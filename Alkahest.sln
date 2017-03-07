@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alkahest.Core", "Alkahest.Core\Alkahest.Core.csproj", "{4CB2D190-FC09-4D4D-9598-D0CFC0C725DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alkahest.Server", "Alkahest.Server\Alkahest.Server.csproj", "{FB4516B0-8850-49F1-B65D-AD5ECE07670C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BDAE3103-21F9-419D-8BFA-DF62C82B90CB}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		Alkahest.snk = Alkahest.snk
+		LICENSE.md = LICENSE.md
+		README.md = README.md
+		SolutionInfo.cs = SolutionInfo.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{C60FBBE6-4B76-4D6F-BADC-377D3878FF93}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alkahest.Plugins.SimpleTest", "Alkahest.Plugins.SimpleTest\Alkahest.Plugins.SimpleTest.csproj", "{F85463D3-9795-4C7D-A041-3BAA652D0BB5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alkahest.Plugins.Overlay", "Alkahest.Plugins.Overlay\Alkahest.Plugins.Overlay.csproj", "{46B28B13-CBB6-4D5F-94F9-004E0643CAF5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Default|Portable = Default|Portable
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4CB2D190-FC09-4D4D-9598-D0CFC0C725DB}.Default|Portable.ActiveCfg = Default|Any CPU
+		{4CB2D190-FC09-4D4D-9598-D0CFC0C725DB}.Default|Portable.Build.0 = Default|Any CPU
+		{FB4516B0-8850-49F1-B65D-AD5ECE07670C}.Default|Portable.ActiveCfg = Debug|x86
+		{FB4516B0-8850-49F1-B65D-AD5ECE07670C}.Default|Portable.Build.0 = Debug|x86
+		{F85463D3-9795-4C7D-A041-3BAA652D0BB5}.Default|Portable.ActiveCfg = Default|Any CPU
+		{F85463D3-9795-4C7D-A041-3BAA652D0BB5}.Default|Portable.Build.0 = Default|Any CPU
+		{46B28B13-CBB6-4D5F-94F9-004E0643CAF5}.Default|Portable.ActiveCfg = Debug|Any CPU
+		{46B28B13-CBB6-4D5F-94F9-004E0643CAF5}.Default|Portable.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F85463D3-9795-4C7D-A041-3BAA652D0BB5} = {C60FBBE6-4B76-4D6F-BADC-377D3878FF93}
+		{46B28B13-CBB6-4D5F-94F9-004E0643CAF5} = {C60FBBE6-4B76-4D6F-BADC-377D3878FF93}
+	EndGlobalSection
+EndGlobal
