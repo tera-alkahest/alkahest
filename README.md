@@ -42,9 +42,9 @@ such usage. I'd encourage people to report such exploits to the TERA developers
 Binary releases of Alkahest are not yet available as the project is still in
 heavy development. If you want to build it, you will need Visual Studio 2015
 (any edition) and .NET Framework version 4.6.1. Simply open `Alkahest.sln` and
-build it with the `Default` + `Portable` configuration. All build artifacts
-will end up in the `Build` directory. Run `Alkahest.Server.exe` to start the
-proxy server (but see below for configuration).
+build it with the `Debug` + `Any CPU` configuration. All build artifacts will
+end up in the `Build` directory. Run `Alkahest.Server.exe` to start the proxy
+server (but see below for configuration).
 
 ## Configuration
 
