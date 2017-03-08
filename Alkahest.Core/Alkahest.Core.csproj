@@ -32,6 +32,9 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="Net\Protocol\Logging\PacketLogEntry.cs" />
+    <Compile Include="Net\Protocol\Logging\PacketLogReader.cs" />
+    <Compile Include="Net\Protocol\Logging\PacketLogWriter.cs" />
     <Compile Include="Net\Protocol\PacketFieldAttribute.cs" />
     <Compile Include="Net\Protocol\PacketSerializer.cs" />
     <Compile Include="Net\Protocol\Packets\CCheckVersionPacket.cs" />

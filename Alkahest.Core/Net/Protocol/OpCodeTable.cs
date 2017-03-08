@@ -6,6 +6,8 @@ namespace Alkahest.Core.Net.Protocol
 {
     public sealed class OpCodeTable
     {
+        public Region Region { get; }
+
         public IReadOnlyDictionary<ushort, string> OpCodeToName => _names;
 
         public IReadOnlyDictionary<string, ushort> NameToOpCode => _codes;
@@ -18,6 +20,8 @@ namespace Alkahest.Core.Net.Protocol
 
         public OpCodeTable(bool opCodes, Region region)
         {
+            Region = region;
+
             var asm = Assembly.GetExecutingAssembly();
             var name = string.Format(@"Net\Protocol\OpCodes\{0}_{1}.txt",
                 opCodes ? "opc" : "smt", region.ToRegionString());

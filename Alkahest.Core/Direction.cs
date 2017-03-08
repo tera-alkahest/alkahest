@@ -1,8 +1,8 @@
 ﻿namespace Alkahest.Core
 {
-    public enum Direction
+    public enum Direction : byte
     {
-        ClientToServer,
-        ServerToClient
+        ClientToServer = 0,
+        ServerToClient = 1
     }
 }

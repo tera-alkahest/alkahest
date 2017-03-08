@@ -11,6 +11,7 @@ using Alkahest.Core.Logging;
 using Alkahest.Core.Logging.Loggers;
 using Alkahest.Core.Net;
 using Alkahest.Core.Net.Protocol;
+using Alkahest.Core.Net.Protocol.Logging;
 using Alkahest.Core.Plugins;
 
 namespace Alkahest.Server
@@ -73,24 +74,31 @@ namespace Alkahest.Server
                         Configuration.PoolLimit != 0 ? (int?)Configuration.PoolLimit : null);
                     var opc = new OpCodeTable(true, region);
                     var smt = new OpCodeTable(false, region);
-                    var proxies = slsProxy.Servers.Select(x => new GameProxy(x,
-                        pool, new PacketProcessor(opc, smt), Configuration.GameBacklog,
-                        Configuration.GameMaxClients, Configuration.GameTimeout)).ToArray();
-                    var loader = new PluginLoader(Configuration.PluginDirectory,
-                        Configuration.PluginPattern, Configuration.DisablePlugins);
 
-                    loader.Start(proxies);
+                    using (var writer = Configuration.EnablePacketLogs ?
+                        new PacketLogWriter(region, Configuration.PacketLogDirectory,
+                            Configuration.PacketLogFileNameFormat) : null)
+                    {
+                        var proxies = slsProxy.Servers.Select(x => new GameProxy(
+                            x, pool, new PacketProcessor(opc, smt, writer),
+                            Configuration.GameBacklog, Configuration.GameMaxClients,
+                            Configuration.GameTimeout)).ToArray();
+                        var loader = new PluginLoader(Configuration.PluginDirectory,
+                            Configuration.PluginPattern, Configuration.DisablePlugins);
 
-                    _log.Basic("{0} started", Name);
+                        loader.Start(proxies);
 
-                    _event.Wait();
+                        _log.Basic("{0} started", Name);
 
-                    _log.Basic("{0} shutting down...", Name);
+                        _event.Wait();
 
-                    loader.Stop(proxies);
+                        _log.Basic("{0} shutting down...", Name);
 
-                    foreach (var proxy in proxies)
-                        proxy.Dispose();
+                        loader.Stop(proxies);
+
+                        foreach (var proxy in proxies)
+                            proxy.Dispose();
+                    }
                 }
             }
         }

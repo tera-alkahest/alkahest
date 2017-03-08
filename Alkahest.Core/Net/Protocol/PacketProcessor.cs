@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using Alkahest.Core.IO;
 using Alkahest.Core.Logging;
+using Alkahest.Core.Net.Protocol.Logging;
 
 namespace Alkahest.Core.Net.Protocol
 {
@@ -22,6 +23,10 @@ namespace Alkahest.Core.Net.Protocol
 
         public OpCodeTable SystemMessages { get; }
 
+        public PacketLogWriter LogWriter { get; }
+
+        internal PacketSerializer Serializer { get; } = new PacketSerializer();
+
         readonly HashSet<RawPacketHandler> _wildcardRawHandlers =
             new HashSet<RawPacketHandler>();
 
@@ -36,13 +41,12 @@ namespace Alkahest.Core.Net.Protocol
 
         readonly object _lock = new object();
 
-        internal PacketSerializer Serializer { get; } = new PacketSerializer();
-
         public PacketProcessor(OpCodeTable gameMessages,
-            OpCodeTable systemMessages)
+            OpCodeTable systemMessages, PacketLogWriter logWriter)
         {
             GameMessages = gameMessages;
             SystemMessages = systemMessages;
+            LogWriter = logWriter;
 
             foreach (var code in gameMessages.OpCodeToName.Keys)
             {
@@ -200,6 +204,10 @@ namespace Alkahest.Core.Net.Protocol
                 payload = Serializer.Serialize(packet);
                 header = new PacketHeader((ushort)payload.Length, header.OpCode);
             }
+
+            LogWriter?.Write(new PacketLogEntry(DateTime.Now,
+                client.Proxy.Info.Name, direction, header.OpCode,
+                payload.Slice(0, header.Length)));
 
             _log.Debug("{0}: {1} ({2} bytes{3})", direction.ToDirectionString(),
                 name, header.Length, send ? string.Empty : ", discarded");

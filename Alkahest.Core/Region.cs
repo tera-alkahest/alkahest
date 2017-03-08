@@ -1,6 +1,6 @@
 ﻿namespace Alkahest.Core
 {
-    public enum Region
+    public enum Region : byte
     {
         EU,
         NA
