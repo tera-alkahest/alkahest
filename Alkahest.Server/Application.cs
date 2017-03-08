@@ -80,9 +80,10 @@ namespace Alkahest.Server
                             Configuration.PacketLogFileNameFormat) : null)
                     {
                         var proxies = slsProxy.Servers.Select(x => new GameProxy(
-                            x, pool, new PacketProcessor(opc, smt, writer),
-                            Configuration.GameBacklog, Configuration.GameMaxClients,
-                            Configuration.GameTimeout)).ToArray();
+                            x, pool, new PacketProcessor(new PacketSerializer(
+                                opc, smt), writer), Configuration.GameBacklog,
+                            Configuration.GameMaxClients, Configuration.GameTimeout))
+                            .ToArray();
                         var loader = new PluginLoader(Configuration.PluginDirectory,
                             Configuration.PluginPattern, Configuration.DisablePlugins);
 

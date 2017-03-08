@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition.Hosting;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -19,13 +18,9 @@ namespace Alkahest.Core.Net.Protocol
 
         static readonly Log _log = new Log(typeof(PacketProcessor));
 
-        public OpCodeTable GameMessages { get; }
-
-        public OpCodeTable SystemMessages { get; }
+        public PacketSerializer Serializer { get; }
 
         public PacketLogWriter LogWriter { get; }
-
-        internal PacketSerializer Serializer { get; } = new PacketSerializer();
 
         readonly HashSet<RawPacketHandler> _wildcardRawHandlers =
             new HashSet<RawPacketHandler>();
@@ -36,33 +31,18 @@ namespace Alkahest.Core.Net.Protocol
         readonly Dictionary<ushort, HashSet<Delegate>> _handlers =
            new Dictionary<ushort, HashSet<Delegate>>();
 
-        readonly Dictionary<ushort, Func<Packet>> _packetCreators =
-            new Dictionary<ushort, Func<Packet>>();
-
         readonly object _lock = new object();
 
-        public PacketProcessor(OpCodeTable gameMessages,
-            OpCodeTable systemMessages, PacketLogWriter logWriter)
+        public PacketProcessor(PacketSerializer serializer,
+            PacketLogWriter logWriter)
         {
-            GameMessages = gameMessages;
-            SystemMessages = systemMessages;
+            Serializer = serializer;
             LogWriter = logWriter;
 
-            foreach (var code in gameMessages.OpCodeToName.Keys)
+            foreach (var code in serializer.GameMessages.OpCodeToName.Keys)
             {
                 _rawHandlers.Add(code, new HashSet<RawPacketHandler>());
                 _handlers.Add(code, new HashSet<Delegate>());
-            }
-
-            using (var container = new CompositionContainer(
-                new AssemblyCatalog(Assembly.GetExecutingAssembly()), true))
-            {
-                var creators = container.GetExports<Func<Packet>,
-                    IPacketMetadata>(PacketAttribute.ThisContractName);
-
-                foreach (var lazy in creators)
-                    _packetCreators.Add(GameMessages.NameToOpCode[lazy.Metadata.OpCode],
-                        lazy.Value);
             }
         }
 
@@ -81,13 +61,13 @@ namespace Alkahest.Core.Net.Protocol
         public void AddRawHandler(string name, RawPacketHandler handler)
         {
             lock (_lock)
-                _rawHandlers[GameMessages.NameToOpCode[name]].Add(handler);
+                _rawHandlers[Serializer.GameMessages.NameToOpCode[name]].Add(handler);
         }
 
         public void RemoveRawHandler(string name, RawPacketHandler handler)
         {
             lock (_lock)
-                _rawHandlers[GameMessages.NameToOpCode[name]].Remove(handler);
+                _rawHandlers[Serializer.GameMessages.NameToOpCode[name]].Remove(handler);
         }
 
         static string GetOpCode(Type t)
@@ -100,14 +80,14 @@ namespace Alkahest.Core.Net.Protocol
             where T : Packet
         {
             lock (_lock)
-                _handlers[GameMessages.NameToOpCode[GetOpCode(typeof(T))]].Add(handler);
+                _handlers[Serializer.GameMessages.NameToOpCode[GetOpCode(typeof(T))]].Add(handler);
         }
 
         public void RemoveHandler<T>(PacketHandler<T> handler)
             where T : Packet
         {
             lock (_lock)
-                _handlers[GameMessages.NameToOpCode[GetOpCode(typeof(T))]].Remove(handler);
+                _handlers[Serializer.GameMessages.NameToOpCode[GetOpCode(typeof(T))]].Remove(handler);
         }
 
         internal static PacketHeader ReadHeader(byte[] buffer)
@@ -143,7 +123,7 @@ namespace Alkahest.Core.Net.Protocol
             }
 
             var send = true;
-            var name = GameMessages.OpCodeToName[header.OpCode];
+            var name = Serializer.GameMessages.OpCodeToName[header.OpCode];
 
             if (rawHandlers.Count != 0)
             {
@@ -179,8 +159,7 @@ namespace Alkahest.Core.Net.Protocol
 
             if (handlers != null)
             {
-                var creator = _packetCreators[header.OpCode];
-                var packet = creator();
+                var packet = Serializer.Create(header.OpCode);
 
                 Serializer.Deserialize(payload, packet);
 

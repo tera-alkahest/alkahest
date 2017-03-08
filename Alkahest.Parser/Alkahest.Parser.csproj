@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FB4516B0-8850-49F1-B65D-AD5ECE07670C}</ProjectGuid>
+    <ProjectGuid>{0238DD2F-47AD-4B4C-8118-DDDA7C33716B}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Alkahest.Server</RootNamespace>
-    <AssemblyName>alkahest-server</AssemblyName>
+    <RootNamespace>Alkahest.Parser</RootNamespace>
+    <AssemblyName>alkahest-parser</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -26,33 +26,13 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <LangVersion>6</LangVersion>
-    <ApplicationManifest>Properties\App.manifest</ApplicationManifest>
-    <StartupObject>Alkahest.Server.Program</StartupObject>
+    <StartupObject>Alkahest.Parser.Program</StartupObject>
     <ApplicationIcon>..\Alkahest.ico</ApplicationIcon>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Alkahest.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\SolutionInfo.cs">
-      <Link>Properties\SolutionInfo.cs</Link>
-    </Compile>
-    <Compile Include="Application.cs" />
-    <Compile Include="Configuration.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Alkahest.snk">
-      <Link>Properties\Alkahest.snk</Link>
-    </None>
-    <None Include="Properties\App.config">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Properties\App.manifest" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Alkahest.ico">
@@ -60,19 +40,21 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SolutionInfo.cs">
+      <Link>Properties\SolutionInfo.cs</Link>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Alkahest.snk">
+      <Link>Properties\Alkahest.snk</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Alkahest.Core\Alkahest.Core.csproj">
       <Project>{4cb2d190-fc09-4d4d-9598-d0cfc0c725db}</Project>
       <Name>Alkahest.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Alkahest.Plugins.Overlay\Alkahest.Plugins.Overlay.csproj">
-      <Project>{46b28b13-cbb6-4d5f-94f9-004e0643caf5}</Project>
-      <Name>Alkahest.Plugins.Overlay</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\Alkahest.Plugins.SimpleTest\Alkahest.Plugins.SimpleTest.csproj">
-      <Project>{f85463d3-9795-4c7d-a041-3baa652d0bb5}</Project>
-      <Name>Alkahest.Plugins.SimpleTest</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

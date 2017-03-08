@@ -26,15 +26,18 @@ namespace Alkahest.Core.Net.Protocol
         {
             var sb = new StringBuilder();
 
-            ToString(sb, this, OpCode, string.Empty);
+            ToString(sb, this, null, string.Empty);
 
-            return sb.ToString();
+            return sb.ToString().Trim();
         }
 
         static void ToString(StringBuilder builder, object source,
             string header, string indent)
         {
             var type = source.GetType();
+
+            if (header == null)
+                header = $"{type.Name} =";
 
             builder.AppendLine($"{indent}{header}");
             builder.AppendLine($"{indent}{{");

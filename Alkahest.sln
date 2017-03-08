@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alkahest.Plugins.SimpleTest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alkahest.Plugins.Overlay", "Alkahest.Plugins.Overlay\Alkahest.Plugins.Overlay.csproj", "{46B28B13-CBB6-4D5F-94F9-004E0643CAF5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alkahest.Parser", "Alkahest.Parser\Alkahest.Parser.csproj", "{0238DD2F-47AD-4B4C-8118-DDDA7C33716B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,8 @@ Global
 		{F85463D3-9795-4C7D-A041-3BAA652D0BB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46B28B13-CBB6-4D5F-94F9-004E0643CAF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{46B28B13-CBB6-4D5F-94F9-004E0643CAF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0238DD2F-47AD-4B4C-8118-DDDA7C33716B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0238DD2F-47AD-4B4C-8118-DDDA7C33716B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 
 namespace Alkahest.Core.Net.Protocol.Logging
@@ -14,7 +15,8 @@ namespace Alkahest.Core.Net.Protocol.Logging
 
         public PacketLogReader(string fileName)
         {
-            _reader = new BinaryReader(File.OpenRead(fileName));
+            _reader = new BinaryReader(new DeflateStream(
+                File.OpenRead(fileName), CompressionMode.Decompress));
 
             if (!_reader.ReadBytes(4).SequenceEqual(PacketLogWriter.Magic))
                 throw new InvalidDataException();
@@ -30,17 +32,21 @@ namespace Alkahest.Core.Net.Protocol.Logging
 
         public PacketLogEntry Read()
         {
-            if (_reader.BaseStream.Position == _reader.BaseStream.Length)
+            try
+            {
+                var stamp = DateTime.FromBinary(_reader.ReadInt64()).ToLocalTime();
+                var name = _reader.ReadString();
+                var direction = (Direction)_reader.ReadByte();
+                var opCode = _reader.ReadUInt16();
+                var length = _reader.ReadUInt16();
+                var payload = _reader.ReadBytes(length);
+
+                return new PacketLogEntry(stamp, name, direction, opCode, payload);
+            }
+            catch (EndOfStreamException)
+            {
                 return null;
-
-            var stamp = DateTime.FromBinary(_reader.ReadInt64()).ToLocalTime();
-            var name = _reader.ReadString();
-            var direction = (Direction)_reader.ReadByte();
-            var opCode = _reader.ReadUInt16();
-            var length = _reader.ReadUInt16();
-            var payload = _reader.ReadBytes(length);
-
-            return new PacketLogEntry(stamp, name, direction, opCode, payload);
+            }
         }
     }
 }

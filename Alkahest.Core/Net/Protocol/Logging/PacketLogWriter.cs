@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 
 namespace Alkahest.Core.Net.Protocol.Logging
@@ -23,8 +24,10 @@ namespace Alkahest.Core.Net.Protocol.Logging
         {
             Directory.CreateDirectory(directory);
 
-            _writer = new BinaryWriter(File.OpenWrite(Path.Combine(directory,
-                DateTime.Now.ToString(fileNameFormat) + ".pkt")));
+            _writer = new BinaryWriter(new DeflateStream(new FileStream(
+                Path.Combine(directory, DateTime.Now.ToString(fileNameFormat) +
+                ".pkt"), FileMode.Create, FileAccess.Write),
+                CompressionLevel.Optimal));
 
             _writer.Write(_magic);
             _writer.Write((byte)(Region = region));

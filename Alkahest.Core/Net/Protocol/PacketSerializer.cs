@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using System.Reflection;
 using Alkahest.Core.IO;
 
 namespace Alkahest.Core.Net.Protocol
 {
-    sealed class PacketSerializer
+    public sealed class PacketSerializer
     {
         const string CountNameSuffix = "Count";
 
@@ -43,8 +44,38 @@ namespace Alkahest.Core.Net.Protocol
             }
         }
 
+        public OpCodeTable GameMessages { get; }
+
+        public OpCodeTable SystemMessages { get; }
+
         readonly ConcurrentDictionary<Type, PacketFieldInfo[]> _info =
             new ConcurrentDictionary<Type, PacketFieldInfo[]>();
+
+        readonly Dictionary<ushort, Func<Packet>> _packetCreators =
+            new Dictionary<ushort, Func<Packet>>();
+
+        public PacketSerializer(OpCodeTable gameMessages,
+            OpCodeTable systemMessages)
+        {
+            GameMessages = gameMessages;
+            SystemMessages = systemMessages;
+
+            using (var container = new CompositionContainer(
+                new AssemblyCatalog(Assembly.GetExecutingAssembly()), true))
+                foreach (var lazy in container.GetExports<Func<Packet>,
+                    IPacketMetadata>(PacketAttribute.ThisContractName))
+                    _packetCreators.Add(gameMessages.NameToOpCode[lazy.Metadata.OpCode],
+                        lazy.Value);
+        }
+
+        public Packet Create(ushort opCode)
+        {
+            Func<Packet> creator;
+
+            _packetCreators.TryGetValue(opCode, out creator);
+
+            return creator?.Invoke();
+        }
 
         public void Deserialize(byte[] payload, Packet packet)
         {
