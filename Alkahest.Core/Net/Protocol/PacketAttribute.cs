@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.Composition;
 
 namespace Alkahest.Core.Net.Protocol

@@ -1,4 +1,4 @@
-﻿namespace Alkahest.Core.Net.Protocol
+namespace Alkahest.Core.Net.Protocol
 {
     public delegate bool PacketHandler<T>(GameClient client,
         Direction direction, T packet)

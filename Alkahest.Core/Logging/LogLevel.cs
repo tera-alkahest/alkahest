@@ -1,4 +1,4 @@
-﻿namespace Alkahest.Core.Logging
+namespace Alkahest.Core.Logging
 {
     public enum LogLevel
     {

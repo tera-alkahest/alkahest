@@ -1,4 +1,4 @@
-﻿namespace Alkahest.Core.Net.Protocol.Packets
+namespace Alkahest.Core.Net.Protocol.Packets
 {
     public sealed class CSocialPacket : Packet
     {

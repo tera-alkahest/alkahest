@@ -1,4 +1,4 @@
-﻿using Alkahest.Core.Logging;
+using Alkahest.Core.Logging;
 using Alkahest.Core.Net;
 using Alkahest.Core.Plugins;
 

@@ -1,4 +1,4 @@
-﻿namespace Alkahest.Core
+namespace Alkahest.Core
 {
     public enum Direction : byte
     {

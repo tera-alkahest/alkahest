@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.Composition;
+using System.ComponentModel.Composition;
 using Alkahest.Core.Net;
 
 namespace Alkahest.Core.Plugins

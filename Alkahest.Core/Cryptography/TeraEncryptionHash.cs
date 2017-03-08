@@ -1,4 +1,4 @@
-﻿namespace Alkahest.Core.Cryptography
+namespace Alkahest.Core.Cryptography
 {
     internal static class TeraEncryptionHash
     {
