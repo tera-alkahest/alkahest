@@ -7,7 +7,7 @@ namespace Alkahest.Core.Logging
     {
         public static LogLevel Level { get; set; }
 
-        public static string TimestampFormat { get; set; }
+        public static string TimestampFormat { get; set; } = string.Empty;
 
         public static List<string> DiscardSources { get; } = new List<string>();
 

@@ -18,14 +18,19 @@ namespace Alkahest.Server
 {
     static class Application
     {
-        public const string Name = nameof(Alkahest);
-
-        static readonly Log _log = new Log(typeof(Program));
+        public static string Name { get; }
 
         static readonly ManualResetEventSlim _event =
             new ManualResetEventSlim();
 
-        public static void Run(string[] args)
+        static readonly Log _log = new Log(typeof(Application));
+
+        static Application()
+        {
+            Name = $"{nameof(Alkahest)} {nameof(Server)}";
+        }
+
+        public static int Run(string[] args)
         {
             Console.CancelKeyPress += CancelKeyPress;
 
@@ -102,6 +107,8 @@ namespace Alkahest.Server
                     }
                 }
             }
+
+            return 0;
         }
 
         static void CancelKeyPress(object sender, ConsoleCancelEventArgs args)

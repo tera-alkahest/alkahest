@@ -5,12 +5,12 @@ namespace Alkahest.Server
 {
     static class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             Console.Title = Application.Name;
             GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
 
-            Application.Run(args);
+            return Application.Run(args);
         }
     }
 }
