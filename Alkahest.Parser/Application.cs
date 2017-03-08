@@ -45,6 +45,8 @@ namespace Alkahest.Parser
             var resultName = args.Length >= 2 ?
                 args[1] : Path.ChangeExtension(inputName, "txt");
 
+            _log.Basic("Parsing {0} to {1}", inputName, resultName);
+
             var reader = new PacketLogReader(inputName);
             var serializer = new PacketSerializer(
                 new OpCodeTable(true, reader.Region),
