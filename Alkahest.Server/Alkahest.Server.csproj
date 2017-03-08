@@ -39,7 +39,6 @@
     <Compile Include="Application.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Alkahest.snk">
