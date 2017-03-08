@@ -43,13 +43,13 @@ Binary releases of Alkahest are not yet available as the project is still in
 heavy development. If you want to build it, you will need Visual Studio 2015
 (any edition) and .NET Framework version 4.6.1. Simply open `Alkahest.sln` and
 build it with the `Debug` + `Any CPU` configuration. All build artifacts will
-end up in the `Build` directory. Run `Alkahest.Server.exe` to start the proxy
+end up in the `Build` directory. Run `alkahest-server.exe` to start the proxy
 server (but see below for configuration).
 
 ## Configuration
 
 After you've built Alkahest, you will need to configure it. This is done in the
-`Alkahest.Server.exe.config` file in the `Build` directory.
+`alkahest-server.exe.config` file in the `Build` directory.
 
 The most important configuration values you'll need to change are:
 
@@ -77,7 +77,7 @@ files in the `Build` directory. Make backups if needed.
 
 ## Usage
 
-Once you've configured Alkahest, run `Alkahest.Server.exe` to start it. Once
+Once you've configured Alkahest, run `alkahest-server.exe` to start it. Once
 Alkahest finishes initializing, and if everything went fine, you should be able
 to just start TERA and play.
 
