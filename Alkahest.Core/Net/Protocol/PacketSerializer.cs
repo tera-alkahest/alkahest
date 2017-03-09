@@ -90,8 +90,14 @@ namespace Alkahest.Core.Net.Protocol
             var fields = GetPacketFields(target.GetType());
 
             foreach (var info in fields.Where(x => x.IsPrimitive))
-                info.Property.SetValue(target,
-                    DeserializePrimitive(reader, info.Property.PropertyType));
+            {
+                var type = info.Property.PropertyType;
+
+                if (type.IsEnum)
+                    type = type.GetEnumUnderlyingType();
+
+                info.Property.SetValue(target, DeserializePrimitive(reader, type));
+            }
 
             foreach (var info in fields.Where(x => !x.IsPrimitive))
             {
@@ -105,6 +111,9 @@ namespace Alkahest.Core.Net.Protocol
                     var count = (ushort)info.CountField.GetValue(target);
                     var array = (Array)Activator.CreateInstance(type, (int)count);
                     var elemType = type.GetElementType();
+
+                    if (elemType.IsEnum)
+                        elemType = elemType.GetEnumUnderlyingType();
 
                     reader.Seek(offset - PacketHeader.HeaderSize, (r, op) =>
                     {
@@ -218,6 +227,10 @@ namespace Alkahest.Core.Net.Protocol
                         (w, op) => w.Write((ushort)array.Length));
 
                     var elemType = type.GetElementType();
+
+                    if (elemType.IsEnum)
+                        elemType = elemType.GetEnumUnderlyingType();
+
                     var markers = new Stack<int>();
 
                     for (var i = 0; i < array.Length; i++)
@@ -266,6 +279,9 @@ namespace Alkahest.Core.Net.Protocol
         static void SerializePrimitive(TeraBinaryWriter writer, object value)
         {
             var type = value.GetType();
+
+            if (type.IsEnum)
+                type = type.GetEnumUnderlyingType();
 
             if (type == typeof(bool))
                 writer.Write((bool)value);
