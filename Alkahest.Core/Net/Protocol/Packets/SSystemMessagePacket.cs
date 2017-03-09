@@ -1,8 +1,8 @@
 namespace Alkahest.Core.Net.Protocol.Packets
 {
-    public sealed class CSocialPacket : Packet
+    public sealed class SSystemMessagePacket : Packet
     {
-        const string Name = "C_SOCIAL";
+        const string Name = "S_SYSTEM_MESSAGE";
 
         public override string OpCode
         {
@@ -12,13 +12,13 @@ namespace Alkahest.Core.Net.Protocol.Packets
         [Packet(Name)]
         internal static Packet Create()
         {
-            return new CSocialPacket();
+            return new SSystemMessagePacket();
         }
 
         [PacketField]
-        public uint Emote { get; set; }
+        internal ushort MessageOffset { get; set; }
 
         [PacketField]
-        public byte Unknown1 { get; set; }
+        public string Message { get; set; }
     }
 }

@@ -1,8 +1,8 @@
 namespace Alkahest.Core.Net.Protocol.Packets
 {
-    public sealed class CSocialPacket : Packet
+    public sealed class CAcceptContractPacket : Packet
     {
-        const string Name = "C_SOCIAL";
+        const string Name = "C_ACCEPT_CONTRACT";
 
         public override string OpCode
         {
@@ -12,13 +12,13 @@ namespace Alkahest.Core.Net.Protocol.Packets
         [Packet(Name)]
         internal static Packet Create()
         {
-            return new CSocialPacket();
+            return new CAcceptContractPacket();
         }
 
         [PacketField]
-        public uint Emote { get; set; }
+        public uint Type { get; set; }
 
         [PacketField]
-        public byte Unknown1 { get; set; }
+        public uint Id { get; set; }
     }
 }

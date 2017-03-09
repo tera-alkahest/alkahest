@@ -1,8 +1,8 @@
 namespace Alkahest.Core.Net.Protocol.Packets
 {
-    public sealed class CSocialPacket : Packet
+    public sealed class CChatPacket : Packet
     {
-        const string Name = "C_SOCIAL";
+        const string Name = "C_CHAT";
 
         public override string OpCode
         {
@@ -12,13 +12,16 @@ namespace Alkahest.Core.Net.Protocol.Packets
         [Packet(Name)]
         internal static Packet Create()
         {
-            return new CSocialPacket();
+            return new CChatPacket();
         }
 
         [PacketField]
-        public uint Emote { get; set; }
+        public ushort MessageOffset { get; set; }
 
         [PacketField]
-        public byte Unknown1 { get; set; }
+        public uint Channel { get; set; }
+
+        [PacketField]
+        public string Message { get; set; }
     }
 }

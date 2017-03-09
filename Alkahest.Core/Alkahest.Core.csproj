@@ -37,6 +37,9 @@
     <Compile Include="Net\Protocol\Logging\PacketLogWriter.cs" />
     <Compile Include="Net\Protocol\PacketFieldAttribute.cs" />
     <Compile Include="Net\Protocol\PacketSerializer.cs" />
+    <Compile Include="Net\Protocol\Packets\CAcceptContractPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\CAvailableEventMatchingListPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\CCheckUserNamePacket.cs" />
     <Compile Include="Net\Protocol\Packets\CCheckVersionPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CSetVisibilityRangePacket.cs" />
     <Compile Include="Net\Protocol\Packets\CSocialPacket.cs" />
@@ -44,6 +47,8 @@
     <Compile Include="Net\Protocol\PacketAttribute.cs" />
     <Compile Include="Net\Protocol\IPacketMetadata.cs" />
     <Compile Include="Net\Protocol\PacketHandler.cs" />
+    <Compile Include="Net\Protocol\Packets\CChatPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SSystemMessagePacket.cs" />
     <Compile Include="Plugins\IPlugin.cs" />
     <Compile Include="Plugins\PluginLoader.cs" />
     <Compile Include="Cryptography\TeraEncryptionHash.cs" />

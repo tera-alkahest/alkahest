@@ -24,10 +24,10 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public sealed class VersionValue
         {
             [PacketField]
-            public int Index { get; set; }
+            public uint Index { get; set; }
 
             [PacketField]
-            public int Value { get; set; }
+            public uint Value { get; set; }
         }
 
         [PacketField]

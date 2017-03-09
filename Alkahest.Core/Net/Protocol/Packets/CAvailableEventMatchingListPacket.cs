@@ -1,8 +1,8 @@
 namespace Alkahest.Core.Net.Protocol.Packets
 {
-    public sealed class CSocialPacket : Packet
+    public sealed class CAvailableEventMatchingListPacket : Packet
     {
-        const string Name = "C_SOCIAL";
+        const string Name = "C_AVAILABLE_EVENT_MATCHING_LIST";
 
         public override string OpCode
         {
@@ -12,11 +12,8 @@ namespace Alkahest.Core.Net.Protocol.Packets
         [Packet(Name)]
         internal static Packet Create()
         {
-            return new CSocialPacket();
+            return new CAvailableEventMatchingListPacket();
         }
-
-        [PacketField]
-        public uint Emote { get; set; }
 
         [PacketField]
         public byte Unknown1 { get; set; }
