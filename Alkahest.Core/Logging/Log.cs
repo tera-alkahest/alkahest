@@ -9,9 +9,9 @@ namespace Alkahest.Core.Logging
 
         public static string TimestampFormat { get; set; } = string.Empty;
 
-        public static List<string> DiscardSources { get; } = new List<string>();
+        public static ICollection<string> DiscardSources { get; } = new HashSet<string>();
 
-        public static List<ILogger> Loggers { get; } = new List<ILogger>();
+        public static ICollection<ILogger> Loggers { get; } = new HashSet<ILogger>();
 
         static readonly object _lock = new object();
 

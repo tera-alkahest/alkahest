@@ -39,13 +39,11 @@ namespace Alkahest.Core.Net
         bool _disposed;
 
         public GameProxy(ServerInfo info, ObjectPool<SocketAsyncEventArgs> pool,
-            PacketProcessor processor, int backlog, int maxClients,
-            TimeSpan timeout)
+            PacketProcessor processor, int backlog, TimeSpan timeout)
         {
             Info = info;
             ArgsPool = pool;
             Processor = processor;
-            MaxClients = maxClients;
             Timeout = timeout;
             RealEndPoint = new IPEndPoint(info.RealAddress, info.Port);
             ProxyEndPoint = new IPEndPoint(info.ProxyAddress, info.Port);

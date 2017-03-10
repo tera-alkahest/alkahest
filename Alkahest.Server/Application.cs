@@ -88,8 +88,10 @@ namespace Alkahest.Server
                         var proxies = slsProxy.Servers.Select(x => new GameProxy(
                             x, pool, new PacketProcessor(new PacketSerializer(
                                 opc, smt), writer), Configuration.GameBacklog,
-                            Configuration.GameMaxClients, Configuration.GameTimeout))
-                            .ToArray();
+                            Configuration.GameTimeout)
+                        {
+                            MaxClients = Configuration.GameMaxClients
+                        }).ToArray();
                         var loader = new PluginLoader(Configuration.PluginDirectory,
                             Configuration.PluginPattern, Configuration.DisablePlugins);
 

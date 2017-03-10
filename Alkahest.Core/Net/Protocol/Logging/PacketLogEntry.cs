@@ -14,7 +14,7 @@ namespace Alkahest.Core.Net.Protocol.Logging
 
         public ushort OpCode { get; }
 
-        public IReadOnlyCollection<byte> Payload { get; }
+        public IReadOnlyList<byte> Payload { get; }
 
         public PacketLogEntry(DateTime timestamp, string serverName,
             Direction direction, ushort opCode, byte[] payload)

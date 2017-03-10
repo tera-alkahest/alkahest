@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Alkahest.Core.Cryptography
@@ -8,17 +9,17 @@ namespace Alkahest.Core.Cryptography
 
         public Direction Direction { get; }
 
-        public byte[] ClientKey1 => _clientKey1.ToArray();
+        public IReadOnlyList<byte> ClientKey1 => _clientKey1;
 
-        public byte[] ClientKey2 => _clientKey2.ToArray();
+        public IReadOnlyList<byte> ClientKey2 => _clientKey2;
 
-        public byte[] ServerKey1 => _serverKey1.ToArray();
+        public IReadOnlyList<byte> ServerKey1 => _serverKey1;
 
-        public byte[] ServerKey2 => _serverKey2.ToArray();
+        public IReadOnlyList<byte> ServerKey2 => _serverKey2;
 
-        public byte[] DecryptionKey => _decryptKey.ToArray();
+        public IReadOnlyList<byte> DecryptionKey => _decryptKey;
 
-        public byte[] EncryptionKey => _encryptKey.ToArray();
+        public IReadOnlyList<byte> EncryptionKey => _encryptKey;
 
         readonly byte[] _clientKey1;
 

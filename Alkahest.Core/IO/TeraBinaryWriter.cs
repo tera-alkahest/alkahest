@@ -7,7 +7,7 @@ namespace Alkahest.Core.IO
 {
     public class TeraBinaryWriter : BinaryWriter
     {
-        public static Encoding Encoding => Encoding.Unicode;
+        public static Encoding Encoding { get; } = Encoding.Unicode;
 
         public new MemoryStream BaseStream => (MemoryStream)base.BaseStream;
 
