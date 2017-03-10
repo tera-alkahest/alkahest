@@ -31,13 +31,19 @@ namespace Alkahest.Core.Net.Protocol
         readonly Dictionary<ushort, HashSet<Delegate>> _handlers =
            new Dictionary<ushort, HashSet<Delegate>>();
 
+        readonly IReadOnlyCollection<Delegate> _emptyHandlers =
+            new List<Delegate>();
+
+        readonly int _roundtrips;
+
         readonly object _lock = new object();
 
         public PacketProcessor(PacketSerializer serializer,
-            PacketLogWriter logWriter)
+            PacketLogWriter logWriter, int roundtrips)
         {
             Serializer = serializer;
             LogWriter = logWriter;
+            _roundtrips = roundtrips;
 
             foreach (var code in serializer.GameMessages.OpCodeToName.Keys)
             {
@@ -110,9 +116,36 @@ namespace Alkahest.Core.Net.Protocol
             }
         }
 
+        void Roundtrip(PacketHeader header, ref byte[] payload)
+        {
+            var packet = Serializer.Create(header.OpCode);
+
+            if (packet == null)
+                return;
+
+            for (var i = 0; i < _roundtrips; i++)
+            {
+                Serializer.Deserialize(payload, packet);
+                var payload2 = Serializer.Serialize(packet);
+
+                if (payload2.Length != payload.Length)
+                    throw new Exception();
+
+                payload = payload2;
+            }
+        }
+
         internal bool Process(GameClient client, Direction direction,
             ref PacketHeader header, ref byte[] payload)
         {
+            if (_roundtrips != 0)
+            {
+                payload = payload.Slice(0, header.Length);
+                Roundtrip(header, ref payload);
+
+                return true;
+            }
+
             var rawHandlers = new List<RawPacketHandler>();
 
             // Make a copy so we don't have to lock while iterating.
@@ -155,7 +188,7 @@ namespace Alkahest.Core.Net.Protocol
             IReadOnlyCollection<Delegate> handlers = _handlers[header.OpCode];
 
             lock (_lock)
-                handlers = handlers.Count != 0 ? handlers.ToArray() : null;
+                handlers = handlers.Count != 0 ? handlers.ToArray() : _emptyHandlers;
 
             if (handlers != null)
             {

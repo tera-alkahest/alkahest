@@ -77,17 +77,18 @@ namespace Alkahest.Server
                     var pool = new ObjectPool<SocketAsyncEventArgs>(
                         () => new SocketAsyncEventArgs(), x => x.Reset(),
                         Configuration.PoolLimit != 0 ? (int?)Configuration.PoolLimit : null);
-                    var opc = new OpCodeTable(true, region);
-                    var smt = new OpCodeTable(false, region);
 
                     using (var writer = Configuration.EnablePacketLogs ?
                         new PacketLogWriter(region, Configuration.PacketLogDirectory,
                             Configuration.PacketLogFileNameFormat,
                             Configuration.CompressPacketLogs) : null)
                     {
+                        var proc = new PacketProcessor(new PacketSerializer(
+                            new OpCodeTable(true, region),
+                            new OpCodeTable(false, region)), writer,
+                            Configuration.GamePacketRoundtrips);
                         var proxies = slsProxy.Servers.Select(x => new GameProxy(
-                            x, pool, new PacketProcessor(new PacketSerializer(
-                                opc, smt), writer), Configuration.GameBacklog,
+                            x, pool, proc, Configuration.GameBacklog,
                             Configuration.GameTimeout)
                         {
                             MaxClients = Configuration.GameMaxClients
