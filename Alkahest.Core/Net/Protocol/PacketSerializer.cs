@@ -179,7 +179,7 @@ namespace Alkahest.Core.Net.Protocol
             else if (type == typeof(float))
                 value = reader.ReadSingle();
             else
-                throw new Exception();
+                throw Assert.Unreachable();
 
             return value;
         }

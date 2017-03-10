@@ -22,7 +22,7 @@ namespace Alkahest.Core
                 case Direction.ServerToClient:
                     return "S -> C";
                 default:
-                    throw new Exception();
+                    throw Assert.Unreachable();
             }
         }
 
@@ -35,7 +35,7 @@ namespace Alkahest.Core
                 case Region.NA:
                     return "en";
                 default:
-                    throw new Exception();
+                    throw Assert.Unreachable();
             }
         }
     }

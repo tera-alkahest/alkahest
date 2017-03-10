@@ -127,9 +127,9 @@ namespace Alkahest.Core.Net.Protocol
             {
                 Serializer.Deserialize(payload, packet);
                 var payload2 = Serializer.Serialize(packet);
+                var payload1 = payload;
 
-                if (payload2.Length != payload.Length)
-                    throw new Exception();
+                Assert.Check(() => payload2.Length == payload1.Length);
 
                 payload = payload2;
             }

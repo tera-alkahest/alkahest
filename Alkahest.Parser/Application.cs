@@ -25,6 +25,8 @@ namespace Alkahest.Parser
 
         public static int Run(string[] args)
         {
+            Assert.Enabled = true;
+
             Log.Level = LogLevel.Info;
 
             var color = Console.ForegroundColor;

@@ -67,6 +67,8 @@ namespace Alkahest.Server
 
         public static bool AdjustHostsFile { get; }
 
+        public static bool EnableAssertions { get; }
+
         static Configuration()
         {
             var cfg = ConfigurationManager.AppSettings;
@@ -100,6 +102,7 @@ namespace Alkahest.Server
             GamePacketRoundtrips = int.Parse(cfg["gamePacketRoundtrips"]);
             PoolLimit = int.Parse(cfg["poolLimit"]);
             AdjustHostsFile = bool.Parse(cfg["adjustHostsFile"]);
+            EnableAssertions = bool.Parse(cfg["enableAssertions"]);
         }
 
         static string[] Split(string value, char separator)

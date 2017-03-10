@@ -37,7 +37,7 @@ namespace Alkahest.Core.Logging.Loggers
                     lvl = "D";
                     break;
                 default:
-                    throw new Exception();
+                    throw Assert.Unreachable();
             }
 
             timestamp = timestamp != string.Empty ? $"[{timestamp}] " : string.Empty;

@@ -47,7 +47,7 @@ namespace Alkahest.Core.Net
                 case Region.NA:
                     return "sls.service.enmasse.com";
                 default:
-                    throw new Exception();
+                    throw Assert.Unreachable();
             }
         }
 
@@ -60,7 +60,7 @@ namespace Alkahest.Core.Net
                 case Region.NA:
                     return 4566;
                 default:
-                    throw new Exception();
+                    throw Assert.Unreachable();
             }
         }
     }
