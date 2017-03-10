@@ -82,7 +82,8 @@ namespace Alkahest.Server
 
                     using (var writer = Configuration.EnablePacketLogs ?
                         new PacketLogWriter(region, Configuration.PacketLogDirectory,
-                            Configuration.PacketLogFileNameFormat) : null)
+                            Configuration.PacketLogFileNameFormat,
+                            Configuration.CompressPacketLogs) : null)
                     {
                         var proxies = slsProxy.Servers.Select(x => new GameProxy(
                             x, pool, new PacketProcessor(new PacketSerializer(

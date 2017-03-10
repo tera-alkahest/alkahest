@@ -37,6 +37,8 @@ namespace Alkahest.Server
 
         public static string PacketLogFileNameFormat { get; }
 
+        public static bool CompressPacketLogs { get; }
+
         public static string PluginDirectory { get; }
 
         public static string PluginPattern { get; }
@@ -81,6 +83,7 @@ namespace Alkahest.Server
             EnablePacketLogs = bool.Parse(cfg["enablePacketLogs"]);
             PacketLogDirectory = cfg["packetLogDirectory"];
             PacketLogFileNameFormat = cfg["packetLogFileNameFormat"];
+            CompressPacketLogs = bool.Parse(cfg["compressPacketLogs"]);
             PluginDirectory = cfg["pluginDirectory"];
             PluginPattern = cfg["pluginPattern"];
             DisablePlugins = Split(cfg["disablePlugins"], ',');

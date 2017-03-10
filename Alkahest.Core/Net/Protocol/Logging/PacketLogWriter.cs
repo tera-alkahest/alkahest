@@ -15,23 +15,25 @@ namespace Alkahest.Core.Net.Protocol.Logging
 
         public Region Region { get; }
 
-        public DateTime StartTime { get; }
-
         readonly BinaryWriter _writer;
 
         public PacketLogWriter(Region region, string directory,
-            string fileNameFormat)
+            string fileNameFormat, bool compress)
         {
             Directory.CreateDirectory(directory);
 
-            _writer = new BinaryWriter(new DeflateStream(new FileStream(
-                Path.Combine(directory, DateTime.Now.ToString(fileNameFormat) +
-                ".pkt"), FileMode.Create, FileAccess.Write),
-                CompressionLevel.Optimal));
+            Stream stream = new FileStream(Path.Combine(directory,
+                DateTime.Now.ToString(fileNameFormat) + ".pkt"),
+                FileMode.Create, FileAccess.Write);
 
-            _writer.Write(_magic);
-            _writer.Write((byte)(Region = region));
-            _writer.Write((StartTime = DateTime.Now).ToUniversalTime().ToBinary());
+            stream.Write(_magic, 0, _magic.Length);
+            stream.WriteByte((byte)(Region = region));
+            stream.WriteByte((byte)(compress ? 1 : 0));
+
+            if (compress)
+                stream = new DeflateStream(stream, CompressionLevel.Optimal);
+
+            _writer = new BinaryWriter(stream);
         }
 
         public void Dispose()

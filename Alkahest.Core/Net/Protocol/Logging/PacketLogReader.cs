@@ -9,20 +9,24 @@ namespace Alkahest.Core.Net.Protocol.Logging
     {
         public Region Region { get; }
 
-        public DateTime StartTime { get; }
-
         readonly BinaryReader _reader;
 
         public PacketLogReader(string fileName)
         {
-            _reader = new BinaryReader(new DeflateStream(
-                File.OpenRead(fileName), CompressionMode.Decompress));
+            Stream stream = File.OpenRead(fileName);
 
-            if (!_reader.ReadBytes(4).SequenceEqual(PacketLogWriter.Magic))
+            var magic = new byte[PacketLogWriter.Magic.Count];
+
+            if (stream.Read(magic, 0, magic.Length) != magic.Length ||
+                !magic.SequenceEqual(PacketLogWriter.Magic))
                 throw new InvalidDataException();
 
-            Region = (Region)_reader.ReadByte();
-            StartTime = DateTime.FromBinary(_reader.ReadInt64());
+            Region = (Region)stream.ReadByte();
+
+            if (stream.ReadByte() == 1)
+                stream = new DeflateStream(stream, CompressionMode.Decompress);
+
+            _reader = new BinaryReader(stream);
         }
 
         public void Dispose()
