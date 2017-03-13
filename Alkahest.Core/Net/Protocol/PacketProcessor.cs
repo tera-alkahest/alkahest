@@ -190,7 +190,7 @@ namespace Alkahest.Core.Net.Protocol
             lock (_lock)
                 handlers = handlers.Count != 0 ? handlers.ToArray() : _emptyHandlers;
 
-            if (handlers != null)
+            if (handlers.Count != 0)
             {
                 var packet = Serializer.Create(header.OpCode);
 
