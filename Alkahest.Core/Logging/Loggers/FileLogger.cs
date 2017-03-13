@@ -17,8 +17,8 @@ namespace Alkahest.Core.Logging.Loggers
                 DateTime.Now.ToString(fileNameFormat) + ".log")));
         }
 
-        public void Log(LogLevel level, string timestamp,
-            string source, string message)
+        public void Log(LogLevel level, string timestamp, Type source,
+            string category, string message)
         {
             string lvl;
 
@@ -41,8 +41,9 @@ namespace Alkahest.Core.Logging.Loggers
             }
 
             timestamp = timestamp != string.Empty ? $"[{timestamp}] " : string.Empty;
+            category = category != null ? $" ({category})" : string.Empty;
 
-            _writer.WriteLine($"{timestamp}[{lvl}] {source}: {message}");
+            _writer.WriteLine($"{timestamp}[{lvl}] {source.Name}{category}: {message}");
         }
     }
 }

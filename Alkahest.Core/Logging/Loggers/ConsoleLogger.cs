@@ -27,8 +27,8 @@ namespace Alkahest.Core.Logging.Loggers
             _debugColor = debugColor;
         }
 
-        public void Log(LogLevel level, string timestamp,
-            string source, string message)
+        public void Log(LogLevel level, string timestamp, Type source,
+            string category, string message)
         {
             ConsoleColor color;
             string lvl;
@@ -56,9 +56,10 @@ namespace Alkahest.Core.Logging.Loggers
             }
 
             timestamp = timestamp != string.Empty ? $"[{timestamp}] " : string.Empty;
+            category = category != null ? $" ({category})" : string.Empty;
 
             Console.ForegroundColor = color;
-            Console.WriteLine($"{timestamp}[{lvl}] {source}: {message}");
+            Console.WriteLine($"{timestamp}[{lvl}] {source.Name}{category}: {message}");
             Console.ResetColor();
         }
     }

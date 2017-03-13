@@ -15,37 +15,46 @@ namespace Alkahest.Core.Logging
 
         static readonly object _lock = new object();
 
-        readonly string _source;
+        readonly Type _source;
+
+        readonly string _category;
 
         public Log(Type source)
+            : this(source, null)
         {
-            _source = source.Name;
+        }
+
+        public Log(Type source, string category)
+        {
+            _source = source;
+            _category = category;
         }
 
         public void Error(string format, params object[] args)
         {
-            LogMessage(LogLevel.Error, _source, format, args);
+            LogMessage(LogLevel.Error, _source, _category, format, args);
         }
 
         public void Basic(string format, params object[] args)
         {
-            LogMessage(LogLevel.Basic, _source, format, args);
+            LogMessage(LogLevel.Basic, _source, _category, format, args);
         }
 
         public void Info(string format, params object[] args)
         {
-            LogMessage(LogLevel.Info, _source, format, args);
+            LogMessage(LogLevel.Info, _source, _category, format, args);
         }
 
         public void Debug(string format, params object[] args)
         {
-            LogMessage(LogLevel.Debug, _source, format, args);
+            LogMessage(LogLevel.Debug, _source, _category, format, args);
         }
 
-        static void LogMessage(LogLevel level, string source,
+        static void LogMessage(LogLevel level, Type source, string category,
             string format, params object[] args)
         {
-            if (level > Level || (level != LogLevel.Error && DiscardSources.Contains(source)))
+            if (level > Level || (level != LogLevel.Error &&
+                DiscardSources.Contains(source.Name)))
                 return;
 
             var msg = args.Length != 0 ? string.Format(format, args) : format;
@@ -54,7 +63,7 @@ namespace Alkahest.Core.Logging
 
             lock (_lock)
                 foreach (var logger in Loggers)
-                    logger.Log(level, stamp, source, msg);
+                    logger.Log(level, stamp, source, category, msg);
         }
     }
 }
