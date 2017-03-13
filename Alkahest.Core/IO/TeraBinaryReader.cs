@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -16,6 +17,10 @@ namespace Alkahest.Core.IO
             set { BaseStream.Position = value; }
         }
 
+        public int Length => (int)BaseStream.Length;
+
+        public bool EndOfStream => Position == Length;
+
         public TeraBinaryReader(byte[] data)
             : base(new MemoryStream(data, false), Encoding)
         {
@@ -23,16 +28,16 @@ namespace Alkahest.Core.IO
 
         public new string ReadString()
         {
-            var sb = new StringBuilder();
+            var list = new List<char>();
 
             while (true)
             {
-                var ch = ReadChar();
+                var ch = (char)ReadUInt16();
 
                 if (ch == char.MinValue)
-                    return sb.ToString();
+                    return new string(list.ToArray());
 
-                sb.Append(ch);
+                list.Add(ch);
             }
         }
 
@@ -56,6 +61,11 @@ namespace Alkahest.Core.IO
                 action(r, op);
                 return (object)null;
             });
+        }
+
+        public bool CanRead(int size)
+        {
+            return Length - Position >= size;
         }
     }
 }

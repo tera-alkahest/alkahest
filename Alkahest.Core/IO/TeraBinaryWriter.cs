@@ -17,6 +17,10 @@ namespace Alkahest.Core.IO
             set { BaseStream.Position = value; }
         }
 
+        public int Length => (int)BaseStream.Length;
+
+        public bool EndOfStream => Position == Length;
+
         public TeraBinaryWriter()
             : base(new MemoryStream(PacketHeader.MaxPayloadSize), Encoding)
         {
@@ -29,9 +33,7 @@ namespace Alkahest.Core.IO
 
         public new void Write(string value)
         {
-            foreach (var ch in value)
-                Write(ch);
-
+            Write(value.ToCharArray());
             Write(char.MinValue);
         }
 
@@ -55,6 +57,11 @@ namespace Alkahest.Core.IO
                 action(w, op);
                 return (object)null;
             });
+        }
+
+        public bool CanWrite(int size)
+        {
+            return Length - Position >= size;
         }
     }
 }
