@@ -5,28 +5,92 @@ using System.Text;
 
 namespace Alkahest.Core.IO
 {
-    public class TeraBinaryReader : BinaryReader
+    public sealed class TeraBinaryReader : IDisposable
     {
         public static Encoding Encoding { get; } = Encoding.Unicode;
 
-        public new MemoryStream BaseStream => (MemoryStream)base.BaseStream;
+        public MemoryStream Stream => (MemoryStream)_reader.BaseStream;
 
         public int Position
         {
-            get { return (int)BaseStream.Position; }
-            set { BaseStream.Position = value; }
+            get { return (int)Stream.Position; }
+            set { Stream.Position = value; }
         }
 
-        public int Length => (int)BaseStream.Length;
+        public int Length => (int)Stream.Length;
 
         public bool EndOfStream => Position == Length;
 
+        readonly BinaryReader _reader;
+
+        bool _disposed;
+
         public TeraBinaryReader(byte[] data)
-            : base(new MemoryStream(data, false), Encoding)
         {
+            _reader = new BinaryReader(new MemoryStream(data, false), Encoding);
         }
 
-        public new string ReadString()
+        public void Dispose()
+        {
+            if (_disposed)
+                return;
+
+            _disposed = true;
+
+            _reader.Dispose();
+        }
+
+        public byte ReadByte()
+        {
+            return _reader.ReadByte();
+        }
+
+        public sbyte ReadSByte()
+        {
+            return _reader.ReadSByte();
+        }
+
+        public ushort ReadUInt16()
+        {
+            return _reader.ReadUInt16();
+        }
+
+        public short ReadInt16()
+        {
+            return _reader.ReadInt16();
+        }
+
+        public uint ReadUInt32()
+        {
+            return _reader.ReadUInt32();
+        }
+
+        public int ReadInt32()
+        {
+            return _reader.ReadInt32();
+        }
+
+        public ulong ReadUInt64()
+        {
+            return _reader.ReadUInt64();
+        }
+
+        public long ReadInt64()
+        {
+            return _reader.ReadInt64();
+        }
+
+        public float ReadSingle()
+        {
+            return _reader.ReadSingle();
+        }
+
+        public bool ReadBoolean()
+        {
+            return _reader.ReadBoolean();
+        }
+
+        public string ReadString()
         {
             var list = new List<char>();
 
@@ -59,6 +123,7 @@ namespace Alkahest.Core.IO
             Seek(position, (r, op) =>
             {
                 action(r, op);
+
                 return (object)null;
             });
         }

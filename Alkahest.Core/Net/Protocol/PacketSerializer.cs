@@ -192,7 +192,7 @@ namespace Alkahest.Core.Net.Protocol
             {
                 SerializeObject(writer, packet);
 
-                return writer.BaseStream.ToArray();
+                return writer.Stream.ToArray();
             }
         }
 
@@ -210,7 +210,7 @@ namespace Alkahest.Core.Net.Protocol
                     offsets.Add(info.Property.Name, writer.Position);
 
                 if (info.IsCount || info.IsOffset)
-                    writer.Write((ushort)0);
+                    writer.WriteUInt16(0);
                 else
                     SerializePrimitive(writer, info.Property.GetValue(source));
             }
@@ -222,12 +222,13 @@ namespace Alkahest.Core.Net.Protocol
                 var noOffset = array != null && array.Length == 0;
 
                 writer.Seek(offsets[info.Property.Name + OffsetNameSuffix],
-                    (w, op) => w.Write((ushort)(noOffset ? 0 : op + PacketHeader.HeaderSize)));
+                    (w, op) => w.WriteUInt16((ushort)(noOffset ?
+                        0 : op + PacketHeader.HeaderSize)));
 
                 if (type.IsArray)
                 {
                     writer.Seek(counts[info.Property.Name + CountNameSuffix],
-                        (w, op) => w.Write((ushort)array.Length));
+                        (w, op) => w.WriteUInt16((ushort)array.Length));
 
                     var elemType = type.GetElementType();
 
@@ -242,13 +243,13 @@ namespace Alkahest.Core.Net.Protocol
 
                         if (!IsByte(elemType))
                         {
-                            writer.Write((ushort)(writer.Position +
+                            writer.WriteUInt16((ushort)(writer.Position +
                                 PacketHeader.HeaderSize));
 
                             if (!isLast)
                                 markers.Push(writer.Position);
 
-                            writer.Write((ushort)0);
+                            writer.WriteUInt16(0);
                         }
 
                         var value = array.GetValue(i);
@@ -270,12 +271,13 @@ namespace Alkahest.Core.Net.Protocol
                             var nextPos = markers.Pop();
 
                             writer.Seek(nextPos, (w, op) =>
-                                w.Write((ushort)(afterElemPos + PacketHeader.HeaderSize)));
+                                w.WriteUInt16((ushort)(afterElemPos +
+                                    PacketHeader.HeaderSize)));
                         }
                     }
                 }
                 else
-                    writer.Write((string)info.Property.GetValue(source));
+                    writer.WriteString((string)info.Property.GetValue(source));
             }
         }
 
@@ -287,25 +289,25 @@ namespace Alkahest.Core.Net.Protocol
                 type = type.GetEnumUnderlyingType();
 
             if (type == typeof(bool))
-                writer.Write((bool)value);
+                writer.WriteBoolean((bool)value);
             else if (type == typeof(byte))
-                writer.Write((byte)value);
+                writer.WriteByte((byte)value);
             else if (type == typeof(sbyte))
-                writer.Write((sbyte)value);
+                writer.WriteSByte((sbyte)value);
             else if (type == typeof(ushort))
-                writer.Write((ushort)value);
+                writer.WriteUInt16((ushort)value);
             else if (type == typeof(short))
-                writer.Write((short)value);
+                writer.WriteInt16((short)value);
             else if (type == typeof(uint))
-                writer.Write((uint)value);
+                writer.WriteUInt32((uint)value);
             else if (type == typeof(int))
-                writer.Write((int)value);
+                writer.WriteInt32((int)value);
             else if (type == typeof(ulong))
-                writer.Write((ulong)value);
+                writer.WriteUInt64((ulong)value);
             else if (type == typeof(long))
-                writer.Write((long)value);
+                writer.WriteInt64((long)value);
             else if (type == typeof(float))
-                writer.Write((float)value);
+                writer.WriteSingle((float)value);
         }
 
         static bool IsByte(Type type)

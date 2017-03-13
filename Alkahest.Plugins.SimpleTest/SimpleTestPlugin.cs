@@ -94,13 +94,14 @@ namespace Alkahest.Plugins.SimpleTest
 
             using (var writer = new TeraBinaryWriter())
             {
-                writer.Write((ushort)(PacketHeader.HeaderSize + sizeof(ushort) * 2));
-                writer.Write(ChatChannelPassword);
-                writer.Write(ChatChannelName);
+                writer.WriteUInt16((ushort)(PacketHeader.HeaderSize +
+                    sizeof(ushort) * 2));
+                writer.WriteUInt16(ChatChannelPassword);
+                writer.WriteString(ChatChannelName);
 
                 client.SendToServer(new RawPacket("C_JOIN_PRIVATE_CHANNEL")
                 {
-                    Payload = writer.BaseStream.ToArray()
+                    Payload = writer.Stream.ToArray()
                 });
             }
 

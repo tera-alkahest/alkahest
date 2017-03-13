@@ -100,7 +100,8 @@ namespace Alkahest.Core.Net.Protocol
         {
             using (var reader = new TeraBinaryReader(buffer))
             {
-                var length = (ushort)(reader.ReadUInt16() - PacketHeader.HeaderSize);
+                var length = (ushort)(reader.ReadUInt16() -
+                    PacketHeader.HeaderSize);
                 var opCode = reader.ReadUInt16();
 
                 return new PacketHeader(length, opCode);
@@ -111,8 +112,9 @@ namespace Alkahest.Core.Net.Protocol
         {
             using (var writer = new TeraBinaryWriter(buffer))
             {
-                writer.Write((ushort)(header.Length + PacketHeader.HeaderSize));
-                writer.Write(header.OpCode);
+                writer.WriteUInt16((ushort)(header.Length +
+                    PacketHeader.HeaderSize));
+                writer.WriteUInt16(header.OpCode);
             }
         }
 

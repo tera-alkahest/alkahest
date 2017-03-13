@@ -5,36 +5,101 @@ using Alkahest.Core.Net.Protocol;
 
 namespace Alkahest.Core.IO
 {
-    public class TeraBinaryWriter : BinaryWriter
+    public sealed class TeraBinaryWriter : IDisposable
     {
         public static Encoding Encoding { get; } = Encoding.Unicode;
 
-        public new MemoryStream BaseStream => (MemoryStream)base.BaseStream;
+        public MemoryStream Stream => (MemoryStream)_writer.BaseStream;
 
         public int Position
         {
-            get { return (int)BaseStream.Position; }
-            set { BaseStream.Position = value; }
+            get { return (int)Stream.Position; }
+            set { Stream.Position = value; }
         }
 
-        public int Length => (int)BaseStream.Length;
+        public int Length => (int)Stream.Length;
 
         public bool EndOfStream => Position == Length;
 
+        readonly BinaryWriter _writer;
+
+        bool _disposed;
+
         public TeraBinaryWriter()
-            : base(new MemoryStream(PacketHeader.MaxPayloadSize), Encoding)
         {
+            _writer = new BinaryWriter(
+                new MemoryStream(PacketHeader.MaxPayloadSize), Encoding);
         }
 
         public TeraBinaryWriter(byte[] buffer)
-            : base(new MemoryStream(buffer), Encoding)
         {
+            _writer = new BinaryWriter(new MemoryStream(buffer), Encoding);
         }
 
-        public new void Write(string value)
+        public void Dispose()
         {
-            Write(value.ToCharArray());
-            Write(char.MinValue);
+            if (_disposed)
+                return;
+
+            _disposed = true;
+
+            _writer.Dispose();
+        }
+
+        public void WriteByte(byte value)
+        {
+            _writer.Write(value);
+        }
+
+        public void WriteSByte(sbyte value)
+        {
+            _writer.Write(value);
+        }
+
+        public void WriteUInt16(ushort value)
+        {
+            _writer.Write(value);
+        }
+
+        public void WriteInt16(short value)
+        {
+            _writer.Write(value);
+        }
+
+        public void WriteUInt32(uint value)
+        {
+            _writer.Write(value);
+        }
+
+        public void WriteInt32(int value)
+        {
+            _writer.Write(value);
+        }
+
+        public void WriteUInt64(ulong value)
+        {
+            _writer.Write(value);
+        }
+
+        public void WriteInt64(long value)
+        {
+            _writer.Write(value);
+        }
+
+        public void WriteSingle(float value)
+        {
+            _writer.Write(value);
+        }
+
+        public void WriteBoolean(bool value)
+        {
+            _writer.Write(value);
+        }
+
+        public void WriteString(string value)
+        {
+            _writer.Write(value.ToCharArray());
+            _writer.Write(char.MinValue);
         }
 
         public T Seek<T>(int position, Func<TeraBinaryWriter, int, T> func)
@@ -55,6 +120,7 @@ namespace Alkahest.Core.IO
             Seek(position, (w, op) =>
             {
                 action(w, op);
+
                 return (object)null;
             });
         }
