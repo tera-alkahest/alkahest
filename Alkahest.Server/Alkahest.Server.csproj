@@ -68,6 +68,11 @@
       <Name>Alkahest.Plugins.Overlay</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\Alkahest.Plugins.Python\Alkahest.Plugins.Python.csproj">
+      <Project>{92CD0899-A58E-4196-BD8D-4B96CB12A384}</Project>
+      <Name>Alkahest.Plugins.Python</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
     <ProjectReference Include="..\Alkahest.Plugins.SimpleTest\Alkahest.Plugins.SimpleTest.csproj">
       <Project>{f85463d3-9795-4c7d-a041-3baa652d0bb5}</Project>
       <Name>Alkahest.Plugins.SimpleTest</Name>
