@@ -209,20 +209,23 @@ namespace Alkahest.Core.Net.Protocol
                 else if (info.IsOffset)
                     offsets.Add(info.Property.Name, writer.Position);
 
-                SerializePrimitive(writer, info.Property.GetValue(source));
+                if (info.IsCount || info.IsOffset)
+                    writer.Write((ushort)0);
+                else
+                    SerializePrimitive(writer, info.Property.GetValue(source));
             }
 
             foreach (var info in fields.Where(x => !x.IsPrimitive))
             {
                 var type = info.Property.PropertyType;
+                var array = info.Property.GetValue(source) as Array;
+                var noOffset = array != null && array.Length == 0;
 
                 writer.Seek(offsets[info.Property.Name + OffsetNameSuffix],
-                    (w, op) => w.Write((ushort)(op + PacketHeader.HeaderSize)));
+                    (w, op) => w.Write((ushort)(noOffset ? 0 : op + PacketHeader.HeaderSize)));
 
                 if (type.IsArray)
                 {
-                    var array = (Array)info.Property.GetValue(source);
-
                     writer.Seek(counts[info.Property.Name + CountNameSuffix],
                         (w, op) => w.Write((ushort)array.Length));
 
