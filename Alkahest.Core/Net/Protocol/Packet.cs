@@ -26,13 +26,13 @@ namespace Alkahest.Core.Net.Protocol
         {
             var sb = new StringBuilder();
 
-            ToString(sb, this, null, string.Empty);
+            ToString(sb, this, null, string.Empty, 0);
 
-            return sb.ToString().Trim();
+            return sb.ToString();
         }
 
         static void ToString(StringBuilder builder, object source,
-            string header, string indent)
+            string header, string indent, int level)
         {
             var type = source.GetType();
 
@@ -67,10 +67,8 @@ namespace Alkahest.Core.Net.Protocol
 
                         if (elemType.IsPrimitive)
                             builder.AppendLine($"{elemIndent}{idx} {elem}");
-                        else if (elemType == typeof(string))
-                            builder.AppendLine($"{elemIndent}{idx} \"{elem}\"");
                         else
-                            ToString(builder, elem, idx, elemIndent);
+                            ToString(builder, elem, idx, elemIndent, level + 1);
                     }
 
                     builder.AppendLine($"{indent}  }}");
@@ -81,7 +79,12 @@ namespace Alkahest.Core.Net.Protocol
                     builder.AppendLine($"{indent}  {name} = \"{value}\"");
             }
 
-            builder.AppendLine($"{indent}}}");
+            var end = $"{indent}}}";
+
+            if (level == 0)
+                builder.Append(end);
+            else
+                builder.AppendLine(end);
         }
     }
 }
