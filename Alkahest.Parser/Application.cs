@@ -14,20 +14,17 @@ namespace Alkahest.Parser
 {
     static class Application
     {
-        public static string Name { get; }
+        public static string Name { get; } =
+            $"{nameof(Alkahest)} {nameof(Parser)}";
 
         static readonly Log _log = new Log(typeof(Application));
-
-        static Application()
-        {
-            Name = $"{nameof(Alkahest)} {nameof(Parser)}";
-        }
 
         public static int Run(string[] args)
         {
             Assert.Enabled = true;
 
             Log.Level = LogLevel.Info;
+            Log.TimestampFormat = "HH:mm:ss:fff";
 
             var color = Console.ForegroundColor;
 
@@ -47,54 +44,60 @@ namespace Alkahest.Parser
             var resultName = args.Length >= 2 ?
                 args[1] : Path.ChangeExtension(inputName, "txt");
 
-            _log.Basic("Parsing {0} to {1}", inputName, resultName);
+            _log.Basic("Parsing {0} to {1}...", inputName, resultName);
 
             var reader = new PacketLogReader(inputName);
             var serializer = new PacketSerializer(
                 new OpCodeTable(true, reader.Region),
                 new OpCodeTable(false, reader.Region));
-            var result = new StreamWriter(new FileStream(resultName,
-                FileMode.Create, FileAccess.Write));
             var count = 0;
+            var known = 0;
 
             PacketLogEntry entry;
 
-            while ((entry = reader.Read()) != null)
+            using (var result = new StreamWriter(new FileStream(resultName,
+                FileMode.Create, FileAccess.Write)))
             {
-                result.WriteLine("[{0}] {1} {2}: {3} ({4} bytes)",
-                    entry.Timestamp.ToLocalTime(), entry.ServerName,
-                    entry.Direction.ToDirectionString(),
-                    serializer.GameMessages.OpCodeToName[entry.OpCode],
-                    entry.Payload.Count);
-
-                var raw = new RawPacket(
-                    serializer.GameMessages.OpCodeToName[entry.OpCode])
+                while ((entry = reader.Read()) != null)
                 {
-                    Payload = entry.Payload.ToArray()
-                };
+                    count++;
 
-                if (raw.Payload.Length != 0)
-                {
+                    result.WriteLine("[{0}:yyyy-MM-dd HH:mm:ss:fff] {1} {2}: {3} ({4} bytes)",
+                        entry.Timestamp.ToLocalTime(), entry.ServerName,
+                        entry.Direction.ToDirectionString(),
+                        serializer.GameMessages.OpCodeToName[entry.OpCode],
+                        entry.Payload.Count);
+
+                    var raw = new RawPacket(
+                        serializer.GameMessages.OpCodeToName[entry.OpCode])
+                    {
+                        Payload = entry.Payload.ToArray()
+                    };
+
+                    if (raw.Payload.Length != 0)
+                    {
+                        result.WriteLine();
+                        result.WriteLine(raw);
+                    }
+
+                    var parsed = serializer.Create(entry.OpCode);
+
+                    if (parsed != null)
+                    {
+                        known++;
+
+                        serializer.Deserialize(raw.Payload, parsed);
+
+                        result.WriteLine();
+                        result.WriteLine(parsed);
+                    }
+
                     result.WriteLine();
-                    result.WriteLine(raw);
                 }
-
-                var parsed = serializer.Create(entry.OpCode);
-
-                if (parsed != null)
-                {
-                    serializer.Deserialize(raw.Payload, parsed);
-
-                    result.WriteLine();
-                    result.WriteLine(parsed);
-                }
-
-                result.WriteLine();
-
-                count++;
             }
 
-            _log.Basic("Parsed {0} packets", count);
+            _log.Basic("Parsed {0} packets ({1:P2} with known structure)",
+                count, (double)known / count);
 
             return 0;
         }

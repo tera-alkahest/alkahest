@@ -18,17 +18,13 @@ namespace Alkahest.Server
 {
     static class Application
     {
-        public static string Name { get; }
+        public static string Name { get; } =
+            $"{nameof(Alkahest)} {nameof(Server)}";
 
         static readonly ManualResetEventSlim _event =
             new ManualResetEventSlim();
 
         static readonly Log _log = new Log(typeof(Application));
-
-        static Application()
-        {
-            Name = $"{nameof(Alkahest)} {nameof(Server)}";
-        }
 
         public static int Run(string[] args)
         {
