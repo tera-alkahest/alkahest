@@ -18,7 +18,7 @@ namespace Alkahest.Core.Data
 
         public override bool Equals(object obj)
         {
-            return obj is EntityId ? Equals((EntityId)obj) : false;
+            return obj is EntityId e ? Equals(e) : false;
         }
 
         public override int GetHashCode()
@@ -28,7 +28,7 @@ namespace Alkahest.Core.Data
 
         public override string ToString()
         {
-            return Raw.ToString("X8");
+            return Raw.ToString("X16");
         }
 
         public static bool operator ==(EntityId a, EntityId b)

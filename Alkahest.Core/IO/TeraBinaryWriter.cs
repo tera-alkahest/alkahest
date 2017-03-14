@@ -116,6 +116,16 @@ namespace Alkahest.Core.IO
             _writer.Write(value.Raw);
         }
 
+        public void WriteSkillId(SkillId value)
+        {
+            _writer.Write(value.Raw);
+        }
+
+        public void WriteAngle(Angle value)
+        {
+            _writer.Write(value.Raw);
+        }
+
         public T Seek<T>(int position, Func<TeraBinaryWriter, int, T> func)
         {
             var pos = Position;

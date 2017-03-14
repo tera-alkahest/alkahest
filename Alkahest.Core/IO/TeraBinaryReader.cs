@@ -118,6 +118,16 @@ namespace Alkahest.Core.IO
             return new EntityId(_reader.ReadUInt64());
         }
 
+        public SkillId ReadSkillId()
+        {
+            return new SkillId(_reader.ReadUInt32());
+        }
+
+        public Angle ReadAngle()
+        {
+            return new Angle(_reader.ReadInt16());
+        }
+
         public T Seek<T>(int position, Func<TeraBinaryReader, int, T> func)
         {
             var pos = Position;

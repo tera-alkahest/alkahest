@@ -185,6 +185,10 @@ namespace Alkahest.Core.Net.Protocol
                 value = reader.ReadVector3();
             else if (type == typeof(EntityId))
                 value = reader.ReadEntityId();
+            else if (type == typeof(SkillId))
+                value = reader.ReadSkillId();
+            else if (type == typeof(Angle))
+                value = reader.ReadAngle();
             else
                 throw Assert.Unreachable();
 
@@ -320,6 +324,10 @@ namespace Alkahest.Core.Net.Protocol
                 writer.WriteVector3((Vector3)value);
             else if (type == typeof(EntityId))
                 writer.WriteEntityId((EntityId)value);
+            else if (type == typeof(SkillId))
+                writer.WriteSkillId((SkillId)value);
+            else if (type == typeof(Angle))
+                writer.WriteAngle((Angle)value);
             else
                 Assert.Unreachable();
         }

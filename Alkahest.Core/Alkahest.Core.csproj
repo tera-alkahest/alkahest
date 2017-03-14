@@ -34,7 +34,10 @@
     </Compile>
     <Compile Include="Assert.cs" />
     <Compile Include="Bits.cs" />
+    <Compile Include="Data\Angle.cs" />
     <Compile Include="Data\EntityId.cs" />
+    <Compile Include="Data\SkillFlags.cs" />
+    <Compile Include="Data\SkillId.cs" />
     <Compile Include="Net\Protocol\Logging\PacketLogEntry.cs" />
     <Compile Include="Net\Protocol\Logging\PacketLogReader.cs" />
     <Compile Include="Net\Protocol\Logging\PacketLogWriter.cs" />
