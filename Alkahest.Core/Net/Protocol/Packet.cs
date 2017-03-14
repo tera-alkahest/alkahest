@@ -73,10 +73,10 @@ namespace Alkahest.Core.Net.Protocol
 
                     builder.AppendLine($"{indent}  }}");
                 }
-                else if (propType.IsPrimitive)
-                    builder.AppendLine($"{indent}  {name} = {value}");
-                else
+                else if (propType == typeof(string))
                     builder.AppendLine($"{indent}  {name} = \"{value}\"");
+                else
+                    builder.AppendLine($"{indent}  {name} = {value}");
             }
 
             var end = $"{indent}}}";
