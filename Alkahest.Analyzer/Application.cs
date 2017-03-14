@@ -90,7 +90,7 @@ namespace Alkahest.Analyzer
                     var entry = tup.Item1;
                     var raw = tup.Item2;
 
-                    result.WriteLine("[{0}:yyyy-MM-dd HH:mm:ss:fff] {1} {2}: {3} ({4} bytes)",
+                    result.WriteLine("[{0:yyyy-MM-dd HH:mm:ss:fff}] {1} {2}: {3} ({4} bytes)",
                         entry.Timestamp.ToLocalTime(), entry.ServerName,
                         entry.Direction.ToDirectionString(),
                         serializer.GameMessages.OpCodeToName[entry.OpCode],
