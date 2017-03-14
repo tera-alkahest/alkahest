@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Numerics;
 using System.Text;
+using Alkahest.Core.Data;
 
 namespace Alkahest.Core.IO
 {
@@ -96,13 +98,24 @@ namespace Alkahest.Core.IO
 
             while (true)
             {
-                var ch = (char)ReadUInt16();
+                var ch = (char)_reader.ReadUInt16();
 
                 if (ch == char.MinValue)
                     return new string(list.ToArray());
 
                 list.Add(ch);
             }
+        }
+
+        public Vector3 ReadVector3()
+        {
+            return new Vector3(_reader.ReadSingle(), _reader.ReadSingle(),
+                _reader.ReadSingle());
+        }
+
+        public EntityId ReadEntityId()
+        {
+            return new EntityId(_reader.ReadUInt64());
         }
 
         public T Seek<T>(int position, Func<TeraBinaryReader, int, T> func)

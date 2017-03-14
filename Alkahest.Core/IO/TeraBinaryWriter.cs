@@ -1,6 +1,8 @@
 using System;
 using System.IO;
+using System.Numerics;
 using System.Text;
+using Alkahest.Core.Data;
 using Alkahest.Core.Net.Protocol;
 
 namespace Alkahest.Core.IO
@@ -100,6 +102,18 @@ namespace Alkahest.Core.IO
         {
             _writer.Write(value.ToCharArray());
             _writer.Write(char.MinValue);
+        }
+
+        public void WriteVector3(Vector3 value)
+        {
+            _writer.Write(value.X);
+            _writer.Write(value.Y);
+            _writer.Write(value.Z);
+        }
+
+        public void WriteEntityId(EntityId value)
+        {
+            _writer.Write(value.Raw);
         }
 
         public T Seek<T>(int position, Func<TeraBinaryWriter, int, T> func)

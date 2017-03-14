@@ -3,7 +3,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel.Composition.Hosting;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
+using Alkahest.Core.Data;
 using Alkahest.Core.IO;
 
 namespace Alkahest.Core.Net.Protocol
@@ -28,12 +30,11 @@ namespace Alkahest.Core.Net.Protocol
 
             public PropertyInfo OffsetField { get; }
 
-            public bool IsPrimitive => !Property.PropertyType.IsArray &&
-                Property.PropertyType != typeof(string);
+            public bool IsPrimitive { get; }
 
-            public bool IsCount => Property.Name.EndsWith(CountNameSuffix);
+            public bool IsCount { get; }
 
-            public bool IsOffset => Property.Name.EndsWith(OffsetNameSuffix);
+            public bool IsOffset { get; }
 
             public PacketFieldInfo(PropertyInfo property,
                 PropertyInfo countField, PropertyInfo offsetField)
@@ -41,6 +42,10 @@ namespace Alkahest.Core.Net.Protocol
                 Property = property;
                 CountField = countField;
                 OffsetField = offsetField;
+                IsPrimitive = !property.PropertyType.IsArray &&
+                    property.PropertyType != typeof(string);
+                IsCount = property.Name.EndsWith(CountNameSuffix);
+                IsOffset = property.Name.EndsWith(OffsetNameSuffix);
             }
         }
 
@@ -178,6 +183,10 @@ namespace Alkahest.Core.Net.Protocol
                 value = reader.ReadInt64();
             else if (type == typeof(float))
                 value = reader.ReadSingle();
+            else if (type == typeof(Vector3))
+                value = reader.ReadVector3();
+            else if (type == typeof(EntityId))
+                value = reader.ReadEntityId();
             else
                 throw Assert.Unreachable();
 
@@ -218,7 +227,8 @@ namespace Alkahest.Core.Net.Protocol
             foreach (var info in fields.Where(x => !x.IsPrimitive))
             {
                 var type = info.Property.PropertyType;
-                var array = info.Property.GetValue(source) as Array;
+                var value = info.Property.GetValue(source);
+                var array = value as Array;
                 var noOffset = array != null && array.Length == 0;
 
                 writer.Seek(offsets[info.Property.Name + OffsetNameSuffix],
@@ -252,12 +262,12 @@ namespace Alkahest.Core.Net.Protocol
                             writer.WriteUInt16(0);
                         }
 
-                        var value = array.GetValue(i);
+                        var elem = array.GetValue(i);
 
                         if (elemType.IsPrimitive)
-                            SerializePrimitive(writer, value);
+                            SerializePrimitive(writer, elem);
                         else
-                            SerializeObject(writer, value);
+                            SerializeObject(writer, elem);
 
                         if (!IsByte(elemType) && !isLast)
                             markers.Push(writer.Position);
@@ -277,7 +287,7 @@ namespace Alkahest.Core.Net.Protocol
                     }
                 }
                 else
-                    writer.WriteString((string)info.Property.GetValue(source));
+                    writer.WriteString((string)value);
             }
         }
 
@@ -308,6 +318,12 @@ namespace Alkahest.Core.Net.Protocol
                 writer.WriteInt64((long)value);
             else if (type == typeof(float))
                 writer.WriteSingle((float)value);
+            else if (type == typeof(Vector3))
+                writer.WriteVector3((Vector3)value);
+            else if (type == typeof(EntityId))
+                writer.WriteEntityId((EntityId)value);
+            else
+                Assert.Unreachable();
         }
 
         static bool IsByte(Type type)
