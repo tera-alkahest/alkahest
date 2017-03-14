@@ -33,6 +33,7 @@
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="Assert.cs" />
+    <Compile Include="Bits.cs" />
     <Compile Include="Data\EntityId.cs" />
     <Compile Include="Net\Protocol\Logging\PacketLogEntry.cs" />
     <Compile Include="Net\Protocol\Logging\PacketLogReader.cs" />
