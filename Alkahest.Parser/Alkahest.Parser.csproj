@@ -25,7 +25,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <LangVersion>6</LangVersion>
+    <LangVersion>7</LangVersion>
     <StartupObject>Alkahest.Parser.Program</StartupObject>
     <ApplicationIcon>..\Alkahest.ico</ApplicationIcon>
     <SignAssembly>true</SignAssembly>
