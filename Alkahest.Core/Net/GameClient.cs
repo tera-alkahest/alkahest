@@ -304,7 +304,7 @@ namespace Alkahest.Core.Net
             var toServer = to == _serverSocket;
             var fromServer = to == _serverSocket;
 
-            Func<bool> receive = () =>
+            bool DoReceive()
             {
                 try
                 {
@@ -336,7 +336,7 @@ namespace Alkahest.Core.Net
                 }
 
                 return true;
-            };
+            }
 
             // If we don't expect a large number of clients, just use dedicated
             // tasks to receive data instead of spawning a new one per receive.
@@ -344,7 +344,7 @@ namespace Alkahest.Core.Net
             {
                 Task.Factory.StartNew(() =>
                 {
-                    while (receive())
+                    while (DoReceive())
                     {
                     }
                 }, TaskCreationOptions.LongRunning);
@@ -353,7 +353,7 @@ namespace Alkahest.Core.Net
             {
                 Task.Run(() =>
                 {
-                    receive();
+                    DoReceive();
 
                     Receive(direction, headerBuffer, payloadBuffer);
                 });
