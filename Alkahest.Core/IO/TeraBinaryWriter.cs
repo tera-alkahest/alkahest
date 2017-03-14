@@ -15,8 +15,8 @@ namespace Alkahest.Core.IO
 
         public int Position
         {
-            get { return (int)Stream.Position; }
-            set { Stream.Position = value; }
+            get => (int)Stream.Position;
+            set => Stream.Position = value;
         }
 
         public int Length => (int)Stream.Length;
