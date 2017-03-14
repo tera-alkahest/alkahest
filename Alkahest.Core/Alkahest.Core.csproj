@@ -54,6 +54,7 @@
     <Compile Include="Net\Protocol\IPacketMetadata.cs" />
     <Compile Include="Net\Protocol\PacketHandler.cs" />
     <Compile Include="Net\Protocol\Packets\CChatPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\CStartSkillPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SSystemMessagePacket.cs" />
     <Compile Include="Plugins\IPlugin.cs" />
     <Compile Include="Plugins\PluginLoader.cs" />
