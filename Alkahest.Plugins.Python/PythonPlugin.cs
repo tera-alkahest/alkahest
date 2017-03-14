@@ -71,16 +71,13 @@ namespace Alkahest.Plugins.Python
                 }
                 catch (Exception e)
                 {
-                    var syn = e as SyntaxErrorException;
-
-                    if (syn != null)
+                    if (e is SyntaxErrorException syn)
                     {
                         _log.Error("Syntax error in package {0}:", name);
                         _log.Error("{0} ({1}, {2}): {3}", syn.SourcePath,
                             syn.Line, syn.Column, syn.Message);
                     }
-                    else
-                    {
+                    else {
                         _log.Error("Failed to initialize package {0}:", name);
                         _log.Error(e.ToString());
                     }

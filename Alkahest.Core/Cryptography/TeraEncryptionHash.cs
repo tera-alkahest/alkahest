@@ -72,11 +72,11 @@ namespace Alkahest.Core.Cryptography
                 for (var t = 16; t < 80; t++)
                     w[t] = w[t - 3] ^ w[t - 8] ^ w[t - 14] ^ w[t - 16];
 
-                uint a = _messageDigest[0];
-                uint b = _messageDigest[1];
-                uint c = _messageDigest[2];
-                uint d = _messageDigest[3];
-                uint e = _messageDigest[4];
+                var a = _messageDigest[0];
+                var b = _messageDigest[1];
+                var c = _messageDigest[2];
+                var d = _messageDigest[3];
+                var e = _messageDigest[4];
 
                 for (var t = 0; t < 80; t++)
                 {

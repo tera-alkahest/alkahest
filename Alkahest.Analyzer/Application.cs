@@ -52,9 +52,7 @@ namespace Alkahest.Analyzer
             var reader = new PacketLogReader(inputName);
             var opc = new OpCodeTable(true, reader.Region);
 
-            ushort opCode;
-
-            if (!opc.NameToOpCode.TryGetValue(opCodeName, out opCode))
+            if (!opc.NameToOpCode.TryGetValue(opCodeName, out var opCode))
             {
                 _log.Error("Invalid opcode {0}", opCodeName);
                 return 1;

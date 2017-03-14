@@ -75,9 +75,7 @@ namespace Alkahest.Core.Net.Protocol
 
         public Packet Create(ushort opCode)
         {
-            Func<Packet> creator;
-
-            _packetCreators.TryGetValue(opCode, out creator);
+            _packetCreators.TryGetValue(opCode, out var creator);
 
             return creator?.Invoke();
         }

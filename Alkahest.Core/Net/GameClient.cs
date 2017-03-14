@@ -367,9 +367,7 @@ namespace Alkahest.Core.Net
 
         void HandleException(Exception exception, bool server)
         {
-            var sockEx = exception as SocketException;
-
-            if (sockEx != null)
+            if (exception is SocketException sockEx)
                 _log.Error("Disconnected {0} socket of client {1} from {2} due to error: {3}",
                     server ? "server" : "client", EndPoint, Proxy.Info.Name,
                     sockEx.SocketErrorCode.ToErrorString());

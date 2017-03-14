@@ -22,9 +22,7 @@ namespace Alkahest.Core
 
         public T Get()
         {
-            T item;
-
-            if (_bag.Count >= _limit || !_bag.TryTake(out item))
+            if (_bag.Count >= _limit || !_bag.TryTake(out var item))
                 item = _creator();
 
             _cleaner?.Invoke(item);

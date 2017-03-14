@@ -4,10 +4,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
     {
         const string Name = "C_CHAT";
 
-        public override string OpCode
-        {
-            get { return Name; }
-        }
+        public override string OpCode => Name;
 
         [Packet(Name)]
         internal static Packet Create()

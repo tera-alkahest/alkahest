@@ -17,15 +17,9 @@ namespace Alkahest.Core.Net
 
         public int Retries { get; }
 
-        public string Host
-        {
-            get { return GetHost(Region); }
-        }
+        public string Host => GetHost(Region);
 
-        public int Port
-        {
-            get { return GetPort(Region); }
-        }
+        public int Port => GetPort(Region);
 
         public ServerListParameters(IPAddress realAddress, IPAddress slsAddress,
             IPAddress gameAddress, Region region, TimeSpan timeout, int retries)
