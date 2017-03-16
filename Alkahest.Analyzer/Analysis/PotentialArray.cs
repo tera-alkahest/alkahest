@@ -36,7 +36,7 @@ namespace Alkahest.Analyzer.Analysis
             sb.AppendLine($"{{");
 
             foreach (var elem in Elements)
-                sb.AppendLine($"    {elem}");
+                sb.AppendLine($"  {elem}");
 
             sb.Append("}");
 
