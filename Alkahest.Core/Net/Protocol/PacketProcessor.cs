@@ -171,7 +171,8 @@ namespace Alkahest.Core.Net.Protocol
                 {
                     try
                     {
-                        send &= handler(client, direction, packet);
+                        lock (handler)
+                            send &= handler(client, direction, packet);
                     }
                     catch (Exception e)
                     {
@@ -202,8 +203,9 @@ namespace Alkahest.Core.Net.Protocol
                 {
                     try
                     {
-                        send &= (bool)handler.DynamicInvoke(client,
-                            direction, packet);
+                        lock (handler)
+                            send &= (bool)handler.DynamicInvoke(client,
+                                direction, packet);
                     }
                     catch (Exception e)
                     {
@@ -219,9 +221,11 @@ namespace Alkahest.Core.Net.Protocol
                 header = new PacketHeader((ushort)payload.Length, header.OpCode);
             }
 
-            LogWriter?.Write(new PacketLogEntry(DateTime.Now,
-                client.Proxy.Info.Name, direction, header.OpCode,
-                payload.Slice(0, header.Length)));
+            if (LogWriter != null)
+                lock (LogWriter)
+                    LogWriter.Write(new PacketLogEntry(DateTime.Now,
+                        client.Proxy.Info.Name, direction, header.OpCode,
+                        payload.Slice(0, header.Length)));
 
             _log.Debug("{0}: {1} ({2} bytes{3})", direction.ToDirectionString(),
                 name, header.Length, send ? string.Empty : ", discarded");
