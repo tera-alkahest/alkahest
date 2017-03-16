@@ -35,6 +35,7 @@
     <Compile Include="Assert.cs" />
     <Compile Include="Bits.cs" />
     <Compile Include="Data\Angle.cs" />
+    <Compile Include="Data\EntityFlags.cs" />
     <Compile Include="Data\EntityId.cs" />
     <Compile Include="Data\SkillFlags.cs" />
     <Compile Include="Data\SkillId.cs" />

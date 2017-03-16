@@ -2,7 +2,7 @@ using System;
 
 namespace Alkahest.Core.Data
 {
-    public struct Angle : IEquatable<Angle>
+    public struct Angle : IEquatable<Angle>, IComparable<Angle>
     {
         public readonly short Raw;
 
@@ -30,6 +30,11 @@ namespace Alkahest.Core.Data
             return Raw == other.Raw;
         }
 
+        public int CompareTo(Angle other)
+        {
+            return Raw.CompareTo(other.Raw);
+        }
+
         public override bool Equals(object obj)
         {
             return obj is Angle a ? Equals(a) : false;
@@ -42,7 +47,7 @@ namespace Alkahest.Core.Data
 
         public override string ToString()
         {
-            return $"[Radians: {Radians}, Degrees: {Degrees}]";
+            return $"[Raw: {Raw}, Radians: {Radians}, Degrees: {Degrees}]";
         }
 
         public static bool operator ==(Angle a, Angle b)
@@ -52,7 +57,27 @@ namespace Alkahest.Core.Data
 
         public static bool operator !=(Angle a, Angle b)
         {
-            return !(a == b);
+            return !a.Equals(b);
+        }
+
+        public static bool operator >(Angle a, Angle b)
+        {
+            return a.CompareTo(b) > 0;
+        }
+
+        public static bool operator <(Angle a, Angle b)
+        {
+            return a.CompareTo(b) < 0;
+        }
+
+        public static bool operator >=(Angle a, Angle b)
+        {
+            return a.CompareTo(b) >= 0;
+        }
+
+        public static bool operator <=(Angle a, Angle b)
+        {
+            return a.CompareTo(b) <= 0;
         }
     }
 }

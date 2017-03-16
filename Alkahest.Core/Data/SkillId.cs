@@ -21,10 +21,16 @@ namespace Alkahest.Core.Data
             Raw = raw;
         }
 
-        public SkillId(uint category, uint level, uint type)
+        public static SkillId FromSkill(uint skill)
         {
-            Raw = Bits.Insert(0, (category * 10000 + level * 100 + type), 0, 23);
-            Raw |= Bits.Insert(0, (uint)SkillFlags.Unknown1, 24, 31);
+            return new SkillId(Bits.Insert(0, skill, 0, 25) |
+                Bits.Insert(0, (uint)SkillFlags.Unknown1, 26, 31));
+        }
+
+        public static SkillId FromValues(uint category, uint level, uint type)
+        {
+            return new SkillId(Bits.Insert(0, (category * 10000 + level * 100 + type), 0, 25) |
+                Bits.Insert(0, (uint)SkillFlags.Unknown1, 26, 31));
         }
 
         public bool Equals(SkillId other)
@@ -44,7 +50,7 @@ namespace Alkahest.Core.Data
 
         public override string ToString()
         {
-            return $"[Skill: {Skill}, Flags: {Flags}]";
+            return $"[Raw: {Raw}, Skill: {Skill}, Flags: {Flags}]";
         }
 
         public static bool operator ==(SkillId a, SkillId b)
@@ -54,7 +60,7 @@ namespace Alkahest.Core.Data
 
         public static bool operator !=(SkillId a, SkillId b)
         {
-            return !(a == b);
+            return !a.Equals(b);
         }
     }
 }

@@ -4,7 +4,15 @@ namespace Alkahest.Core.Data
 {
     public struct EntityId : IEquatable<EntityId>
     {
+        public static readonly EntityId Zero = new EntityId(0);
+
         public readonly ulong Raw;
+
+        public bool IsZero => this == Zero;
+
+        public uint Id => (uint)Bits.Extract(Raw, 0, 31);
+
+        public EntityFlags Flags => (EntityFlags)Bits.Extract(Raw, 32, 63);
 
         public EntityId(ulong raw)
         {
@@ -28,7 +36,7 @@ namespace Alkahest.Core.Data
 
         public override string ToString()
         {
-            return Raw.ToString("X16");
+            return $"[Raw: {Raw:X16}, Id: {Id}, Flags: {Flags}]";
         }
 
         public static bool operator ==(EntityId a, EntityId b)
@@ -38,7 +46,7 @@ namespace Alkahest.Core.Data
 
         public static bool operator !=(EntityId a, EntityId b)
         {
-            return !(a == b);
+            return !a.Equals(b);
         }
     }
 }
