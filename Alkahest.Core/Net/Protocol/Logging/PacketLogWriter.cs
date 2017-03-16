@@ -49,6 +49,8 @@ namespace Alkahest.Core.Net.Protocol.Logging
             _writer.Write(entry.OpCode);
             _writer.Write((ushort)entry.Payload.Count);
             _writer.Write(entry.Payload.ToArray());
+
+            _writer.Flush();
         }
     }
 }
