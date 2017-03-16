@@ -133,6 +133,9 @@ namespace Alkahest.Core.Net.Protocol
 
                 Assert.Check(() => payload2.Length == payload1.Length);
 
+                if (i > 0)
+                    Assert.Check(() => payload2.SequenceEqual(payload1));
+
                 payload = payload2;
             }
         }
