@@ -3,40 +3,40 @@ using Alkahest.Core.Data;
 
 namespace Alkahest.Core.Net.Protocol.Packets
 {
-    public sealed class CStartSkillPacket : Packet
+    public sealed class CPlayerLocationPacket : Packet
     {
-        const string Name = "C_START_SKILL";
+        const string Name = "C_PLAYER_LOCATION";
 
         public override string OpCode => Name;
 
         [Packet(Name)]
         internal static Packet Create()
         {
-            return new CStartSkillPacket();
+            return new CPlayerLocationPacket();
         }
 
         [PacketField]
-        public SkillId Skill { get; set; }
+        public Vector3 Position { get; set; }
 
         [PacketField]
         public Angle Direction { get; set; }
 
         [PacketField]
-        public Vector3 Position1 { get; set; }
+        public ushort Unknown1 { get; set; }
 
         [PacketField]
-        public Vector3 Position2 { get; set; }
+        public Vector3 Destination { get; set; }
 
         [PacketField]
-        public byte Unknown1 { get; set; }
+        public uint Type { get; set; }
+
+        [PacketField]
+        public ushort Speed { get; set; }
 
         [PacketField]
         public byte Unknown2 { get; set; }
 
         [PacketField]
-        public byte Unknown3 { get; set; }
-
-        [PacketField]
-        public EntityId Target { get; set; }
+        public uint Timestamp { get; set; }
     }
 }

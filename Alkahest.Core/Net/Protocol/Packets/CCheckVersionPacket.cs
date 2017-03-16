@@ -13,12 +13,12 @@ namespace Alkahest.Core.Net.Protocol.Packets
         }
 
         [PacketField]
-        internal ushort VersionValuesCount { get; set; }
+        internal ushort VersionsCount { get; set; }
 
         [PacketField]
-        internal ushort VersionValuesOffset { get; set; }
+        internal ushort VersionsOffset { get; set; }
 
-        public sealed class VersionValue
+        public sealed class Version
         {
             [PacketField]
             public uint Index { get; set; }
@@ -28,6 +28,6 @@ namespace Alkahest.Core.Net.Protocol.Packets
         }
 
         [PacketField]
-        public VersionValue[] VersionValues { get; set; }
+        public Version[] Versions { get; set; }
     }
 }

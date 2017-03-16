@@ -66,7 +66,7 @@ namespace Alkahest.Plugins.SimpleTest
         bool HandleCheckVersion(GameClient client, Direction direction,
             CCheckVersionPacket packet)
         {
-            foreach (var ver in packet.VersionValues)
+            foreach (var ver in packet.Versions)
                 _log.Info("Client reported version: {0}", ver.Value);
 
             return true;
@@ -110,7 +110,7 @@ namespace Alkahest.Plugins.SimpleTest
             _log.Info("Setting visibility range for client {0} to {1}",
                 client.EndPoint, VisibilityRange);
 
-            client.SendToServer(new CSetVisibilityRangePacket
+            client.SendToServer(new CSetVisibleRangePacket
             {
                 Range = VisibilityRange
             });
