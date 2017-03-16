@@ -118,34 +118,38 @@ namespace Alkahest.Core.Net.Protocol
                     if (elemType.IsEnum)
                         elemType = elemType.GetEnumUnderlyingType();
 
-                    reader.Seek(offset - PacketHeader.HeaderSize, (r, op) =>
+                    if (offset != 0)
                     {
-                        for (var i = 0; i < count; i++)
+                        reader.Seek(offset - PacketHeader.HeaderSize, (r, op) =>
                         {
-                            var next = 0;
-
-                            if (!IsByte(elemType))
+                            for (var i = 0; i < count; i++)
                             {
-                                reader.ReadUInt16();
-                                next = reader.ReadUInt16();
+                                var next = 0;
+
+                                if (!IsByte(elemType))
+                                {
+                                    reader.ReadUInt16();
+                                    next = reader.ReadUInt16();
+                                }
+
+                                object elem;
+
+                                if (!elemType.IsPrimitive)
+                                {
+                                    elem = Activator.CreateInstance(elemType);
+                                    DeserializeObject(reader, elem);
+                                }
+                                else
+                                    elem = DeserializePrimitive(reader, elemType);
+
+                                array.SetValue(elem, i);
+
+                                if (!IsByte(elemType) && i != count - 1)
+                                    reader.Position = next -
+                                        PacketHeader.HeaderSize;
                             }
-
-                            object elem;
-
-                            if (!elemType.IsPrimitive)
-                            {
-                                elem = Activator.CreateInstance(elemType);
-                                DeserializeObject(reader, elem);
-                            }
-                            else
-                                elem = DeserializePrimitive(reader, elemType);
-
-                            array.SetValue(elem, i);
-
-                            if (!IsByte(elemType) && i != count - 1)
-                                reader.Position = next - PacketHeader.HeaderSize;
-                        }
-                    });
+                        });
+                    }
 
                     value = array;
                 }
