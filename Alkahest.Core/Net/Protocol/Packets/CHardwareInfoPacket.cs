@@ -22,7 +22,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         internal ushort GraphicsProcessorOffset { get; set; }
 
         [PacketField]
-        public uint Unknown1 { get; set; }
+        public uint SystemMemory { get; set; }
 
         [PacketField]
         public uint Unknown2 { get; set; }
