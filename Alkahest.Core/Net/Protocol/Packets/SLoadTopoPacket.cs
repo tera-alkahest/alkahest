@@ -11,7 +11,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         [Packet(Name)]
         internal static Packet Create()
         {
-            return new CLoadTopoFinPacket();
+            return new SLoadTopoPacket();
         }
 
         [PacketField]
