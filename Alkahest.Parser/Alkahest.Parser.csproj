@@ -43,8 +43,15 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
+    <Compile Include="AnalysisMode.cs" />
+    <Compile Include="Analysis\PacketAnalysis.cs" />
+    <Compile Include="Analysis\PotentialArray.cs" />
+    <Compile Include="Analysis\PotentialArrayElement.cs" />
+    <Compile Include="Analysis\PotentialString.cs" />
     <Compile Include="Application.cs" />
+    <Compile Include="HexDumpMode.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="PacketStatistics.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Alkahest.snk">
@@ -57,6 +64,11 @@
       <Project>{4cb2d190-fc09-4d4d-9598-d0cfc0c725db}</Project>
       <Name>Alkahest.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Mono.Options.Signed">
+      <Version>0.2.3</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

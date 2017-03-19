@@ -6,12 +6,12 @@ using System.Linq;
 using Alkahest.Core.IO;
 using Alkahest.Core.Net.Protocol;
 
-namespace Alkahest.Analyzer.Analysis
+namespace Alkahest.Parser.Analysis
 {
     static class PacketAnalysis
     {
         public static IEnumerable<PotentialString> FindStrings(
-            byte[] payload)
+            byte[] payload, bool whiteSpace, bool control, int minLength)
         {
             using (var reader = new TeraBinaryReader(payload))
             {
@@ -49,7 +49,10 @@ namespace Alkahest.Analyzer.Analysis
                         continue;
                     }
 
-                    if (string.IsNullOrWhiteSpace(str))
+                    if (!whiteSpace && string.IsNullOrWhiteSpace(str))
+                        continue;
+
+                    if (minLength != 0 && str.Length < minLength)
                         continue;
 
                     var hasBadChars = str.Any(c =>
@@ -63,9 +66,11 @@ namespace Alkahest.Analyzer.Analysis
                             cat == UnicodeCategory.Surrogate;
                     });
 
-                    if (!hasBadChars)
-                        yield return new PotentialString(offsetPos,
-                            (ushort)offset, str);
+                    if (!control && hasBadChars)
+                        continue;
+
+                    yield return new PotentialString(offsetPos,
+                        (ushort)offset, str);
                 }
             }
         }

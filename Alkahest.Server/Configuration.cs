@@ -61,8 +61,6 @@ namespace Alkahest.Server
 
         public static TimeSpan GameTimeout { get; }
 
-        public static int GamePacketRoundtrips { get; }
-
         public static int PoolLimit { get; }
 
         public static bool AdjustHostsFile { get; }
@@ -99,7 +97,6 @@ namespace Alkahest.Server
             GameBacklog = int.Parse(cfg["gameBacklog"]);
             GameMaxClients = int.Parse(cfg["gameMaxClients"]);
             GameTimeout = TimeSpan.FromMinutes(int.Parse(cfg["gameTimeout"]));
-            GamePacketRoundtrips = int.Parse(cfg["gamePacketRoundtrips"]);
             PoolLimit = int.Parse(cfg["poolLimit"]);
             AdjustHostsFile = bool.Parse(cfg["adjustHostsFile"]);
             EnableAssertions = bool.Parse(cfg["enableAssertions"]);

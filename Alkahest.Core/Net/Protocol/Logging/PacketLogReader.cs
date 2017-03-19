@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -51,6 +52,19 @@ namespace Alkahest.Core.Net.Protocol.Logging
             {
                 return null;
             }
+        }
+
+        public PacketLogEntry[] ReadAll()
+        {
+            return EnumerateAll().ToArray();
+        }
+
+        public IEnumerable<PacketLogEntry> EnumerateAll()
+        {
+            PacketLogEntry entry;
+
+            while ((entry = Read()) != null)
+                yield return entry;
         }
     }
 }

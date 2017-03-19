@@ -56,8 +56,7 @@ namespace Alkahest.Core.Net.Protocol
         readonly ConcurrentDictionary<Type, PacketFieldInfo[]> _info =
             new ConcurrentDictionary<Type, PacketFieldInfo[]>();
 
-        readonly Dictionary<ushort, Func<Packet>> _packetCreators =
-            new Dictionary<ushort, Func<Packet>>();
+        readonly IReadOnlyDictionary<ushort, Func<Packet>> _packetCreators;
 
         public PacketSerializer(OpCodeTable gameMessages,
             OpCodeTable systemMessages)
@@ -65,12 +64,16 @@ namespace Alkahest.Core.Net.Protocol
             GameMessages = gameMessages;
             SystemMessages = systemMessages;
 
+            var creators = new Dictionary<ushort, Func<Packet>>();
+
             using (var container = new CompositionContainer(
                 new AssemblyCatalog(Assembly.GetExecutingAssembly()), true))
                 foreach (var lazy in container.GetExports<Func<Packet>,
                     IPacketMetadata>(PacketAttribute.ThisContractName))
-                    _packetCreators.Add(gameMessages.NameToOpCode[lazy.Metadata.OpCode],
+                    creators.Add(gameMessages.NameToOpCode[lazy.Metadata.OpCode],
                         lazy.Value);
+
+            _packetCreators = creators;
         }
 
         public Packet Create(ushort opCode)

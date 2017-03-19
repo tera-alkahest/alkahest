@@ -34,16 +34,13 @@ namespace Alkahest.Core.Net.Protocol
         readonly IReadOnlyCollection<Delegate> _emptyHandlers =
             new List<Delegate>();
 
-        readonly int _roundtrips;
-
         readonly object _lock = new object();
 
         public PacketProcessor(PacketSerializer serializer,
-            PacketLogWriter logWriter, int roundtrips)
+            PacketLogWriter logWriter)
         {
             Serializer = serializer;
             LogWriter = logWriter;
-            _roundtrips = roundtrips;
 
             foreach (var code in serializer.GameMessages.OpCodeToName.Keys)
             {
@@ -118,39 +115,9 @@ namespace Alkahest.Core.Net.Protocol
             }
         }
 
-        void Roundtrip(PacketHeader header, ref byte[] payload)
-        {
-            var packet = Serializer.Create(header.OpCode);
-
-            if (packet == null)
-                return;
-
-            for (var i = 0; i < _roundtrips; i++)
-            {
-                Serializer.Deserialize(payload, packet);
-                var payload2 = Serializer.Serialize(packet);
-                var payload1 = payload;
-
-                Assert.Check(() => payload2.Length == payload1.Length);
-
-                if (i > 0)
-                    Assert.Check(() => payload2.SequenceEqual(payload1));
-
-                payload = payload2;
-            }
-        }
-
         internal bool Process(GameClient client, Direction direction,
             ref PacketHeader header, ref byte[] payload)
         {
-            if (_roundtrips != 0)
-            {
-                payload = payload.Slice(0, header.Length);
-                Roundtrip(header, ref payload);
-
-                return true;
-            }
-
             var rawHandlers = new List<RawPacketHandler>();
 
             // Make a copy so we don't have to lock while iterating.

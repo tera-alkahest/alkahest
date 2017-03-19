@@ -1,4 +1,4 @@
-namespace Alkahest.Analyzer.Analysis
+namespace Alkahest.Parser.Analysis
 {
     sealed class PotentialString
     {

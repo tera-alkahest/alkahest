@@ -83,8 +83,7 @@ namespace Alkahest.Server
                     {
                         var proc = new PacketProcessor(new PacketSerializer(
                             new OpCodeTable(true, region),
-                            new OpCodeTable(false, region)), writer,
-                            Configuration.GamePacketRoundtrips);
+                            new OpCodeTable(false, region)), writer);
                         var proxies = slsProxy.Servers.Select(x => new GameProxy(
                             x, pool, proc, Configuration.GameBacklog,
                             Configuration.GameTimeout)
