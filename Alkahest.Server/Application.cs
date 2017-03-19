@@ -115,6 +115,7 @@ namespace Alkahest.Server
         static void CancelKeyPress(object sender, ConsoleCancelEventArgs args)
         {
             args.Cancel = true;
+
             _event.Set();
         }
 
@@ -126,7 +127,7 @@ namespace Alkahest.Server
             _log.Error(args.ExceptionObject.ToString());
             _log.Error("{0} will terminate", Name);
 
-            _event.Wait();
+            Environment.Exit(1);
         }
     }
 }
