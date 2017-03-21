@@ -88,7 +88,7 @@ namespace Alkahest.Core.Net.Protocol
             using (var reader = new TeraBinaryReader(payload))
                 DeserializeObject(reader, packet);
 
-            packet.OnDeserialize();
+            packet.OnDeserialize(this);
         }
 
         void DeserializeObject(TeraBinaryReader reader, object target)
@@ -204,7 +204,7 @@ namespace Alkahest.Core.Net.Protocol
 
         public byte[] Serialize(Packet packet)
         {
-            packet.OnSerialize();
+            packet.OnSerialize(this);
 
             using (var writer = new TeraBinaryWriter())
             {

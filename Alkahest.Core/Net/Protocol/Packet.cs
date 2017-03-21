@@ -14,11 +14,11 @@ namespace Alkahest.Core.Net.Protocol
 
         public abstract string OpCode { get; }
 
-        internal virtual void OnSerialize()
+        internal virtual void OnSerialize(PacketSerializer serializer)
         {
         }
 
-        internal virtual void OnDeserialize()
+        internal virtual void OnDeserialize(PacketSerializer serializer)
         {
         }
 
