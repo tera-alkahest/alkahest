@@ -30,8 +30,6 @@ namespace Alkahest.Server
         {
             Console.CancelKeyPress += CancelKeyPress;
 
-            Assert.Enabled = Configuration.EnableAssertions;
-
             Log.Level = Configuration.LogLevel;
             Log.TimestampFormat = Configuration.LogTimestampFormat;
 

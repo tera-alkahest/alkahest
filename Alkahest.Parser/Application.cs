@@ -32,8 +32,6 @@ namespace Alkahest.Parser
 
         static bool _stats;
 
-        static bool _assert;
-
         static List<string> _regexes = new List<string>();
 
         static HexDumpMode _hex = HexDumpMode.Unknown;
@@ -125,11 +123,6 @@ namespace Alkahest.Parser
                     "Output parsing and analysis statistics before exiting.",
                     s => _stats = s != null
                 },
-                {
-                    "assert",
-                    "Enable heavy assertions. For debugging only.",
-                    assert => _assert = assert != null
-                },
                 "Parsing",
                 {
                     "x|hex-dump=",
@@ -204,8 +197,6 @@ namespace Alkahest.Parser
                 Console.WriteLine("Expected exactly one input file argument.");
                 return 1;
             }
-
-            Assert.Enabled = _assert;
 
             Log.Level = LogLevel.Debug;
             Log.TimestampFormat = "HH:mm:ss:fff";
@@ -324,10 +315,12 @@ namespace Alkahest.Parser
 
                                 var payload2 = serializer.Serialize(parsed);
 
-                                Assert.Check(() => payload2.Length == payload.Length);
+                                Assert.Check(payload2.Length == payload.Length,
+                                    "Payload lengths must match after roundtrip.");
 
                                 if (i > 0)
-                                    Assert.Check(() => payload2.SequenceEqual(payload));
+                                    Assert.Check(payload2.SequenceEqual(payload),
+                                        "Payloads must match after first roundtrip.");
 
                                 payload = payload2;
                             }

@@ -336,7 +336,7 @@ namespace Alkahest.Core.Net.Protocol
             else if (type == typeof(Angle))
                 writer.WriteAngle((Angle)value);
             else
-                Assert.Unreachable();
+                throw Assert.Unreachable();
         }
 
         static bool IsByte(Type type)
