@@ -77,7 +77,8 @@ namespace Alkahest.Plugins.Python
                         _log.Error("{0} ({1}, {2}): {3}", syn.SourcePath,
                             syn.Line, syn.Column, syn.Message);
                     }
-                    else {
+                    else
+                    {
                         _log.Error("Failed to initialize package {0}:", name);
                         _log.Error(e.ToString());
                     }
