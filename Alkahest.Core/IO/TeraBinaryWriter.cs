@@ -25,8 +25,6 @@ namespace Alkahest.Core.IO
 
         readonly BinaryWriter _writer;
 
-        bool _disposed;
-
         public TeraBinaryWriter()
         {
             _writer = new BinaryWriter(
@@ -40,11 +38,6 @@ namespace Alkahest.Core.IO
 
         public void Dispose()
         {
-            if (_disposed)
-                return;
-
-            _disposed = true;
-
             _writer.Dispose();
         }
 

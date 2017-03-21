@@ -25,8 +25,6 @@ namespace Alkahest.Core.IO
 
         readonly BinaryReader _reader;
 
-        bool _disposed;
-
         public TeraBinaryReader(byte[] data)
         {
             _reader = new BinaryReader(new MemoryStream(data, false), Encoding);
@@ -34,11 +32,6 @@ namespace Alkahest.Core.IO
 
         public void Dispose()
         {
-            if (_disposed)
-                return;
-
-            _disposed = true;
-
             _reader.Dispose();
         }
 
