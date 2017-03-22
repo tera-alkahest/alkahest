@@ -137,7 +137,7 @@ namespace Alkahest.Core.Net.Protocol
 
                                 object elem;
 
-                                if (!elemType.IsPrimitive)
+                                if (!IsPrimitive(elemType))
                                 {
                                     elem = Activator.CreateInstance(elemType);
                                     DeserializeObject(reader, elem);
@@ -273,7 +273,7 @@ namespace Alkahest.Core.Net.Protocol
 
                         var elem = array.GetValue(i);
 
-                        if (elemType.IsPrimitive)
+                        if (IsPrimitive(elemType))
                             SerializePrimitive(writer, elem);
                         else
                             SerializeObject(writer, elem);
@@ -344,6 +344,15 @@ namespace Alkahest.Core.Net.Protocol
             return type == typeof(bool) ||
                 type == typeof(byte) ||
                 type == typeof(sbyte);
+        }
+
+        static bool IsPrimitive(Type type)
+        {
+            return type.IsPrimitive ||
+                type == typeof(Vector3) ||
+                type == typeof(EntityId) ||
+                type == typeof(SkillId) ||
+                type == typeof(Angle);
         }
 
         PacketFieldInfo[] GetPacketFields(Type type)
