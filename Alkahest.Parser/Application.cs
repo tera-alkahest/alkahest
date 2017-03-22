@@ -340,24 +340,35 @@ namespace Alkahest.Parser
 
             if (_stats)
             {
-                void PrintValue(string name, int value)
+                void PrintValue(string name, int value,
+                    string trail = "")
                 {
-                    _log.Info("{0,17}: {1}", name, value);
+                    _log.Info("{0,17}: {1}{2}", name, value, trail);
                 }
 
-                void PrintPacketValue(string name, int value)
+                void PrintPercentageValue(string name, int value, int total)
                 {
-                    _log.Info("{0,17}: {1} ({2:P2})", name, value,
-                        (double)value / stats.RelevantPackets);
+                    PrintValue(name, value, total == 0 ? string.Empty :
+                        $" ({(double)value / total:P2})");
+                }
+
+                void PrintTotalPacketValue(string name, int value)
+                {
+                    PrintPercentageValue(name, value, stats.TotalPackets);
+                }
+
+                void PrintRelevantPacketValue(string name, int value)
+                {
+                    PrintPercentageValue(name, value, stats.RelevantPackets);
                 }
 
                 PrintValue("Total packets", stats.TotalPackets);
-                PrintPacketValue("Relevant packets", stats.RelevantPackets);
-                PrintPacketValue("Ignored packets", stats.IgnoredPackets);
-                PrintPacketValue("Empty packets", stats.EmptyPackets);
-                PrintPacketValue("Unknown packets", stats.UnknownPackets);
-                PrintPacketValue("Known packets", stats.KnownPackets);
-                PrintPacketValue("Parsed packets", stats.ParsedPackets);
+                PrintTotalPacketValue("Relevant packets", stats.RelevantPackets);
+                PrintTotalPacketValue("Ignored packets", stats.IgnoredPackets);
+                PrintRelevantPacketValue("Empty packets", stats.EmptyPackets);
+                PrintRelevantPacketValue("Unknown packets", stats.UnknownPackets);
+                PrintRelevantPacketValue("Known packets", stats.KnownPackets);
+                PrintRelevantPacketValue("Parsed packets", stats.ParsedPackets);
                 PrintValue("Potential arrays", stats.PotentialArrays);
                 PrintValue("Potential strings", stats.PotentialStrings);
             }
