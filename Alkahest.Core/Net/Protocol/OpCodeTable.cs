@@ -8,15 +8,9 @@ namespace Alkahest.Core.Net.Protocol
     {
         public Region Region { get; }
 
-        public IReadOnlyDictionary<ushort, string> OpCodeToName => _names;
+        public IReadOnlyDictionary<ushort, string> OpCodeToName { get; }
 
-        public IReadOnlyDictionary<string, ushort> NameToOpCode => _codes;
-
-        readonly Dictionary<ushort, string> _names =
-            new Dictionary<ushort, string>();
-
-        readonly Dictionary<string, ushort> _codes =
-            new Dictionary<string, ushort>();
+        public IReadOnlyDictionary<string, ushort> NameToOpCode { get; }
 
         public OpCodeTable(bool opCodes, Region region)
         {
@@ -25,6 +19,8 @@ namespace Alkahest.Core.Net.Protocol
             var asm = Assembly.GetExecutingAssembly();
             var name = string.Format(@"Net\Protocol\OpCodes\{0}_{1}.txt",
                 opCodes ? "opc" : "smt", region.ToRegionString());
+            var codeToName = new Dictionary<ushort, string>();
+            var nameToCode = new Dictionary<string, ushort>();
 
             using (var stream = asm.GetManifestResourceStream(name))
             {
@@ -42,11 +38,14 @@ namespace Alkahest.Core.Net.Protocol
 
                         var code = ushort.Parse(parts[2]);
 
-                        _names.Add(code, parts[0]);
-                        _codes.Add(parts[0], code);
+                        codeToName.Add(code, parts[0]);
+                        nameToCode.Add(parts[0], code);
                     }
                 }
             }
+
+            NameToOpCode = nameToCode;
+            OpCodeToName = codeToName;
         }
     }
 }
