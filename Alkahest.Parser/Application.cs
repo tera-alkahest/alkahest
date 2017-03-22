@@ -232,7 +232,7 @@ namespace Alkahest.Parser
 
                     var name = serializer.GameMessages.OpCodeToName[entry.OpCode];
 
-                    if (regexes.Any(r => !r.IsMatch(name)))
+                    if (regexes.All(r => !r.IsMatch(name)))
                     {
                         stats.IgnoredPackets++;
 
