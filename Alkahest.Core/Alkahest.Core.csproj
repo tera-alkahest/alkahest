@@ -136,6 +136,7 @@
     <Compile Include="Net\Protocol\Packets\SSystemMessagePacket.cs" />
     <Compile Include="Net\Protocol\Packets\STradeBrokerHighestItemLevelPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SWhisperPacket.cs" />
+    <Compile Include="Net\ServerListRequestHandler.cs" />
     <Compile Include="Plugins\IPlugin.cs" />
     <Compile Include="Plugins\PluginLoader.cs" />
     <Compile Include="Cryptography\TeraEncryptionHash.cs" />
