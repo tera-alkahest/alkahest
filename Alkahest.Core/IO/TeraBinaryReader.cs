@@ -4,6 +4,7 @@ using System.IO;
 using System.Numerics;
 using System.Text;
 using Alkahest.Core.Data;
+using Alkahest.Core.Net.Protocol;
 
 namespace Alkahest.Core.IO
 {
@@ -119,6 +120,11 @@ namespace Alkahest.Core.IO
         public Angle ReadAngle()
         {
             return new Angle(_reader.ReadInt16());
+        }
+
+        public ushort ReadOffset()
+        {
+            return (ushort)(_reader.ReadUInt16() - PacketHeader.HeaderSize);
         }
 
         public T Seek<T>(int position, Func<TeraBinaryReader, int, T> func)

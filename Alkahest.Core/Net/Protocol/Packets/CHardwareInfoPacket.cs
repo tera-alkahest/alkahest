@@ -13,13 +13,13 @@ namespace Alkahest.Core.Net.Protocol.Packets
         }
 
         [PacketField]
-        internal ushort OperatingSystemOffset { get; set; }
+        public string OperatingSystem { get; set; }
 
         [PacketField]
-        internal ushort ProcessorOffset { get; set; }
+        public string Processor { get; set; }
 
         [PacketField]
-        internal ushort GraphicsProcessorOffset { get; set; }
+        public string GraphicsProcessor { get; set; }
 
         [PacketField]
         public uint SystemMemory { get; set; }
@@ -56,14 +56,5 @@ namespace Alkahest.Core.Net.Protocol.Packets
 
         [PacketField]
         public byte Unknown10 { get; set; }
-
-        [PacketField]
-        public string OperatingSystem { get; set; }
-
-        [PacketField]
-        public string Processor { get; set; }
-
-        [PacketField]
-        public string GraphicsProcessor { get; set; }
     }
 }

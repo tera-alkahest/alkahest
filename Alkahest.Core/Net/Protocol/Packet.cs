@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -54,19 +55,17 @@ namespace Alkahest.Core.Net.Protocol
                 var name = prop.Name;
                 var value = prop.GetValue(source);
 
-                if (propType.IsArray)
+                if (value is IList list)
                 {
-                    var array = (Array)value;
-
-                    builder.AppendLine($"{indent}  {name} = [{array.Length}]");
+                    builder.AppendLine($"{indent}  {name} = [{list.Count}]");
                     builder.AppendLine($"{indent}  {{");
 
                     var elemIndent = indent + "    ";
-                    var elemType = propType.GetElementType();
+                    var elemType = propType.GetGenericArguments()[0];
 
-                    for (var i = 0; i < array.Length; i++)
+                    for (var i = 0; i < list.Count; i++)
                     {
-                        var elem = array.GetValue(i);
+                        var elem = list[i];
                         var idx = $"[{i}] =";
 
                         if (elemType.IsPrimitive)

@@ -23,7 +23,7 @@ namespace Alkahest.Parser.Analysis
                         break;
 
                     var offsetPos = reader.Position;
-                    var offset = reader.ReadUInt16() - PacketHeader.HeaderSize;
+                    var offset = reader.ReadOffset();
 
                     if (offset < 0 || offset < offsetPos + sizeof(ushort) ||
                         offset > reader.Length - sizeof(char))
@@ -95,8 +95,7 @@ namespace Alkahest.Parser.Analysis
                     var countPos = reader.Position;
                     var count = reader.ReadUInt16();
                     var offsetPos = reader.Position;
-                    var offset = reader.ReadUInt16() -
-                        PacketHeader.HeaderSize;
+                    var offset = reader.ReadOffset();
 
                     if (count == 0 ||
                         (count * (sizeof(ushort) * 2 + sizeof(byte)) +
@@ -116,7 +115,7 @@ namespace Alkahest.Parser.Analysis
                     var last = offsetPos;
                     var next = offset;
 
-                    while (next != -PacketHeader.HeaderSize)
+                    while (next != unchecked((ushort)-PacketHeader.HeaderSize))
                     {
                         if (!(good = next >= 0 && next > last &&
                             next <= reader.Length - sizeof(ushort) * 2 - sizeof(byte)))
@@ -127,8 +126,7 @@ namespace Alkahest.Parser.Analysis
                         reader.Position = next;
 
                         var herePos = reader.Position;
-                        var here = reader.ReadUInt16() -
-                            PacketHeader.HeaderSize;
+                        var here = reader.ReadOffset();
 
                         if (!(good = here == herePos && here == next &&
                             positions.Add(herePos) &&
@@ -136,21 +134,20 @@ namespace Alkahest.Parser.Analysis
                             break;
 
                         var nextPos = reader.Position;
-                        next = reader.ReadUInt16() -
-                            PacketHeader.HeaderSize;
+                        next = reader.ReadOffset();
 
                         if (!(good = positions.Add(nextPos) &&
                             positions.Add(nextPos + sizeof(byte))))
                             break;
 
-                        elems.Add(new PotentialArrayElement((ushort)here,
-                            nextPos, (ushort)(next == -PacketHeader.HeaderSize ?
+                        elems.Add(new PotentialArrayElement(here, nextPos,
+                            (ushort)(next == unchecked((ushort)-PacketHeader.HeaderSize) ?
                             0 : next)));
                     }
 
                     if (good && elems.Count == count)
                         yield return new PotentialArray(countPos, count,
-                            offsetPos, (ushort)offset, elems);
+                            offsetPos, offset, elems);
                 }
             }
         }

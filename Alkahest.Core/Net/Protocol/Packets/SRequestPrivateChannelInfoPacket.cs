@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Alkahest.Core.Data;
 
 namespace Alkahest.Core.Net.Protocol.Packets
@@ -14,41 +15,8 @@ namespace Alkahest.Core.Net.Protocol.Packets
             return new SRequestPrivateChannelInfoPacket();
         }
 
-        [PacketField]
-        internal ushort FriendsCount { get; set; }
-
-        [PacketField]
-        internal ushort FriendsOffset { get; set; }
-
-        [PacketField]
-        internal ushort MembersCount { get; set; }
-
-        [PacketField]
-        internal ushort MembersOffset { get; set; }
-
-        [PacketField]
-        public bool IsOwner { get; set; }
-
-        [PacketField]
-        public ushort Password { get; set; }
-
-        public sealed class Member
-        {
-            [PacketField]
-            internal ushort MemberNameOffset { get; set; }
-
-            [PacketField]
-            public string MemberName { get; set; }
-        }
-
-        [PacketField]
-        public Member[] Members { get; set; }
-
         public sealed class Friend
         {
-            [PacketField]
-            internal ushort FriendNameOffset { get; set; }
-
             [PacketField]
             public string FriendName { get; set; }
 
@@ -66,6 +34,21 @@ namespace Alkahest.Core.Net.Protocol.Packets
         }
 
         [PacketField]
-        public Friend[] Friends { get; set; }
+        public List<Friend> Friends { get; } = new List<Friend>();
+
+        public sealed class Member
+        {
+            [PacketField]
+            public string MemberName { get; set; }
+        }
+
+        [PacketField]
+        public List<Member> Members { get; } = new List<Member>();
+
+        [PacketField]
+        public bool IsOwner { get; set; }
+
+        [PacketField]
+        public ushort Password { get; set; }
     }
 }

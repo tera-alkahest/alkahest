@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Alkahest.Core.Net.Protocol.Packets
 {
     public sealed class SLoadClientAccountSettingPacket : Packet
@@ -13,12 +15,6 @@ namespace Alkahest.Core.Net.Protocol.Packets
         }
 
         [PacketField]
-        internal ushort DataOffset { get; set; }
-
-        [PacketField]
-        internal ushort DataCount { get; set; }
-
-        [PacketField]
-        public byte[] Data { get; set; }
+        public List<byte> Data { get; set; } = new List<byte>();
     }
 }

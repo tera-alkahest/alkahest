@@ -17,9 +17,6 @@ namespace Alkahest.Core.Net.Protocol.Packets
         }
 
         [PacketField]
-        internal ushort MessageOffset { get; set; }
-
-        [PacketField]
         public string Message { get; set; }
 
         public string MessageName { get; set; }

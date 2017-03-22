@@ -15,13 +15,13 @@ namespace Alkahest.Core.Net.Protocol.Packets
         }
 
         [PacketField]
-        internal ushort SenderNameOffset { get; set; }
+        public string SenderName { get; set; }
 
         [PacketField]
-        internal ushort RecipientNameOffset { get; set; }
+        public string RecipientName { get; set; }
 
         [PacketField]
-        internal ushort MessageOffset { get; set; }
+        public string Message { get; set; }
 
         [PacketField]
         public EntityId Source { get; set; }
@@ -34,14 +34,5 @@ namespace Alkahest.Core.Net.Protocol.Packets
 
         [PacketField]
         public byte Unknown2 { get; set; }
-
-        [PacketField]
-        public string SenderName { get; set; }
-
-        [PacketField]
-        public string RecipientName { get; set; }
-
-        [PacketField]
-        public string Message { get; set; }
     }
 }

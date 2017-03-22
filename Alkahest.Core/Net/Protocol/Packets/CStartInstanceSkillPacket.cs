@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Numerics;
 using Alkahest.Core.Data;
 
@@ -15,30 +16,6 @@ namespace Alkahest.Core.Net.Protocol.Packets
             return new CStartInstanceSkillPacket();
         }
 
-        [PacketField]
-        internal ushort TargetsCount { get; set; }
-
-        [PacketField]
-        internal ushort TargetsOffset { get; set; }
-
-        [PacketField]
-        internal ushort LocationsCount { get; set; }
-
-        [PacketField]
-        internal ushort LocationsOffset { get; set; }
-
-        [PacketField]
-        public SkillId Skill { get; set; }
-
-        [PacketField]
-        public Vector3 Position { get; set; }
-
-        [PacketField]
-        public Angle Direction { get; set; }
-
-        [PacketField]
-        public byte Unknown1 { get; set; }
-
         public sealed class TargetInfo
         {
             [PacketField]
@@ -52,9 +29,28 @@ namespace Alkahest.Core.Net.Protocol.Packets
         }
 
         [PacketField]
-        public TargetInfo[] Targets { get; set; }
+        public List<TargetInfo> Targets { get; } = new List<TargetInfo>();
+
+        public sealed class TargetLocation
+        {
+            [PacketField]
+            public Vector3 Location { get; set; }
+        }
 
         [PacketField]
-        public Vector3[] Locations { get; set; }
+        public List<TargetLocation> Locations { get; } =
+            new List<TargetLocation>();
+
+        [PacketField]
+        public SkillId Skill { get; set; }
+
+        [PacketField]
+        public Vector3 Position { get; set; }
+
+        [PacketField]
+        public Angle Direction { get; set; }
+
+        [PacketField]
+        public byte Unknown1 { get; set; }
     }
 }

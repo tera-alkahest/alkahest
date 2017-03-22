@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Alkahest.Core.Net.Protocol.Packets
 {
     public sealed class SAccountPackageListPacket : Packet
@@ -12,12 +14,6 @@ namespace Alkahest.Core.Net.Protocol.Packets
             return new SAccountPackageListPacket();
         }
 
-        [PacketField]
-        internal ushort PackagesCount { get; set; }
-
-        [PacketField]
-        internal ushort PackagesOffset { get; set; }
-
         public sealed class Package
         {
             [PacketField]
@@ -31,6 +27,6 @@ namespace Alkahest.Core.Net.Protocol.Packets
         }
 
         [PacketField]
-        public Package[] Packages { get; set; }
+        public List<Package> Packages { get; } = new List<Package>();
     }
 }

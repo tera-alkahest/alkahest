@@ -15,12 +15,9 @@ namespace Alkahest.Core.Net.Protocol.Packets
         }
 
         [PacketField]
-        internal ushort MessageOffset { get; set; }
+        public string Message { get; set; }
 
         [PacketField]
         public ChatChannel Channel { get; set; }
-
-        [PacketField]
-        public string Message { get; set; }
     }
 }

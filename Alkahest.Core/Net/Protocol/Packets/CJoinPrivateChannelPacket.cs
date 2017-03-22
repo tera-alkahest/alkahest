@@ -13,12 +13,9 @@ namespace Alkahest.Core.Net.Protocol.Packets
         }
 
         [PacketField]
-        internal ushort ChannelNameOffset { get; set; }
+        public string ChannelName { get; set; }
 
         [PacketField]
         public ushort Password { get; set; }
-
-        [PacketField]
-        public string ChannelName { get; set; }
     }
 }

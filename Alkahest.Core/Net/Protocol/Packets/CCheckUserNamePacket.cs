@@ -13,9 +13,6 @@ namespace Alkahest.Core.Net.Protocol.Packets
         }
 
         [PacketField]
-        internal ushort UserNameOffset { get; set; }
-
-        [PacketField]
         public string UserName { get; set; }
     }
 }

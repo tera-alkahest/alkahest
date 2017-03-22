@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Alkahest.Core.Net.Protocol.Packets
 {
     public sealed class CCreatePrivateChannelPacket : Packet
@@ -12,21 +14,6 @@ namespace Alkahest.Core.Net.Protocol.Packets
             return new CCreatePrivateChannelPacket();
         }
 
-        [PacketField]
-        internal ushort MembersCount { get; set; }
-
-        [PacketField]
-        internal ushort MembersOffset { get; set; }
-
-        [PacketField]
-        internal ushort ChannelNameOffset { get; set; }
-
-        [PacketField]
-        public ushort Password { get; set; }
-
-        [PacketField]
-        public string ChannelName { get; set; }
-
         public sealed class Member
         {
             [PacketField]
@@ -34,6 +21,12 @@ namespace Alkahest.Core.Net.Protocol.Packets
         }
 
         [PacketField]
-        public Member[] Members { get; set; }
+        public List<Member> Members { get; } = new List<Member>();
+
+        [PacketField]
+        public string ChannelName { get; set; }
+
+        [PacketField]
+        public ushort Password { get; set; }
     }
 }

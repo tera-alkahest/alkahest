@@ -1,8 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel.Composition.Hosting;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Numerics;
 using System.Reflection;
 using Alkahest.Core.Data;
@@ -12,10 +14,6 @@ namespace Alkahest.Core.Net.Protocol
 {
     public sealed class PacketSerializer
     {
-        const string CountNameSuffix = "Count";
-
-        const string OffsetNameSuffix = "Offset";
-
         const BindingFlags FieldFlags =
             BindingFlags.DeclaredOnly |
             BindingFlags.Instance |
@@ -26,26 +24,192 @@ namespace Alkahest.Core.Net.Protocol
         {
             public PropertyInfo Property { get; }
 
-            public PropertyInfo CountField { get; }
-
-            public PropertyInfo OffsetField { get; }
+            public PacketFieldAttribute Attribute { get; }
 
             public bool IsPrimitive { get; }
 
-            public bool IsCount { get; }
+            public bool IsArray { get; }
 
-            public bool IsOffset { get; }
+            public bool IsByteArray { get; }
+
+            public bool IsString { get; }
+
+            public Action<TeraBinaryWriter, object> PrimitiveSerializer { get; }
+
+            public Func<TeraBinaryReader, object> PrimitiveDeserializer { get; }
+
+            public Func<object, object> ValueGetter { get; }
+
+            public Action<object, object> ValueSetter { get; }
+
+            public Func<IList> ArrayConstructor { get; }
+
+            public Func<object> ElementConstructor { get; }
 
             public PacketFieldInfo(PropertyInfo property,
-                PropertyInfo countField, PropertyInfo offsetField)
+                PacketFieldAttribute attribute)
             {
                 Property = property;
-                CountField = countField;
-                OffsetField = offsetField;
-                IsPrimitive = !property.PropertyType.IsArray &&
-                    property.PropertyType != typeof(string);
-                IsCount = property.Name.EndsWith(CountNameSuffix);
-                IsOffset = property.Name.EndsWith(OffsetNameSuffix);
+                Attribute = attribute;
+
+                var type = property.PropertyType;
+
+                IsPrimitive = IsPrimitiveType(type);
+
+                var isArray = type.IsConstructedGenericType &&
+                    type.GetGenericTypeDefinition() == typeof(List<>);
+                var elemType = isArray ? type.GetGenericArguments()[0] : null;
+                var isByteArray = elemType == typeof(byte);
+
+                IsArray = isArray && !isByteArray;
+                IsByteArray = isArray && isByteArray;
+                IsString = type == typeof(string);
+
+                if (IsPrimitive)
+                {
+                    GetFunctions(type, out var s, out var d);
+
+                    PrimitiveSerializer = s;
+                    PrimitiveDeserializer = d;
+                }
+
+                ValueGetter = GetValueGetter(property);
+
+                if (IsPrimitive || IsString)
+                    ValueSetter = GetValueSetter(property);
+
+                if (IsArray)
+                    ElementConstructor = GetDefaultConstructor(elemType);
+            }
+
+            static bool IsPrimitiveType(Type type)
+            {
+                if (type.IsEnum)
+                    type = type.GetEnumUnderlyingType();
+
+                return type.IsPrimitive ||
+                    type == typeof(Vector3) ||
+                    type == typeof(EntityId) ||
+                    type == typeof(SkillId) ||
+                    type == typeof(Angle);
+            }
+
+            static void GetFunctions(Type type,
+                out Action<TeraBinaryWriter, object> serializer,
+                out Func<TeraBinaryReader, object> deserializer)
+            {
+                if (type.IsEnum)
+                    type = type.GetEnumUnderlyingType();
+
+                if (type == typeof(bool))
+                {
+                    serializer = (w, v) => w.WriteBoolean((bool)v);
+                    deserializer = r => r.ReadBoolean();
+                }
+                else if (type == typeof(byte))
+                {
+                    serializer = (w, v) => w.WriteByte((byte)v);
+                    deserializer = r => r.ReadByte();
+                }
+                else if (type == typeof(sbyte))
+                {
+                    serializer = (w, v) => w.WriteSByte((sbyte)v);
+                    deserializer = r => r.ReadSByte();
+                }
+                else if (type == typeof(ushort))
+                {
+                    serializer = (w, v) => w.WriteUInt16((ushort)v);
+                    deserializer = r => r.ReadUInt16();
+                }
+                else if (type == typeof(short))
+                {
+                    serializer = (w, v) => w.WriteInt16((short)v);
+                    deserializer = r => r.ReadInt16();
+                }
+                else if (type == typeof(uint))
+                {
+                    serializer = (w, v) => w.WriteUInt32((uint)v);
+                    deserializer = r => r.ReadUInt32();
+                }
+                else if (type == typeof(int))
+                {
+                    serializer = (w, v) => w.WriteInt32((int)v);
+                    deserializer = r => r.ReadInt32();
+                }
+                else if (type == typeof(ulong))
+                {
+                    serializer = (w, v) => w.WriteUInt64((ulong)v);
+                    deserializer = r => r.ReadUInt64();
+                }
+                else if (type == typeof(long))
+                {
+                    serializer = (w, v) => w.WriteInt64((long)v);
+                    deserializer = r => r.ReadInt64();
+                }
+                else if (type == typeof(float))
+                {
+                    serializer = (w, v) => w.WriteSingle((float)v);
+                    deserializer = r => r.ReadSingle();
+                }
+                else if (type == typeof(Vector3))
+                {
+                    serializer = (w, v) => w.WriteVector3((Vector3)v);
+                    deserializer = r => r.ReadVector3();
+                }
+                else if (type == typeof(EntityId))
+                {
+                    serializer = (w, v) => w.WriteEntityId((EntityId)v);
+                    deserializer = r => r.ReadEntityId();
+                }
+                else if (type == typeof(SkillId))
+                {
+                    serializer = (w, v) => w.WriteSkillId((SkillId)v);
+                    deserializer = r => r.ReadSkillId();
+                }
+                else if (type == typeof(Angle))
+                {
+                    serializer = (w, v) => w.WriteAngle((Angle)v);
+                    deserializer = r => r.ReadAngle();
+                }
+                else
+                    throw Assert.Unreachable();
+            }
+
+            static Func<object, object> GetValueGetter(PropertyInfo property)
+            {
+                var thisParam = Expression.Parameter(typeof(object));
+
+                return Expression.Lambda<Func<object, object>>(
+                    Expression.Convert(
+                        Expression.Property(
+                            Expression.Convert(
+                                thisParam, property.DeclaringType),
+                            property),
+                        typeof(object)),
+                    thisParam).Compile();
+            }
+
+            static Action<object, object> GetValueSetter(PropertyInfo property)
+            {
+                var thisParam = Expression.Parameter(typeof(object));
+                var valueParam = Expression.Parameter(typeof(object));
+
+                return Expression.Lambda<Action<object, object>>(
+                    Expression.Assign(
+                        Expression.Property(
+                            Expression.Convert(
+                                thisParam, property.DeclaringType),
+                            property),
+                        Expression.Convert(
+                            valueParam, property.PropertyType)),
+                    thisParam, valueParam).Compile();
+            }
+
+            static Func<object> GetDefaultConstructor(Type type)
+            {
+                return Expression.Lambda<Func<object>>(
+                    Expression.New(type)
+                    ).Compile();
             }
         }
 
@@ -83,6 +247,18 @@ namespace Alkahest.Core.Net.Protocol
             return creator?.Invoke();
         }
 
+        PacketFieldInfo[] GetPacketFields(Type type)
+        {
+            return _info.GetOrAdd(type, t =>
+            {
+                return (from prop in t.GetProperties(FieldFlags)
+                        let attr = prop.GetCustomAttribute<PacketFieldAttribute>()
+                        where attr != null
+                        orderby prop.MetadataToken
+                        select new PacketFieldInfo(prop, attr)).ToArray();
+            });
+        }
+
         public void Deserialize(byte[] payload, Packet packet)
         {
             using (var reader = new TeraBinaryReader(payload))
@@ -94,112 +270,72 @@ namespace Alkahest.Core.Net.Protocol
         void DeserializeObject(TeraBinaryReader reader, object target)
         {
             var fields = GetPacketFields(target.GetType());
+            var counts = new Dictionary<PacketFieldInfo, ushort>();
+            var offsets = new Dictionary<PacketFieldInfo, ushort>();
 
-            foreach (var info in fields.Where(x => x.IsPrimitive))
+            foreach (var info in fields)
             {
-                var type = info.Property.PropertyType;
-
-                if (type.IsEnum)
-                    type = type.GetEnumUnderlyingType();
-
-                info.Property.SetValue(target, DeserializePrimitive(reader, type));
-            }
-
-            foreach (var info in fields.Where(x => !x.IsPrimitive))
-            {
-                var type = info.Property.PropertyType;
-                var offset = (ushort)info.OffsetField.GetValue(target);
-
-                object value;
-
-                if (type.IsArray)
+                if (info.IsByteArray)
                 {
-                    var count = (ushort)info.CountField.GetValue(target);
-                    var array = (Array)Activator.CreateInstance(type, (int)count);
-                    var elemType = type.GetElementType();
-
-                    if (elemType.IsEnum)
-                        elemType = elemType.GetEnumUnderlyingType();
-
-                    if (offset != 0)
-                    {
-                        reader.Seek(offset - PacketHeader.HeaderSize, (r, op) =>
-                        {
-                            for (var i = 0; i < count; i++)
-                            {
-                                var next = 0;
-
-                                if (!IsByte(elemType))
-                                {
-                                    reader.ReadUInt16();
-                                    next = reader.ReadUInt16();
-                                }
-
-                                object elem;
-
-                                if (!IsPrimitive(elemType))
-                                {
-                                    elem = Activator.CreateInstance(elemType);
-                                    DeserializeObject(reader, elem);
-                                }
-                                else
-                                    elem = DeserializePrimitive(reader, elemType);
-
-                                array.SetValue(elem, i);
-
-                                if (!IsByte(elemType) && i != count - 1)
-                                    reader.Position = next -
-                                        PacketHeader.HeaderSize;
-                            }
-                        });
-                    }
-
-                    value = array;
+                    offsets.Add(info, reader.ReadOffset());
+                    counts.Add(info, reader.ReadUInt16());
                 }
+                else if (info.IsArray)
+                {
+                    counts.Add(info, reader.ReadUInt16());
+                    offsets.Add(info, reader.ReadOffset());
+                }
+                else if (info.IsString)
+                    offsets.Add(info, reader.ReadOffset());
                 else
-                    value = reader.Seek(offset - PacketHeader.HeaderSize,
-                        (r, op) => r.ReadString());
-
-                info.Property.SetValue(target, value);
+                    info.ValueSetter(target, info.PrimitiveDeserializer(reader));
             }
-        }
 
-        static object DeserializePrimitive(TeraBinaryReader reader, Type type)
-        {
-            object value;
+            foreach (var info in fields.Where(x => x.IsString))
+                info.ValueSetter(target, reader.Seek(offsets[info],
+                    (r, op) => r.ReadString()));
 
-            if (type == typeof(bool))
-                value = reader.ReadBoolean();
-            else if (type == typeof(byte))
-                value = reader.ReadByte();
-            else if (type == typeof(sbyte))
-                value = reader.ReadSByte();
-            else if (type == typeof(ushort))
-                value = reader.ReadUInt16();
-            else if (type == typeof(short))
-                value = reader.ReadInt16();
-            else if (type == typeof(uint))
-                value = reader.ReadUInt32();
-            else if (type == typeof(int))
-                value = reader.ReadInt32();
-            else if (type == typeof(ulong))
-                value = reader.ReadUInt64();
-            else if (type == typeof(long))
-                value = reader.ReadInt64();
-            else if (type == typeof(float))
-                value = reader.ReadSingle();
-            else if (type == typeof(Vector3))
-                value = reader.ReadVector3();
-            else if (type == typeof(EntityId))
-                value = reader.ReadEntityId();
-            else if (type == typeof(SkillId))
-                value = reader.ReadSkillId();
-            else if (type == typeof(Angle))
-                value = reader.ReadAngle();
-            else
-                throw Assert.Unreachable();
+            foreach (var info in fields.Where(x => x.IsByteArray))
+            {
+                var count = counts[info];
 
-            return value;
+                if (count == 0)
+                    continue;
+
+                var offset = offsets[info];
+                var list = (List<byte>)info.ValueGetter(target);
+
+                reader.Seek(offset, (r, op) =>
+                {
+                    for (var i = 0; i < count; i++)
+                        list.Add(r.ReadByte());
+                });
+            }
+
+            foreach (var info in fields.Where(x => x.IsArray))
+            {
+                var count = counts[info];
+
+                if (count == 0)
+                    continue;
+
+                var list = (IList)info.ValueGetter(target);
+                var next = offsets[info];
+
+                for (var i = 0; i < count; i++)
+                {
+                    reader.Seek(next, (r, op) =>
+                    {
+                        r.ReadOffset();
+                        next = r.ReadOffset();
+
+                        var elem = info.ElementConstructor();
+
+                        DeserializeObject(r, elem);
+                        list.Add(elem);
+                    });
+                }
+            }
         }
 
         public byte[] Serialize(Packet packet)
@@ -217,156 +353,88 @@ namespace Alkahest.Core.Net.Protocol
         void SerializeObject(TeraBinaryWriter writer, object source)
         {
             var fields = GetPacketFields(source.GetType());
-            var counts = new Dictionary<string, int>();
-            var offsets = new Dictionary<string, int>();
+            var offsets = new Dictionary<PacketFieldInfo, int>();
 
-            foreach (var info in fields.Where(x => x.IsPrimitive))
+            foreach (var info in fields)
             {
-                if (info.IsCount)
-                    counts.Add(info.Property.Name, writer.Position);
-                else if (info.IsOffset)
-                    offsets.Add(info.Property.Name, writer.Position);
-
-                if (info.IsCount || info.IsOffset)
-                    writer.WriteUInt16(0);
-                else
-                    SerializePrimitive(writer, info.Property.GetValue(source));
-            }
-
-            foreach (var info in fields.Where(x => !x.IsPrimitive))
-            {
-                var type = info.Property.PropertyType;
-                var value = info.Property.GetValue(source);
-                var array = value as Array;
-                var noOffset = array != null && array.Length == 0;
-
-                writer.Seek(offsets[info.Property.Name + OffsetNameSuffix],
-                    (w, op) => w.WriteUInt16((ushort)(noOffset ?
-                        0 : op + PacketHeader.HeaderSize)));
-
-                if (type.IsArray)
+                if (info.IsByteArray)
                 {
-                    writer.Seek(counts[info.Property.Name + CountNameSuffix],
-                        (w, op) => w.WriteUInt16((ushort)array.Length));
-
-                    var elemType = type.GetElementType();
-
-                    if (elemType.IsEnum)
-                        elemType = elemType.GetEnumUnderlyingType();
-
-                    var markers = new Stack<int>();
-
-                    for (var i = 0; i < array.Length; i++)
-                    {
-                        var isLast = i == array.Length - 1;
-
-                        if (!IsByte(elemType))
-                        {
-                            writer.WriteUInt16((ushort)(writer.Position +
-                                PacketHeader.HeaderSize));
-
-                            if (!isLast)
-                                markers.Push(writer.Position);
-
-                            writer.WriteUInt16(0);
-                        }
-
-                        var elem = array.GetValue(i);
-
-                        if (IsPrimitive(elemType))
-                            SerializePrimitive(writer, elem);
-                        else
-                            SerializeObject(writer, elem);
-
-                        if (!IsByte(elemType) && !isLast)
-                            markers.Push(writer.Position);
-                    }
-
-                    if (!IsByte(elemType))
-                    {
-                        for (var i = 0; i < markers.Count / 2; i++)
-                        {
-                            var afterElemPos = markers.Pop();
-                            var nextPos = markers.Pop();
-
-                            writer.Seek(nextPos, (w, op) =>
-                                w.WriteUInt16((ushort)(afterElemPos +
-                                    PacketHeader.HeaderSize)));
-                        }
-                    }
+                    offsets.Add(info, writer.Position);
+                    writer.WriteUInt16(0);
+                    writer.WriteUInt16(
+                        (ushort)((List<byte>)info.ValueGetter(source)).Count);
+                }
+                else if (info.IsArray)
+                {
+                    writer.WriteUInt16(
+                        (ushort)((IList)info.ValueGetter(source)).Count);
+                    offsets.Add(info, writer.Position);
+                    writer.WriteUInt16(0);
+                }
+                else if (info.IsString)
+                {
+                    offsets.Add(info, writer.Position);
+                    writer.WriteUInt16(0);
                 }
                 else
-                    writer.WriteString((string)value ?? string.Empty);
+                    info.PrimitiveSerializer(writer, info.ValueGetter(source));
             }
-        }
 
-        static void SerializePrimitive(TeraBinaryWriter writer, object value)
-        {
-            var type = value.GetType();
-
-            if (type.IsEnum)
-                type = type.GetEnumUnderlyingType();
-
-            if (type == typeof(bool))
-                writer.WriteBoolean((bool)value);
-            else if (type == typeof(byte))
-                writer.WriteByte((byte)value);
-            else if (type == typeof(sbyte))
-                writer.WriteSByte((sbyte)value);
-            else if (type == typeof(ushort))
-                writer.WriteUInt16((ushort)value);
-            else if (type == typeof(short))
-                writer.WriteInt16((short)value);
-            else if (type == typeof(uint))
-                writer.WriteUInt32((uint)value);
-            else if (type == typeof(int))
-                writer.WriteInt32((int)value);
-            else if (type == typeof(ulong))
-                writer.WriteUInt64((ulong)value);
-            else if (type == typeof(long))
-                writer.WriteInt64((long)value);
-            else if (type == typeof(float))
-                writer.WriteSingle((float)value);
-            else if (type == typeof(Vector3))
-                writer.WriteVector3((Vector3)value);
-            else if (type == typeof(EntityId))
-                writer.WriteEntityId((EntityId)value);
-            else if (type == typeof(SkillId))
-                writer.WriteSkillId((SkillId)value);
-            else if (type == typeof(Angle))
-                writer.WriteAngle((Angle)value);
-            else
-                throw Assert.Unreachable();
-        }
-
-        static bool IsByte(Type type)
-        {
-            return type == typeof(bool) ||
-                type == typeof(byte) ||
-                type == typeof(sbyte);
-        }
-
-        static bool IsPrimitive(Type type)
-        {
-            return type.IsPrimitive ||
-                type == typeof(Vector3) ||
-                type == typeof(EntityId) ||
-                type == typeof(SkillId) ||
-                type == typeof(Angle);
-        }
-
-        PacketFieldInfo[] GetPacketFields(Type type)
-        {
-            return _info.GetOrAdd(type, t =>
+            foreach (var info in fields.Where(x => x.IsString))
             {
-                return t.GetProperties(FieldFlags)
-                    .Where(p => p.GetCustomAttribute<PacketFieldAttribute>() != null)
-                    .OrderBy(p => p.MetadataToken)
-                    .Select(p => new PacketFieldInfo(p,
-                        t.GetProperty(p.Name + CountNameSuffix, FieldFlags),
-                        t.GetProperty(p.Name + OffsetNameSuffix, FieldFlags)))
-                    .ToArray();
-            });
+                writer.Seek(offsets[info], (w, op) => w.WriteOffset(op));
+                writer.WriteString((string)info.ValueGetter(source) ?? string.Empty);
+            }
+
+            foreach (var info in fields.Where(x => x.IsByteArray))
+            {
+                var list = (List<byte>)info.ValueGetter(source);
+
+                if (list.Count == 0)
+                    continue;
+
+                writer.Seek(offsets[info], (w, op) => w.WriteOffset(op));
+
+                foreach (var val in list)
+                    writer.WriteByte(val);
+            }
+
+            foreach (var info in fields.Where(x => x.IsArray))
+            {
+                var list = (IList)info.ValueGetter(source);
+
+                if (list.Count == 0)
+                    continue;
+
+                writer.Seek(offsets[info], (w, op) => w.WriteOffset(op));
+
+                var markers = new Stack<int>();
+
+                for (var i = 0; i < list.Count; i++)
+                {
+                    var isLast = i == list.Count - 1;
+
+                    writer.WriteOffset(writer.Position);
+
+                    if (!isLast)
+                        markers.Push(writer.Position);
+
+                    writer.WriteUInt16(0);
+
+                    SerializeObject(writer, list[i]);
+
+                    if (!isLast)
+                        markers.Push(writer.Position);
+                }
+
+                for (var i = 0; i < markers.Count / 2; i++)
+                {
+                    var afterElemPos = markers.Pop();
+                    var nextPos = markers.Pop();
+
+                    writer.Seek(nextPos, (w, op) => w.WriteOffset(afterElemPos));
+                }
+            }
         }
     }
 }

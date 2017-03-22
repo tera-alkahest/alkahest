@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Alkahest.Core.Net.Protocol.Packets
 {
     public sealed class CCheckVersionPacket : Packet
@@ -12,12 +14,6 @@ namespace Alkahest.Core.Net.Protocol.Packets
             return new CCheckVersionPacket();
         }
 
-        [PacketField]
-        internal ushort VersionsCount { get; set; }
-
-        [PacketField]
-        internal ushort VersionsOffset { get; set; }
-
         public sealed class Version
         {
             [PacketField]
@@ -28,6 +24,6 @@ namespace Alkahest.Core.Net.Protocol.Packets
         }
 
         [PacketField]
-        public Version[] Versions { get; set; }
+        public List<Version> Versions { get; } = new List<Version>();
     }
 }

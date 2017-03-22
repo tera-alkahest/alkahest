@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Numerics;
 using Alkahest.Core.Data;
 
@@ -15,11 +16,14 @@ namespace Alkahest.Core.Net.Protocol.Packets
             return new CStartTargetedSkillPacket();
         }
 
-        [PacketField]
-        internal ushort Unknown1Count { get; set; }
+        public sealed class Unknown2Info
+        {
+            [PacketField]
+            public Vector3 Unknown1 { get; set; }
+        }
 
         [PacketField]
-        internal ushort Unknown1Offset { get; set; }
+        public List<Unknown2Info> Unknown2 { get; } = new List<Unknown2Info>();
 
         [PacketField]
         public SkillId Skill { get; set; }
@@ -32,8 +36,5 @@ namespace Alkahest.Core.Net.Protocol.Packets
 
         [PacketField]
         public Vector3 Destination { get; set; }
-
-        [PacketField]
-        public Vector3[] Unknown1 { get; set; }
     }
 }

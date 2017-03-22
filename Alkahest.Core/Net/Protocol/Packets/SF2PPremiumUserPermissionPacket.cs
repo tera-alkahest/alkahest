@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Alkahest.Core.Net.Protocol.Packets
 {
     public sealed class SF2PPremiumUserPermissionPacket : Packet
@@ -12,20 +14,20 @@ namespace Alkahest.Core.Net.Protocol.Packets
             return new SF2PPremiumUserPermissionPacket();
         }
 
-        [PacketField]
-        internal ushort PermissionsCount { get; set; }
+        public sealed class Permission
+        {
+            [PacketField]
+            public ushort Unknown1 { get; set; }
+
+            [PacketField]
+            public ushort Unknown2 { get; set; }
+        }
 
         [PacketField]
-        internal ushort PermissionsOffset { get; set; }
+        public List<Permission> Permissions { get; } = new List<Permission>();
 
         [PacketField]
-        public uint Unknown1 { get; set; }
-
-        [PacketField]
-        public ushort Unknown2 { get; set; }
-
-        [PacketField]
-        public ushort Unknown3 { get; set; }
+        public uint Unknown3 { get; set; }
 
         [PacketField]
         public ushort Unknown4 { get; set; }
@@ -33,16 +35,10 @@ namespace Alkahest.Core.Net.Protocol.Packets
         [PacketField]
         public ushort Unknown5 { get; set; }
 
-        public sealed class Permission
-        {
-            [PacketField]
-            public ushort Unknown6 { get; set; }
-
-            [PacketField]
-            public ushort Unknown7 { get; set; }
-        }
+        [PacketField]
+        public ushort Unknown6 { get; set; }
 
         [PacketField]
-        public Permission[] Permissions { get; set; }
+        public ushort Unknown7 { get; set; }
     }
 }

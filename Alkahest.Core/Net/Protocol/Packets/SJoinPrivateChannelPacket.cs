@@ -13,21 +13,18 @@ namespace Alkahest.Core.Net.Protocol.Packets
         }
 
         [PacketField]
-        internal ushort Unknown1Count { get; set; }
+        public ushort Unknown1Count { get; set; }
 
         [PacketField]
-        internal ushort Unknown1Offset { get; set; }
+        public ushort Unknown1Offset { get; set; }
 
         [PacketField]
-        internal ushort ChannelNameOffset { get; set; }
+        public string ChannelName { get; set; }
 
         [PacketField]
         public uint Index { get; set; }
 
         [PacketField]
         public uint ChannelId { get; set; }
-
-        [PacketField]
-        public string ChannelName { get; set; }
     }
 }

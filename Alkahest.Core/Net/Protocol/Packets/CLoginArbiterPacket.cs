@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Alkahest.Core.Net.Protocol.Packets
 {
     public sealed class CLoginArbiterPacket : Packet
@@ -13,13 +15,10 @@ namespace Alkahest.Core.Net.Protocol.Packets
         }
 
         [PacketField]
-        internal ushort AccountNameOffset { get; set; }
+        public string AccountName { get; set; }
 
         [PacketField]
-        internal ushort TicketOffset { get; set; }
-
-        [PacketField]
-        internal ushort TicketCount { get; set; }
+        public List<byte> Ticket { get; } = new List<byte>();
 
         [PacketField]
         public uint Unknown1 { get; set; }
@@ -32,11 +31,5 @@ namespace Alkahest.Core.Net.Protocol.Packets
 
         [PacketField]
         public uint PatchVersion { get; set; }
-
-        [PacketField]
-        public string AccountName { get; set; }
-
-        [PacketField]
-        public byte[] Ticket { get; set; }
     }
 }

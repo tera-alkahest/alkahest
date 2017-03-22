@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Numerics;
 using Alkahest.Core.Data;
 
@@ -15,11 +16,23 @@ namespace Alkahest.Core.Net.Protocol.Packets
             return new SActionStagePacket();
         }
 
-        [PacketField]
-        internal ushort MovementsCount { get; set; }
+        public sealed class Movement
+        {
+            [PacketField]
+            public uint Duration { get; set; }
+
+            [PacketField]
+            public float Speed { get; set; }
+
+            [PacketField]
+            public uint Unknown5 { get; set; }
+
+            [PacketField]
+            public float Distance { get; set; }
+        }
 
         [PacketField]
-        internal ushort MovementsOffset { get; set; }
+        public List<Movement> Movements { get; } = new List<Movement>();
 
         [PacketField]
         public EntityId Source { get; set; }
@@ -59,23 +72,5 @@ namespace Alkahest.Core.Net.Protocol.Packets
 
         [PacketField]
         public uint Unknown4 { get; set; }
-
-        public sealed class Movement
-        {
-            [PacketField]
-            public uint Duration { get; set; }
-
-            [PacketField]
-            public float Speed { get; set; }
-
-            [PacketField]
-            public uint Unknown5 { get; set; }
-
-            [PacketField]
-            public float Distance { get; set; }
-        }
-
-        [PacketField]
-        public Movement[] Movements { get; set; }
     }
 }
