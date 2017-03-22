@@ -167,7 +167,7 @@ namespace Alkahest.Core.Net.Protocol
             {
                 var packet = Serializer.Create(header.OpCode);
 
-                Serializer.Deserialize(payload, packet);
+                Serializer.Deserialize(payload.Slice(0, header.Length), packet);
 
                 foreach (var handler in handlers)
                 {
