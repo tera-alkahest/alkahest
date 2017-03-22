@@ -296,7 +296,7 @@ namespace Alkahest.Core.Net.Protocol
                     }
                 }
                 else
-                    writer.WriteString((string)value);
+                    writer.WriteString((string)value ?? string.Empty);
             }
         }
 
