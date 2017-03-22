@@ -35,6 +35,8 @@
     <Compile Include="Assert.cs" />
     <Compile Include="Bits.cs" />
     <Compile Include="Data\Angle.cs" />
+    <Compile Include="Data\ChatChannel.cs" />
+    <Compile Include="Data\Class.cs" />
     <Compile Include="Data\EntityFlags.cs" />
     <Compile Include="Data\EntityId.cs" />
     <Compile Include="Data\SkillFlags.cs" />
@@ -50,12 +52,16 @@
     <Compile Include="Net\Protocol\Packets\CCanLockOnTargetPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CCheckUserNamePacket.cs" />
     <Compile Include="Net\Protocol\Packets\CCheckVersionPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\CCreatePrivateChannelPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CDungeonCoolTimeListPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\CEditPrivateChannelPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CGetUserListPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CGuardPKPolicyPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CGuildApplyListPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CHardwareInfoPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\CJoinPrivateChannelPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CLeavePartyPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\CLeavePrivateChannelPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CLoadTopoFinPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CLoginArbiterPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CPCBangInventoryUseSlotPacket.cs" />
@@ -65,6 +71,8 @@
     <Compile Include="Net\Protocol\Packets\CRequestGameStatPingPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CRequestGuildMemberListPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CRequestIngameStoreProductListPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\CRequestMegaphonePacket.cs" />
+    <Compile Include="Net\Protocol\Packets\CRequestPrivateChannelInfoPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CRequestUserItemLevelInfoPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CResetAllDungeonPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CReturnToLobbyPacket.cs" />
@@ -84,12 +92,14 @@
     <Compile Include="Net\Protocol\Packets\CTradeBrokerHighestItemLevelPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CUnidentifyExecutePacket.cs" />
     <Compile Include="Net\Protocol\Packets\CUpdateFriendInfoPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\CWhisperPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SAccountPackageListPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SActionEndPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SActionStagePacket.cs" />
     <Compile Include="Net\Protocol\Packets\SAdminHoldCharacterPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SCanLockOnTargetPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SCannotStartSkillPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SChatPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SCheckUserNamePacket.cs" />
     <Compile Include="Net\Protocol\Packets\SCheckVersionPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SClearQuestInfoPacket.cs" />
@@ -98,6 +108,8 @@
     <Compile Include="Net\Protocol\Packets\SF2PPremiumUserPermissionPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SGuardPKPolicyPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SHideHPPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SJoinPrivateChannelPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SLeavePrivateChannelPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SLoadClientAccountSettingPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SLoadClientUserSettingPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SLoadingScreenControlInfoPacket.cs" />
@@ -108,6 +120,9 @@
     <Compile Include="Net\Protocol\Packets\SNpcStatusPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SPingPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SPlayerChangeStaminaPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SPrivateChannelNoticePacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SPrivateChatPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SRequestPrivateChannelInfoPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SResponseGameStatPongPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SReturnToLobbyPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SServerTimePacket.cs" />
@@ -120,6 +135,7 @@
     <Compile Include="Net\Protocol\Packets\SStartCoolTimeSkillPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SSystemMessagePacket.cs" />
     <Compile Include="Net\Protocol\Packets\STradeBrokerHighestItemLevelPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SWhisperPacket.cs" />
     <Compile Include="Plugins\IPlugin.cs" />
     <Compile Include="Plugins\PluginLoader.cs" />
     <Compile Include="Cryptography\TeraEncryptionHash.cs" />

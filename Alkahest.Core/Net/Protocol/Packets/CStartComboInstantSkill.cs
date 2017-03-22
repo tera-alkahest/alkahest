@@ -39,10 +39,13 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public sealed class TargetInfo
         {
             [PacketField]
-            public uint Unknown2 { get; set; }
+            public uint Unknown1 { get; set; }
 
             [PacketField]
             public EntityId Target { get; set; }
+
+            [PacketField]
+            public uint Unknown2 { get; set; }
         }
 
         [PacketField]

@@ -15,13 +15,10 @@ namespace Alkahest.Core.Net.Protocol.Packets
         }
 
         [PacketField]
-        public uint Unknown1 { get; set; }
+        public EntityId Source { get; set; }
 
         [PacketField]
-        public uint Unknown2 { get; set; }
-
-        [PacketField]
-        public uint Unknown3 { get; set; }
+        public SkillId BlockedSkill { get; set; }
 
         [PacketField]
         public uint Unknown4 { get; set; }

@@ -46,6 +46,9 @@ namespace Alkahest.Core.Net.Protocol.Packets
 
             [PacketField]
             public EntityId Target { get; set; }
+
+            [PacketField]
+            public uint Unknown3 { get; set; }
         }
 
         [PacketField]
