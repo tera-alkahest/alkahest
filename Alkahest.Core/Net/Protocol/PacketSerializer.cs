@@ -305,6 +305,8 @@ namespace Alkahest.Core.Net.Protocol
                 var offset = offsets[info];
                 var list = (List<byte>)info.ValueGetter(target);
 
+                list.Clear();
+
                 reader.Seek(offset, (r, op) =>
                 {
                     for (var i = 0; i < count; i++)
@@ -319,8 +321,10 @@ namespace Alkahest.Core.Net.Protocol
                 if (count == 0)
                     continue;
 
-                var list = (IList)info.ValueGetter(target);
                 var next = offsets[info];
+                var list = (IList)info.ValueGetter(target);
+
+                list.Clear();
 
                 for (var i = 0; i < count; i++)
                 {

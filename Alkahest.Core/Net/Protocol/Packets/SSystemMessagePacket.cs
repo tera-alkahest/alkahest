@@ -36,6 +36,8 @@ namespace Alkahest.Core.Net.Protocol.Packets
             var keys = msg.Where((_, i) => i % 2 == 0);
             var vals = msg.Where((_, i) => i % 2 != 0);
 
+            MessageArguments.Clear();
+
             foreach (var (k, v) in keys.Zip(vals, (k, v) => (k, v)))
                 MessageArguments.Add(k, v);
         }
