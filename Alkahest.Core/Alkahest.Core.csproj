@@ -67,6 +67,7 @@
     <Compile Include="Net\Protocol\Packets\CLoadTopoFinPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CLoginArbiterPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CPCBangInventoryUseSlotPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\CPlayerFlyingLocationPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CPlayerLocationPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CPongPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CPressSkillPacket.cs" />
