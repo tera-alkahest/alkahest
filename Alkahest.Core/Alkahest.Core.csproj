@@ -80,6 +80,7 @@
     <Compile Include="Net\Protocol\Packets\CSaveClientAccountSettingPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CServerTimePacket.cs" />
     <Compile Include="Net\Protocol\Packets\CSetVisibleRangePacket.cs" />
+    <Compile Include="Net\Protocol\Packets\CShowInventoryPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CSocialPacket.cs" />
     <Compile Include="Net\Protocol\Packet.cs" />
     <Compile Include="Net\Protocol\PacketAttribute.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Net\Protocol\Packets\CStartTargetedSkillPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CTradeBrokerHighestItemLevelPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CUnidentifyExecutePacket.cs" />
+    <Compile Include="Net\Protocol\Packets\CUnmountVehiclePacket.cs" />
     <Compile Include="Net\Protocol\Packets\CUpdateFriendInfoPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CWhisperPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SAccountPackageListPacket.cs" />
@@ -121,6 +123,7 @@
     <Compile Include="Net\Protocol\Packets\SLoadTopoPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SLoginAccountInfoPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SLoginArbiterPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SMountVehiclePacket.cs" />
     <Compile Include="Net\Protocol\Packets\SNpcLocationPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SNpcStatusPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SPingPacket.cs" />
@@ -133,6 +136,7 @@
     <Compile Include="Net\Protocol\Packets\SResponseGameStatPongPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SReturnToLobbyPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SServerTimePacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SShortcutChangePacket.cs" />
     <Compile Include="Net\Protocol\Packets\SShowDeadUIPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SShowHPPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SSkillCategoryPacket.cs" />
@@ -143,6 +147,7 @@
     <Compile Include="Net\Protocol\Packets\SStartCoolTimeSkillPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SSystemMessagePacket.cs" />
     <Compile Include="Net\Protocol\Packets\STradeBrokerHighestItemLevelPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SUnmountVehiclePacket.cs" />
     <Compile Include="Net\Protocol\Packets\SUserStatusPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SWhisperPacket.cs" />
     <Compile Include="Net\ServerListRequestHandler.cs" />
