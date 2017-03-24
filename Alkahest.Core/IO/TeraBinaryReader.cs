@@ -83,7 +83,13 @@ namespace Alkahest.Core.IO
 
         public bool ReadBoolean()
         {
-            return _reader.ReadBoolean();
+            var val = _reader.ReadByte();
+
+            if (val > 1)
+                throw new InvalidDataException(
+                    $"Non-Boolean value {val} encountered.");
+
+            return val == 1;
         }
 
         public string ReadString()
