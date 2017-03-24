@@ -32,6 +32,8 @@ namespace Alkahest.Parser
 
         static bool _stats;
 
+        static bool _summary;
+
         static List<string> _regexes = new List<string>();
 
         static HexDumpMode _hex = HexDumpMode.Unknown;
@@ -122,6 +124,11 @@ namespace Alkahest.Parser
                     "s|stats",
                     "Output parsing and analysis statistics before exiting.",
                     s => _stats = s != null
+                },
+                {
+                    "u|summary",
+                    "Output a summary of known and unknown packets before exiting.",
+                    u => _summary = u != null
                 },
                 "Parsing",
                 {
@@ -301,10 +308,10 @@ namespace Alkahest.Parser
                     else
                         stats.EmptyPackets++;
 
+                    stats.AddPacket(name, parsed != null, payload.Length);
+
                     if (parsed != null)
                     {
-                        stats.KnownPackets++;
-
                         if (_parse)
                         {
                             stats.ParsedPackets++;
@@ -332,8 +339,6 @@ namespace Alkahest.Parser
                             result.WriteLine(parsed);
                         }
                     }
-                    else
-                        stats.UnknownPackets++;
 
                     result.WriteLine();
                 }
@@ -369,11 +374,42 @@ namespace Alkahest.Parser
                 PrintTotalPacketValue("Relevant packets", stats.RelevantPackets);
                 PrintTotalPacketValue("Ignored packets", stats.IgnoredPackets);
                 PrintRelevantPacketValue("Empty packets", stats.EmptyPackets);
-                PrintRelevantPacketValue("Unknown packets", stats.UnknownPackets);
-                PrintRelevantPacketValue("Known packets", stats.KnownPackets);
+                PrintRelevantPacketValue("Unknown packets", stats.UnknownPackets.Count);
+                PrintRelevantPacketValue("Known packets", stats.KnownPackets.Count);
                 PrintRelevantPacketValue("Parsed packets", stats.ParsedPackets);
                 PrintValue("Potential arrays", stats.PotentialArrays);
                 PrintValue("Potential strings", stats.PotentialStrings);
+            }
+
+            if (_summary)
+            {
+                void PrintSummary(KeyValuePair<string,
+                    PacketStatistics.SummaryEntry> kvp)
+                {
+                    var entry = kvp.Value;
+                    var total = stats.RelevantPackets;
+                    var sizes = entry.Sizes;
+
+                    _log.Info("  {0}", kvp.Key);
+                    _log.Info("    Count: {0}{1}", entry.Count, total != 0 ?
+                        $" ({(double)entry.Count / total:P2})" : string.Empty);
+                    _log.Info("    Sizes: Min = {0}, Max = {1}, Avg = {2}",
+                        sizes.Min(), sizes.Max(), (int)sizes.Average());
+                }
+
+                _log.Info(string.Empty);
+                _log.Info("Known packets:");
+                _log.Info(string.Empty);
+
+                foreach (var kvp in stats.KnownPackets.OrderBy(x => x.Key))
+                    PrintSummary(kvp);
+
+                _log.Info(string.Empty);
+                _log.Info("Unknown packets:");
+                _log.Info(string.Empty);
+
+                foreach (var kvp in stats.UnknownPackets.OrderBy(x => x.Key))
+                    PrintSummary(kvp);
             }
 
             return 0;
