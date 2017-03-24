@@ -37,6 +37,7 @@
     <Compile Include="Data\Angle.cs" />
     <Compile Include="Data\ChatChannel.cs" />
     <Compile Include="Data\Class.cs" />
+    <Compile Include="Data\DespawnType.cs" />
     <Compile Include="Data\EntityFlags.cs" />
     <Compile Include="Data\EntityId.cs" />
     <Compile Include="Data\SkillFlags.cs" />
@@ -112,9 +113,11 @@
     <Compile Include="Net\Protocol\Packets\SDecreaseCoolTimeSkillPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SDefendSuccessPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SDespawnNpcPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SDespawnUserPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SF2PPremiumUserPermissionPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SGuardPKPolicyPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SHideHPPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SHitComboPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SJoinPrivateChannelPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SLeavePrivateChannelPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SLoadClientAccountSettingPacket.cs" />
@@ -126,6 +129,7 @@
     <Compile Include="Net\Protocol\Packets\SMountVehiclePacket.cs" />
     <Compile Include="Net\Protocol\Packets\SNpcLocationPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SNpcStatusPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SNpcTargetUserPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SPingPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SPlayerChangeFlightEnergyPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SPlayerChangeMPPacket.cs" />

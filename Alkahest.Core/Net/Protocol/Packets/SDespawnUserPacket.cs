@@ -1,30 +1,23 @@
-using System.Numerics;
 using Alkahest.Core.Data;
 
 namespace Alkahest.Core.Net.Protocol.Packets
 {
-    public sealed class SDespawnNpcPacket : Packet
+    public sealed class SDespawnUserPacket : Packet
     {
-        const string Name = "S_DESPAWN_NPC";
+        const string Name = "S_DESPAWN_USER";
 
         public override string OpCode => Name;
 
         [Packet(Name)]
         internal static Packet Create()
         {
-            return new SDespawnNpcPacket();
+            return new SDespawnUserPacket();
         }
 
         [PacketField]
         public EntityId Target { get; set; }
 
         [PacketField]
-        public Vector3 Position { get; set; }
-
-        [PacketField]
         public DespawnType Type { get; set; }
-
-        [PacketField]
-        public uint Unknown1 { get; set; }
     }
 }
