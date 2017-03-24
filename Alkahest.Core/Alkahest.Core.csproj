@@ -41,6 +41,7 @@
     <Compile Include="Data\EntityId.cs" />
     <Compile Include="Data\SkillFlags.cs" />
     <Compile Include="Data\SkillId.cs" />
+    <Compile Include="Data\UserStatus.cs" />
     <Compile Include="Net\Protocol\Logging\PacketLogEntry.cs" />
     <Compile Include="Net\Protocol\Logging\PacketLogReader.cs" />
     <Compile Include="Net\Protocol\Logging\PacketLogWriter.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="Net\Protocol\Packets\SActionEndPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SActionStagePacket.cs" />
     <Compile Include="Net\Protocol\Packets\SAdminHoldCharacterPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SBossGaugeInfoPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SCanLockOnTargetPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SCannotStartSkillPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SChatPacket.cs" />
@@ -104,7 +106,10 @@
     <Compile Include="Net\Protocol\Packets\SCheckVersionPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SClearQuestInfoPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SClearWorldQuestVillagerInfoPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SCreatureChangeHPPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SDecreaseCoolTimeSkillPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SDefendSuccessPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SDespawnNpcPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SF2PPremiumUserPermissionPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SGuardPKPolicyPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SHideHPPacket.cs" />
@@ -119,6 +124,8 @@
     <Compile Include="Net\Protocol\Packets\SNpcLocationPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SNpcStatusPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SPingPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SPlayerChangeFlightEnergyPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SPlayerChangeMPPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SPlayerChangeStaminaPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SPrivateChannelNoticePacket.cs" />
     <Compile Include="Net\Protocol\Packets\SPrivateChatPacket.cs" />
@@ -131,10 +138,12 @@
     <Compile Include="Net\Protocol\Packets\SSkillCategoryPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SSocialCancelPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SSocialPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SSpawnMePacket.cs" />
     <Compile Include="Net\Protocol\Packets\SStartCoolTimeItemPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SStartCoolTimeSkillPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SSystemMessagePacket.cs" />
     <Compile Include="Net\Protocol\Packets\STradeBrokerHighestItemLevelPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SUserStatusPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SWhisperPacket.cs" />
     <Compile Include="Net\ServerListRequestHandler.cs" />
     <Compile Include="Plugins\IPlugin.cs" />
