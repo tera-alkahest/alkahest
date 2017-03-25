@@ -1,4 +1,5 @@
 using System.Numerics;
+using Alkahest.Core.Data;
 
 namespace Alkahest.Core.Net.Protocol.Packets
 {
@@ -15,7 +16,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         }
 
         [PacketField]
-        public uint Type { get; set; }
+        public FlyingMovementKind Kind { get; set; }
 
         [PacketField]
         public Vector3 Position { get; set; }

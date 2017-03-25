@@ -37,9 +37,11 @@
     <Compile Include="Data\Angle.cs" />
     <Compile Include="Data\ChatChannel.cs" />
     <Compile Include="Data\Class.cs" />
-    <Compile Include="Data\DespawnType.cs" />
+    <Compile Include="Data\DespawnKind.cs" />
     <Compile Include="Data\EntityFlags.cs" />
     <Compile Include="Data\EntityId.cs" />
+    <Compile Include="Data\FlyingMovementKind.cs" />
+    <Compile Include="Data\MovementKind.cs" />
     <Compile Include="Data\SkillFlags.cs" />
     <Compile Include="Data\SkillId.cs" />
     <Compile Include="Data\UserStatus.cs" />
@@ -80,6 +82,7 @@
     <Compile Include="Net\Protocol\Packets\CResetAllDungeonPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CReturnToLobbyPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CSaveClientAccountSettingPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\CSaveClientUserSettingPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CServerTimePacket.cs" />
     <Compile Include="Net\Protocol\Packets\CSetVisibleRangePacket.cs" />
     <Compile Include="Net\Protocol\Packets\CShowInventoryPacket.cs" />
@@ -148,11 +151,14 @@
     <Compile Include="Net\Protocol\Packets\SSocialCancelPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SSocialPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SSpawnMePacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SStartClientCustomSkillPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SStartCoolTimeItemPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SStartCoolTimeSkillPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SSwitchInfoPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SSystemMessagePacket.cs" />
     <Compile Include="Net\Protocol\Packets\STradeBrokerHighestItemLevelPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SUnmountVehiclePacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SUpdateEventSeedStatePacket.cs" />
     <Compile Include="Net\Protocol\Packets\SUserStatusPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SWhisperPacket.cs" />
     <Compile Include="Net\ServerListRequestHandler.cs" />

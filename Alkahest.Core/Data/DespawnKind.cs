@@ -1,9 +1,10 @@
 namespace Alkahest.Core.Data
 {
-    public enum DespawnType : uint
+    public enum DespawnKind : uint
     {
+        Unknown1 = 0,
         OutOfView = 1,
-        Unknown1 = 3,
+        Unknown2 = 3,
         Dead = 5
     }
 }

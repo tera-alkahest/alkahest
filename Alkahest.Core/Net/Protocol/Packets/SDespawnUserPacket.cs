@@ -18,6 +18,6 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public EntityId Target { get; set; }
 
         [PacketField]
-        public DespawnType Type { get; set; }
+        public DespawnKind Kind { get; set; }
     }
 }

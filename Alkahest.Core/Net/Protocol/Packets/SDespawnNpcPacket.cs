@@ -22,7 +22,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public Vector3 Position { get; set; }
 
         [PacketField]
-        public DespawnType Type { get; set; }
+        public DespawnKind Kind { get; set; }
 
         [PacketField]
         public uint Unknown1 { get; set; }

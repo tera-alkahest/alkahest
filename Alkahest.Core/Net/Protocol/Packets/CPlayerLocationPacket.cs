@@ -28,7 +28,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public Vector3 Destination { get; set; }
 
         [PacketField]
-        public uint Type { get; set; }
+        public MovementKind Kind { get; set; }
 
         [PacketField]
         public ushort Speed { get; set; }
