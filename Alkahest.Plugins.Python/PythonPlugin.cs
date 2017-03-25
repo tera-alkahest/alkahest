@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Alkahest.Core;
 using Alkahest.Core.Logging;
 using Alkahest.Core.Net;
 using Alkahest.Core.Plugins;
@@ -54,7 +55,7 @@ namespace Alkahest.Plugins.Python
                 io.SetInput(Stream.Null, io.InputEncoding);
 
                 ((dynamic)IronPython.Hosting.Python.GetClrModule(engine))
-                    .AddReference($"{nameof(Alkahest)}.{nameof(Core)}");
+                    .AddReference(typeof(Assert).Assembly.FullName);
 
                 ((dynamic)IronPython.Hosting.Python.GetBuiltinModule(engine)).__log__ =
                     new Log(typeof(PythonPlugin), name);
