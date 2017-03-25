@@ -17,8 +17,15 @@ namespace Alkahest.Core.Net
             var progress = 0;
 
             while (progress < length)
-                progress += socket.Send(data, offset + progress,
+            {
+                var len = socket.Send(data, offset + progress,
                     length - progress, SocketFlags.None);
+
+                if (len == 0)
+                    throw new SocketDisconnectedException();
+
+                progress += len;
+            }
         }
 
         public static void ReceiveFull(this Socket socket,
@@ -27,8 +34,15 @@ namespace Alkahest.Core.Net
             var progress = 0;
 
             while (progress < length)
-                progress += socket.Receive(data, offset + progress,
+            {
+                var len = socket.Receive(data, offset + progress,
                     length - progress, SocketFlags.None);
+
+                if (len == 0)
+                    throw new SocketDisconnectedException();
+
+                progress += len;
+            }
         }
 
         public static void SafeClose(this Socket socket)

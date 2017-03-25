@@ -162,6 +162,7 @@
     <Compile Include="Net\Protocol\Packets\SUserStatusPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SWhisperPacket.cs" />
     <Compile Include="Net\ServerListRequestHandler.cs" />
+    <Compile Include="Net\SocketDisconnectedException.cs" />
     <Compile Include="Plugins\IPlugin.cs" />
     <Compile Include="Plugins\PluginLoader.cs" />
     <Compile Include="Cryptography\TeraEncryptionHash.cs" />

@@ -33,6 +33,8 @@ namespace Alkahest.Core.Net
         readonly byte[] _serverSendBuffer =
             new byte[PacketHeader.MaxPacketSize];
 
+        volatile bool _disconnected;
+
         internal GameClient(GameProxy proxy, Socket socket)
         {
             Proxy = proxy;
@@ -68,13 +70,15 @@ namespace Alkahest.Core.Net
         {
             DisconnectInternal();
 
-            _log.Info("Disconnected client {0} from {1}",
-                EndPoint, Proxy.Info.Name);
+            _log.Info("Disconnected client {0} from {1} ({2})",
+                EndPoint, Proxy.Info.Name, Proxy.RealEndPoint);
         }
 
         void DisconnectInternal()
         {
             Proxy.RemoveClient(this);
+
+            _disconnected = true;
 
             _serverSocket.SafeClose();
             _clientSocket.SafeClose();
@@ -104,8 +108,16 @@ namespace Alkahest.Core.Net
                 Buffer.BlockCopy(packet.Payload, 0, buffer,
                     PacketHeader.HeaderSize, header.Length);
 
-                return SendInternal(buffer, header.FullLength, false,
-                    socket, encryption, server);
+                try
+                {
+                    return SendInternal(buffer, header.FullLength, false,
+                        socket, encryption, server);
+                }
+                catch (SocketDisconnectedException)
+                {
+                    // Normal disconnection.
+                    return false;
+                }
             }
         }
 
@@ -134,8 +146,16 @@ namespace Alkahest.Core.Net
                 Buffer.BlockCopy(data, 0, buffer, PacketHeader.HeaderSize,
                     header.Length);
 
-                return SendInternal(buffer, header.FullLength, false,
-                    socket, encryption, server);
+                try
+                {
+                    return SendInternal(buffer, header.FullLength, false,
+                        socket, encryption, server);
+                }
+                catch (SocketDisconnectedException)
+                {
+                    // Normal disconnection.
+                    return false;
+                }
             }
         }
 
@@ -259,6 +279,12 @@ namespace Alkahest.Core.Net
                 skey2 = ReceiveFromServerInternal(TeraEncryptionSession.KeySize);
                 SendToClientInternal(skey2, true);
             }
+            catch (SocketDisconnectedException)
+            {
+                // Normal disconnection.
+                Disconnect();
+                return;
+            }
             catch (Exception e) when (IsSocketException(e))
             {
                 // The client is already disconnected.
@@ -329,6 +355,12 @@ namespace Alkahest.Core.Net
                             true, to, toEnc, toServer);
                     }
                 }
+                catch (SocketDisconnectedException)
+                {
+                    // Normal disconnection.
+                    Disconnect();
+                    return false;
+                }
                 catch (Exception e) when (IsSocketException(e))
                 {
                     // The client is already disconnected.
@@ -381,11 +413,14 @@ namespace Alkahest.Core.Net
             }
             catch (Exception e) when (IsSocketException(e))
             {
-                DisconnectInternal();
-                HandleException(e, server);
+                if (!_disconnected)
+                {
+                    DisconnectInternal();
+                    HandleException(e, server);
 
-                if (rethrow)
-                    throw;
+                    if (rethrow)
+                        throw;
+                }
 
                 return false;
             }
@@ -403,11 +438,14 @@ namespace Alkahest.Core.Net
             }
             catch (Exception e) when (IsSocketException(e))
             {
-                DisconnectInternal();
-                HandleException(e, server);
+                if (!_disconnected)
+                {
+                    DisconnectInternal();
+                    HandleException(e, server);
 
-                if (rethrow)
-                    throw;
+                    if (rethrow)
+                        throw;
+                }
 
                 return default(T);
             }
