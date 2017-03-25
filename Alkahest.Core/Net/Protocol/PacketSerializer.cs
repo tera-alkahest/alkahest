@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel.Composition.Hosting;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Numerics;
@@ -42,6 +43,8 @@ namespace Alkahest.Core.Net.Protocol
 
             public Action<object, object> ValueSetter { get; }
 
+            public Action<object> EnumValidator { get; }
+
             public Func<IList> ArrayConstructor { get; }
 
             public Func<object> ElementConstructor { get; }
@@ -77,6 +80,16 @@ namespace Alkahest.Core.Net.Protocol
 
                 if (IsPrimitive || IsString)
                     ValueSetter = GetValueSetter(property);
+
+                if (type.IsEnum && type.GetCustomAttribute<FlagsAttribute>() == null)
+                {
+                    EnumValidator = val =>
+                    {
+                        if (!Enum.IsDefined(type, val))
+                            throw new InvalidDataException(
+                                $"Invalid enum value {val} encountered for {type}.");
+                    };
+                }
 
                 if (IsArray)
                     ElementConstructor = GetDefaultConstructor(elemType);
@@ -288,7 +301,12 @@ namespace Alkahest.Core.Net.Protocol
                 else if (info.IsString)
                     offsets.Add(info, reader.ReadOffset());
                 else
-                    info.ValueSetter(target, info.PrimitiveDeserializer(reader));
+                {
+                    var val = info.PrimitiveDeserializer(reader);
+
+                    info.EnumValidator?.Invoke(val);
+                    info.ValueSetter(target, val);
+                }
             }
 
             foreach (var info in fields.Where(x => x.IsString))
