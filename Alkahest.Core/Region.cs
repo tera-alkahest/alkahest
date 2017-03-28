@@ -3,6 +3,10 @@ namespace Alkahest.Core
     public enum Region : byte
     {
         EU,
-        NA
+        JP,
+        KR,
+        NA,
+        RU,
+        TW
     }
 }

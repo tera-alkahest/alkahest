@@ -54,7 +54,7 @@ namespace Alkahest.Server
             using (var hosts = Configuration.AdjustHostsFile ? new HostsFileManager() : null)
             {
                 var region = Configuration.Region;
-                var slsHost = ServerListParameters.GetHost(region);
+                var slsHost = ServerListParameters.GetUri(region).Host;
                 var slsAddress = Configuration.ServerListAddress;
 
                 hosts?.RemoveEntry(slsHost, slsAddress);

@@ -18,7 +18,7 @@ namespace Alkahest.Core.Net.Protocol
 
             var asm = Assembly.GetExecutingAssembly();
             var name = string.Format(@"Net\Protocol\OpCodes\{0}_{1}.txt",
-                opCodes ? "opc" : "smt", region.ToRegionString());
+                opCodes ? "opc" : "smt", region.ToString().ToLowerInvariant());
             var codeToName = new Dictionary<ushort, string>();
             var nameToCode = new Dictionary<string, ushort>();
 

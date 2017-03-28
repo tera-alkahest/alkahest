@@ -5,6 +5,15 @@ namespace Alkahest.Core.Net
 {
     public sealed class ServerListParameters
     {
+        static readonly Uri _eu = new Uri(
+            "http://web-sls.tera.gameforge.com:4566/servers/list.uk");
+
+        static readonly Uri _na = new Uri(
+            "http://sls.service.enmasse.com:8080/servers/list.en");
+
+        static readonly Uri _tw = new Uri(
+            "http://tera.mangot5.com:80/game/tera/serverList.xml");
+
         public IPAddress RealAddress { get; }
 
         public IPAddress ServerListAddress { get; }
@@ -17,9 +26,7 @@ namespace Alkahest.Core.Net
 
         public int Retries { get; }
 
-        public string Host => GetHost(Region);
-
-        public int Port => GetPort(Region);
+        public Uri Uri { get; }
 
         public ServerListParameters(IPAddress realAddress, IPAddress slsAddress,
             IPAddress gameAddress, Region region, TimeSpan timeout, int retries)
@@ -30,29 +37,25 @@ namespace Alkahest.Core.Net
             Region = region;
             Timeout = timeout;
             Retries = retries;
+            Uri = GetUri(region);
         }
 
-        public static string GetHost(Region region)
+        public static Uri GetUri(Region region)
         {
             switch (region)
             {
                 case Region.EU:
-                    return "web-sls.tera.gameforge.com";
+                    return _eu;
+                case Region.JP:
+                    throw new NotImplementedException(); // TODO
+                case Region.KR:
+                    throw new NotImplementedException(); // TODO
                 case Region.NA:
-                    return "sls.service.enmasse.com";
-                default:
-                    throw Assert.Unreachable();
-            }
-        }
-
-        public static int GetPort(Region region)
-        {
-            switch (region)
-            {
-                case Region.EU:
-                    return 4566;
-                case Region.NA:
-                    return 4566;
+                    return _na;
+                case Region.RU:
+                    throw new NotImplementedException(); // TODO
+                case Region.TW:
+                    return _tw;
                 default:
                     throw Assert.Unreachable();
             }

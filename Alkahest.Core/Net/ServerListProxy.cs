@@ -22,7 +22,7 @@ namespace Alkahest.Core.Net
             Parameters = parameters;
 
             var cfg = new HttpSelfHostConfiguration(
-                $"http://{parameters.ServerListAddress}:{parameters.Port}")
+                $"http://{parameters.ServerListAddress}:{parameters.Uri.Port}")
             {
                 MessageHandlers =
                 {

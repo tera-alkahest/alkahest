@@ -17,20 +17,14 @@ namespace Alkahest.Core.Net
 
         static readonly Log _log = new Log(typeof(ServerListRequestHandler));
 
-        readonly ServerListParameters _params;
-
-        readonly string _hostHeader;
-
-        readonly string _serverListPath;
+        readonly ServerListParameters _parameters;
 
         readonly string _servers;
 
         public ServerListRequestHandler(ServerListParameters parameters,
             out ServerInfo[] servers)
         {
-            _params = parameters;
-            _hostHeader = $"{parameters.Host}:{parameters.Port}";
-            _serverListPath = $"/servers/list.{parameters.Region.ToRegionString()}";
+            _parameters = parameters;
             _servers = GetAndAdjustServers(out servers);
         }
 
@@ -42,16 +36,16 @@ namespace Alkahest.Core.Net
 
             using (var client = new HttpClient())
             {
-                client.Timeout = _params.Timeout;
+                client.Timeout = _parameters.Timeout;
 
                 var retriesSoFar = 0;
 
                 while (true)
                 {
                     var req = new HttpRequestMessage(HttpMethod.Get,
-                        GetUri(_serverListPath));
+                        GetUri(_parameters.Uri.PathAndQuery));
 
-                    req.Headers.Host = _hostHeader;
+                    req.Headers.Host = _parameters.Uri.Authority;
 
                     try
                     {
@@ -59,7 +53,7 @@ namespace Alkahest.Core.Net
                     }
                     catch (AggregateException)
                     {
-                        if (retriesSoFar < _params.Retries)
+                        if (retriesSoFar < _parameters.Retries)
                         {
                             _log.Error("Could not fetch official server list, retrying...");
                             retriesSoFar++;
@@ -83,15 +77,14 @@ namespace Alkahest.Core.Net
                 var ipElem = elem.Element("ip");
 
                 var id = int.Parse(elem.Element("id").Value);
-                var name = elem.Element("name").Value;
-                var cat = elem.Element("category").Value;
+                var name = elem.Element("name").Attribute("raw_name").Value;
                 var ip = IPAddress.Parse(ipElem.Value);
                 var port = int.Parse(elem.Element("port").Value);
-                var newIP = _params.GameAddress;
+                var newIP = _parameters.GameAddress;
 
                 ipElem.Value = newIP.ToString();
 
-                servs.Add(new ServerInfo(id, name, cat, ip, newIP, port));
+                servs.Add(new ServerInfo(id, name, ip, newIP, port));
 
                 _log.Info("Redirected {0}: {1}:{2} -> {3}:{2}",
                     name, ip, port, newIP);
@@ -106,7 +99,7 @@ namespace Alkahest.Core.Net
 
         Uri GetUri(string path)
         {
-            return new Uri($"http://{_params.RealAddress}:{_params.Port}{path}");
+            return new Uri($"http://{_parameters.RealAddress}:{_parameters.Uri.Port}{path}");
         }
 
         protected override Task<HttpResponseMessage> SendAsync(
@@ -125,7 +118,7 @@ namespace Alkahest.Core.Net
 
                 using (var client = new HttpClient())
                 {
-                    client.Timeout = _params.Timeout;
+                    client.Timeout = _parameters.Timeout;
 
                     var retriesSoFar = 0;
 
@@ -144,7 +137,7 @@ namespace Alkahest.Core.Net
                         foreach (var hdr in request.Headers)
                             req.Headers.Add(hdr.Key, hdr.Value);
 
-                        req.Headers.Host = _hostHeader;
+                        req.Headers.Host = _parameters.Uri.Authority;
 
                         var content = request.Content.ReadAsByteArrayAsync().Result;
 
@@ -157,7 +150,7 @@ namespace Alkahest.Core.Net
                         }
                         catch (AggregateException)
                         {
-                            if (retriesSoFar < _params.Retries)
+                            if (retriesSoFar < _parameters.Retries)
                             {
                                 _log.Error("Could not forward HTTP request at {0} from {1}, retrying...",
                                     path, from);
@@ -166,7 +159,7 @@ namespace Alkahest.Core.Net
                             }
 
                             _log.Error("Gave up forwarding HTTP request at {0} from {1} after {2} retries",
-                                path, from, _params.Retries);
+                                path, from, _parameters.Retries);
 
                             // The official server seems dead.
                             return new HttpResponseMessage(HttpStatusCode.GatewayTimeout);
@@ -176,7 +169,7 @@ namespace Alkahest.Core.Net
                     }
                 }
 
-                if (path == _serverListPath)
+                if (path == _parameters.Uri.PathAndQuery)
                     resp.Content = new StringContent(_servers);
 
                 _log.Debug("Forwarded HTTP request at {0} from {1}: {2}",

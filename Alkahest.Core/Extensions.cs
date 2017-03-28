@@ -25,18 +25,5 @@ namespace Alkahest.Core
                     throw Assert.Unreachable();
             }
         }
-
-        public static string ToRegionString(this Region region)
-        {
-            switch (region)
-            {
-                case Region.EU:
-                    return "uk";
-                case Region.NA:
-                    return "en";
-                default:
-                    throw Assert.Unreachable();
-            }
-        }
     }
 }
