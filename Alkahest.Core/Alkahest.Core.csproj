@@ -159,6 +159,7 @@
     <Compile Include="Net\Protocol\Packets\STradeBrokerHighestItemLevelPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SUnmountVehiclePacket.cs" />
     <Compile Include="Net\Protocol\Packets\SUpdateEventSeedStatePacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SUserFlyingLocationPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SUserStatusPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SWhisperPacket.cs" />
     <Compile Include="Net\ServerListRequestHandler.cs" />

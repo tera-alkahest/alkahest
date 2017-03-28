@@ -15,7 +15,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         }
 
         [PacketField]
-        public uint Unknown1 { get; set; }
+        public uint Category { get; set; }
 
         [PacketField]
         public byte Unknown2 { get; set; }

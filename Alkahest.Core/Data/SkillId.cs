@@ -10,7 +10,7 @@ namespace Alkahest.Core.Data
 
         public SkillFlags Flags => (SkillFlags)Bits.Extract(Raw, 26, 31);
 
-        public uint Category => Skill / 10000;
+        public uint Group => Skill / 10000;
 
         public uint Level => Skill / 100 % 100;
 
@@ -27,9 +27,9 @@ namespace Alkahest.Core.Data
                 Bits.Insert(0, (uint)SkillFlags.Unknown1, 26, 31));
         }
 
-        public static SkillId FromValues(uint category, uint level, uint type)
+        public static SkillId FromValues(uint group, uint level, uint type)
         {
-            return new SkillId(Bits.Insert(0, (category * 10000 + level * 100 + type), 0, 25) |
+            return new SkillId(Bits.Insert(0, (group * 10000 + level * 100 + type), 0, 25) |
                 Bits.Insert(0, (uint)SkillFlags.Unknown1, 26, 31));
         }
 
