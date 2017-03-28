@@ -70,7 +70,7 @@ namespace Alkahest.Core.Net.Protocol
 
                 if (IsPrimitive)
                 {
-                    GetFunctions(type, out var s, out var d);
+                    GetFunctions(attribute, type, out var s, out var d);
 
                     PrimitiveSerializer = s;
                     PrimitiveDeserializer = d;
@@ -107,7 +107,7 @@ namespace Alkahest.Core.Net.Protocol
                     type == typeof(Angle);
             }
 
-            static void GetFunctions(Type type,
+            static void GetFunctions(PacketFieldAttribute attribute, Type type,
                 out Action<TeraBinaryWriter, object> serializer,
                 out Func<TeraBinaryReader, object> deserializer)
             {
@@ -131,7 +131,11 @@ namespace Alkahest.Core.Net.Protocol
                 }
                 else if (type == typeof(ushort))
                 {
-                    serializer = (w, v) => w.WriteUInt16((ushort)v);
+                    if (attribute.IsUnknownArray)
+                        serializer = (w, v) => w.WriteUInt16(0);
+                    else
+                        serializer = (w, v) => w.WriteUInt16((ushort)v);
+
                     deserializer = r => r.ReadUInt16();
                 }
                 else if (type == typeof(short))

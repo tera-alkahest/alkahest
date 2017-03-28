@@ -12,10 +12,10 @@ namespace Alkahest.Core.Net.Protocol.Packets
             return new SJoinPrivateChannelPacket();
         }
 
-        [PacketField]
+        [PacketField(IsUnknownArray = true)]
         public ushort Unknown1Count { get; set; }
 
-        [PacketField]
+        [PacketField(IsUnknownArray = true)]
         public ushort Unknown1Offset { get; set; }
 
         [PacketField]
