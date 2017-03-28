@@ -21,3 +21,5 @@ def __stop__(proxies):
 def _handle_check_version(client, direction, packet):
     for ver in packet.VersionValues:
         __log__.Info("Client reported version: {0}", ver.Value)
+
+    return True
