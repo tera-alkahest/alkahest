@@ -81,6 +81,9 @@ Once you've configured Alkahest, run `alkahest-server.exe` to start it. Once
 Alkahest finishes initializing, and if everything went fine, you should be able
 to just start TERA and play.
 
+If you're playing on TW, you need to log in through the launcher, start
+Alkahest, and then start the game.
+
 Note that, by default, Alkahest will adjust your `hosts` file so that the
 hostname that the TERA launcher fetches the official server list from will be
 redirected to wherever Alkahest is configured to be listening. This is
@@ -88,7 +91,3 @@ necessary so that Alkahest can give the client a modified server list where all
 IP addresses point to where Alkahest is listening for each server. Modifying
 the `hosts` file requires administrative privileges, so you must run Alkahest
 as administrator.
-
-To close the Alkahest process properly, press Ctrl-C while the console window
-is in focus. Don't terminate it in any other way as that will not give Alkahest
-a chance to undo its changes to your `hosts` file.

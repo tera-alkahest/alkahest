@@ -21,14 +21,19 @@ namespace Alkahest.Server
         public static string Name { get; } =
             $"{nameof(Alkahest)} {nameof(Server)}";
 
-        static readonly ManualResetEventSlim _event =
+        static readonly ManualResetEventSlim _runningEvent =
+            new ManualResetEventSlim();
+
+        static readonly ManualResetEventSlim _exitEvent =
             new ManualResetEventSlim();
 
         static readonly Log _log = new Log(typeof(Application));
 
         public static int Run(string[] args)
         {
+            AppDomain.CurrentDomain.ProcessExit += ProcessExit;
             Console.CancelKeyPress += CancelKeyPress;
+            ConsoleUtility.AddConsoleEventHandler(ConsoleEvent);
 
             Log.Level = Configuration.LogLevel;
             Log.TimestampFormat = Configuration.LogTimestampFormat;
@@ -95,7 +100,7 @@ namespace Alkahest.Server
 
                         _log.Basic("{0} started", Name);
 
-                        _event.Wait();
+                        _runningEvent.Wait();
 
                         _log.Basic("{0} shutting down...", Name);
 
@@ -107,14 +112,34 @@ namespace Alkahest.Server
                 }
             }
 
+            _exitEvent.Set();
+
             return 0;
+        }
+
+        static void ProcessExit(object sender, EventArgs e)
+        {
+            _runningEvent.Set();
+            _exitEvent.Wait();
         }
 
         static void CancelKeyPress(object sender, ConsoleCancelEventArgs args)
         {
             args.Cancel = true;
 
-            _event.Set();
+            _runningEvent.Set();
+            _exitEvent.Wait();
+        }
+
+        static bool ConsoleEvent(int @event)
+        {
+            if (@event == ConsoleUtility.CloseEvent)
+            {
+                _runningEvent.Set();
+                _exitEvent.Wait();
+            }
+
+            return false;
         }
 
         [HandleProcessCorruptedStateExceptions]
