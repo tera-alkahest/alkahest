@@ -186,166 +186,119 @@ namespace Alkahest.Parser
             return true;
         }
 
-        public static int Run(string[] args)
+        static void HandleEntry(PacketLogEntry entry, Regex[] regexes,
+            PacketStatistics stats, PacketSerializer serializer,
+            StreamWriter result)
         {
-            try
-            {
-                if (!HandleArguments(ref args))
-                    return 0;
-            }
-            catch (OptionException e)
-            {
-                Console.WriteLine(e.Message);
-                return 1;
-            }
+            stats.TotalPackets++;
 
-            if (args.Length != 1)
+            var name = serializer.GameMessages.OpCodeToName[entry.OpCode];
+
+            if (regexes.All(r => !r.IsMatch(name)))
             {
-                Console.WriteLine("Expected exactly one input file argument.");
-                return 1;
+                stats.IgnoredPackets++;
+                return;
             }
 
-            Log.Level = LogLevel.Debug;
-            Log.TimestampFormat = "HH:mm:ss:fff";
+            stats.RelevantPackets++;
 
-            var color = Console.ForegroundColor;
+            result.WriteLine("[{0:yyyy-MM-dd HH:mm:ss:fff}] {1} {2}: {3} ({4} bytes)",
+                entry.Timestamp.ToLocalTime(), entry.ServerName,
+                entry.Direction.ToDirectionString(), name,
+                entry.Payload.Count);
 
-            Log.Loggers.Add(new ConsoleLogger(false,
-                color, color, color, color));
+            var parsed = serializer.Create(entry.OpCode);
+            var payload = entry.Payload.ToArray();
 
-            if (!Debugger.IsAttached)
-                AppDomain.CurrentDomain.UnhandledException += UnhandledException;
-
-            var input = args[0];
-            var output = _output ?? Path.ChangeExtension(input, "txt");
-            var regexes = _regexes.Select(x => new Regex(x, RegexOptions))
-                .DefaultIfEmpty(new Regex(".*", RegexOptions))
-                .ToArray();
-
-            _log.Basic("Parsing {0}...", input);
-
-            var reader = new PacketLogReader(input);
-            var serializer = new PacketSerializer(
-                new OpCodeTable(true, reader.Region),
-                new OpCodeTable(false, reader.Region));
-            var stats = new PacketStatistics();
-
-            using (var result = new StreamWriter(new FileStream(output,
-                FileMode.Create, FileAccess.Write)))
+            if (payload.Length != 0)
             {
-                foreach (var entry in reader.EnumerateAll())
+                if ((_hex == HexDumpMode.Unknown && parsed == null) ||
+                    _hex == HexDumpMode.All)
                 {
-                    stats.TotalPackets++;
-
-                    var name = serializer.GameMessages.OpCodeToName[entry.OpCode];
-
-                    if (regexes.All(r => !r.IsMatch(name)))
+                    result.WriteLine();
+                    result.WriteLine(new RawPacket(name)
                     {
-                        stats.IgnoredPackets++;
+                        Payload = payload
+                    });
+                }
 
-                        continue;
-                    }
+                if ((_analysis == AnalysisMode.Unknown && parsed == null) ||
+                    _analysis == AnalysisMode.All)
+                {
+                    var arrays = PacketAnalysis.FindArrays(payload);
 
-                    stats.RelevantPackets++;
-
-                    result.WriteLine("[{0:yyyy-MM-dd HH:mm:ss:fff}] {1} {2}: {3} ({4} bytes)",
-                        entry.Timestamp.ToLocalTime(), entry.ServerName,
-                        entry.Direction.ToDirectionString(), name,
-                        entry.Payload.Count);
-
-                    var parsed = serializer.Create(entry.OpCode);
-                    var payload = entry.Payload.ToArray();
-
-                    if (payload.Length != 0)
+                    if (arrays.Any())
                     {
-                        if ((_hex == HexDumpMode.Unknown && parsed == null) ||
-                            _hex == HexDumpMode.All)
+                        result.WriteLine();
+                        result.WriteLine("Potential arrays:");
+                        result.WriteLine();
+
+                        foreach (var arr in arrays)
                         {
-                            result.WriteLine();
-                            result.WriteLine(new RawPacket(name)
-                            {
-                                Payload = payload
-                            });
-                        }
+                            stats.PotentialArrays++;
 
-                        if ((_analysis == AnalysisMode.Unknown && parsed == null) ||
-                            _analysis == AnalysisMode.All)
-                        {
-                            var arrays = PacketAnalysis.FindArrays(payload);
-
-                            if (arrays.Any())
-                            {
-                                result.WriteLine();
-                                result.WriteLine("Potential arrays:");
-                                result.WriteLine();
-
-                                foreach (var arr in arrays)
-                                {
-                                    stats.PotentialArrays++;
-
-                                    result.WriteLine(arr);
-                                }
-                            }
-
-                            var strings = PacketAnalysis.FindStrings(payload,
-                                _whiteSpace, _control, _length);
-
-                            if (strings.Any())
-                            {
-                                result.WriteLine();
-                                result.WriteLine("Potential strings:");
-                                result.WriteLine();
-
-                                foreach (var str in strings)
-                                {
-                                    stats.PotentialStrings++;
-
-                                    result.WriteLine(str);
-                                }
-                            }
+                            result.WriteLine(arr);
                         }
                     }
-                    else
-                        stats.EmptyPackets++;
 
-                    stats.AddPacket(name, parsed != null, payload.Length);
+                    var strings = PacketAnalysis.FindStrings(payload,
+                        _whiteSpace, _control, _length);
 
-                    if (parsed != null)
+                    if (strings.Any())
                     {
-                        if (_parse)
+                        result.WriteLine();
+                        result.WriteLine("Potential strings:");
+                        result.WriteLine();
+
+                        foreach (var str in strings)
                         {
-                            stats.ParsedPackets++;
+                            stats.PotentialStrings++;
 
-                            serializer.Deserialize(payload, parsed);
-
-                            for (var i = 0; i < _roundtrips; i++)
-                            {
-                                var payload2 = serializer.Serialize(parsed);
-
-                                Assert.Check(payload2.Length == payload.Length,
-                                    "Payload lengths must match after roundtrip.");
-
-                                if (i > 0)
-                                    Assert.Check(payload2.SequenceEqual(payload),
-                                        "Payloads must match after first roundtrip.");
-
-                                if (i != _roundtrips - 1)
-                                    serializer.Deserialize(payload2, parsed);
-
-                                payload = payload2;
-                            }
-
-                            result.WriteLine();
-                            result.WriteLine(parsed);
+                            result.WriteLine(str);
                         }
+                    }
+                }
+            }
+            else
+                stats.EmptyPackets++;
+
+            stats.AddPacket(name, parsed != null, payload.Length);
+
+            if (parsed != null)
+            {
+                if (_parse)
+                {
+                    stats.ParsedPackets++;
+
+                    serializer.Deserialize(payload, parsed);
+
+                    for (var i = 0; i < _roundtrips; i++)
+                    {
+                        var payload2 = serializer.Serialize(parsed);
+
+                        Assert.Check(payload2.Length == payload.Length,
+                            "Payload lengths must match after roundtrip.");
+
+                        if (i > 0)
+                            Assert.Check(payload2.SequenceEqual(payload),
+                                "Payloads must match after first roundtrip.");
+
+                        if (i != _roundtrips - 1)
+                            serializer.Deserialize(payload2, parsed);
+
+                        payload = payload2;
                     }
 
                     result.WriteLine();
+                    result.WriteLine(parsed);
                 }
             }
 
-            _log.Basic("Parsed packets to {0}", output);
+            result.WriteLine();
+        }
 
+        static void PrintStats(PacketStatistics stats)
+        {
             if (_stats)
             {
                 void PrintValue(string name, int value,
@@ -397,20 +350,78 @@ namespace Alkahest.Parser
                         sizes.Min(), sizes.Max(), (int)sizes.Average());
                 }
 
-                _log.Info(string.Empty);
-                _log.Info("Known packets:");
-                _log.Info(string.Empty);
+                void PrintSummaryList(string header,
+                    IReadOnlyDictionary<string,
+                    PacketStatistics.SummaryEntry> packets)
+                {
+                    _log.Info(string.Empty);
+                    _log.Info($"{header}:");
+                    _log.Info(string.Empty);
 
-                foreach (var kvp in stats.KnownPackets.OrderBy(x => x.Key))
-                    PrintSummary(kvp);
+                    foreach (var kvp in packets.OrderBy(x => x.Key))
+                        PrintSummary(kvp);
+                }
 
-                _log.Info(string.Empty);
-                _log.Info("Unknown packets:");
-                _log.Info(string.Empty);
-
-                foreach (var kvp in stats.UnknownPackets.OrderBy(x => x.Key))
-                    PrintSummary(kvp);
+                PrintSummaryList("Known packets", stats.KnownPackets);
+                PrintSummaryList("Unknown packets", stats.UnknownPackets);
             }
+        }
+
+        public static int Run(string[] args)
+        {
+            try
+            {
+                if (!HandleArguments(ref args))
+                    return 0;
+            }
+            catch (OptionException e)
+            {
+                Console.WriteLine(e.Message);
+                return 1;
+            }
+
+            if (args.Length != 1)
+            {
+                Console.WriteLine("Expected exactly one input file argument.");
+                return 1;
+            }
+
+            Log.Level = LogLevel.Debug;
+            Log.TimestampFormat = "HH:mm:ss:fff";
+
+            var color = Console.ForegroundColor;
+
+            Log.Loggers.Add(new ConsoleLogger(false,
+                color, color, color, color));
+
+            if (!Debugger.IsAttached)
+                AppDomain.CurrentDomain.UnhandledException += UnhandledException;
+
+            var input = args[0];
+            var output = _output ?? Path.ChangeExtension(input, "txt");
+            var regexes = _regexes.Select(x => new Regex(x, RegexOptions))
+                .DefaultIfEmpty(new Regex(".*", RegexOptions))
+                .ToArray();
+
+            _log.Basic("Parsing {0}...", input);
+
+            var stats = new PacketStatistics();
+
+            using (var reader = new PacketLogReader(input))
+            {
+                var serializer = new PacketSerializer(
+                    new OpCodeTable(true, reader.Region),
+                    new OpCodeTable(false, reader.Region));
+
+                using (var result = new StreamWriter(new FileStream(output,
+                    FileMode.Create, FileAccess.Write)))
+                    foreach (var entry in reader.EnumerateAll())
+                        HandleEntry(entry, regexes, stats, serializer, result);
+            }
+
+            _log.Basic("Parsed packets to {0}", output);
+
+            PrintStats(stats);
 
             return 0;
         }
