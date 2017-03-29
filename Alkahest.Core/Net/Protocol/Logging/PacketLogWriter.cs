@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -8,14 +7,11 @@ namespace Alkahest.Core.Net.Protocol.Logging
 {
     public sealed class PacketLogWriter : IDisposable
     {
-        public static IReadOnlyList<byte> Magic => _magic;
-
-        static readonly byte[] _magic =
-            new[] { 'A', 'T', 'P', 'L' }.Select(x => (byte)x).ToArray();
-
         public Region Region { get; }
 
         readonly BinaryWriter _writer;
+
+        bool _disposed;
 
         public PacketLogWriter(Region region, string directory,
             string fileNameFormat, bool compress)
@@ -26,7 +22,9 @@ namespace Alkahest.Core.Net.Protocol.Logging
                 DateTime.Now.ToString(fileNameFormat) + ".pkt"),
                 FileMode.Create, FileAccess.Write);
 
-            stream.Write(_magic, 0, _magic.Length);
+            var magic = PacketLogEntry.Magic.ToArray();
+
+            stream.Write(magic, 0, magic.Length);
             stream.WriteByte((byte)(Region = region));
             stream.WriteByte((byte)(compress ? 1 : 0));
 
@@ -36,13 +34,29 @@ namespace Alkahest.Core.Net.Protocol.Logging
             _writer = new BinaryWriter(stream);
         }
 
+        ~PacketLogWriter()
+        {
+            RealDispose();
+        }
+
         public void Dispose()
         {
+            RealDispose();
+            GC.SuppressFinalize(this);
+        }
+
+        void RealDispose()
+        {
+            _disposed = true;
+
             _writer.Dispose();
         }
 
         public void Write(PacketLogEntry entry)
         {
+            if (_disposed)
+                throw new ObjectDisposedException(GetType().FullName);
+
             _writer.Write(entry.Timestamp.ToUniversalTime().ToBinary());
             _writer.Write(entry.ServerName);
             _writer.Write((byte)entry.Direction);

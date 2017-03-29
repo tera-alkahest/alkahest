@@ -6,6 +6,11 @@ namespace Alkahest.Core.Net.Protocol.Logging
 {
     public sealed class PacketLogEntry
     {
+        public static IReadOnlyList<byte> Magic => _magic;
+
+        static readonly byte[] _magic =
+            new[] { 'A', 'T', 'P', 'L' }.Select(x => (byte)x).ToArray();
+
         public DateTime Timestamp { get; }
 
         public string ServerName { get; }

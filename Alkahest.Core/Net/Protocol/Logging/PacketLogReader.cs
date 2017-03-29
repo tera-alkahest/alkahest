@@ -12,14 +12,16 @@ namespace Alkahest.Core.Net.Protocol.Logging
 
         readonly BinaryReader _reader;
 
+        bool _disposed;
+
         public PacketLogReader(string fileName)
         {
             Stream stream = File.OpenRead(fileName);
 
-            var magic = new byte[PacketLogWriter.Magic.Count];
+            var magic = new byte[PacketLogEntry.Magic.Count];
 
             if (stream.Read(magic, 0, magic.Length) != magic.Length ||
-                !magic.SequenceEqual(PacketLogWriter.Magic))
+                !magic.SequenceEqual(PacketLogEntry.Magic))
                 throw new InvalidDataException();
 
             Region = (Region)stream.ReadByte();
@@ -30,13 +32,29 @@ namespace Alkahest.Core.Net.Protocol.Logging
             _reader = new BinaryReader(stream);
         }
 
+        ~PacketLogReader()
+        {
+            RealDispose();
+        }
+
         public void Dispose()
         {
+            RealDispose();
+            GC.SuppressFinalize(this);
+        }
+
+        void RealDispose()
+        {
+            _disposed = true;
+
             _reader.Dispose();
         }
 
         public PacketLogEntry Read()
         {
+            if (_disposed)
+                throw new ObjectDisposedException(GetType().FullName);
+
             try
             {
                 var stamp = DateTime.FromBinary(_reader.ReadInt64()).ToLocalTime();
@@ -61,10 +79,18 @@ namespace Alkahest.Core.Net.Protocol.Logging
 
         public IEnumerable<PacketLogEntry> EnumerateAll()
         {
-            PacketLogEntry entry;
+            if (_disposed)
+                throw new ObjectDisposedException(GetType().FullName);
 
-            while ((entry = Read()) != null)
-                yield return entry;
+            IEnumerable<PacketLogEntry> Enumerate()
+            {
+                PacketLogEntry entry;
+
+                while ((entry = Read()) != null)
+                    yield return entry;
+            }
+
+            return Enumerate();
         }
     }
 }
