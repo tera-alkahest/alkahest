@@ -94,11 +94,11 @@ namespace Alkahest.Core.Net
             var args = ArgsPool.Get();
             args.Completed += OnAccept;
 
-            Task.Run(() =>
+            Task.Factory.StartNew(() =>
             {
                 if (!_serverSocket.AcceptAsync(args))
                     OnAccept(this, args);
-            });
+            }, TaskCreationOptions.LongRunning);
         }
 
         void OnAccept(object sender, SocketAsyncEventArgs args)
