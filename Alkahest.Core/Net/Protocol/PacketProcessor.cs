@@ -20,7 +20,7 @@ namespace Alkahest.Core.Net.Protocol
 
         public PacketSerializer Serializer { get; }
 
-        public PacketLogWriter LogWriter { get; }
+        internal PacketLogWriter LogWriter { get; }
 
         readonly HashSet<RawPacketHandler> _wildcardRawHandlers =
             new HashSet<RawPacketHandler>();
