@@ -40,7 +40,7 @@ namespace Alkahest.Core.Logging.Loggers
                     throw Assert.Unreachable();
             }
 
-            timestamp = timestamp != string.Empty ? $"[{timestamp}] " : string.Empty;
+            timestamp = timestamp != null ? $"[{timestamp}] " : string.Empty;
             category = category != null ? $" ({category})" : string.Empty;
 
             _writer.WriteLine($"{timestamp}[{lvl}] {source.Name}{category}: {message}");
