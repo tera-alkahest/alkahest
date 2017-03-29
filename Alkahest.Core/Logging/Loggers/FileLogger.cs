@@ -44,6 +44,7 @@ namespace Alkahest.Core.Logging.Loggers
             category = category != null ? $" ({category})" : string.Empty;
 
             _writer.WriteLine($"{timestamp}[{lvl}] {source.Name}{category}: {message}");
+            _writer.Flush();
         }
     }
 }
