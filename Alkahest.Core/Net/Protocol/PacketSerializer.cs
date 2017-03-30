@@ -295,12 +295,12 @@ namespace Alkahest.Core.Net.Protocol
                     var offset = reader.ReadOffset();
                     var count = reader.ReadUInt16();
 
-                    if (count == 0)
-                        continue;
-
                     var list = (List<byte>)info.ValueGetter(target);
 
                     list.Clear();
+
+                    if (count == 0)
+                        continue;
 
                     reader.Seek(offset, (r, op) =>
                         list.AddRange(r.ReadBytes(count)));
@@ -309,14 +309,14 @@ namespace Alkahest.Core.Net.Protocol
                 {
                     var count = reader.ReadUInt16();
                     var offset = reader.ReadOffset();
+                    var list = (IList)info.ValueGetter(target);
+
+                    list.Clear();
 
                     if (count == 0)
                         continue;
 
                     var next = offset;
-                    var list = (IList)info.ValueGetter(target);
-
-                    list.Clear();
 
                     for (var i = 0; i < count; i++)
                     {
