@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 namespace Alkahest.Parser
@@ -10,15 +9,26 @@ namespace Alkahest.Parser
             public int Count { get; set; }
 
             public List<int> Sizes { get; } = new List<int>();
+
+            public bool Known { get; }
+
+            public SummaryEntry(bool known)
+            {
+                Known = known;
+            }
         }
 
         public int TotalPackets { get; set; }
 
-        public int RelevantPackets { get; set; }
+        public int RelevantPackets { get; private set; }
 
         public int IgnoredPackets { get; set; }
 
-        public int EmptyPackets { get; set; }
+        public int EmptyPackets { get; private set; }
+
+        public int UnknownPackets { get; private set; }
+
+        public int KnownPackets { get; private set; }
 
         public int ParsedPackets { get; set; }
 
@@ -26,24 +36,26 @@ namespace Alkahest.Parser
 
         public int PotentialStrings { get; set; }
 
-        public IReadOnlyDictionary<string, SummaryEntry> KnownPackets =>
-            _known;
+        public IReadOnlyDictionary<string, SummaryEntry> Packets =>
+            _packets;
 
-        public IReadOnlyDictionary<string, SummaryEntry> UnknownPackets =>
-            _unknown;
-
-        readonly Dictionary<string, SummaryEntry> _known =
-            new Dictionary<string, SummaryEntry>();
-
-        readonly Dictionary<string, SummaryEntry> _unknown =
+        readonly Dictionary<string, SummaryEntry> _packets =
             new Dictionary<string, SummaryEntry>();
 
         public void AddPacket(string opCode, bool known, int length)
         {
-            var dict = known ? _known : _unknown;
+            RelevantPackets++;
 
-            if (!dict.TryGetValue(opCode, out var entry))
-                dict.Add(opCode, entry = new SummaryEntry());
+            if (length == 0)
+                EmptyPackets++;
+
+            if (known)
+                KnownPackets++;
+            else
+                UnknownPackets++;
+
+            if (!_packets.TryGetValue(opCode, out var entry))
+                _packets.Add(opCode, entry = new SummaryEntry(known));
 
             entry.Count++;
             entry.Sizes.Add(length);

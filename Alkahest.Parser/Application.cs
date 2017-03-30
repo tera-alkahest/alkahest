@@ -200,8 +200,6 @@ namespace Alkahest.Parser
                 return;
             }
 
-            stats.RelevantPackets++;
-
             result.WriteLine("[{0:yyyy-MM-dd HH:mm:ss:fff}] {1} {2}: {3} ({4} bytes)",
                 entry.Timestamp.ToLocalTime(),
                 reader.Servers[entry.ServerId].Name,
@@ -260,8 +258,6 @@ namespace Alkahest.Parser
                     }
                 }
             }
-            else
-                stats.EmptyPackets++;
 
             stats.AddPacket(name, parsed != null, payload.Length);
 
@@ -328,8 +324,8 @@ namespace Alkahest.Parser
                 PrintTotalPacketValue("Relevant packets", stats.RelevantPackets);
                 PrintTotalPacketValue("Ignored packets", stats.IgnoredPackets);
                 PrintRelevantPacketValue("Empty packets", stats.EmptyPackets);
-                PrintRelevantPacketValue("Unknown packets", stats.UnknownPackets.Count);
-                PrintRelevantPacketValue("Known packets", stats.KnownPackets.Count);
+                PrintRelevantPacketValue("Unknown packets", stats.UnknownPackets);
+                PrintRelevantPacketValue("Known packets", stats.KnownPackets);
                 PrintRelevantPacketValue("Parsed packets", stats.ParsedPackets);
                 PrintValue("Potential arrays", stats.PotentialArrays);
                 PrintValue("Potential strings", stats.PotentialStrings);
@@ -352,19 +348,19 @@ namespace Alkahest.Parser
                 }
 
                 void PrintSummaryList(string header,
-                    IReadOnlyDictionary<string,
-                    PacketStatistics.SummaryEntry> packets)
+                    Func<PacketStatistics.SummaryEntry, bool> predicate)
                 {
                     _log.Info(string.Empty);
                     _log.Info($"{header}:");
                     _log.Info(string.Empty);
 
-                    foreach (var kvp in packets.OrderBy(x => x.Key))
+                    foreach (var kvp in stats.Packets
+                        .Where(x => predicate(x.Value)).OrderBy(x => x.Key))
                         PrintSummary(kvp);
                 }
 
-                PrintSummaryList("Known packets", stats.KnownPackets);
-                PrintSummaryList("Unknown packets", stats.UnknownPackets);
+                PrintSummaryList("Known packets", x => x.Known);
+                PrintSummaryList("Unknown packets", x => !x.Known);
             }
         }
 
