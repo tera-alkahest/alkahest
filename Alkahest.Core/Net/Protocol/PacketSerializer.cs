@@ -303,10 +303,7 @@ namespace Alkahest.Core.Net.Protocol
                     list.Clear();
 
                     reader.Seek(offset, (r, op) =>
-                    {
-                        for (var i = 0; i < count; i++)
-                            list.Add(r.ReadByte());
-                    });
+                        list.AddRange(r.ReadBytes(count)));
                 }
                 else if (info.IsArray)
                 {
@@ -408,9 +405,7 @@ namespace Alkahest.Core.Net.Protocol
                     continue;
 
                 writer.Seek(offsets[info], (w, op) => w.WriteOffset(op));
-
-                foreach (var val in list)
-                    writer.WriteByte(val);
+                writer.WriteBytes(list.ToArray());
             }
 
             foreach (var info in fields.Where(x => x.IsArray))

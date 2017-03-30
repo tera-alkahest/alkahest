@@ -133,6 +133,11 @@ namespace Alkahest.Core.IO
             return (ushort)(_reader.ReadUInt16() - PacketHeader.HeaderSize);
         }
 
+        public byte[] ReadBytes(int count)
+        {
+            return _reader.ReadBytes(count);
+        }
+
         public T Seek<T>(int position, Func<TeraBinaryReader, int, T> func)
         {
             var pos = Position;

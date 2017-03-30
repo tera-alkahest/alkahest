@@ -124,6 +124,11 @@ namespace Alkahest.Core.IO
             _writer.Write((ushort)(value + PacketHeader.HeaderSize));
         }
 
+        public void WriteBytes(byte[] value)
+        {
+            _writer.Write(value);
+        }
+
         public T Seek<T>(int position, Func<TeraBinaryWriter, int, T> func)
         {
             var pos = Position;
