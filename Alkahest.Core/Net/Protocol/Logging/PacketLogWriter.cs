@@ -63,7 +63,7 @@ namespace Alkahest.Core.Net.Protocol.Logging
         {
             _disposed = true;
 
-            _writer.Dispose();
+            _writer?.Dispose();
         }
 
         public void Write(PacketLogEntry entry)

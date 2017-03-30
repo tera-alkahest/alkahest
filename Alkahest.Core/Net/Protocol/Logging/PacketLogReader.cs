@@ -74,7 +74,7 @@ namespace Alkahest.Core.Net.Protocol.Logging
         {
             _disposed = true;
 
-            _reader.Dispose();
+            _reader?.Dispose();
         }
 
         public PacketLogEntry Read()

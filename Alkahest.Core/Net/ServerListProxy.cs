@@ -56,7 +56,7 @@ namespace Alkahest.Core.Net
 
             _disposed = true;
 
-            _server.CloseAsync().Wait();
+            _server?.CloseAsync().Wait();
 
             _log.Basic("Server list proxy stopped");
         }

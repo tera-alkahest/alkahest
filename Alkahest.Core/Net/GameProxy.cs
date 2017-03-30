@@ -80,7 +80,7 @@ namespace Alkahest.Core.Net
 
             _disposed = true;
 
-            _serverSocket.SafeClose();
+            _serverSocket?.SafeClose();
             _event.Wait();
 
             foreach (var client in _clients.ToArray())
