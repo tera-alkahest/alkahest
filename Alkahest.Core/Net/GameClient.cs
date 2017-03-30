@@ -414,13 +414,12 @@ namespace Alkahest.Core.Net
             catch (Exception e) when (IsSocketException(e))
             {
                 if (!_disconnected)
-                {
-                    DisconnectInternal();
                     HandleException(e, server);
 
-                    if (rethrow)
-                        throw;
-                }
+                DisconnectInternal();
+
+                if (rethrow)
+                    throw;
 
                 return false;
             }
@@ -439,13 +438,12 @@ namespace Alkahest.Core.Net
             catch (Exception e) when (IsSocketException(e))
             {
                 if (!_disconnected)
-                {
-                    DisconnectInternal();
                     HandleException(e, server);
 
-                    if (rethrow)
-                        throw;
-                }
+                DisconnectInternal();
+
+                if (rethrow)
+                    throw;
 
                 return default(T);
             }
