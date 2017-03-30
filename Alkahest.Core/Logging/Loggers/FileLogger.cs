@@ -22,20 +22,21 @@ namespace Alkahest.Core.Logging.Loggers
 
         ~FileLogger()
         {
-            RealDispose();
+            RealDispose(false);
         }
 
         public void Dispose()
         {
-            RealDispose();
+            RealDispose(true);
             GC.SuppressFinalize(this);
         }
 
-        void RealDispose()
+        void RealDispose(bool disposing)
         {
             _disposed = true;
 
-            _writer?.Dispose();
+            if (disposing)
+                _writer.Dispose();
         }
 
         public void Log(LogLevel level, string timestamp, Type source,
