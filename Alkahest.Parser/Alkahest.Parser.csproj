@@ -58,6 +58,7 @@
       <Link>Properties\Alkahest.snk</Link>
     </None>
     <None Include="Properties\App.config" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Alkahest.Core\Alkahest.Core.csproj">
