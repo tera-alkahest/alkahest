@@ -194,7 +194,7 @@ namespace Alkahest.Core.Net.Protocol
             if (LogWriter != null)
                 lock (LogWriter)
                     LogWriter.Write(new PacketLogEntry(DateTime.Now,
-                        client.Proxy.Info.Name, direction, header.OpCode,
+                        client.Proxy.Info.Id, direction, header.OpCode,
                         payload.Slice(0, header.Length)));
 
             _log.Debug("{0}: {1} ({2} bytes{3})", direction.ToDirectionString(),

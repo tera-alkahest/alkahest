@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net.Sockets;
 
 namespace Alkahest.Core.Net.Protocol.Logging
 {
@@ -13,8 +14,8 @@ namespace Alkahest.Core.Net.Protocol.Logging
 
         bool _disposed;
 
-        public PacketLogWriter(Region region, string directory,
-            string fileNameFormat, bool compress)
+        public PacketLogWriter(Region region, ServerInfo[] servers,
+            string directory, string fileNameFormat, bool compress)
         {
             Directory.CreateDirectory(directory);
 
@@ -25,13 +26,26 @@ namespace Alkahest.Core.Net.Protocol.Logging
             var magic = PacketLogEntry.Magic.ToArray();
 
             stream.Write(magic, 0, magic.Length);
-            stream.WriteByte((byte)(Region = region));
             stream.WriteByte((byte)(compress ? 1 : 0));
 
             if (compress)
                 stream = new DeflateStream(stream, CompressionLevel.Optimal);
 
             _writer = new BinaryWriter(stream);
+            _writer.Write(PacketLogEntry.Version);
+            _writer.Write((byte)(Region = region));
+            _writer.Write(servers.Length);
+
+            foreach (var server in servers)
+            {
+                _writer.Write(server.Id);
+                _writer.Write(server.Name);
+                _writer.Write(server.RealAddress.AddressFamily ==
+                    AddressFamily.InterNetworkV6);
+                _writer.Write(server.RealAddress.GetAddressBytes());
+                _writer.Write(server.ProxyAddress.GetAddressBytes());
+                _writer.Write((ushort)server.Port);
+            }
         }
 
         ~PacketLogWriter()
@@ -58,7 +72,7 @@ namespace Alkahest.Core.Net.Protocol.Logging
                 throw new ObjectDisposedException(GetType().FullName);
 
             _writer.Write(entry.Timestamp.ToUniversalTime().ToBinary());
-            _writer.Write(entry.ServerName);
+            _writer.Write(entry.ServerId);
             _writer.Write((byte)entry.Direction);
             _writer.Write(entry.OpCode);
             _writer.Write((ushort)entry.Payload.Count);

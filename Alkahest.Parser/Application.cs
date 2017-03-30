@@ -186,9 +186,9 @@ namespace Alkahest.Parser
             return true;
         }
 
-        static void HandleEntry(PacketLogEntry entry, Regex[] regexes,
-            PacketStatistics stats, PacketSerializer serializer,
-            StreamWriter result)
+        static void HandleEntry(PacketLogReader reader, PacketLogEntry entry,
+            Regex[] regexes, PacketStatistics stats,
+            PacketSerializer serializer, StreamWriter result)
         {
             stats.TotalPackets++;
 
@@ -203,7 +203,8 @@ namespace Alkahest.Parser
             stats.RelevantPackets++;
 
             result.WriteLine("[{0:yyyy-MM-dd HH:mm:ss:fff}] {1} {2}: {3} ({4} bytes)",
-                entry.Timestamp.ToLocalTime(), entry.ServerName,
+                entry.Timestamp.ToLocalTime(),
+                reader.Servers[entry.ServerId].Name,
                 entry.Direction.ToDirectionString(), name,
                 entry.Payload.Count);
 
@@ -416,7 +417,8 @@ namespace Alkahest.Parser
                 using (var result = new StreamWriter(new FileStream(output,
                     FileMode.Create, FileAccess.Write)))
                     foreach (var entry in reader.EnumerateAll())
-                        HandleEntry(entry, regexes, stats, serializer, result);
+                        HandleEntry(reader, entry, regexes, stats, serializer,
+                            result);
             }
 
             _log.Basic("Parsed packets to {0}", output);

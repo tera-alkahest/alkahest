@@ -8,12 +8,14 @@ namespace Alkahest.Core.Net.Protocol.Logging
     {
         public static IReadOnlyList<byte> Magic => _magic;
 
+        public static int Version { get; } = 0;
+
         static readonly byte[] _magic =
             new[] { 'A', 'T', 'P', 'L' }.Select(x => (byte)x).ToArray();
 
         public DateTime Timestamp { get; }
 
-        public string ServerName { get; }
+        public int ServerId { get; }
 
         public Direction Direction { get; }
 
@@ -21,11 +23,11 @@ namespace Alkahest.Core.Net.Protocol.Logging
 
         public IReadOnlyList<byte> Payload { get; }
 
-        public PacketLogEntry(DateTime timestamp, string serverName,
+        public PacketLogEntry(DateTime timestamp, int serverId,
             Direction direction, ushort opCode, byte[] payload)
         {
             Timestamp = timestamp;
-            ServerName = serverName;
+            ServerId = serverId;
             Direction = direction;
             OpCode = opCode;
             Payload = payload.ToArray();
