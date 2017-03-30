@@ -287,79 +287,67 @@ namespace Alkahest.Core.Net.Protocol
         void DeserializeObject(TeraBinaryReader reader, object target)
         {
             var fields = GetPacketFields(target.GetType());
-            var counts = new Dictionary<PacketFieldInfo, ushort>();
-            var offsets = new Dictionary<PacketFieldInfo, ushort>();
 
             foreach (var info in fields)
             {
                 if (info.IsByteArray)
                 {
-                    offsets.Add(info, reader.ReadOffset());
-                    counts.Add(info, reader.ReadUInt16());
+                    var offset = reader.ReadOffset();
+                    var count = reader.ReadUInt16();
+
+                    if (count == 0)
+                        continue;
+
+                    var list = (List<byte>)info.ValueGetter(target);
+
+                    list.Clear();
+
+                    reader.Seek(offset, (r, op) =>
+                    {
+                        for (var i = 0; i < count; i++)
+                            list.Add(r.ReadByte());
+                    });
                 }
                 else if (info.IsArray)
                 {
-                    counts.Add(info, reader.ReadUInt16());
-                    offsets.Add(info, reader.ReadOffset());
+                    var count = reader.ReadUInt16();
+                    var offset = reader.ReadOffset();
+
+                    if (count == 0)
+                        continue;
+
+                    var next = offset;
+                    var list = (IList)info.ValueGetter(target);
+
+                    list.Clear();
+
+                    for (var i = 0; i < count; i++)
+                    {
+                        reader.Seek(next, (r, op) =>
+                        {
+                            r.ReadOffset();
+                            next = r.ReadOffset();
+
+                            var elem = info.ElementConstructor();
+
+                            DeserializeObject(r, elem);
+                            list.Add(elem);
+                        });
+                    }
                 }
                 else if (info.IsString)
-                    offsets.Add(info, reader.ReadOffset());
+                {
+                    var offset = reader.ReadOffset();
+
+                    info.ValueSetter(target, reader.Seek(offset,
+                        (r, op) => r.ReadString()));
+                }
                 else
                 {
                     var val = info.PrimitiveDeserializer(reader);
 
                     info.EnumValidator?.Invoke(val);
                     info.ValueSetter(target, val);
-                }
-            }
-
-            foreach (var info in fields.Where(x => x.IsString))
-                info.ValueSetter(target, reader.Seek(offsets[info],
-                    (r, op) => r.ReadString()));
-
-            foreach (var info in fields.Where(x => x.IsByteArray))
-            {
-                var count = counts[info];
-
-                if (count == 0)
-                    continue;
-
-                var offset = offsets[info];
-                var list = (List<byte>)info.ValueGetter(target);
-
-                list.Clear();
-
-                reader.Seek(offset, (r, op) =>
-                {
-                    for (var i = 0; i < count; i++)
-                        list.Add(r.ReadByte());
-                });
-            }
-
-            foreach (var info in fields.Where(x => x.IsArray))
-            {
-                var count = counts[info];
-
-                if (count == 0)
-                    continue;
-
-                var next = offsets[info];
-                var list = (IList)info.ValueGetter(target);
-
-                list.Clear();
-
-                for (var i = 0; i < count; i++)
-                {
-                    reader.Seek(next, (r, op) =>
-                    {
-                        r.ReadOffset();
-                        next = r.ReadOffset();
-
-                        var elem = info.ElementConstructor();
-
-                        DeserializeObject(r, elem);
-                        list.Add(elem);
-                    });
                 }
             }
         }
