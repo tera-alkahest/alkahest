@@ -19,7 +19,7 @@ namespace Alkahest.Core.Net.Protocol.Logging
         {
             Directory.CreateDirectory(directory);
 
-            Stream stream = new FileStream(Path.Combine(directory,
+            Stream stream = File.Open(Path.Combine(directory,
                 DateTime.Now.ToString(fileNameFormat) + ".pkt"),
                 FileMode.Create, FileAccess.Write);
 
@@ -77,8 +77,6 @@ namespace Alkahest.Core.Net.Protocol.Logging
             _writer.Write(entry.OpCode);
             _writer.Write((ushort)entry.Payload.Count);
             _writer.Write(entry.Payload.ToArray());
-
-            _writer.Flush();
         }
     }
 }
