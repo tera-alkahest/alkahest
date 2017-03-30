@@ -153,7 +153,7 @@ namespace Alkahest.Parser
                     (AnalysisMode a) => _analysis = a
                 },
                 {
-                    "m|min-string-length",
+                    "m|min-string-length=",
                     "Specify minimum string length.",
                     (int m) => _length = m
                 },
