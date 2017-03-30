@@ -3,23 +3,47 @@ using System.IO;
 
 namespace Alkahest.Core.Logging.Loggers
 {
-    public sealed class FileLogger : ILogger
+    public sealed class FileLogger : IDisposable, ILogger
     {
         public const string Name = "file";
 
         readonly StreamWriter _writer;
 
+        bool _disposed;
+
         public FileLogger(string directory, string fileNameFormat)
         {
             Directory.CreateDirectory(directory);
 
-            _writer = new StreamWriter(File.OpenWrite(Path.Combine(directory,
-                DateTime.Now.ToString(fileNameFormat) + ".log")));
+            _writer = new StreamWriter(File.Open(Path.Combine(directory,
+                DateTime.Now.ToString(fileNameFormat) + ".log"),
+                FileMode.Create, FileAccess.Write));
+        }
+
+        ~FileLogger()
+        {
+            RealDispose();
+        }
+
+        public void Dispose()
+        {
+            RealDispose();
+            GC.SuppressFinalize(this);
+        }
+
+        void RealDispose()
+        {
+            _disposed = true;
+
+            _writer?.Dispose();
         }
 
         public void Log(LogLevel level, string timestamp, Type source,
             string category, string message)
         {
+            if (_disposed)
+                throw new ObjectDisposedException(GetType().FullName);
+
             string lvl;
 
             switch (level)
