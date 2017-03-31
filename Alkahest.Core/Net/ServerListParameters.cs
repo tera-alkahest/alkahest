@@ -8,6 +8,9 @@ namespace Alkahest.Core.Net
         static readonly Uri _eu = new Uri(
             "http://web-sls.tera.gameforge.com:4566/servers/list.uk");
 
+        static readonly Uri _kr = new Uri(
+            "http://tera.nexon.com:80/launcher/sls/servers/list.xml");
+
         static readonly Uri _na = new Uri(
             "http://sls.service.enmasse.com:8080/servers/list.en");
 
@@ -49,7 +52,7 @@ namespace Alkahest.Core.Net
                 case Region.JP:
                     throw new NotImplementedException(); // TODO
                 case Region.KR:
-                    throw new NotImplementedException(); // TODO
+                    return _kr;
                 case Region.NA:
                     return _na;
                 case Region.RU:
