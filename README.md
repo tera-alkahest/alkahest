@@ -81,8 +81,9 @@ Once you've configured Alkahest, run `alkahest-server.exe` to start it. Once
 Alkahest finishes initializing, and if everything went fine, you should be able
 to just start TERA and play.
 
-If you're playing on TW, you need to log in through the launcher, start
-Alkahest, and then start the game.
+For some regions, you may need to log into TERA first, then start Alkahest just
+before launching the game. This is necessary because some regions use the same
+domain name for logging in and retrieving the server list.
 
 Note that, by default, Alkahest will adjust your `hosts` file so that the
 hostname that the TERA launcher fetches the official server list from will be
