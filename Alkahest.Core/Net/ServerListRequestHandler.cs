@@ -46,7 +46,7 @@ namespace Alkahest.Core.Net
                 while (true)
                 {
                     var req = new HttpRequestMessage(HttpMethod.Get,
-                        GetUri(_parameters.Uri.PathAndQuery));
+                        GetUri(_parameters.Uri.AbsolutePath, true));
 
                     req.Headers.Host = _parameters.Uri.Authority;
 
@@ -107,9 +107,14 @@ namespace Alkahest.Core.Net
                 exception is HttpRequestException;
         }
 
-        Uri GetUri(string path)
+        Uri GetUri(string path, bool usn)
         {
-            return new Uri($"http://{_parameters.RealAddress}:{_parameters.Uri.Port}{path}");
+            var uri = $"http://{_parameters.RealAddress}:{_parameters.Uri.Port}{path}";
+
+            if (usn && _parameters.Region == Region.JP)
+                uri += "?usn=0";
+
+            return new Uri(uri);
         }
 
         protected override Task<HttpResponseMessage> SendAsync(
@@ -118,7 +123,8 @@ namespace Alkahest.Core.Net
             var p = (RemoteEndpointMessageProperty)
                 request.Properties[RemoteEndPointPropertyName];
             var from = $"{p.Address}:{p.Port}";
-            var path = request.RequestUri.PathAndQuery;
+            var uri = request.RequestUri;
+            var path = uri.PathAndQuery;
 
             _log.Debug("Received HTTP request at {0} from {1}", path, from);
 
@@ -137,7 +143,7 @@ namespace Alkahest.Core.Net
                         // We need to make a new request object or we'll get an
                         // exception when attempting to send it below.
                         var req = new HttpRequestMessage(
-                            request.Method, GetUri(path))
+                            request.Method, GetUri(path, false))
                         {
                             Version = request.Version
                         };
@@ -179,7 +185,8 @@ namespace Alkahest.Core.Net
                     }
                 }
 
-                if (path == _parameters.Uri.PathAndQuery)
+                // Don't include the query string as TERA JP actually uses it.
+                if (uri.AbsolutePath == _parameters.Uri.AbsolutePath)
                     resp.Content = new StringContent(_servers);
 
                 _log.Debug("Forwarded HTTP request at {0} from {1}: {2}",
