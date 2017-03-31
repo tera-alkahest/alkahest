@@ -202,40 +202,16 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Net\Protocol\OpCodes\opc_eu.txt">
+    <EmbeddedResource Include="Net\Protocol\OpCodes\opc_311380.txt">
       <LogicalName>%(Identity)</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Net\Protocol\OpCodes\opc_jp.txt">
+    <EmbeddedResource Include="Net\Protocol\OpCodes\opc_313577.txt">
       <LogicalName>%(Identity)</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Net\Protocol\OpCodes\opc_kr.txt">
+    <EmbeddedResource Include="Net\Protocol\OpCodes\smt_311380.txt">
       <LogicalName>%(Identity)</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Net\Protocol\OpCodes\opc_na.txt">
-      <LogicalName>%(Identity)</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Net\Protocol\OpCodes\opc_ru.txt">
-      <LogicalName>%(Identity)</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Net\Protocol\OpCodes\opc_tw.txt">
-      <LogicalName>%(Identity)</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Net\Protocol\OpCodes\smt_eu.txt">
-      <LogicalName>%(Identity)</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Net\Protocol\OpCodes\smt_jp.txt">
-      <LogicalName>%(Identity)</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Net\Protocol\OpCodes\smt_kr.txt">
-      <LogicalName>%(Identity)</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Net\Protocol\OpCodes\smt_na.txt">
-      <LogicalName>%(Identity)</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Net\Protocol\OpCodes\smt_ru.txt">
-      <LogicalName>%(Identity)</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Net\Protocol\OpCodes\smt_tw.txt">
+    <EmbeddedResource Include="Net\Protocol\OpCodes\smt_313577.txt">
       <LogicalName>%(Identity)</LogicalName>
     </EmbeddedResource>
   </ItemGroup>

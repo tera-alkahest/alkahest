@@ -12,13 +12,24 @@ namespace Alkahest.Core.Net.Protocol
 
         public IReadOnlyDictionary<string, ushort> NameToOpCode { get; }
 
+        static readonly IReadOnlyDictionary<Region, int> _versions =
+            new Dictionary<Region, int>()
+            {
+                { Region.EU, 311380 },
+                { Region.JP, 311380 },
+                { Region.KR, 313577 },
+                { Region.NA, 311380 },
+                { Region.RU, 311380 },
+                { Region.TW, 311380 }
+            };
+
         public OpCodeTable(bool opCodes, Region region)
         {
             Region = region;
 
             var asm = Assembly.GetExecutingAssembly();
             var name = string.Format(@"Net\Protocol\OpCodes\{0}_{1}.txt",
-                opCodes ? "opc" : "smt", region.ToString().ToLowerInvariant());
+                opCodes ? "opc" : "smt", _versions[region]);
             var codeToName = new Dictionary<ushort, string>();
             var nameToCode = new Dictionary<string, ushort>();
 
