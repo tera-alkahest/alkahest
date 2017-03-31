@@ -70,8 +70,8 @@ namespace Alkahest.Server
 
                 var slsParams = new ServerListParameters(real,
                     Configuration.ServerListAddress, Configuration.GameAddress,
-                    region, Configuration.ServerListTimeout,
-                    Configuration.ServerListRetries);
+                    Configuration.GameStartingPort, region,
+                    Configuration.ServerListTimeout, Configuration.ServerListRetries);
 
                 using (var slsProxy = new ServerListProxy(slsParams))
                 {

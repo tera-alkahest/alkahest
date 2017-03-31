@@ -23,6 +23,8 @@ namespace Alkahest.Core.Net
 
         public IPAddress GameAddress { get; }
 
+        public int StartingPort { get; }
+
         public Region Region { get; }
 
         public TimeSpan Timeout { get; }
@@ -32,11 +34,13 @@ namespace Alkahest.Core.Net
         public Uri Uri { get; }
 
         public ServerListParameters(IPAddress realAddress, IPAddress slsAddress,
-            IPAddress gameAddress, Region region, TimeSpan timeout, int retries)
+            IPAddress gameAddress, int startingPort, Region region,
+            TimeSpan timeout, int retries)
         {
             RealAddress = realAddress;
             ServerListAddress = slsAddress;
             GameAddress = gameAddress;
+            StartingPort = startingPort;
             Region = region;
             Timeout = timeout;
             Retries = retries;

@@ -19,12 +19,15 @@ namespace Alkahest.Core.Net
 
         readonly ServerListParameters _parameters;
 
+        int _lastPort;
+
         readonly string _servers;
 
         public ServerListRequestHandler(ServerListParameters parameters,
             out ServerInfo[] servers)
         {
             _parameters = parameters;
+            _lastPort = parameters.StartingPort;
             _servers = GetAndAdjustServers(out servers);
         }
 
@@ -79,15 +82,16 @@ namespace Alkahest.Core.Net
                 var id = int.Parse(elem.Element("id").Value);
                 var name = elem.Element("name").Attribute("raw_name").Value;
                 var ip = IPAddress.Parse(ipElem.Value);
-                var port = int.Parse(elem.Element("port").Value);
                 var newIP = _parameters.GameAddress;
+                var port = int.Parse(elem.Element("port").Value);
+                var newPort = _lastPort++;
 
                 ipElem.Value = newIP.ToString();
 
                 servs.Add(new ServerInfo(id, name, ip, newIP, port));
 
-                _log.Info("Redirected {0}: {1}:{2} -> {3}:{2}",
-                    name, ip, port, newIP);
+                _log.Info("Redirected {0}: {1}:{2} -> {3}:{4}",
+                    name, ip, port, newIP, newPort);
             }
 
             servers = servs.ToArray();

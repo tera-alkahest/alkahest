@@ -55,6 +55,8 @@ namespace Alkahest.Server
 
         public static IPAddress GameAddress { get; }
 
+        public static int GameStartingPort { get; }
+
         public static int GameBacklog { get; }
 
         public static int GameMaxClients { get; }
@@ -90,6 +92,7 @@ namespace Alkahest.Server
             Region = (Region)Enum.Parse(typeof(Region), cfg["region"], true);
             ServerListAddress = IPAddress.Parse(cfg["slsAddress"]);
             GameAddress = IPAddress.Parse(cfg["gameAddress"]);
+            GameStartingPort = int.Parse(cfg["gameStartingPort"]);
             ServerListTimeout = TimeSpan.FromSeconds(int.Parse(cfg["slsTimeout"]));
             ServerListRetries = int.Parse(cfg["slsRetries"]);
             GameBacklog = int.Parse(cfg["gameBacklog"]);
