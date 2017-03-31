@@ -54,7 +54,7 @@ namespace Alkahest.Core.Net
                     {
                         resp = client.SendAsync(req).Result.EnsureSuccessStatusCode();
                     }
-                    catch (AggregateException)
+                    catch (Exception e) when (IsHttpException(e))
                     {
                         if (retriesSoFar < _parameters.Retries)
                         {
@@ -99,6 +99,12 @@ namespace Alkahest.Core.Net
             _log.Basic("Redirected {0} servers", servs.Count);
 
             return doc.ToString();
+        }
+
+        static bool IsHttpException(Exception exception)
+        {
+            return exception is AggregateException ||
+                exception is HttpRequestException;
         }
 
         Uri GetUri(string path)
