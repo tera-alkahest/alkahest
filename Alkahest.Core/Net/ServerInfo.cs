@@ -14,7 +14,7 @@ namespace Alkahest.Core.Net
 
         public int Port { get; }
 
-        internal ServerInfo(int id, string name, IPAddress realAddress,
+        public ServerInfo(int id, string name, IPAddress realAddress,
             IPAddress proxyAddress, int port)
         {
             Id = id;
