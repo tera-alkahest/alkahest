@@ -21,6 +21,8 @@ namespace Alkahest.Core.Net.Protocol.Serializers
 
         const string ReaderPositionName = nameof(TeraBinaryReader.Position);
 
+        const string ReadName = "Read";
+
         const string ReadUInt16Name = nameof(TeraBinaryReader.ReadUInt16);
 
         const string ReadStringName = nameof(TeraBinaryReader.ReadString);
@@ -30,6 +32,8 @@ namespace Alkahest.Core.Net.Protocol.Serializers
         const string ReadBytesName = nameof(TeraBinaryReader.ReadBytes);
 
         const string WriterPositionName = nameof(TeraBinaryWriter.Position);
+
+        const string WriteName = "Write";
 
         const string WriteUInt16Name = nameof(TeraBinaryWriter.WriteUInt16);
 
@@ -61,6 +65,16 @@ namespace Alkahest.Core.Net.Protocol.Serializers
             OpCodeTable systemMessages)
             : base(gameMessages, systemMessages)
         {
+            foreach (var opCode in gameMessages.OpCodeToName.Keys)
+            {
+                var type = GetType(opCode);
+
+                if (type == null)
+                    continue;
+
+                _serializers.Add(type, CompileSerializer(type));
+                _deserializers.Add(type, CompileDeserializer(type));
+            }
         }
 
         protected override PacketFieldInfo CreateFieldInfo(
@@ -72,22 +86,14 @@ namespace Alkahest.Core.Net.Protocol.Serializers
         protected override void OnSerialize(TeraBinaryWriter writer,
             Packet packet)
         {
-            GetSerializer(packet.GetType())(writer, packet);
-        }
-
-        public Action<TeraBinaryWriter, object> GetSerializer(Type type)
-        {
-            lock (_serializers)
-            {
-                if (!_serializers.TryGetValue(type, out var s))
-                    _serializers.Add(type, s = CompileSerializer(type));
-
-                return s;
-            }
+            _serializers[packet.GetType()](writer, packet);
         }
 
         Action<TeraBinaryWriter, object> CompileSerializer(Type type)
         {
+            if (_serializers.TryGetValue(type, out var s))
+                return s;
+
             var writer = Expression.Parameter(typeof(TeraBinaryWriter), "writer");
             var source = Expression.Parameter(typeof(object), "source");
             var packet = Expression.Variable(type, "packet2");
@@ -164,7 +170,7 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                 }
 
                 return Expression.Block(
-                    writer.Call($"Write{etype.Name}", null, new[] { property }));
+                    writer.Call(WriteName + etype.Name, null, new[] { property }));
             }
 
             var exprs = new List<Expression>()
@@ -237,8 +243,9 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                         writer.Call(WriteOffsetName, null, new[] { position2 }),
                         writer.Call(WriteUInt16Name, null,
                             new[] { ((ushort)0).Constant() }),
-                        Expression.Invoke(GetSerializer(elemType).Constant(),
-                            writer, property.Property(ItemName, i)),
+                        Expression.Invoke(CompileSerializer(elemType)
+                            .Constant(), writer,
+                            property.Property(ItemName, i)),
                         i.NotEqual(count.Subtract(1.Constant()))
                             .IfThen(writeNext)));
 
@@ -291,22 +298,14 @@ namespace Alkahest.Core.Net.Protocol.Serializers
         protected override void OnDeserialize(TeraBinaryReader reader,
             Packet packet)
         {
-            GetDeserializer(packet.GetType())(reader, packet);
-        }
-
-        public Action<TeraBinaryReader, object> GetDeserializer(Type type)
-        {
-            lock (_deserializers)
-            {
-                if (!_deserializers.TryGetValue(type, out var d))
-                    _deserializers.Add(type, d = CompileDeserializer(type));
-
-                return d;
-            }
+            _deserializers[packet.GetType()](reader, packet);
         }
 
         Action<TeraBinaryReader, object> CompileDeserializer(Type type)
         {
+            if (_deserializers.TryGetValue(type, out var d))
+                return d;
+
             var reader = Expression.Parameter(typeof(TeraBinaryReader), "reader");
             var target = Expression.Parameter(typeof(object), "target");
             var packet = Expression.Variable(type, "packet");
@@ -359,7 +358,7 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                         reader.Call(ReadOffsetName, null, null),
                         next.Assign(reader.Call(ReadOffsetName, null, null)),
                         elem.Assign(elemType.New()),
-                        Expression.Invoke(GetDeserializer(elemType)
+                        Expression.Invoke(CompileDeserializer(elemType)
                             .Constant(), reader, elem),
                         property.Call(AddName, null, new[] { elem })));
 
@@ -397,7 +396,7 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                 var ftype = prop.PropertyType;
                 var etype = ftype.IsEnum ? ftype.GetEnumUnderlyingType() : ftype;
 
-                Expression read = reader.Call($"Read{etype.Name}", null, null);
+                Expression read = reader.Call(ReadName + etype.Name, null, null);
 
                 if (ftype.IsEnum)
                     read = read.Convert(ftype);

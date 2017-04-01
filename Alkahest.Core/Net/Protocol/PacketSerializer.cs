@@ -43,6 +43,18 @@ namespace Alkahest.Core.Net.Protocol
             _packetCreators = creators;
         }
 
+        public bool IsKnown(ushort opCode)
+        {
+            return _packetCreators.ContainsKey(opCode);
+        }
+
+        public Type GetType(ushort opCode)
+        {
+            _packetCreators.TryGetValue(opCode, out var creator);
+
+            return creator?.Method.DeclaringType;
+        }
+
         public Packet Create(ushort opCode)
         {
             _packetCreators.TryGetValue(opCode, out var creator);
