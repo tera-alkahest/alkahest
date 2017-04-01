@@ -8,16 +8,16 @@ namespace Alkahest.Parser.Analysis
     {
         public int CountPosition { get; }
 
-        public ushort Count { get; }
+        public int Count { get; }
 
         public int OffsetPosition { get; }
 
-        public ushort Offset { get; }
+        public int Offset { get; }
 
         public IReadOnlyList<PotentialArrayElement> Elements { get; }
 
-        public PotentialArray(int countPosition, ushort count,
-            int offsetPosition, ushort offset,
+        public PotentialArray(int countPosition, int count,
+            int offsetPosition, int offset,
             IEnumerable<PotentialArrayElement> elements)
         {
             CountPosition = countPosition;

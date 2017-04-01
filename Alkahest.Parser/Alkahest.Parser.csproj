@@ -50,6 +50,7 @@
     <Compile Include="Analysis\PotentialString.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="HexDumpMode.cs" />
+    <Compile Include="PacketSerializerBackend.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="PacketStatistics.cs" />
   </ItemGroup>

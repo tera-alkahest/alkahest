@@ -50,6 +50,7 @@
     <Compile Include="Net\Protocol\Logging\PacketLogReader.cs" />
     <Compile Include="Net\Protocol\Logging\PacketLogWriter.cs" />
     <Compile Include="Net\Protocol\PacketFieldAttribute.cs" />
+    <Compile Include="Net\Protocol\PacketFieldInfo.cs" />
     <Compile Include="Net\Protocol\PacketSerializer.cs" />
     <Compile Include="Net\Protocol\Packets\CAcceptContractPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CAvailableEventMatchingListPacket.cs" />
@@ -163,6 +164,8 @@
     <Compile Include="Net\Protocol\Packets\SUserFlyingLocationPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SUserStatusPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SWhisperPacket.cs" />
+    <Compile Include="Net\Protocol\Serializers\CompilerPacketSerializer.cs" />
+    <Compile Include="Net\Protocol\Serializers\ReflectionPacketSerializer.cs" />
     <Compile Include="Net\ServerListRequestHandler.cs" />
     <Compile Include="Net\SocketDisconnectedException.cs" />
     <Compile Include="Plugins\IPlugin.cs" />
@@ -223,6 +226,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.SelfHost">
       <Version>5.2.3</Version>
+    </PackageReference>
+    <PackageReference Include="Mono.Linq.Expressions">
+      <Version>1.2.0</Version>
     </PackageReference>
     <PackageReference Include="System.Numerics.Vectors">
       <Version>4.3.0</Version>

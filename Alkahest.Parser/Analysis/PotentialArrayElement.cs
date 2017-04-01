@@ -4,14 +4,13 @@ namespace Alkahest.Parser.Analysis
     {
         public int HerePosition { get; }
 
-        public ushort Here { get; }
+        public int Here { get; }
 
         public int NextPosition { get; }
 
-        public ushort Next { get; }
+        public int Next { get; }
 
-        public PotentialArrayElement(ushort here, int nextPosition,
-            ushort next)
+        public PotentialArrayElement(int here, int nextPosition, int next)
         {
             HerePosition = Here = here;
             NextPosition = nextPosition;

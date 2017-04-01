@@ -37,10 +37,6 @@ namespace Alkahest.Parser.Analysis
                     {
                         str = reader.ReadString();
 
-                        if (offset < offsetPos &&
-                            reader.Position > offsetPos)
-                            continue;
-
                         TeraBinaryReader.Encoding.GetString(
                             TeraBinaryReader.Encoding.GetBytes(str));
                     }
@@ -69,8 +65,7 @@ namespace Alkahest.Parser.Analysis
                     if (!control && hasBadChars)
                         continue;
 
-                    yield return new PotentialString(offsetPos,
-                        (ushort)offset, str);
+                    yield return new PotentialString(offsetPos, offset, str);
                 }
             }
         }
@@ -115,7 +110,7 @@ namespace Alkahest.Parser.Analysis
                     var last = offsetPos;
                     var next = offset;
 
-                    while (next != unchecked((ushort)-PacketHeader.HeaderSize))
+                    while (next != -PacketHeader.HeaderSize)
                     {
                         if (!(good = next >= 0 && next > last &&
                             next <= reader.Length - sizeof(ushort) * 2 - sizeof(byte)))
@@ -141,8 +136,7 @@ namespace Alkahest.Parser.Analysis
                             break;
 
                         elems.Add(new PotentialArrayElement(here, nextPos,
-                            (ushort)(next == unchecked((ushort)-PacketHeader.HeaderSize) ?
-                            0 : next)));
+                            next == -PacketHeader.HeaderSize ? 0 : next));
                     }
 
                     if (good && elems.Count == count)

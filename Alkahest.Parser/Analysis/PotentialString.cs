@@ -4,11 +4,11 @@ namespace Alkahest.Parser.Analysis
     {
         public int OffsetPosition { get; }
 
-        public ushort Offset { get; }
+        public int Offset { get; }
 
         public string Value { get; }
 
-        public PotentialString(int offsetPosition, ushort offset, string value)
+        public PotentialString(int offsetPosition, int offset, string value)
         {
             OffsetPosition = offsetPosition;
             Offset = offset;

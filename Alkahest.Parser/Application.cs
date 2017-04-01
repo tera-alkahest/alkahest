@@ -13,6 +13,7 @@ using Alkahest.Core.Logging;
 using Alkahest.Core.Logging.Loggers;
 using Alkahest.Core.Net.Protocol;
 using Alkahest.Core.Net.Protocol.Logging;
+using Alkahest.Core.Net.Protocol.Serializers;
 using Alkahest.Parser.Analysis;
 
 namespace Alkahest.Parser
@@ -39,6 +40,8 @@ namespace Alkahest.Parser
         static HexDumpMode _hex = HexDumpMode.Unknown;
 
         static bool _parse = true;
+
+        static PacketSerializerBackend _backend;
 
         static int _roundtrips;
 
@@ -83,9 +86,16 @@ namespace Alkahest.Parser
             Console.WriteLine("  {0}: Do hex dumps for all packets.",
                 HexDumpMode.All);
             Console.WriteLine();
+            Console.WriteLine("Packet serializer backends:");
+            Console.WriteLine();
+            Console.WriteLine("  {0}: Reflection-based serializer (default).",
+                PacketSerializerBackend.Reflection);
+            Console.WriteLine("  {0}: JIT-compiling serializer.",
+                PacketSerializerBackend.Compiler);
+            Console.WriteLine();
             Console.WriteLine("Analysis modes:");
             Console.WriteLine();
-            Console.WriteLine("  {0}: Don't perform analysis.",
+            Console.WriteLine("  {0}: Don't perform analysis (default).",
                 AnalysisMode.None);
             Console.WriteLine("  {0}: Analyze packets with unknown structure.",
                 AnalysisMode.Unknown);
@@ -140,6 +150,11 @@ namespace Alkahest.Parser
                     "p|parse",
                     "Enable/disable parsing of known packets.",
                     p => _parse = p != null
+                },
+                {
+                    "z|backend=",
+                    "Specify packet serializer backend.",
+                    (PacketSerializerBackend z) => _backend = z
                 },
                 {
                     "t|roundtrips=",
@@ -406,9 +421,22 @@ namespace Alkahest.Parser
 
             using (var reader = new PacketLogReader(input))
             {
-                var serializer = new PacketSerializer(
-                    new OpCodeTable(true, reader.Region),
-                    new OpCodeTable(false, reader.Region));
+                var opc = new OpCodeTable(true, reader.Region);
+                var smt = new OpCodeTable(false, reader.Region);
+
+                PacketSerializer serializer;
+
+                switch (_backend)
+                {
+                    case PacketSerializerBackend.Reflection:
+                        serializer = new ReflectionPacketSerializer(opc, smt);
+                        break;
+                    case PacketSerializerBackend.Compiler:
+                        serializer = new CompilerPacketSerializer(opc, smt);
+                        break;
+                    default:
+                        throw Assert.Unreachable();
+                }
 
                 using (var result = new StreamWriter(new FileStream(output,
                     FileMode.Create, FileAccess.Write)))
