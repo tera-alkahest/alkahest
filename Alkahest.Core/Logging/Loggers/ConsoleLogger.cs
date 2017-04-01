@@ -66,7 +66,7 @@ namespace Alkahest.Core.Logging.Loggers
             category = category != null ? $" ({category})" : string.Empty;
 
             var console = level <= LogLevel.Warning ?
-                Console.Out : Console.Error;
+                Console.Error : Console.Out;
 
             Console.ForegroundColor = color;
             console.WriteLine($"{timestamp}[{lvl}] {source.Name}{category}: {message}");
