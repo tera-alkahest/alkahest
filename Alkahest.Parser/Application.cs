@@ -389,7 +389,7 @@ namespace Alkahest.Parser
             var color = Console.ForegroundColor;
 
             Log.Loggers.Add(new ConsoleLogger(false,
-                color, color, color, color));
+                color, color, color, color, color));
 
             if (!Debugger.IsAttached)
                 AppDomain.CurrentDomain.UnhandledException += UnhandledException;

@@ -44,8 +44,8 @@ namespace Alkahest.Server
             if (Configuration.Loggers.Contains(ConsoleLogger.Name))
                 Log.Loggers.Add(new ConsoleLogger(
                     Configuration.EnableColors, Configuration.ErrorColor,
-                    Configuration.BasicColor, Configuration.InfoColor,
-                    Configuration.DebugColor));
+                    Configuration.WarningColor, Configuration.BasicColor,
+                    Configuration.InfoColor, Configuration.DebugColor));
 
             if (Configuration.Loggers.Contains(FileLogger.Name))
                 Log.Loggers.Add(new FileLogger(

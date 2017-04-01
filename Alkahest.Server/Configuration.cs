@@ -21,6 +21,8 @@ namespace Alkahest.Server
 
         public static ConsoleColor ErrorColor { get; }
 
+        public static ConsoleColor WarningColor { get; }
+
         public static ConsoleColor BasicColor { get; }
 
         public static ConsoleColor InfoColor { get; }
@@ -77,6 +79,7 @@ namespace Alkahest.Server
             Loggers = Split(cfg["loggers"], ',');
             EnableColors = bool.Parse(cfg["enableColors"]);
             ErrorColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), cfg["errorColor"], true);
+            WarningColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), cfg["warningColor"], true);
             BasicColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), cfg["basicColor"], true);
             InfoColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), cfg["infoColor"], true);
             DebugColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), cfg["debugColor"], true);

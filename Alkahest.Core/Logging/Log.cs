@@ -39,6 +39,11 @@ namespace Alkahest.Core.Logging
             LogMessage(LogLevel.Error, format, args);
         }
 
+        public void Warning(string format, params object[] args)
+        {
+            LogMessage(LogLevel.Warning, format, args);
+        }
+
         public void Basic(string format, params object[] args)
         {
             LogMessage(LogLevel.Basic, format, args);
@@ -54,10 +59,17 @@ namespace Alkahest.Core.Logging
             LogMessage(LogLevel.Debug, format, args);
         }
 
+        bool ShouldLog(LogLevel level)
+        {
+            if (level == LogLevel.Error || level == LogLevel.Warning)
+                return true;
+
+            return level <= Level && !DiscardSources.Contains(Source.Name);
+        }
+
         void LogMessage(LogLevel level, string format, params object[] args)
         {
-            if (level > Level || (level != LogLevel.Error &&
-                DiscardSources.Contains(Source.Name)))
+            if (!ShouldLog(level))
                 return;
 
             var msg = args.Length != 0 ? string.Format(format, args) : format;

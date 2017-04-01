@@ -52,6 +52,9 @@ namespace Alkahest.Core.Logging.Loggers
                 case LogLevel.Error:
                     lvl = "E";
                     break;
+                case LogLevel.Warning:
+                    lvl = "W";
+                    break;
                 case LogLevel.Basic:
                     lvl = "B";
                     break;

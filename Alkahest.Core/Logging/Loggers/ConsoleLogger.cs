@@ -10,6 +10,8 @@ namespace Alkahest.Core.Logging.Loggers
 
         readonly ConsoleColor _errorColor;
 
+        readonly ConsoleColor _warningColor;
+
         readonly ConsoleColor _basicColor;
 
         readonly ConsoleColor _infoColor;
@@ -17,11 +19,12 @@ namespace Alkahest.Core.Logging.Loggers
         readonly ConsoleColor _debugColor;
 
         public ConsoleLogger(bool colors, ConsoleColor errorColor,
-            ConsoleColor basicColor, ConsoleColor infoColor,
-            ConsoleColor debugColor)
+            ConsoleColor warningColor, ConsoleColor basicColor,
+            ConsoleColor infoColor, ConsoleColor debugColor)
         {
             _colors = colors;
             _errorColor = errorColor;
+            _warningColor = warningColor;
             _basicColor = basicColor;
             _infoColor = infoColor;
             _debugColor = debugColor;
@@ -38,6 +41,10 @@ namespace Alkahest.Core.Logging.Loggers
                 case LogLevel.Error:
                     color = _errorColor;
                     lvl = "E";
+                    break;
+                case LogLevel.Warning:
+                    color = _warningColor;
+                    lvl = "W";
                     break;
                 case LogLevel.Basic:
                     color = _basicColor;
