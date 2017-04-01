@@ -140,6 +140,7 @@
     <Compile Include="Net\Protocol\Packets\SPlayerChangeFlightEnergyPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SPlayerChangeMPPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SPlayerChangeStaminaPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SPlayerStatUpdatePacket.cs" />
     <Compile Include="Net\Protocol\Packets\SPrivateChannelNoticePacket.cs" />
     <Compile Include="Net\Protocol\Packets\SPrivateChatPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SRequestPrivateChannelInfoPacket.cs" />
