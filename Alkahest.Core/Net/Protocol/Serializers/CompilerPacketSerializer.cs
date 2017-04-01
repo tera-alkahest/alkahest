@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Mono.Linq.Expressions;
 using Alkahest.Core.IO;
+using Alkahest.Core.Logging;
 
 namespace Alkahest.Core.Net.Protocol.Serializers
 {
@@ -55,6 +56,8 @@ namespace Alkahest.Core.Net.Protocol.Serializers
 
         const string ItemName = "Item";
 
+        static readonly Log _log = new Log(typeof(CompilerPacketSerializer));
+
         readonly Dictionary<Type, Action<TeraBinaryReader, object>> _deserializers =
             new Dictionary<Type, Action<TeraBinaryReader, object>>();
 
@@ -75,6 +78,8 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                 _serializers.Add(type, CompileSerializer(type));
                 _deserializers.Add(type, CompileDeserializer(type));
             }
+
+            _log.Basic("Compiled {0} packet serializers", _serializers.Count);
         }
 
         protected override PacketFieldInfo CreateFieldInfo(
