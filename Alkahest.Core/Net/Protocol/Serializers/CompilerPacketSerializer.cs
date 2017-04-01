@@ -151,10 +151,17 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                 var ftype = prop.PropertyType;
                 var etype = ftype.IsEnum ? ftype.GetEnumUnderlyingType() : ftype;
 
-                Expression property = packet.Property(prop);
+                Expression property;
 
-                if (ftype.IsEnum)
-                    property = property.Convert(etype);
+                if (ftype == typeof(ushort) && info.Attribute.IsUnknownArray)
+                    property = ((ushort)0).Constant();
+                else
+                {
+                    property = packet.Property(prop);
+
+                    if (ftype.IsEnum)
+                        property = property.Convert(etype);
+                }
 
                 return Expression.Block(
                     writer.Call($"Write{etype.Name}", null, new[] { property }));
