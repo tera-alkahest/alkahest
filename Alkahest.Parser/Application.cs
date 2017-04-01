@@ -287,13 +287,15 @@ namespace Alkahest.Parser
                     for (var i = 0; i < _roundtrips; i++)
                     {
                         var payload2 = serializer.Serialize(parsed);
+                        var len = payload.Length;
+                        var len2 = payload2.Length;
 
-                        Assert.Check(payload2.Length == payload.Length,
-                            "Payload lengths must match after roundtrip.");
+                        Assert.Check(len2 == len,
+                            $"Payload lengths for {name} don't match ({len2} versus {len}).");
 
                         if (i > 0)
                             Assert.Check(payload2.SequenceEqual(payload),
-                                "Payloads must match after first roundtrip.");
+                                $"Payloads for {name} don't match after roundtrip.");
 
                         if (i != _roundtrips - 1)
                             serializer.Deserialize(payload2, parsed);
