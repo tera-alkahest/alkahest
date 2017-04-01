@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using Alkahest.Core.Data;
@@ -47,7 +45,8 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                     {
                         if (!Enum.IsDefined(type, val))
                             _log.Warning("Found unknown enum value {0} for field {1}.{2} ({3})",
-                                val, property.DeclaringType.Name, property.Name, type);
+                                val, property.DeclaringType.Name,
+                                property.Name, type.Name);
                     };
                 }
 
