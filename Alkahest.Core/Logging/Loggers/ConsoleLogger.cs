@@ -65,8 +65,11 @@ namespace Alkahest.Core.Logging.Loggers
             timestamp = timestamp != null ? $"[{timestamp}] " : string.Empty;
             category = category != null ? $" ({category})" : string.Empty;
 
+            var console = level <= LogLevel.Warning ?
+                Console.Out : Console.Error;
+
             Console.ForegroundColor = color;
-            Console.WriteLine($"{timestamp}[{lvl}] {source.Name}{category}: {message}");
+            console.WriteLine($"{timestamp}[{lvl}] {source.Name}{category}: {message}");
             Console.ResetColor();
         }
     }
