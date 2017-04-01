@@ -136,19 +136,19 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public float BonusStunResistFactor { get; set; }
 
         [PacketField]
-        public uint Level { get; set; }
+        public ushort Level1 { get; set; }
 
         [PacketField]
-        public ushort Unknown4 { get; set; }
+        public byte Unknown4 { get; set; }
 
         [PacketField]
-        public byte Unknown5 { get; set; }
+        public uint Unknown5 { get; set; }
 
         [PacketField]
-        public uint BonusHP { get; set; }
+        public uint StaminaBonusHP { get; set; }
 
         [PacketField]
-        public uint BonusMP { get; set; }
+        public uint StaminaBonusMP { get; set; }
 
         [PacketField]
         public uint CurrentStamina { get; set; }
@@ -166,7 +166,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public uint BonusResource { get; set; }
 
         [PacketField]
-        public uint Unknown6 { get; set; }
+        public uint Unknown7 { get; set; }
 
         [PacketField]
         public uint InventoryItemLevel { get; set; }
@@ -178,13 +178,10 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public uint ResourceStacks { get; set; }
 
         [PacketField]
-        public uint Unknown7 { get; set; }
+        public ushort Unknown8 { get; set; }
 
         [PacketField]
-        public uint Unknown8 { get; set; }
-
-        [PacketField]
-        public uint Unknown9 { get; set; }
+        public ushort Unknown9 { get; set; }
 
         [PacketField]
         public uint Unknown10 { get; set; }
@@ -193,9 +190,15 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public uint Unknown11 { get; set; }
 
         [PacketField]
-        public uint Unknown12 { get; set; }
+        public uint Level2 { get; set; }
+
+        [PacketField]
+        public float Unknown12 { get; set; }
 
         [PacketField]
         public uint Unknown13 { get; set; }
+
+        [PacketField]
+        public float Unknown14 { get; set; }
     }
 }
