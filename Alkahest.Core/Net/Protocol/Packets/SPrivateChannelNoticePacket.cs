@@ -1,5 +1,3 @@
-using Alkahest.Core.Data;
-
 namespace Alkahest.Core.Net.Protocol.Packets
 {
     public sealed class SPrivateChannelNoticePacket : Packet

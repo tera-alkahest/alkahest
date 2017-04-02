@@ -157,6 +157,11 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                     serializer = (w, v) => w.WriteAngle((Angle)v);
                     deserializer = r => r.ReadAngle();
                 }
+                else if (type == typeof(ModelId))
+                {
+                    serializer = (w, v) => w.WriteModelId((ModelId)v);
+                    deserializer = r => r.ReadModelId();
+                }
                 else
                     throw Assert.Unreachable();
             }

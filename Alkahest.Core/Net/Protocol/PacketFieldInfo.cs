@@ -47,7 +47,8 @@ namespace Alkahest.Core.Net.Protocol
                 type == typeof(Vector3) ||
                 type == typeof(EntityId) ||
                 type == typeof(SkillId) ||
-                type == typeof(Angle);
+                type == typeof(Angle) ||
+                type == typeof(ModelId);
         }
     }
 }

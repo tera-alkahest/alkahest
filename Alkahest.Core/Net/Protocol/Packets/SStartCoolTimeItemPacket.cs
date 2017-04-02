@@ -13,7 +13,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         }
 
         [PacketField]
-        public uint Item { get; set; }
+        public uint ItemId { get; set; }
 
         [PacketField]
         public uint Cooldown { get; set; }

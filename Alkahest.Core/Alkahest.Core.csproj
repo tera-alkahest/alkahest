@@ -41,7 +41,10 @@
     <Compile Include="Data\EntityFlags.cs" />
     <Compile Include="Data\EntityId.cs" />
     <Compile Include="Data\FlyingMovementKind.cs" />
+    <Compile Include="Data\Gender.cs" />
+    <Compile Include="Data\ModelId.cs" />
     <Compile Include="Data\MovementKind.cs" />
+    <Compile Include="Data\Race.cs" />
     <Compile Include="Data\SkillFlags.cs" />
     <Compile Include="Data\SkillId.cs" />
     <Compile Include="Data\UserStatus.cs" />
@@ -132,6 +135,7 @@
     <Compile Include="Net\Protocol\Packets\SLoadTopoPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SLoginAccountInfoPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SLoginArbiterPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SLoginPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SMountVehiclePacket.cs" />
     <Compile Include="Net\Protocol\Packets\SNpcLocationPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SNpcStatusPacket.cs" />

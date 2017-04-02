@@ -128,6 +128,11 @@ namespace Alkahest.Core.IO
             return new Angle(_reader.ReadInt16());
         }
 
+        public ModelId ReadModelId()
+        {
+            return new ModelId(_reader.ReadUInt32());
+        }
+
         public int ReadOffset()
         {
             return _reader.ReadUInt16() - PacketHeader.HeaderSize;

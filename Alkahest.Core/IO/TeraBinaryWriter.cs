@@ -119,6 +119,11 @@ namespace Alkahest.Core.IO
             _writer.Write(value.Raw);
         }
 
+        public void WriteModelId(ModelId value)
+        {
+            _writer.Write(value.Raw);
+        }
+
         public void WriteOffset(int value)
         {
             _writer.Write((ushort)(value + PacketHeader.HeaderSize));
