@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Alkahest.Core.IO;
 using Alkahest.Core.Net.Protocol;
 
@@ -72,7 +73,8 @@ namespace Alkahest.Parser.Analysis
 
         static bool IsStringException(Exception e)
         {
-            return e is EndOfStreamException || e is ArgumentException;
+            return e is EndOfStreamException || e is ArgumentException ||
+                e is EncoderFallbackException;
         }
 
         public static IEnumerable<PotentialArray> FindArrays(
