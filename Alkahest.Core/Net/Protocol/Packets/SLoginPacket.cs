@@ -25,7 +25,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public List<byte> Details2 { get; } = new List<byte>();
 
         [PacketField]
-        public ModelId Model { get; set; }
+        public TemplateId Template { get; set; }
 
         [PacketField]
         public EntityId Target { get; set; }

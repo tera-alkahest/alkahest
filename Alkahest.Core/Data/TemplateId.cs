@@ -2,7 +2,7 @@ using System;
 
 namespace Alkahest.Core.Data
 {
-    public struct ModelId : IEquatable<ModelId>
+    public struct TemplateId : IEquatable<TemplateId>
     {
         public readonly uint Raw;
 
@@ -12,25 +12,25 @@ namespace Alkahest.Core.Data
 
         public Class Class => (Class)(Raw % 100 - 1);
 
-        public ModelId(uint raw)
+        public TemplateId(uint raw)
         {
             Raw = raw;
         }
 
-        public static ModelId FromValues(Race race, Gender gender, Class @class)
+        public static TemplateId FromValues(Race race, Gender gender, Class @class)
         {
-            return new ModelId(10200 + 200 * (uint)race -
+            return new TemplateId(10200 + 200 * (uint)race -
                 100 * (uint)gender + (uint)@class + 1);
         }
 
-        public bool Equals(ModelId other)
+        public bool Equals(TemplateId other)
         {
             return Raw == other.Raw;
         }
 
         public override bool Equals(object obj)
         {
-            return obj is ModelId s ? Equals(s) : false;
+            return obj is TemplateId s ? Equals(s) : false;
         }
 
         public override int GetHashCode()
@@ -43,12 +43,12 @@ namespace Alkahest.Core.Data
             return $"[Raw: {Raw}, Race: {Race}, Gender: {Gender}, Class: {Class}]";
         }
 
-        public static bool operator ==(ModelId a, ModelId b)
+        public static bool operator ==(TemplateId a, TemplateId b)
         {
             return a.Equals(b);
         }
 
-        public static bool operator !=(ModelId a, ModelId b)
+        public static bool operator !=(TemplateId a, TemplateId b)
         {
             return !a.Equals(b);
         }

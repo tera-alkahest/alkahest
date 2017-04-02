@@ -128,9 +128,9 @@ namespace Alkahest.Core.IO
             return new Angle(_reader.ReadInt16());
         }
 
-        public ModelId ReadModelId()
+        public TemplateId ReadTemplateId()
         {
-            return new ModelId(_reader.ReadUInt32());
+            return new TemplateId(_reader.ReadUInt32());
         }
 
         public int ReadOffset()

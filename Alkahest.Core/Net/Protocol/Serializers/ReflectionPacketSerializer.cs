@@ -157,10 +157,10 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                     serializer = (w, v) => w.WriteAngle((Angle)v);
                     deserializer = r => r.ReadAngle();
                 }
-                else if (type == typeof(ModelId))
+                else if (type == typeof(TemplateId))
                 {
-                    serializer = (w, v) => w.WriteModelId((ModelId)v);
-                    deserializer = r => r.ReadModelId();
+                    serializer = (w, v) => w.WriteTemplateId((TemplateId)v);
+                    deserializer = r => r.ReadTemplateId();
                 }
                 else
                     throw Assert.Unreachable();

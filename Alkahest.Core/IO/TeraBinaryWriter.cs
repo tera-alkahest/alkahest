@@ -119,7 +119,7 @@ namespace Alkahest.Core.IO
             _writer.Write(value.Raw);
         }
 
-        public void WriteModelId(ModelId value)
+        public void WriteTemplateId(TemplateId value)
         {
             _writer.Write(value.Raw);
         }

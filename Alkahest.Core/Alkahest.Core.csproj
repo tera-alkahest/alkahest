@@ -42,7 +42,7 @@
     <Compile Include="Data\EntityId.cs" />
     <Compile Include="Data\FlyingMovementKind.cs" />
     <Compile Include="Data\Gender.cs" />
-    <Compile Include="Data\ModelId.cs" />
+    <Compile Include="Data\TemplateId.cs" />
     <Compile Include="Data\MovementKind.cs" />
     <Compile Include="Data\Race.cs" />
     <Compile Include="Data\SkillFlags.cs" />
