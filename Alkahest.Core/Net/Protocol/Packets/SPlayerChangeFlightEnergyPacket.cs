@@ -13,6 +13,6 @@ namespace Alkahest.Core.Net.Protocol.Packets
         }
 
         [PacketField]
-        public float Energy { get; set; }
+        public float FlightEnergy { get; set; }
     }
 }

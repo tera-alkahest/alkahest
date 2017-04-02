@@ -193,7 +193,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public uint Level2 { get; set; }
 
         [PacketField]
-        public float Unknown12 { get; set; }
+        public float FlightEnergy { get; set; }
 
         [PacketField]
         public uint Unknown13 { get; set; }
