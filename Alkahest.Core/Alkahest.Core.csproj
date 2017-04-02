@@ -158,6 +158,7 @@
     <Compile Include="Net\Protocol\Packets\SSocialCancelPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SSocialPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SSpawnMePacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SSpawnNpcPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SStartClientCustomSkillPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SStartCoolTimeItemPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SStartCoolTimeSkillPacket.cs" />
