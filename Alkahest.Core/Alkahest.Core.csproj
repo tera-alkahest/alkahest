@@ -151,6 +151,7 @@
     <Compile Include="Net\Protocol\Packets\SPartyMemberAbnormalityClearPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SPartyMemberAbnormalityDeletePacket.cs" />
     <Compile Include="Net\Protocol\Packets\SPartyMemberAbnormalityRefreshPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SPartyMemberChangeStaminaPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SPingPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SPlayerChangeFlightEnergyPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SPlayerChangeMPPacket.cs" />
