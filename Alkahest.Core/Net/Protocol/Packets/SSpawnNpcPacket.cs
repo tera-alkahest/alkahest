@@ -71,10 +71,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public TemplateId Template { get; set; }
 
         [PacketField]
-        public ushort HuntingZoneId { get; set; }
-
-        [PacketField]
-        public ushort Unknown11 { get; set; }
+        public uint HuntingZoneId { get; set; }
 
         [PacketField]
         public ushort Unknown12 { get; set; }

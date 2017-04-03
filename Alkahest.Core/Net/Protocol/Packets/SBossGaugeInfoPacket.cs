@@ -18,10 +18,10 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public EntityId Boss { get; set; }
 
         [PacketField]
-        public uint Type { get; set; }
+        public uint HuntingZoneId { get; set; }
 
         [PacketField]
-        public uint NpcId { get; set; }
+        public TemplateId Template { get; set; }
 
         [PacketField]
         public EntityId Target { get; set; }
