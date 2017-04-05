@@ -65,6 +65,7 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                 out Action<TeraBinaryWriter, object> serializer,
                 out Func<TeraBinaryReader, object> deserializer)
             {
+                var dtype = property.DeclaringType;
                 var type = property.PropertyType;
 
                 if (type.IsEnum)
@@ -73,7 +74,16 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                 if (type == typeof(bool))
                 {
                     serializer = (w, v) => w.WriteBoolean((bool)v);
-                    deserializer = r => r.ReadBoolean();
+                    deserializer = r =>
+                    {
+                        var b = r.ReadByte();
+
+                        if (b != 0 && b != 1)
+                            _log.Warning("Found non-Boolean value {0} for field {1}.{2}",
+                                b, dtype.Name, property.Name);
+
+                        return b != 0;
+                    };
                 }
                 else if (type == typeof(byte))
                 {
@@ -96,7 +106,7 @@ namespace Alkahest.Core.Net.Protocol.Serializers
 
                             if (v != 0)
                                 _log.Warning("Found non-zero value {0} for unknown array field {1}.{2}",
-                                    v, property.DeclaringType.Name, property.Name);
+                                    v, dtype.Name, property.Name);
 
                             return v;
                         };
