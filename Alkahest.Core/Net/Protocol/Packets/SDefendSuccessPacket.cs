@@ -24,6 +24,6 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public uint Unknown4 { get; set; }
 
         [PacketField]
-        public bool IsPerfectBlock { get; set; }
+        public bool IsPerfect { get; set; }
     }
 }
