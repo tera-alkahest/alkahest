@@ -88,7 +88,7 @@ namespace Alkahest.Core.Net
 
                 ipElem.Value = newIP.ToString();
 
-                servs.Add(new ServerInfo(id, name, ip, newIP, port));
+                servs.Add(new ServerInfo(id, name, ip, newIP, newPort));
 
                 _log.Info("Redirected {0}: {1}:{2} -> {3}:{4}",
                     name, ip, port, newIP, newPort);
