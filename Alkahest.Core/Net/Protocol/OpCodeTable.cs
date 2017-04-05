@@ -15,11 +15,11 @@ namespace Alkahest.Core.Net.Protocol
         static readonly IReadOnlyDictionary<Region, int> _versions =
             new Dictionary<Region, int>()
             {
-                { Region.EU, 311380 },
+                { Region.EU, 311383 },
                 { Region.JP, 311380 },
                 { Region.KR, 313577 },
                 { Region.NA, 311380 },
-                { Region.RU, 311380 },
+                { Region.RU, 311383 },
                 { Region.TW, 311380 }
             };
 
