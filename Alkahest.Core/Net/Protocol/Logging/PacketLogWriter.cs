@@ -40,11 +40,12 @@ namespace Alkahest.Core.Net.Protocol.Logging
             {
                 _writer.Write(server.Id);
                 _writer.Write(server.Name);
-                _writer.Write(server.RealAddress.AddressFamily ==
+                _writer.Write(server.RealEndPoint.AddressFamily ==
                     AddressFamily.InterNetworkV6);
-                _writer.Write(server.RealAddress.GetAddressBytes());
-                _writer.Write(server.ProxyAddress.GetAddressBytes());
-                _writer.Write((ushort)server.Port);
+                _writer.Write(server.RealEndPoint.Address.GetAddressBytes());
+                _writer.Write((ushort)server.RealEndPoint.Port);
+                _writer.Write(server.ProxyEndPoint.Address.GetAddressBytes());
+                _writer.Write((ushort)server.ProxyEndPoint.Port);
             }
         }
 

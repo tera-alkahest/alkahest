@@ -49,11 +49,13 @@ namespace Alkahest.Core.Net.Protocol.Logging
                 var id = _reader.ReadInt32();
                 var name = _reader.ReadString();
                 var size = _reader.ReadBoolean() ? 16 : 4;
-                var real = new IPAddress(_reader.ReadBytes(size));
-                var proxy = new IPAddress(_reader.ReadBytes(size));
-                var port = _reader.ReadUInt16();
+                var realIP = new IPAddress(_reader.ReadBytes(size));
+                var realPort = _reader.ReadUInt16();
+                var proxyIP = new IPAddress(_reader.ReadBytes(size));
+                var proxyPort = _reader.ReadUInt16();
 
-                servers.Add(new ServerInfo(id, name, real, proxy, port));
+                servers.Add(new ServerInfo(id, name, new IPEndPoint(realIP,
+                    realPort), new IPEndPoint(proxyIP, proxyPort)));
             }
 
             Servers = servers.ToDictionary(x => x.Id);

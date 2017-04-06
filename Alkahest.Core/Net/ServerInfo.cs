@@ -8,20 +8,17 @@ namespace Alkahest.Core.Net
 
         public string Name { get; }
 
-        public IPAddress RealAddress { get; }
+        public IPEndPoint RealEndPoint { get; }
 
-        public IPAddress ProxyAddress { get; }
+        public IPEndPoint ProxyEndPoint { get; }
 
-        public int Port { get; }
-
-        public ServerInfo(int id, string name, IPAddress realAddress,
-            IPAddress proxyAddress, int port)
+        public ServerInfo(int id, string name, IPEndPoint realEndPoint,
+            IPEndPoint proxyEndPoint)
         {
             Id = id;
             Name = name;
-            RealAddress = realAddress;
-            ProxyAddress = proxyAddress;
-            Port = port;
+            RealEndPoint = realEndPoint;
+            ProxyEndPoint = proxyEndPoint;
         }
     }
 }

@@ -40,14 +40,14 @@ namespace Alkahest.Core.Net
             Proxy = proxy;
             EndPoint = (IPEndPoint)socket.RemoteEndPoint;
             _clientSocket = socket;
-            _serverSocket = new Socket(proxy.RealEndPoint.AddressFamily,
+            _serverSocket = new Socket(proxy.Info.RealEndPoint.AddressFamily,
                 SocketType.Stream, ProtocolType.Tcp);
 
             SetOptions();
 
             var args = proxy.ArgsPool.Get();
             args.Completed += OnConnect;
-            args.RemoteEndPoint = Proxy.RealEndPoint;
+            args.RemoteEndPoint = Proxy.Info.RealEndPoint;
 
             proxy.AddClient(this);
 
@@ -71,7 +71,7 @@ namespace Alkahest.Core.Net
             DisconnectInternal();
 
             _log.Info("Disconnected client {0} from {1} ({2})",
-                EndPoint, Proxy.Info.Name, Proxy.RealEndPoint);
+                EndPoint, Proxy.Info.Name, Proxy.Info.RealEndPoint);
         }
 
         void DisconnectInternal()
@@ -241,12 +241,12 @@ namespace Alkahest.Core.Net
             {
                 DisconnectInternal();
                 _log.Error("Could not connect to {0} ({1}) for client {2}: {3}",
-                    Proxy.Info.Name, Proxy.RealEndPoint, EndPoint, error);
+                    Proxy.Info.Name, Proxy.Info.RealEndPoint, EndPoint, error);
                 return;
             }
 
             _log.Info("Connected to {0} ({1}) for client {2}",
-                Proxy.Info.Name, Proxy.RealEndPoint, EndPoint);
+                Proxy.Info.Name, Proxy.Info.RealEndPoint, EndPoint);
 
             byte[] ckey1;
             byte[] ckey2;

@@ -24,10 +24,6 @@ namespace Alkahest.Core.Net
 
         public TimeSpan Timeout { get; }
 
-        public IPEndPoint RealEndPoint { get; }
-
-        public IPEndPoint ProxyEndPoint { get; }
-
         readonly HashSet<GameClient> _clients = new HashSet<GameClient>();
 
         readonly ManualResetEventSlim _event = new ManualResetEventSlim();
@@ -45,19 +41,18 @@ namespace Alkahest.Core.Net
             ArgsPool = pool;
             Processor = processor;
             Timeout = timeout;
-            RealEndPoint = new IPEndPoint(info.RealAddress, info.Port);
-            ProxyEndPoint = new IPEndPoint(info.ProxyAddress, info.Port);
-            _serverSocket = new Socket(ProxyEndPoint.AddressFamily,
+            _serverSocket = new Socket(info.ProxyEndPoint.AddressFamily,
                 SocketType.Stream, ProtocolType.Tcp)
             {
                 ExclusiveAddressUse = true,
                 NoDelay = true
             };
 
-            _serverSocket.Bind(ProxyEndPoint);
+            _serverSocket.Bind(info.ProxyEndPoint);
             _serverSocket.Listen(backlog);
 
-            _log.Basic("Game proxy for {0} listening at {1}", info.Name, ProxyEndPoint);
+            _log.Basic("Game proxy for {0} listening at {1}", info.Name,
+                info.ProxyEndPoint);
 
             Accept();
         }
