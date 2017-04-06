@@ -43,6 +43,7 @@
     <Compile Include="Data\EntityId.cs" />
     <Compile Include="Data\FlyingMovementKind.cs" />
     <Compile Include="Data\Gender.cs" />
+    <Compile Include="Data\RunemarkEventKind.cs" />
     <Compile Include="Data\TemplateId.cs" />
     <Compile Include="Data\MovementKind.cs" />
     <Compile Include="Data\Race.cs" />
@@ -178,6 +179,7 @@
     <Compile Include="Net\Protocol\Packets\SStartClientCustomSkillPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SStartCoolTimeItemPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SStartCoolTimeSkillPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SSuccessCounterPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SSwitchInfoPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SSystemMessagePacket.cs" />
     <Compile Include="Net\Protocol\Packets\STradeBrokerHighestItemLevelPacket.cs" />
@@ -185,6 +187,7 @@
     <Compile Include="Net\Protocol\Packets\SUpdateEventSeedStatePacket.cs" />
     <Compile Include="Net\Protocol\Packets\SUserFlyingLocationPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SUserStatusPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SWeakPointPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SWhisperPacket.cs" />
     <Compile Include="Net\Protocol\Serializers\CompilerPacketSerializer.cs" />
     <Compile Include="Net\Protocol\Serializers\ReflectionPacketSerializer.cs" />
