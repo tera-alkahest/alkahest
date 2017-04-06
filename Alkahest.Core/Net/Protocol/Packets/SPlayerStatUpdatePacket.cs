@@ -175,7 +175,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public uint CharacterItemLevel { get; set; }
 
         [PacketField]
-        public uint ResourceStacks { get; set; }
+        public uint EdgeStacks { get; set; }
 
         [PacketField]
         public ushort Unknown8 { get; set; }
