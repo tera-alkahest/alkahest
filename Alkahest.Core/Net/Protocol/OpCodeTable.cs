@@ -20,7 +20,7 @@ namespace Alkahest.Core.Net.Protocol
                 { Region.KR, 313577 },
                 { Region.NA, 311380 },
                 { Region.RU, 311383 },
-                { Region.TW, 311380 }
+                { Region.TW, 311383 }
             };
 
         public OpCodeTable(bool opCodes, Region region)
