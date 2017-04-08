@@ -14,37 +14,34 @@ language so that it could easily use the Windows Presentation Foundation
 libraries for the purpose of making a UI overlay for the game (the
 `Alkahest.Plugins.Overlay` project in this repository).
 
-A significant portion of the protocol knowledge in Alkahest is based on
-research done by the developers of the
-[tera-data](https://github.com/meishuu/tera-data) and
-[Shinra Meter](https://github.com/neowutran/ShinraMeter) projects. The
-encryption code is based on the defunct TERA emulator project.
+## Features
 
-## Disclaimer
-
-Technically, using Alkahest could be considered a violation of the terms of
-service for all TERA regions. Historically, most publishers have chosen to
-tolerate programs such as Shinra Meter, tera-proxy, Alkahest, etc as long as
-they're not used for malicious purposes. You'll almost certainly be fine as
-long as you don't do anything really stupid. That said, I take absolutely no
-responsibility if you do manage to get yourself banned.
-
-Also, Alkahest is meant to enable players to write useful plugins that can
-enhance the TERA experience. It is not meant to enable cheating of any sort. It
-may or may not be the case that some aspects of TERA's network protocol can be
-exploited due to poor design (mainly trusting the client too much). Either way,
-I do *not* condone using Alkahest for this, and I *certainly* won't support
-such usage. I'd encourage people to report such exploits to the TERA developers
-(usually through whichever publisher your server is at).
+* **Complete region support:** All TERA regions are supported: EU, JP, KR, NA,
+  RU, and TW.
+* **Packet editing:** Packets can easily be intercepted, modified, or even
+  constructed from scratch, in either raw or typed form.
+* **Fast packet serialization**: Specialized serialization functions are
+  automatically generated and compiled at runtime, making packet serialization
+  fast and painless.
+* **Packet logging:** Compressed packet logs can be saved for later parsing and
+  analysis.
+* **.NET plugins:** Plugins can be written in any .NET language, including C#,
+  F#, Nemerle, etc.
+* **Python scripting:** One of the default plugins implements Python scripting
+  support using IronPython.
+* **Reusable core library:** The Alkahest server is only a wrapper around the
+  `Alkahest.Core` library which can be embedded in any .NET application.
+* **Packet parser:** An offline packet parsing tool can generate text dumps of
+  packet logs and analyze raw packet structures to find arrays and strings.
 
 ## Installation
 
 Binary releases of Alkahest are not yet available as the project is still in
 heavy development. If you want to build it, you will need Visual Studio 2017
-(any edition) and .NET Framework version 4.6.1. Simply open `Alkahest.sln` and
-build it with the `Debug` + `Any CPU` configuration. All build artifacts will
-end up in the `Build` directory. Run `alkahest-server.exe` to start the proxy
-server (but see below for configuration).
+(any edition) and .NET Framework 4.6.1. Simply open `Alkahest.sln` and build
+it with the `Debug` + `Any CPU` configuration. All build artifacts will end up
+in the `Build` directory. Run `alkahest-server.exe` to start the proxy server
+(but see below for configuration).
 
 ## Configuration
 
@@ -82,8 +79,10 @@ Alkahest finishes initializing, and if everything went fine, you should be able
 to just start TERA and play.
 
 For some regions, you may need to log into TERA first, then start Alkahest just
-before launching the game. This is necessary because some regions use the same
-domain name for logging in and retrieving the server list.
+before actually launching the game. This is necessary because some regions use
+the same domain name for logging in and for retrieving the server list, the
+latter of which gets redirected by Alkahest. For KR specifically, you need to
+start Alkahest right after launching the game, during the splash screen.
 
 Note that, by default, Alkahest will adjust your `hosts` file so that the
 hostname that the TERA launcher fetches the official server list from will be
@@ -92,3 +91,32 @@ necessary so that Alkahest can give the client a modified server list where all
 IP addresses point to where Alkahest is listening for each server. Modifying
 the `hosts` file requires administrative privileges, so you must run Alkahest
 as administrator.
+
+## Disclaimer
+
+Technically, using Alkahest could be considered a violation of the terms of
+service for all TERA regions. Historically, most publishers have chosen to
+tolerate programs such as Shinra Meter, tera-proxy, Alkahest, etc as long as
+they're not used for malicious purposes. You'll almost certainly be fine as
+long as you don't do anything really stupid. That said, I take absolutely no
+responsibility if you do manage to get yourself banned.
+
+Also, Alkahest is meant to enable players to write useful plugins that can
+enhance the TERA experience. It is not meant to enable cheating of any sort. It
+may or may not be the case that some aspects of TERA's network protocol can be
+exploited due to poor design (mainly trusting the client too much). Either way,
+I do *not* condone using Alkahest for this, and I *certainly* won't support
+such usage. I'd encourage people to report such exploits to the TERA developers
+(usually through whichever publisher your server is at).
+
+## Acknowledgements
+
+Please see [ACKNOWLEDGEMENTS.md](ACKNOWLEDGEMENTS.md).
+
+## Contributing
+
+Please see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+Please see [LICENSE.md](LICENSE.md).
