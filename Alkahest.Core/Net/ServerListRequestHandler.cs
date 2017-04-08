@@ -189,6 +189,8 @@ namespace Alkahest.Core.Net
                     }
                 }
 
+                resp.Headers.TransferEncodingChunked = null;
+
                 // Don't include the query string as TERA JP actually uses it.
                 if (uri.AbsolutePath == _parameters.Uri.AbsolutePath)
                     resp.Content = new StringContent(_servers);
