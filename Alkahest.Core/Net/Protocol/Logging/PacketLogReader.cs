@@ -9,6 +9,8 @@ namespace Alkahest.Core.Net.Protocol.Logging
 {
     public sealed class PacketLogReader : IDisposable
     {
+        public bool Compressed { get; }
+
         public int Version { get; }
 
         public Region Region { get; }
@@ -31,7 +33,9 @@ namespace Alkahest.Core.Net.Protocol.Logging
             if (!magic.SequenceEqual(PacketLogEntry.Magic))
                 throw new InvalidDataException();
 
-            if (stream.ReadByte() == 1)
+            Compressed = stream.ReadByte() != 0;
+
+            if (Compressed)
                 stream = new DeflateStream(stream, CompressionMode.Decompress);
 
             _reader = new BinaryReader(stream);

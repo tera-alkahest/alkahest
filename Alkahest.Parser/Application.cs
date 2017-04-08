@@ -31,6 +31,8 @@ namespace Alkahest.Parser
 
         static string _output;
 
+        static bool _header;
+
         static bool _stats;
 
         static bool _summary;
@@ -129,6 +131,11 @@ namespace Alkahest.Parser
                     "r|regex=",
                     "Add an opcode regex to filter packets by. Uses Perl 5 regex syntax.",
                     (string ar) => _regexes.Add(ar)
+                },
+                {
+                    "e|header",
+                    "Output packet log header information before parsing.",
+                    e => _header = e != null
                 },
                 {
                     "s|stats",
@@ -337,6 +344,7 @@ namespace Alkahest.Parser
                     PrintPercentageValue(name, value, stats.RelevantPackets);
                 }
 
+                _log.Info(string.Empty);
                 PrintValue("Total packets", stats.TotalPackets);
                 PrintTotalPacketValue("Relevant packets", stats.RelevantPackets);
                 PrintTotalPacketValue("Ignored packets", stats.IgnoredPackets);
@@ -346,6 +354,7 @@ namespace Alkahest.Parser
                 PrintRelevantPacketValue("Parsed packets", stats.ParsedPackets);
                 PrintValue("Potential arrays", stats.PotentialArrays);
                 PrintValue("Potential strings", stats.PotentialStrings);
+                _log.Info(string.Empty);
             }
 
             if (_summary)
@@ -362,17 +371,23 @@ namespace Alkahest.Parser
                         $" ({(double)entry.Count / total:P2})" : string.Empty);
                     _log.Info("    Sizes: Min = {0}, Max = {1}, Avg = {2}",
                         sizes.Min(), sizes.Max(), (int)sizes.Average());
+                    _log.Info(string.Empty);
                 }
 
                 void PrintSummaryList(string header,
                     Func<PacketStatistics.SummaryEntry, bool> predicate)
                 {
+                    var packets = stats.Packets.Where(x => predicate(x.Value))
+                        .OrderBy(x => x.Key);
+
+                    if (!packets.Any())
+                        return;
+
                     _log.Info(string.Empty);
                     _log.Info($"{header}:");
                     _log.Info(string.Empty);
 
-                    foreach (var kvp in stats.Packets
-                        .Where(x => predicate(x.Value)).OrderBy(x => x.Key))
+                    foreach (var kvp in packets)
                         PrintSummary(kvp);
                 }
 
@@ -423,6 +438,21 @@ namespace Alkahest.Parser
 
             using (var reader = new PacketLogReader(input))
             {
+                if (_header)
+                {
+                    _log.Info(string.Empty);
+                    _log.Info("Version: {0}", reader.Version);
+                    _log.Info("Compressed: {0}", reader.Compressed);
+                    _log.Info("Region: {0}", reader.Region);
+                    _log.Info("Servers:");
+
+                    foreach (var srv in reader.Servers.Values)
+                        _log.Info("  {0} ({1}): {2} -> {3}", srv.Name, srv.Id,
+                            srv.RealEndPoint, srv.ProxyEndPoint);
+
+                    _log.Info(string.Empty);
+                }
+
                 var opc = new OpCodeTable(true, reader.Region);
                 var smt = new OpCodeTable(false, reader.Region);
 

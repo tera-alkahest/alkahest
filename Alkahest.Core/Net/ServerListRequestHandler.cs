@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.ServiceModel.Channels;
@@ -24,14 +25,14 @@ namespace Alkahest.Core.Net
         readonly string _servers;
 
         public ServerListRequestHandler(ServerListParameters parameters,
-            out ServerInfo[] servers)
+            out IReadOnlyList<ServerInfo> servers)
         {
             _parameters = parameters;
             _lastPort = parameters.StartingPort;
             _servers = GetAndAdjustServers(out servers);
         }
 
-        string GetAndAdjustServers(out ServerInfo[] servers)
+        string GetAndAdjustServers(out IReadOnlyList<ServerInfo> servers)
         {
             _log.Basic("Fetching official server list...");
 
@@ -97,7 +98,7 @@ namespace Alkahest.Core.Net
                     name, ip, port, newIP, newPort);
             }
 
-            servers = servs.ToArray();
+            servers = servs.OrderBy(x => x.Id).ToArray();
 
             _log.Basic("Redirected {0} servers", servs.Count);
 
