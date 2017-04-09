@@ -78,16 +78,20 @@ namespace Alkahest.Core.Net
 
             foreach (var elem in doc.Root.Elements("server"))
             {
+                var nameElem = elem.Element("name");
+                var rawNameAttr = nameElem.Attribute("raw_name");
                 var ipElem = elem.Element("ip");
                 var portElem = elem.Element("port");
 
                 var id = int.Parse(elem.Element("id").Value);
-                var name = elem.Element("name").Attribute("raw_name").Value;
+                var name = rawNameAttr.Value;
                 var ip = IPAddress.Parse(ipElem.Value);
                 var newIP = _parameters.GameAddress;
                 var port = int.Parse(portElem.Value);
                 var newPort = _lastPort++;
 
+                nameElem.Value += " (Proxy)";
+                rawNameAttr.Value += " (Proxy)";
                 ipElem.Value = newIP.ToString();
                 portElem.Value = newPort.ToString();
 
