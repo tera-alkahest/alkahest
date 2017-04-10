@@ -73,9 +73,12 @@ namespace Alkahest.Core.Net.Protocol
                 return (from prop in t.GetProperties(FieldFlags)
                         let attr = prop.GetCustomAttribute<PacketFieldAttribute>()
                         where attr != null
+                        where attr.MinVersion == 0 ||
+                            attr.MinVersion >= GameMessages.Version
+                        where attr.MaxVersion == 0 ||
+                            attr.MaxVersion <= GameMessages.Version
                         orderby prop.MetadataToken
-                        select CreateFieldInfo(prop, attr))
-                        .ToArray();
+                        select CreateFieldInfo(prop, attr)).ToArray();
             }).Cast<T>().ToArray();
         }
 

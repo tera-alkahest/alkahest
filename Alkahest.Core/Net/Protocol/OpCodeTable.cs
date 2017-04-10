@@ -8,6 +8,8 @@ namespace Alkahest.Core.Net.Protocol
     {
         public Region Region { get; }
 
+        public int Version { get; }
+
         public IReadOnlyDictionary<ushort, string> OpCodeToName { get; }
 
         public IReadOnlyDictionary<string, ushort> NameToOpCode { get; }
@@ -26,10 +28,11 @@ namespace Alkahest.Core.Net.Protocol
         public OpCodeTable(bool opCodes, Region region)
         {
             Region = region;
+            Version = _versions[region];
 
             var asm = Assembly.GetExecutingAssembly();
             var name = string.Format(@"Net\Protocol\OpCodes\{0}_{1}.txt",
-                opCodes ? "opc" : "smt", _versions[region]);
+                opCodes ? "opc" : "smt", Version);
             var codeToName = new Dictionary<ushort, string>();
             var nameToCode = new Dictionary<string, ushort>();
 
