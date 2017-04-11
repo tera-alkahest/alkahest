@@ -3,23 +3,23 @@ using Alkahest.Core.Data;
 
 namespace Alkahest.Core.Net.Protocol.Packets
 {
-    public sealed class CPressSkillPacket : Packet
+    public sealed class CNotifyLocationInDashPacket : Packet
     {
-        const string Name = "C_PRESS_SKILL";
+        const string Name = "C_NOTIFY_LOCATION_IN_DASH";
 
         public override string OpCode => Name;
 
         [Packet(Name)]
         internal static Packet Create()
         {
-            return new CPressSkillPacket();
+            return new CNotifyLocationInDashPacket();
         }
 
         [PacketField]
         public SkillId Skill { get; set; }
 
         [PacketField]
-        public bool IsPress { get; set; }
+        public uint Stage { get; set; }
 
         [PacketField]
         public Vector3 Position { get; set; }

@@ -25,7 +25,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public Angle Direction { get; set; }
 
         [PacketField]
-        public uint Model { get; set; }
+        public TemplateId Template { get; set; }
 
         [PacketField]
         public SkillId Skill { get; set; }

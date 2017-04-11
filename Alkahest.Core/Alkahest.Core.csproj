@@ -38,6 +38,7 @@
     <Compile Include="Data\AwakenedEquipmentKind.cs" />
     <Compile Include="Data\ChatChannel.cs" />
     <Compile Include="Data\Class.cs" />
+    <Compile Include="Data\CrestMessageKind.cs" />
     <Compile Include="Data\DespawnKind.cs" />
     <Compile Include="Data\EntityFlags.cs" />
     <Compile Include="Data\EntityId.cs" />
@@ -63,6 +64,8 @@
     <Compile Include="Net\Protocol\Packets\CCheckUserNamePacket.cs" />
     <Compile Include="Net\Protocol\Packets\CCheckVersionPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CCreatePrivateChannelPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\CCrestApplyListPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\CCrestApplyPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CDungeonCoolTimeListPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CEditPrivateChannelPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CGetUserListPacket.cs" />
@@ -74,6 +77,8 @@
     <Compile Include="Net\Protocol\Packets\CLeavePrivateChannelPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CLoadTopoFinPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CLoginArbiterPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\CNotifyLocationInActionPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\CNotifyLocationInDashPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CPCBangInventoryUseSlotPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CPlayerFlyingLocationPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CPlayerLocationPacket.cs" />
@@ -129,15 +134,21 @@
     <Compile Include="Net\Protocol\Packets\SClearWorldQuestVillagerInfoPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SCreatureChangeHPPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SCreatureLifePacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SCrestApplyPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SCrestInfoPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SCrestMessagePacket.cs" />
     <Compile Include="Net\Protocol\Packets\SDecreaseCoolTimeSkillPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SDefendSuccessPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SDespawnNpcPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SDespawnUserPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SEachSkillResultPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SF2PPremiumUserPermissionPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SGuardPKPolicyPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SHeldAbnormalityAddPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SHideHPPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SHitComboPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SInstantDashPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SInstantMovePacket.cs" />
     <Compile Include="Net\Protocol\Packets\SInventoryPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SJoinPrivateChannelPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SLeavePrivateChannelPacket.cs" />
@@ -172,6 +183,7 @@
     <Compile Include="Net\Protocol\Packets\SShowDeadUIPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SShowHPPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SSkillCategoryPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SSkillPeriodPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SSocialCancelPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SSocialPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SSpawnMePacket.cs" />

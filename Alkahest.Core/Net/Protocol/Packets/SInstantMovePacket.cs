@@ -3,26 +3,23 @@ using Alkahest.Core.Data;
 
 namespace Alkahest.Core.Net.Protocol.Packets
 {
-    public sealed class CPressSkillPacket : Packet
+    public sealed class SInstantMovePacket : Packet
     {
-        const string Name = "C_PRESS_SKILL";
+        const string Name = "S_INSTANT_MOVE";
 
         public override string OpCode => Name;
 
         [Packet(Name)]
         internal static Packet Create()
         {
-            return new CPressSkillPacket();
+            return new SInstantMovePacket();
         }
 
         [PacketField]
-        public SkillId Skill { get; set; }
+        public EntityId Source { get; set; }
 
         [PacketField]
-        public bool IsPress { get; set; }
-
-        [PacketField]
-        public Vector3 Position { get; set; }
+        public Vector3 Destination { get; set; }
 
         [PacketField]
         public Angle Direction { get; set; }

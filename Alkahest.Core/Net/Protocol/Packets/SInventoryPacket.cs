@@ -161,7 +161,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public byte Unknown26 { get; set; }
 
         [PacketField]
-        public byte Unknown27 { get; set; }
+        public byte IsIncomplete { get; set; }
 
         [PacketField]
         public uint InventorySize { get; set; }

@@ -25,7 +25,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
             public float Speed { get; set; }
 
             [PacketField]
-            public uint Unknown5 { get; set; }
+            public float Unknown5 { get; set; }
 
             [PacketField]
             public float Distance { get; set; }
@@ -44,7 +44,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public Angle Angle { get; set; }
 
         [PacketField]
-        public uint Model { get; set; }
+        public TemplateId Template { get; set; }
 
         [PacketField]
         public SkillId Skill { get; set; }
@@ -59,7 +59,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public uint CorrelationId { get; set; }
 
         [PacketField]
-        public uint Unknown1 { get; set; }
+        public float Unknown1 { get; set; }
 
         [PacketField]
         public byte Unknown2 { get; set; }
