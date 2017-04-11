@@ -453,8 +453,9 @@ namespace Alkahest.Parser
                     _log.Info(string.Empty);
                 }
 
-                var opc = new OpCodeTable(true, reader.Region);
-                var smt = new OpCodeTable(false, reader.Region);
+                var ver = OpCodeTable.Versions[reader.Region];
+                var opc = new OpCodeTable(true, ver);
+                var smt = new OpCodeTable(false, ver);
 
                 PacketSerializer serializer;
 

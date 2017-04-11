@@ -87,10 +87,11 @@ namespace Alkahest.Server
                             Configuration.PacketLogFileNameFormat,
                             Configuration.CompressPacketLogs) : null)
                     {
+                        var ver = OpCodeTable.Versions[region];
                         var proc = new PacketProcessor(
                             new CompilerPacketSerializer(
-                                new OpCodeTable(true, region),
-                                new OpCodeTable(false, region)), writer);
+                                new OpCodeTable(true, ver),
+                                new OpCodeTable(false, ver)), writer);
                         var proxies = servers.Select(x => new GameProxy(x,
                             pool, proc, Configuration.GameBacklog,
                             Configuration.GameTimeout)

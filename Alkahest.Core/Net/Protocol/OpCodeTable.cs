@@ -6,16 +6,14 @@ namespace Alkahest.Core.Net.Protocol
 {
     public sealed class OpCodeTable
     {
-        public Region Region { get; }
-
         public int Version { get; }
 
         public IReadOnlyDictionary<ushort, string> OpCodeToName { get; }
 
         public IReadOnlyDictionary<string, ushort> NameToOpCode { get; }
 
-        static readonly IReadOnlyDictionary<Region, int> _versions =
-            new Dictionary<Region, int>()
+        public static IReadOnlyDictionary<Region, int> Versions { get; } =
+            new Dictionary<Region, int>
             {
                 { Region.EU, 311383 },
                 { Region.JP, 311380 },
@@ -25,10 +23,9 @@ namespace Alkahest.Core.Net.Protocol
                 { Region.TW, 311383 }
             };
 
-        public OpCodeTable(bool opCodes, Region region)
+        public OpCodeTable(bool opCodes, int version)
         {
-            Region = region;
-            Version = _versions[region];
+            Version = version;
 
             var asm = Assembly.GetExecutingAssembly();
             var name = string.Format(@"Net\Protocol\OpCodes\{0}_{1}.txt",
