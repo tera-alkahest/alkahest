@@ -50,6 +50,7 @@
     <Compile Include="Data\Race.cs" />
     <Compile Include="Data\SkillId.cs" />
     <Compile Include="Data\UserStatus.cs" />
+    <Compile Include="IO\IOExtensions.cs" />
     <Compile Include="Logging\LogEventArgs.cs" />
     <Compile Include="Net\Protocol\Logging\PacketLogEntry.cs" />
     <Compile Include="Net\Protocol\Logging\PacketLogReader.cs" />

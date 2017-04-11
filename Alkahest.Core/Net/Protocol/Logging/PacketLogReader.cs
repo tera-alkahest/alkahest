@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using Alkahest.Core.IO;
 using Alkahest.Core.Net.Protocol.OpCodes;
 
 namespace Alkahest.Core.Net.Protocol.Logging
@@ -75,9 +76,9 @@ namespace Alkahest.Core.Net.Protocol.Logging
 
                 var name = _reader.ReadString();
                 var size = _reader.ReadBoolean() ? 16 : 4;
-                var realIPBytes = _reader.ReadBytes(size);
+                var realIPBytes = _reader.ReadBytesFull(size);
                 var realPort = _reader.ReadUInt16();
-                var proxyIPBytes = _reader.ReadBytes(size);
+                var proxyIPBytes = _reader.ReadBytesFull(size);
                 var proxyPort = _reader.ReadUInt16();
 
                 IPAddress realIP;
@@ -152,7 +153,7 @@ namespace Alkahest.Core.Net.Protocol.Logging
                     throw new InvalidDataException();
 
                 var length = _reader.ReadUInt16();
-                var payload = _reader.ReadBytes(length);
+                var payload = _reader.ReadBytesFull(length);
 
                 return new PacketLogEntry(stamp, id, direction, opCode, payload);
             }

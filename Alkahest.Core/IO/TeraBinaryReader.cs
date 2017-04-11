@@ -139,7 +139,7 @@ namespace Alkahest.Core.IO
 
         public byte[] ReadBytes(int count)
         {
-            return _reader.ReadBytes(count);
+            return _reader.ReadBytesFull(count);
         }
 
         public T Seek<T>(int position, Func<TeraBinaryReader, int, T> func)
