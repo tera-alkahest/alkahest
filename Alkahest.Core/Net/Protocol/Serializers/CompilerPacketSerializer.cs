@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Mono.Linq.Expressions;
 using Alkahest.Core.IO;
 using Alkahest.Core.Logging;
+using Alkahest.Core.Net.Protocol.OpCodes;
+using Mono.Linq.Expressions;
 
 namespace Alkahest.Core.Net.Protocol.Serializers
 {
@@ -66,8 +67,8 @@ namespace Alkahest.Core.Net.Protocol.Serializers
         readonly Dictionary<Type, Action<TeraBinaryWriter, object>> _serializers =
             new Dictionary<Type, Action<TeraBinaryWriter, object>>();
 
-        public CompilerPacketSerializer(OpCodeTable gameMessages,
-            OpCodeTable systemMessages)
+        public CompilerPacketSerializer(GameMessageTable gameMessages,
+            SystemMessageTable systemMessages)
             : base(gameMessages, systemMessages)
         {
             foreach (var opCode in gameMessages.OpCodeToName.Keys)

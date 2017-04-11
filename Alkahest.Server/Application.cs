@@ -12,6 +12,7 @@ using Alkahest.Core.Logging.Loggers;
 using Alkahest.Core.Net;
 using Alkahest.Core.Net.Protocol;
 using Alkahest.Core.Net.Protocol.Logging;
+using Alkahest.Core.Net.Protocol.OpCodes;
 using Alkahest.Core.Net.Protocol.Serializers;
 using Alkahest.Core.Plugins;
 
@@ -90,8 +91,8 @@ namespace Alkahest.Server
                         var ver = OpCodeTable.Versions[region];
                         var proc = new PacketProcessor(
                             new CompilerPacketSerializer(
-                                new OpCodeTable(true, ver),
-                                new OpCodeTable(false, ver)), writer);
+                                new GameMessageTable(ver),
+                                new SystemMessageTable(ver)), writer);
                         var proxies = servers.Select(x => new GameProxy(x,
                             pool, proc, Configuration.GameBacklog,
                             Configuration.GameTimeout)

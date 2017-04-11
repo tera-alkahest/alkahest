@@ -15,6 +15,7 @@ using Alkahest.Core.Net.Protocol;
 using Alkahest.Core.Net.Protocol.Logging;
 using Alkahest.Core.Net.Protocol.Serializers;
 using Alkahest.Parser.Analysis;
+using Alkahest.Core.Net.Protocol.OpCodes;
 
 namespace Alkahest.Parser
 {
@@ -454,8 +455,8 @@ namespace Alkahest.Parser
                 }
 
                 var ver = OpCodeTable.Versions[reader.Region];
-                var opc = new OpCodeTable(true, ver);
-                var smt = new OpCodeTable(false, ver);
+                var opc = new GameMessageTable(ver);
+                var smt = new SystemMessageTable(ver);
 
                 PacketSerializer serializer;
 

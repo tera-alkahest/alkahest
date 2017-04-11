@@ -6,6 +6,7 @@ using System.Reflection;
 using Alkahest.Core.Data;
 using Alkahest.Core.IO;
 using Alkahest.Core.Logging;
+using Alkahest.Core.Net.Protocol.OpCodes;
 
 namespace Alkahest.Core.Net.Protocol.Serializers
 {
@@ -185,8 +186,8 @@ namespace Alkahest.Core.Net.Protocol.Serializers
             }
         }
 
-        public ReflectionPacketSerializer(OpCodeTable gameMessages,
-            OpCodeTable systemMessages)
+        public ReflectionPacketSerializer(GameMessageTable gameMessages,
+            SystemMessageTable systemMessages)
             : base(gameMessages, systemMessages)
         {
         }

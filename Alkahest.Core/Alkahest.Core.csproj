@@ -54,6 +54,9 @@
     <Compile Include="Net\Protocol\Logging\PacketLogEntry.cs" />
     <Compile Include="Net\Protocol\Logging\PacketLogReader.cs" />
     <Compile Include="Net\Protocol\Logging\PacketLogWriter.cs" />
+    <Compile Include="Net\Protocol\OpCodes\GameMessageTable.cs" />
+    <Compile Include="Net\Protocol\OpCodes\OpCodeTable.cs" />
+    <Compile Include="Net\Protocol\OpCodes\SystemMessageTable.cs" />
     <Compile Include="Net\Protocol\PacketFieldAttribute.cs" />
     <Compile Include="Net\Protocol\PacketFieldInfo.cs" />
     <Compile Include="Net\Protocol\PacketSerializer.cs" />
@@ -223,7 +226,6 @@
     <Compile Include="Net\GameClient.cs" />
     <Compile Include="Net\GameProxy.cs" />
     <Compile Include="Net\NetExtensions.cs" />
-    <Compile Include="Net\Protocol\OpCodeTable.cs" />
     <Compile Include="Net\Protocol\PacketHeader.cs" />
     <Compile Include="Net\Protocol\PacketProcessor.cs" />
     <Compile Include="Net\Protocol\RawPacket.cs" />

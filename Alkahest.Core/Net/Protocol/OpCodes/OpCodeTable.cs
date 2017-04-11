@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
-namespace Alkahest.Core.Net.Protocol
+namespace Alkahest.Core.Net.Protocol.OpCodes
 {
-    public sealed class OpCodeTable
+    public abstract class OpCodeTable
     {
         public int Version { get; }
 
@@ -23,7 +23,7 @@ namespace Alkahest.Core.Net.Protocol
                 { Region.TW, 311383 }
             };
 
-        public OpCodeTable(bool opCodes, int version)
+        internal OpCodeTable(bool opCodes, int version)
         {
             Version = version;
 

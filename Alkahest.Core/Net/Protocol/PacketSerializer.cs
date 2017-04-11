@@ -5,6 +5,7 @@ using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using System.Reflection;
 using Alkahest.Core.IO;
+using Alkahest.Core.Net.Protocol.OpCodes;
 
 namespace Alkahest.Core.Net.Protocol
 {
@@ -16,17 +17,17 @@ namespace Alkahest.Core.Net.Protocol
             BindingFlags.NonPublic |
             BindingFlags.Public;
 
-        public OpCodeTable GameMessages { get; }
+        public GameMessageTable GameMessages { get; }
 
-        public OpCodeTable SystemMessages { get; }
+        public SystemMessageTable SystemMessages { get; }
 
         readonly ConcurrentDictionary<Type, IReadOnlyList<PacketFieldInfo>> _info =
             new ConcurrentDictionary<Type, IReadOnlyList<PacketFieldInfo>>();
 
         readonly IReadOnlyDictionary<ushort, Func<Packet>> _packetCreators;
 
-        protected PacketSerializer(OpCodeTable gameMessages,
-            OpCodeTable systemMessages)
+        protected PacketSerializer(GameMessageTable gameMessages,
+            SystemMessageTable systemMessages)
         {
             GameMessages = gameMessages;
             SystemMessages = systemMessages;
