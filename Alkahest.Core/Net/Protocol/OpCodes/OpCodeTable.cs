@@ -16,9 +16,9 @@ namespace Alkahest.Core.Net.Protocol.OpCodes
             new Dictionary<Region, int>
             {
                 { Region.EU, 311383 },
-                { Region.JP, 311380 },
+                { Region.JP, 311383 },
                 { Region.KR, 313577 },
-                { Region.NA, 311380 },
+                { Region.NA, 311383 },
                 { Region.RU, 311383 },
                 { Region.TW, 311383 }
             };
