@@ -47,7 +47,6 @@
     <Compile Include="Data\TemplateId.cs" />
     <Compile Include="Data\MovementKind.cs" />
     <Compile Include="Data\Race.cs" />
-    <Compile Include="Data\SkillFlags.cs" />
     <Compile Include="Data\SkillId.cs" />
     <Compile Include="Data\UserStatus.cs" />
     <Compile Include="Logging\LogEventArgs.cs" />

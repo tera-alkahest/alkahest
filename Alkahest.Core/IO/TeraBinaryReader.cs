@@ -117,6 +117,11 @@ namespace Alkahest.Core.IO
             return new SkillId(_reader.ReadUInt32());
         }
 
+        public SkillId ReadLocalSkillId()
+        {
+            return SkillId.FromSkill(_reader.ReadUInt32());
+        }
+
         public Angle ReadAngle()
         {
             return new Angle(_reader.ReadInt16());

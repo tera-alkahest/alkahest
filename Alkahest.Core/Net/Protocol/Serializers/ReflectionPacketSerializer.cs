@@ -159,8 +159,16 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                 }
                 else if (type == typeof(SkillId))
                 {
-                    serializer = (w, v) => w.WriteSkillId((SkillId)v);
-                    deserializer = r => r.ReadSkillId();
+                    if (attribute.IsLocalSkill)
+                    {
+                        serializer = (w, v) => w.WriteLocalSkillId((SkillId)v);
+                        deserializer = r => r.ReadLocalSkillId();
+                    }
+                    else
+                    {
+                        serializer = (w, v) => w.WriteSkillId((SkillId)v);
+                        deserializer = r => r.ReadSkillId();
+                    }
                 }
                 else if (type == typeof(Angle))
                 {

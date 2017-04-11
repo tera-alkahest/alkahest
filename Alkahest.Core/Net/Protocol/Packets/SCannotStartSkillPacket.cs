@@ -14,7 +14,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
             return new CCannotStartSkillPacket();
         }
 
-        [PacketField]
+        [PacketField(IsLocalSkill = true)]
         public SkillId Skill { get; set; }
     }
 }
