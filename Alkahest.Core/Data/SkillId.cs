@@ -4,6 +4,8 @@ namespace Alkahest.Core.Data
 {
     public struct SkillId : IEquatable<SkillId>
     {
+        public static readonly SkillId Zero = new SkillId(0);
+
         const int LocalSkillBase = 0x4000000;
 
         public readonly uint Raw;

@@ -4,6 +4,8 @@ namespace Alkahest.Core.Data
 {
     public struct TemplateId : IEquatable<TemplateId>
     {
+        public static readonly TemplateId Zero = new TemplateId(0);
+
         public readonly uint Raw;
 
         public Race Race => (Race)((Raw - 100) / 200 % 50);
