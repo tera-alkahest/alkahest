@@ -42,11 +42,22 @@ namespace Alkahest.Core.Net.Protocol
             Serializer = serializer;
             LogWriter = logWriter;
 
-            foreach (var code in serializer.GameMessages.OpCodeToName.Keys)
+            foreach (var code in serializer.Messages.Game.OpCodeToName.Keys)
             {
                 _rawHandlers.Add(code, new HashSet<RawPacketHandler>());
                 _handlers.Add(code, new HashSet<Delegate>());
             }
+        }
+
+        ushort GetOpCode(string name)
+        {
+            return Serializer.Messages.Game.NameToOpCode[name];
+        }
+
+        static string GetOpCodeName(Type t)
+        {
+            return t.GetMethod("Create", CreateFlags, null, Type.EmptyTypes, null)
+                .GetCustomAttribute<PacketAttribute>().OpCode;
         }
 
         public void AddRawHandler(RawPacketHandler handler)
@@ -63,34 +74,36 @@ namespace Alkahest.Core.Net.Protocol
 
         public void AddRawHandler(string name, RawPacketHandler handler)
         {
+            var opCode = GetOpCode(name);
+
             lock (_lock)
-                _rawHandlers[Serializer.GameMessages.NameToOpCode[name]].Add(handler);
+                _rawHandlers[opCode].Add(handler);
         }
 
         public void RemoveRawHandler(string name, RawPacketHandler handler)
         {
-            lock (_lock)
-                _rawHandlers[Serializer.GameMessages.NameToOpCode[name]].Remove(handler);
-        }
+            var opCode = GetOpCode(name);
 
-        static string GetOpCode(Type t)
-        {
-            return t.GetMethod("Create", CreateFlags, null, Type.EmptyTypes, null)
-                .GetCustomAttribute<PacketAttribute>().OpCode;
+            lock (_lock)
+                _rawHandlers[opCode].Remove(handler);
         }
 
         public void AddHandler<T>(PacketHandler<T> handler)
             where T : Packet
         {
+            var opCode = GetOpCode(GetOpCodeName(typeof(T)));
+
             lock (_lock)
-                _handlers[Serializer.GameMessages.NameToOpCode[GetOpCode(typeof(T))]].Add(handler);
+                _handlers[opCode].Add(handler);
         }
 
         public void RemoveHandler<T>(PacketHandler<T> handler)
             where T : Packet
         {
+            var opCode = GetOpCode(GetOpCodeName(typeof(T)));
+
             lock (_lock)
-                _handlers[Serializer.GameMessages.NameToOpCode[GetOpCode(typeof(T))]].Remove(handler);
+                _handlers[opCode].Remove(handler);
         }
 
         internal static PacketHeader ReadHeader(byte[] buffer)
@@ -128,7 +141,7 @@ namespace Alkahest.Core.Net.Protocol
             }
 
             var send = true;
-            var name = Serializer.GameMessages.OpCodeToName[header.OpCode];
+            var name = Serializer.Messages.Game.OpCodeToName[header.OpCode];
 
             if (rawHandlers.Count != 0)
             {

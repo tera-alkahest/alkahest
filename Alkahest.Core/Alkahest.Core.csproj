@@ -55,6 +55,7 @@
     <Compile Include="Net\Protocol\Logging\PacketLogReader.cs" />
     <Compile Include="Net\Protocol\Logging\PacketLogWriter.cs" />
     <Compile Include="Net\Protocol\OpCodes\GameMessageTable.cs" />
+    <Compile Include="Net\Protocol\OpCodes\MessageTables.cs" />
     <Compile Include="Net\Protocol\OpCodes\OpCodeTable.cs" />
     <Compile Include="Net\Protocol\OpCodes\SystemMessageTable.cs" />
     <Compile Include="Net\Protocol\PacketFieldAttribute.cs" />

@@ -17,20 +17,16 @@ namespace Alkahest.Core.Net.Protocol
             BindingFlags.NonPublic |
             BindingFlags.Public;
 
-        public GameMessageTable GameMessages { get; }
-
-        public SystemMessageTable SystemMessages { get; }
+        public MessageTables Messages { get; }
 
         readonly ConcurrentDictionary<Type, IReadOnlyList<PacketFieldInfo>> _info =
             new ConcurrentDictionary<Type, IReadOnlyList<PacketFieldInfo>>();
 
         readonly IReadOnlyDictionary<ushort, Func<Packet>> _packetCreators;
 
-        protected PacketSerializer(GameMessageTable gameMessages,
-            SystemMessageTable systemMessages)
+        protected PacketSerializer(MessageTables messages)
         {
-            GameMessages = gameMessages;
-            SystemMessages = systemMessages;
+            Messages = messages;
 
             var creators = new Dictionary<ushort, Func<Packet>>();
 
@@ -38,7 +34,7 @@ namespace Alkahest.Core.Net.Protocol
                 new AssemblyCatalog(Assembly.GetExecutingAssembly()), true))
                 foreach (var lazy in container.GetExports<Func<Packet>,
                     IPacketMetadata>(PacketAttribute.ThisContractName))
-                    creators.Add(gameMessages.NameToOpCode[lazy.Metadata.OpCode],
+                    creators.Add(messages.Game.NameToOpCode[lazy.Metadata.OpCode],
                         lazy.Value);
 
             _packetCreators = creators;
@@ -75,9 +71,9 @@ namespace Alkahest.Core.Net.Protocol
                         let attr = prop.GetCustomAttribute<PacketFieldAttribute>()
                         where attr != null
                         where attr.MinVersion == 0 ||
-                            attr.MinVersion >= GameMessages.Version
+                            attr.MinVersion >= Messages.Game.Version
                         where attr.MaxVersion == 0 ||
-                            attr.MaxVersion <= GameMessages.Version
+                            attr.MaxVersion <= Messages.Game.Version
                         orderby prop.MetadataToken
                         select CreateFieldInfo(prop, attr)).ToArray();
             }).Cast<T>().ToArray();

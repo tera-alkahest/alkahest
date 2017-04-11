@@ -25,12 +25,12 @@ namespace Alkahest.Core.Net.Protocol.Packets
 
         internal override void OnDeserialize(PacketSerializer serializer)
         {
-            Message = serializer.SystemMessages.OpCodeToName[(ushort)Event];
+            Message = serializer.Messages.System.OpCodeToName[(ushort)Event];
         }
 
         internal override void OnSerialize(PacketSerializer serializer)
         {
-            Event = serializer.SystemMessages.NameToOpCode[Message];
+            Event = serializer.Messages.System.NameToOpCode[Message];
         }
     }
 }

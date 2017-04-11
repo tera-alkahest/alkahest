@@ -67,11 +67,10 @@ namespace Alkahest.Core.Net.Protocol.Serializers
         readonly Dictionary<Type, Action<TeraBinaryWriter, object>> _serializers =
             new Dictionary<Type, Action<TeraBinaryWriter, object>>();
 
-        public CompilerPacketSerializer(GameMessageTable gameMessages,
-            SystemMessageTable systemMessages)
-            : base(gameMessages, systemMessages)
+        public CompilerPacketSerializer(MessageTables messages)
+            : base(messages)
         {
-            foreach (var opCode in gameMessages.OpCodeToName.Keys)
+            foreach (var opCode in messages.Game.OpCodeToName.Keys)
             {
                 var type = GetType(opCode);
 

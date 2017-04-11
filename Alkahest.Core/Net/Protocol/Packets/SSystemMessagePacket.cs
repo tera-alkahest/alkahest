@@ -28,7 +28,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         {
             var msg = Message.Split('\v');
 
-            MessageName = serializer.SystemMessages.OpCodeToName[
+            MessageName = serializer.Messages.System.OpCodeToName[
                 ushort.Parse(msg[0].Substring(1))];
 
             msg = msg.Skip(1).ToArray();
@@ -46,7 +46,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         {
             var sb = new StringBuilder();
 
-            sb.Append($"@{serializer.SystemMessages.NameToOpCode[MessageName]}");
+            sb.Append($"@{serializer.Messages.System.NameToOpCode[MessageName]}");
 
             foreach (var kvp in MessageArguments)
                 sb.Append($"\v{kvp.Key}\v{kvp.Value}");

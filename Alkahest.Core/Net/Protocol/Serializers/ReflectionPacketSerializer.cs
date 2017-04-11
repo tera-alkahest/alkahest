@@ -186,9 +186,8 @@ namespace Alkahest.Core.Net.Protocol.Serializers
             }
         }
 
-        public ReflectionPacketSerializer(GameMessageTable gameMessages,
-            SystemMessageTable systemMessages)
-            : base(gameMessages, systemMessages)
+        public ReflectionPacketSerializer(MessageTables messages)
+            : base(messages)
         {
         }
 

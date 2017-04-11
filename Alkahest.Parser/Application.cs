@@ -215,7 +215,7 @@ namespace Alkahest.Parser
         {
             stats.TotalPackets++;
 
-            var name = serializer.GameMessages.OpCodeToName[entry.OpCode];
+            var name = serializer.Messages.Game.OpCodeToName[entry.OpCode];
 
             if (regexes.All(r => !r.IsMatch(name)))
             {
@@ -454,19 +454,16 @@ namespace Alkahest.Parser
                     _log.Info(string.Empty);
                 }
 
-                var ver = OpCodeTable.Versions[reader.Region];
-                var opc = new GameMessageTable(ver);
-                var smt = new SystemMessageTable(ver);
-
+                var msgs = new MessageTables(OpCodeTable.Versions[reader.Region]);
                 PacketSerializer serializer;
 
                 switch (_backend)
                 {
                     case PacketSerializerBackend.Reflection:
-                        serializer = new ReflectionPacketSerializer(opc, smt);
+                        serializer = new ReflectionPacketSerializer(msgs);
                         break;
                     case PacketSerializerBackend.Compiler:
-                        serializer = new CompilerPacketSerializer(opc, smt);
+                        serializer = new CompilerPacketSerializer(msgs);
                         break;
                     default:
                         throw Assert.Unreachable();

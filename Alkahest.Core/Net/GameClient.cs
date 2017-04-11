@@ -102,7 +102,7 @@ namespace Alkahest.Core.Net
             lock (socket)
             {
                 var header = new PacketHeader((ushort)packet.Payload.Length,
-                    Proxy.Processor.Serializer.GameMessages.NameToOpCode[packet.OpCode]);
+                    Proxy.Processor.Serializer.Messages.Game.NameToOpCode[packet.OpCode]);
 
                 PacketProcessor.WriteHeader(header, buffer);
                 Buffer.BlockCopy(packet.Payload, 0, buffer,
@@ -140,7 +140,7 @@ namespace Alkahest.Core.Net
             {
                 var data = Proxy.Processor.Serializer.Serialize(packet);
                 var header = new PacketHeader((ushort)data.Length,
-                    Proxy.Processor.Serializer.GameMessages.NameToOpCode[packet.OpCode]);
+                    Proxy.Processor.Serializer.Messages.Game.NameToOpCode[packet.OpCode]);
 
                 PacketProcessor.WriteHeader(header, buffer);
                 Buffer.BlockCopy(data, 0, buffer, PacketHeader.HeaderSize,

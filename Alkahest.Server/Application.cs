@@ -80,6 +80,7 @@ namespace Alkahest.Server
                     var pool = new ObjectPool<SocketAsyncEventArgs>(
                         () => new SocketAsyncEventArgs(), x => x.Reset(),
                         Configuration.PoolLimit != 0 ? (int?)Configuration.PoolLimit : null);
+                    var messages = new MessageTables(OpCodeTable.Versions[region]);
                     var servers = slsProxy.Servers.ToArray();
 
                     using (var writer = Configuration.EnablePacketLogs ?
@@ -90,9 +91,7 @@ namespace Alkahest.Server
                     {
                         var ver = OpCodeTable.Versions[region];
                         var proc = new PacketProcessor(
-                            new CompilerPacketSerializer(
-                                new GameMessageTable(ver),
-                                new SystemMessageTable(ver)), writer);
+                            new CompilerPacketSerializer(messages), writer);
                         var proxies = servers.Select(x => new GameProxy(x,
                             pool, proc, Configuration.GameBacklog,
                             Configuration.GameTimeout)
