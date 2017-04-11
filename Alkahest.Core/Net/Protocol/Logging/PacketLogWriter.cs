@@ -3,6 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net.Sockets;
+using Alkahest.Core.Net.Protocol.OpCodes;
 
 namespace Alkahest.Core.Net.Protocol.Logging
 {
@@ -10,12 +11,15 @@ namespace Alkahest.Core.Net.Protocol.Logging
     {
         public Region Region { get; }
 
+        public MessageTables Messages { get; }
+
         readonly BinaryWriter _writer;
 
         bool _disposed;
 
-        public PacketLogWriter(Region region, ServerInfo[] servers,
-            string directory, string fileNameFormat, bool compress)
+        public PacketLogWriter(Region region, MessageTables messages,
+            ServerInfo[] servers, string directory, string fileNameFormat,
+            bool compress)
         {
             Directory.CreateDirectory(directory);
 
@@ -34,6 +38,7 @@ namespace Alkahest.Core.Net.Protocol.Logging
             _writer = new BinaryWriter(stream);
             _writer.Write(PacketLogEntry.Version);
             _writer.Write((byte)(Region = region));
+            _writer.Write((Messages = messages).Game.Version);
             _writer.Write(servers.Length);
 
             foreach (var server in servers)

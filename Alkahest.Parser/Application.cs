@@ -454,16 +454,17 @@ namespace Alkahest.Parser
                     _log.Info(string.Empty);
                 }
 
-                var msgs = new MessageTables(OpCodeTable.Versions[reader.Region]);
                 PacketSerializer serializer;
 
                 switch (_backend)
                 {
                     case PacketSerializerBackend.Reflection:
-                        serializer = new ReflectionPacketSerializer(msgs);
+                        serializer = new ReflectionPacketSerializer(
+                            reader.Messages);
                         break;
                     case PacketSerializerBackend.Compiler:
-                        serializer = new CompilerPacketSerializer(msgs);
+                        serializer = new CompilerPacketSerializer(
+                            reader.Messages);
                         break;
                     default:
                         throw Assert.Unreachable();

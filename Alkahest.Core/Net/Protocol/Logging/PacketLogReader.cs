@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using Alkahest.Core.Net.Protocol.OpCodes;
 
 namespace Alkahest.Core.Net.Protocol.Logging
 {
@@ -14,6 +15,8 @@ namespace Alkahest.Core.Net.Protocol.Logging
         public int Version { get; }
 
         public Region Region { get; }
+
+        public MessageTables Messages { get; }
 
         public IReadOnlyDictionary<int, ServerInfo> Servers { get; }
 
@@ -46,23 +49,55 @@ namespace Alkahest.Core.Net.Protocol.Logging
 
             Region = (Region)_reader.ReadByte();
 
-            var servers = new List<ServerInfo>(_reader.ReadInt32());
+            if (!Enum.IsDefined(typeof(Region), Region))
+                throw new InvalidDataException();
 
-            for (var i = 0; i < servers.Capacity; i++)
+            var clientVersion = _reader.ReadInt32();
+
+            if (!OpCodeTable.Versions.Values.Contains(clientVersion))
+                throw new InvalidDataException();
+
+            Messages = new MessageTables(clientVersion);
+
+            var serverCount = _reader.ReadInt32();
+
+            if (serverCount < 0)
+                throw new InvalidDataException();
+
+            var servers = new Dictionary<int, ServerInfo>(serverCount);
+
+            for (var i = 0; i < serverCount; i++)
             {
                 var id = _reader.ReadInt32();
+
+                if (servers.ContainsKey(id))
+                    throw new InvalidDataException();
+
                 var name = _reader.ReadString();
                 var size = _reader.ReadBoolean() ? 16 : 4;
-                var realIP = new IPAddress(_reader.ReadBytes(size));
+                var realIPBytes = _reader.ReadBytes(size);
                 var realPort = _reader.ReadUInt16();
-                var proxyIP = new IPAddress(_reader.ReadBytes(size));
+                var proxyIPBytes = _reader.ReadBytes(size);
                 var proxyPort = _reader.ReadUInt16();
 
-                servers.Add(new ServerInfo(id, name, new IPEndPoint(realIP,
+                IPAddress realIP;
+                IPAddress proxyIP;
+
+                try
+                {
+                    realIP = new IPAddress(realIPBytes);
+                    proxyIP = new IPAddress(proxyIPBytes);
+                }
+                catch (ArgumentException)
+                {
+                    throw new InvalidDataException();
+                }
+
+                servers.Add(id, new ServerInfo(id, name, new IPEndPoint(realIP,
                     realPort), new IPEndPoint(proxyIP, proxyPort)));
             }
 
-            Servers = servers.ToDictionary(x => x.Id);
+            Servers = servers;
         }
 
         ~PacketLogReader()
@@ -90,10 +125,32 @@ namespace Alkahest.Core.Net.Protocol.Logging
 
             try
             {
-                var stamp = DateTime.FromBinary(_reader.ReadInt64()).ToLocalTime();
+                DateTime stamp;
+
+                try
+                {
+                    stamp = DateTime.FromBinary(_reader.ReadInt64()).ToLocalTime();
+                }
+                catch (ArgumentException)
+                {
+                    throw new InvalidDataException();
+                }
+
                 var id = _reader.ReadInt32();
+
+                if (!Servers.ContainsKey(id))
+                    throw new InvalidDataException();
+
                 var direction = (Direction)_reader.ReadByte();
+
+                if (!Enum.IsDefined(typeof(Direction), direction))
+                    throw new InvalidDataException();
+
                 var opCode = _reader.ReadUInt16();
+
+                if (!Messages.Game.OpCodeToName.ContainsKey(opCode))
+                    throw new InvalidDataException();
+
                 var length = _reader.ReadUInt16();
                 var payload = _reader.ReadBytes(length);
 

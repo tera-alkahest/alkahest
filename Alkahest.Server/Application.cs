@@ -84,7 +84,7 @@ namespace Alkahest.Server
                     var servers = slsProxy.Servers.ToArray();
 
                     using (var writer = Configuration.EnablePacketLogs ?
-                        new PacketLogWriter(region, servers,
+                        new PacketLogWriter(region, messages, servers,
                             Configuration.PacketLogDirectory,
                             Configuration.PacketLogFileNameFormat,
                             Configuration.CompressPacketLogs) : null)
