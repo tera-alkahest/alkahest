@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Alkahest.Core.Data;
+using Alkahest.Core.Game;
 
 namespace Alkahest.Core.Net.Protocol.Packets
 {

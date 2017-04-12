@@ -1,6 +1,6 @@
 using System;
 
-namespace Alkahest.Core.Data
+namespace Alkahest.Core.Game
 {
     public struct Angle : IEquatable<Angle>, IComparable<Angle>
     {

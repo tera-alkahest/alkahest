@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using System.Text;
-using Alkahest.Core.Data;
+using Alkahest.Core.Game;
 using Alkahest.Core.Net.Protocol;
 
 namespace Alkahest.Core.IO

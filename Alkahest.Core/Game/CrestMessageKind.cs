@@ -1,4 +1,4 @@
-namespace Alkahest.Core.Data
+namespace Alkahest.Core.Game
 {
     public enum CrestMessageKind : uint
     {
