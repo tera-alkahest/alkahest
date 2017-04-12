@@ -12,7 +12,7 @@ namespace Alkahest.Core.IO
     {
         public static Encoding Encoding { get; } = Encoding.Unicode;
 
-        public MemoryStream Stream => (MemoryStream)_reader.BaseStream;
+        public Stream Stream => _reader.BaseStream;
 
         public int Position
         {
@@ -27,8 +27,18 @@ namespace Alkahest.Core.IO
         readonly BinaryReader _reader;
 
         public TeraBinaryReader(byte[] data)
+            : this(new MemoryStream(data, false))
         {
-            _reader = new BinaryReader(new MemoryStream(data, false), Encoding);
+        }
+
+        public TeraBinaryReader(Stream stream)
+            : this(stream, false)
+        {
+        }
+
+        public TeraBinaryReader(Stream stream, bool leaveOpen)
+        {
+            _reader = new BinaryReader(stream, Encoding, leaveOpen);
         }
 
         public void Dispose()
@@ -168,6 +178,19 @@ namespace Alkahest.Core.IO
         public bool CanRead(int size)
         {
             return Length - Position >= size;
+        }
+
+        public byte[] ToArray()
+        {
+            using (var stream = new MemoryStream(PacketHeader.MaxPayloadSize))
+            {
+                return Seek(0, (r, op) =>
+                {
+                    r.Stream.CopyTo(stream);
+
+                    return stream.ToArray();
+                });
+            }
         }
     }
 }

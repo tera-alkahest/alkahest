@@ -11,7 +11,7 @@ namespace Alkahest.Core.IO
     {
         public static Encoding Encoding { get; } = Encoding.Unicode;
 
-        public MemoryStream Stream => (MemoryStream)_writer.BaseStream;
+        public Stream Stream => _writer.BaseStream;
 
         public int Position
         {
@@ -26,14 +26,23 @@ namespace Alkahest.Core.IO
         readonly BinaryWriter _writer;
 
         public TeraBinaryWriter()
+            : this(new MemoryStream(PacketHeader.MaxPayloadSize))
         {
-            _writer = new BinaryWriter(
-                new MemoryStream(PacketHeader.MaxPayloadSize), Encoding);
         }
 
         public TeraBinaryWriter(byte[] buffer)
+            : this(new MemoryStream(buffer))
         {
-            _writer = new BinaryWriter(new MemoryStream(buffer), Encoding);
+        }
+
+        public TeraBinaryWriter(Stream stream)
+            : this(stream, false)
+        {
+        }
+
+        public TeraBinaryWriter(Stream stream, bool leaveOpen)
+        {
+            _writer = new BinaryWriter(stream, Encoding, leaveOpen);
         }
 
         public void Dispose()
@@ -165,6 +174,19 @@ namespace Alkahest.Core.IO
         public bool CanWrite(int size)
         {
             return Length - Position >= size;
+        }
+
+        public byte[] ToArray()
+        {
+            using (var stream = new MemoryStream(PacketHeader.MaxPayloadSize))
+            {
+                return Seek(0, (w, op) =>
+                {
+                    w.Stream.CopyTo(stream);
+
+                    return stream.ToArray();
+                });
+            }
         }
     }
 }

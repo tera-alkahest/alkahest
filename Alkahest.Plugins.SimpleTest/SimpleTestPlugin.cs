@@ -101,7 +101,7 @@ namespace Alkahest.Plugins.SimpleTest
 
                 client.SendToServer(new RawPacket("C_JOIN_PRIVATE_CHANNEL")
                 {
-                    Payload = writer.Stream.ToArray()
+                    Payload = writer.ToArray()
                 });
             }
 

@@ -90,7 +90,7 @@ namespace Alkahest.Core.Net.Protocol
             {
                 OnSerialize(writer, packet);
 
-                return writer.Stream.ToArray();
+                return writer.ToArray();
             }
         }
 
