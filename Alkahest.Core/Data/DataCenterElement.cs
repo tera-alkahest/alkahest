@@ -111,8 +111,6 @@ namespace Alkahest.Core.Data
                 return attributes;
             });
 
-            var a = _attributes.Value;
-
             _children = new Lazy<IReadOnlyList<DataCenterElement>>(() =>
             {
                 var children = new List<DataCenterElement>();
@@ -136,8 +134,6 @@ namespace Alkahest.Core.Data
 
                 return children;
             });
-
-            var c = _children.Value;
         }
 
         public IEnumerator<DataCenterElement> GetEnumerator()
