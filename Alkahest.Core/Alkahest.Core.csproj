@@ -86,6 +86,7 @@
     <Compile Include="Net\Protocol\Packets\CCrestApplyPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CDungeonCoolTimeListPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CEditPrivateChannelPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\CEndMoviePacket.cs" />
     <Compile Include="Net\Protocol\Packets\CGetUserListPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CGuardPKPolicyPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CGuildApplyListPacket.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="Net\Protocol\Packets\SPlayerChangeMPPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SPlayerChangeStaminaPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SPlayerStatUpdatePacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SPlayMoviePacket.cs" />
     <Compile Include="Net\Protocol\Packets\SPrivateChannelNoticePacket.cs" />
     <Compile Include="Net\Protocol\Packets\SPrivateChatPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SRequestPrivateChannelInfoPacket.cs" />
