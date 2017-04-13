@@ -36,7 +36,10 @@ namespace Alkahest.Core.Data
                     throw new ObjectDisposedException(center.GetType().FullName);
 
                 var reader = center.Elements.GetReader(address);
-                var nameIndex = reader.ReadUInt16();
+                var nameIndex = reader.ReadUInt16() - 1;
+
+                if (nameIndex == -1)
+                    throw new DataCenterPlaceholderException();
 
                 if (nameIndex >= center.Names.Count)
                     throw new InvalidDataException();
@@ -71,8 +74,7 @@ namespace Alkahest.Core.Data
                         var addr = new DataCenterAddress(attrAddr.SegmentIndex,
                             (ushort)(attrAddr.ElementIndex + i));
                         var attrReader = center.Attributes.GetReader(addr);
-
-                        var attrNameIndex = attrReader.ReadUInt16();
+                        var attrNameIndex = attrReader.ReadUInt16() - 1;
 
                         if (attrNameIndex >= center.Names.Count)
                             throw new InvalidDataException();
@@ -93,8 +95,7 @@ namespace Alkahest.Core.Data
 
                             var strAddr = DataCenter.ReadAddress(attrReader);
 
-                            if (!center.Strings.TryGetValue(strAddr, out stringValue))
-                                throw new InvalidDataException();
+                            stringValue = center.GetString(strAddr);
                         }
 
                         attributes.Add(new DataCenterAttribute(
@@ -119,10 +120,16 @@ namespace Alkahest.Core.Data
                     var addr = new DataCenterAddress(childAddr.SegmentIndex,
                         (ushort)(childAddr.ElementIndex + i));
 
-                    children.Add(new DataCenterElement(center, addr)
+                    try
                     {
-                        Parent = this
-                    });
+                        children.Add(new DataCenterElement(center, addr)
+                        {
+                            Parent = this
+                        });
+                    }
+                    catch (DataCenterPlaceholderException)
+                    {
+                    }
                 }
 
                 return children;

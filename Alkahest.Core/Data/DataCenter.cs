@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -27,20 +28,21 @@ namespace Alkahest.Core.Data
 
         internal DataCenterSegmentedRegion Elements { get; private set; }
 
-        internal IReadOnlyDictionary<DataCenterAddress, string> Strings { get; private set; }
-
         internal IReadOnlyList<string> Names { get; private set; }
 
         internal bool Disposed { get; private set; }
 
         internal ReaderWriterLockSlim Lock { get; } = new ReaderWriterLockSlim();
 
+        ConcurrentDictionary<DataCenterAddress, string> _strings =
+            new ConcurrentDictionary<DataCenterAddress, string>();
+
+        DataCenterSegmentedRegion _stringRegion;
+
         public DataCenter(string fileName)
         {
             DataCenterSegmentedRegion attributeRegion;
             DataCenterSegmentedRegion elementRegion;
-            DataCenterSegmentedRegion stringRegion;
-            DataCenterSimpleRegion stringAddressRegion;
             DataCenterSegmentedRegion nameRegion;
             DataCenterSimpleRegion nameAddressRegion;
 
@@ -49,19 +51,16 @@ namespace Alkahest.Core.Data
                 Header = ReadHeader(reader);
 
                 ReadRegions(reader, out attributeRegion, out elementRegion,
-                    out stringRegion, out stringAddressRegion, out nameRegion,
-                    out nameAddressRegion);
+                    out _stringRegion, out nameRegion, out nameAddressRegion);
 
                 Footer = ReadFooter(reader);
             }
 
             Attributes = attributeRegion;
             Elements = elementRegion;
-            Strings = ReadAddresses(stringAddressRegion)
-                .ToDictionary(x => x, x => ReadString(stringRegion, x));
-            Names = new[] { "__root__" }.Concat(
-                ReadAddresses(nameAddressRegion).Select(x =>
-                    ReadString(nameRegion, x))).ToArray();
+            Names = ReadAddresses(nameAddressRegion)
+                .Select(x => ReadString(nameRegion, x))
+                .ToArray();
 
             Root = new DataCenterElement(this, DataCenterAddress.Zero);
         }
@@ -76,13 +75,20 @@ namespace Alkahest.Core.Data
 
                 Attributes = null;
                 Elements = null;
-                Strings = null;
                 Names = null;
+                _strings = null;
+                _stringRegion = null;
             }
             finally
             {
                 Lock.ExitWriteLock();
             }
+        }
+
+        internal string GetString(DataCenterAddress address)
+        {
+            return _strings.GetOrAdd(address, a =>
+                _stringRegion.GetReader(address).ReadString());
         }
 
         static DataCenterHeader ReadHeader(TeraBinaryReader reader)
@@ -104,7 +110,6 @@ namespace Alkahest.Core.Data
             out DataCenterSegmentedRegion attributeRegion,
             out DataCenterSegmentedRegion elementRegion,
             out DataCenterSegmentedRegion stringRegion,
-            out DataCenterSimpleRegion stringAddressRegion,
             out DataCenterSegmentedRegion nameRegion,
             out DataCenterSimpleRegion nameAddressRegion)
         {
@@ -115,8 +120,7 @@ namespace Alkahest.Core.Data
 
             stringRegion = ReadSegmentedRegion(reader, sizeof(char));
             ReadSimpleSegmentedRegion(reader, 1024, Unknown2Size);
-            stringAddressRegion = ReadSimpleRegion(reader, true,
-                (uint)sizeof(DataCenterAddress));
+            ReadSimpleRegion(reader, true, (uint)sizeof(DataCenterAddress));
 
             nameRegion = ReadSegmentedRegion(reader, sizeof(char));
             ReadSimpleSegmentedRegion(reader, 512, Unknown2Size);
