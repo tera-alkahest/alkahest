@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alkahest.Plugins.Python", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alkahest.Plugins.AutoVanguard", "Alkahest.Plugins.AutoVanguard\Alkahest.Plugins.AutoVanguard.csproj", "{260A5ED3-D278-4656-BA21-E1B9B7B11266}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alkahest.Plugins.InstantLockon", "Alkahest.Plugins.InstantLockon\Alkahest.Plugins.InstantLockon.csproj", "{4BAAAE83-7B5F-4AD2-9AC8-4C9DB6B171F2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,8 @@ Global
 		{92CD0899-A58E-4196-BD8D-4B96CB12A384}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{260A5ED3-D278-4656-BA21-E1B9B7B11266}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{260A5ED3-D278-4656-BA21-E1B9B7B11266}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BAAAE83-7B5F-4AD2-9AC8-4C9DB6B171F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BAAAE83-7B5F-4AD2-9AC8-4C9DB6B171F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,5 +64,6 @@ Global
 		{46B28B13-CBB6-4D5F-94F9-004E0643CAF5} = {C60FBBE6-4B76-4D6F-BADC-377D3878FF93}
 		{92CD0899-A58E-4196-BD8D-4B96CB12A384} = {C60FBBE6-4B76-4D6F-BADC-377D3878FF93}
 		{260A5ED3-D278-4656-BA21-E1B9B7B11266} = {C60FBBE6-4B76-4D6F-BADC-377D3878FF93}
+		{4BAAAE83-7B5F-4AD2-9AC8-4C9DB6B171F2} = {C60FBBE6-4B76-4D6F-BADC-377D3878FF93}
 	EndGlobalSection
 EndGlobal
