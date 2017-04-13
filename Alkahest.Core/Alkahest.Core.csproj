@@ -34,6 +34,17 @@
     </Compile>
     <Compile Include="Assert.cs" />
     <Compile Include="Bits.cs" />
+    <Compile Include="Data\DataCenter.cs" />
+    <Compile Include="Data\DataCenterAddress.cs" />
+    <Compile Include="Data\DataCenterAttribute.cs" />
+    <Compile Include="Data\DataCenterElement.cs" />
+    <Compile Include="Data\DataCenterFooter.cs" />
+    <Compile Include="Data\DataCenterHeader.cs" />
+    <Compile Include="Data\DataCenterSegment.cs" />
+    <Compile Include="Data\DataCenterSegmentedRegion.cs" />
+    <Compile Include="Data\DataCenterSimpleRegion.cs" />
+    <Compile Include="Data\DataCenterSimpleSegmentedRegion.cs" />
+    <Compile Include="Data\DataCenterTypeCode.cs" />
     <Compile Include="Game\Angle.cs" />
     <Compile Include="Game\AwakenedEquipmentKind.cs" />
     <Compile Include="Game\ChatChannel.cs" />
