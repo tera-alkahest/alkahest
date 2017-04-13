@@ -117,7 +117,7 @@ namespace Alkahest.Core.Net
 
         Uri GetUri(string path, bool usn)
         {
-            var uri = $"http://{_parameters.RealAddress}:{_parameters.Uri.Port}{path}";
+            var uri = $"http://{_parameters.RealServerListAddress}:{_parameters.Uri.Port}{path}";
 
             if (usn && _parameters.Region == Region.JP)
                 uri += "?usn=0";

@@ -23,9 +23,9 @@ namespace Alkahest.Core.Net
         static readonly Uri _tw = new Uri(
             "http://tera.mangot5.com:80/game/tera/serverList.xml");
 
-        public IPAddress RealAddress { get; }
+        public IPAddress RealServerListAddress { get; }
 
-        public IPAddress ServerListAddress { get; }
+        public IPEndPoint ProxyServerListEndPoint { get; }
 
         public IPAddress GameAddress { get; }
 
@@ -39,18 +39,20 @@ namespace Alkahest.Core.Net
 
         public Uri Uri { get; }
 
-        public ServerListParameters(IPAddress realAddress, IPAddress slsAddress,
+        public ServerListParameters(IPAddress realSlsAddress,
+            IPAddress proxySlsAddress, int? proxySlsPort,
             IPAddress gameAddress, int startingPort, Region region,
             TimeSpan timeout, int retries)
         {
-            RealAddress = realAddress;
-            ServerListAddress = slsAddress;
+            Uri = GetUri(region);
+            RealServerListAddress = realSlsAddress;
+            ProxyServerListEndPoint = new IPEndPoint(proxySlsAddress,
+                proxySlsPort ?? Uri.Port);
             GameAddress = gameAddress;
             StartingPort = startingPort;
             Region = region;
             Timeout = timeout;
             Retries = retries;
-            Uri = GetUri(region);
         }
 
         public static Uri GetUri(Region region)
