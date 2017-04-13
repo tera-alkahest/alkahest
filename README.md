@@ -1,4 +1,4 @@
-# Alkahest
+# ![Alkahest](Alkahest.ico) Alkahest
 
 Alkahest is a proxy server for [TERA](http://tera.enmasse.com). At its core,
 it's simply a server that relays communication between the game client and
