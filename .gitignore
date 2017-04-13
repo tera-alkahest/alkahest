@@ -1,4 +1,5 @@
 .vs/*
 Build/*
 */obj/*
+*/*.nupkg
 */*.user
