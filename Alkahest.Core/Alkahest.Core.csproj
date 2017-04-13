@@ -281,6 +281,7 @@
     <None Include="..\Alkahest.snk">
       <Link>Properties\Alkahest.snk</Link>
     </None>
+    <None Include="Properties\Alkahest.Core.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.SelfHost">
