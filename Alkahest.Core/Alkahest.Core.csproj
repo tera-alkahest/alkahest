@@ -111,6 +111,7 @@
     <Compile Include="Net\Protocol\Packets\CRequestUserItemLevelInfoPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CResetAllDungeonPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CReturnToLobbyPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\CReviveNowPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CSaveClientAccountSettingPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CSaveClientUserSettingPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CServerTimePacket.cs" />
