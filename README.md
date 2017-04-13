@@ -1,4 +1,8 @@
-# ![Alkahest](Alkahest.ico) Alkahest [![Build Status](https://ci.appveyor.com/api/projects/status/g4975y955sgosiej?svg=true)](https://ci.appveyor.com/project/alexrp/alkahest)
+# ![Alkahest](Alkahest.ico) Alkahest
+
+[![NuGet](https://img.shields.io/nuget/v/Alkahest.Core.svg)](https://www.nuget.org/packages/Alkahest.Core)
+[![Build Status](https://ci.appveyor.com/api/projects/status/g4975y955sgosiej?svg=true)](https://ci.appveyor.com/project/alexrp/alkahest)
+[![Discord](https://discordapp.com/api/guilds/302077598593318912/widget.png)](https://discord.gg/5GTr5mw)
 
 Alkahest is a proxy server for [TERA](http://tera.enmasse.com). At its core,
 it's simply a server that relays communication between the game client and
