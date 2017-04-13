@@ -70,10 +70,13 @@ namespace Alkahest.Server
 
                 hosts?.AddEntry(slsHost, slsAddress);
 
+                var slsPort = Configuration.ServerListPort;
                 var slsParams = new ServerListParameters(real,
-                    Configuration.ServerListAddress, Configuration.GameAddress,
-                    Configuration.GameStartingPort, region,
-                    Configuration.ServerListTimeout, Configuration.ServerListRetries);
+                    Configuration.ServerListAddress,
+                    slsPort != 0 ? (int?)slsPort : null,
+                    Configuration.GameAddress, Configuration.GameStartingPort,
+                    region, Configuration.ServerListTimeout,
+                    Configuration.ServerListRetries);
 
                 using (var slsProxy = new ServerListProxy(slsParams))
                 {

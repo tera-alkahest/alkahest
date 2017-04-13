@@ -21,8 +21,9 @@ namespace Alkahest.Core.Net
         {
             Parameters = parameters;
 
+            var ep = parameters.ProxyServerListEndPoint;
             var cfg = new HttpSelfHostConfiguration(
-                $"http://{parameters.ServerListAddress}:{parameters.Uri.Port}")
+                $"http://{ep.Address}:{ep.Port}")
             {
                 MessageHandlers =
                 {
