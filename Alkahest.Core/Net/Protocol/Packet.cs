@@ -7,11 +7,6 @@ namespace Alkahest.Core.Net.Protocol
 {
     public abstract class Packet
     {
-        const BindingFlags FieldFlags =
-            BindingFlags.DeclaredOnly |
-            BindingFlags.Instance |
-            BindingFlags.Public;
-
         public abstract string OpCode { get; }
 
         internal Packet()
@@ -46,7 +41,7 @@ namespace Alkahest.Core.Net.Protocol
             builder.AppendLine($"{indent}{header}");
             builder.AppendLine($"{indent}{{");
 
-            foreach (var prop in type.GetProperties(FieldFlags)
+            foreach (var prop in type.GetProperties(PacketSerializer.FieldFlags)
                 .Where(p => p.GetCustomAttribute<PacketFieldAttribute>() != null)
                 .OrderBy(p => p.MetadataToken))
             {

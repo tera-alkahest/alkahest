@@ -11,10 +11,9 @@ namespace Alkahest.Core.Net.Protocol
 {
     public abstract class PacketSerializer
     {
-        const BindingFlags FieldFlags =
+        internal const BindingFlags FieldFlags =
             BindingFlags.DeclaredOnly |
             BindingFlags.Instance |
-            BindingFlags.NonPublic |
             BindingFlags.Public;
 
         public MessageTables Messages { get; }
