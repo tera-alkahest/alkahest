@@ -58,9 +58,9 @@ namespace Alkahest.Core.Data
 
             Attributes = attributeRegion;
             Elements = elementRegion;
-            Names = new[] { "__root__" }.Concat(
-                ReadAddresses(nameAddressRegion).Select(x =>
-                    ReadString(nameRegion, x))).ToArray();
+            Names = ReadAddresses(nameAddressRegion)
+                .Select(x => ReadString(nameRegion, x))
+                .ToArray();
 
             Root = new DataCenterElement(this, DataCenterAddress.Zero);
         }

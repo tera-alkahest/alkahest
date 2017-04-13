@@ -36,7 +36,10 @@ namespace Alkahest.Core.Data
                     throw new ObjectDisposedException(center.GetType().FullName);
 
                 var reader = center.Elements.GetReader(address);
-                var nameIndex = reader.ReadUInt16();
+                var nameIndex = reader.ReadUInt16() - 1;
+
+                if (nameIndex == -1)
+                    throw new DataCenterPlaceholderException();
 
                 if (nameIndex >= center.Names.Count)
                     throw new InvalidDataException();
@@ -71,8 +74,7 @@ namespace Alkahest.Core.Data
                         var addr = new DataCenterAddress(attrAddr.SegmentIndex,
                             (ushort)(attrAddr.ElementIndex + i));
                         var attrReader = center.Attributes.GetReader(addr);
-
-                        var attrNameIndex = attrReader.ReadUInt16();
+                        var attrNameIndex = attrReader.ReadUInt16() - 1;
 
                         if (attrNameIndex >= center.Names.Count)
                             throw new InvalidDataException();
@@ -109,6 +111,8 @@ namespace Alkahest.Core.Data
                 return attributes;
             });
 
+            var a = _attributes.Value;
+
             _children = new Lazy<IReadOnlyList<DataCenterElement>>(() =>
             {
                 var children = new List<DataCenterElement>();
@@ -118,14 +122,22 @@ namespace Alkahest.Core.Data
                     var addr = new DataCenterAddress(childAddr.SegmentIndex,
                         (ushort)(childAddr.ElementIndex + i));
 
-                    children.Add(new DataCenterElement(center, addr)
+                    try
                     {
-                        Parent = this
-                    });
+                        children.Add(new DataCenterElement(center, addr)
+                        {
+                            Parent = this
+                        });
+                    }
+                    catch (DataCenterPlaceholderException)
+                    {
+                    }
                 }
 
                 return children;
             });
+
+            var c = _children.Value;
         }
 
         public IEnumerator<DataCenterElement> GetEnumerator()
