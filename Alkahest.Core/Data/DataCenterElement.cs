@@ -93,8 +93,7 @@ namespace Alkahest.Core.Data
 
                             var strAddr = DataCenter.ReadAddress(attrReader);
 
-                            if (!center.Strings.TryGetValue(strAddr, out stringValue))
-                                throw new InvalidDataException();
+                            stringValue = center.GetString(strAddr);
                         }
 
                         attributes.Add(new DataCenterAttribute(
