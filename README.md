@@ -1,4 +1,4 @@
-# ![Alkahest](Alkahest.ico) Alkahest
+# ![Alkahest](Alkahest.ico) Alkahest [![Build Status](https://ci.appveyor.com/api/projects/status/g4975y955sgosiej?svg=true)](https://ci.appveyor.com/project/alexrp/alkahest)
 
 Alkahest is a proxy server for [TERA](http://tera.enmasse.com). At its core,
 it's simply a server that relays communication between the game client and
