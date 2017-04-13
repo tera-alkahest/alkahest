@@ -4,7 +4,7 @@ namespace Alkahest.Core.Game
 {
     public struct SkillId : IEquatable<SkillId>
     {
-        public static readonly SkillId Zero = new SkillId(0);
+        public static readonly SkillId Zero = new SkillId();
 
         const int LocalSkillBase = 0x4000000;
 

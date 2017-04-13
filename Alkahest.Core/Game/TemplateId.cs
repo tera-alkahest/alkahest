@@ -4,7 +4,7 @@ namespace Alkahest.Core.Game
 {
     public struct TemplateId : IEquatable<TemplateId>
     {
-        public static readonly TemplateId Zero = new TemplateId(0);
+        public static readonly TemplateId Zero = new TemplateId();
 
         public readonly uint Raw;
 
