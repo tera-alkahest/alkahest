@@ -68,6 +68,7 @@
     <Compile Include="Net\Protocol\Packets\CCanLockOnTargetPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CCheckUserNamePacket.cs" />
     <Compile Include="Net\Protocol\Packets\CCheckVersionPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\CCompleteDailyEventPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CCreatePrivateChannelPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CCrestApplyListPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CCrestApplyPacket.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Net\Protocol\Packets\SClearAllHeldAbnormalitiesPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SClearQuestInfoPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SClearWorldQuestVillagerInfoPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SCompleteEventMatchingQuestPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SCreatureChangeHPPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SCreatureLifePacket.cs" />
     <Compile Include="Net\Protocol\Packets\SCrestApplyPacket.cs" />
