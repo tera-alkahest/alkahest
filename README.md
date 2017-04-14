@@ -16,7 +16,7 @@ This project was started out of a need to have a program similar to
 [tera-proxy](https://github.com/meishuu/tera-proxy), but written in a .NET
 language so that it could easily use the Windows Presentation Foundation
 libraries for the purpose of making a UI overlay for the game. It has since
-grown to be a more general purpose framework for TERA modding.
+grown to be a more general-purpose framework for TERA modding.
 
 ## Features
 
@@ -40,17 +40,19 @@ grown to be a more general purpose framework for TERA modding.
 
 ## Installation
 
-Binary releases of Alkahest are not yet available as the project is still in
-heavy development. If you want to build it, you will need Visual Studio 2017
+[Installers and archives are available from the releases page.](https://github.com/alexrp/alkahest/releases)
+
+If you want to build Alkahest from source, you will need Visual Studio 2017
 (any edition) and .NET Framework 4.6.1. Simply open `Alkahest.sln` and build
 it with the `Debug` + `Any CPU` configuration. All build artifacts will end up
-in the `Build` directory. Run `alkahest-server.exe` to start the proxy server
-(but see below for configuration).
+in the `Build` directory.
 
 ## Configuration
 
 After you've built Alkahest, you will need to configure it. This is done in the
-`alkahest-server.exe.config` file in the `Build` directory.
+`alkahest-server.exe.config` file. You can find that file in the `Build`
+directory if you've built Alkahest from source, or in the directory you
+installed Alkahest to.
 
 The most important configuration values you'll need to change are:
 
@@ -61,20 +63,14 @@ The most important configuration values you'll need to change are:
   `file` logger from this list to save disk space.
 * `enablePacketLogs`: Unless you're a developer, you should set this to
   `false`. Packet logs can get quite big and aren't useful to most users.
-* `disablePlugins`: Remove any plugins from this list that you want to use. You
-  can also add plugins here that you don't want to use.
-* `region`: Set this to `na` or `eu` depending on which region you're playing
-  in.
+* `disablePlugins`: Remove any core plugins from this list that you want to
+  use. You can also add plugins here that you want to temporarily disable.
+* `region`: Set this to `eu`, `jp`, `kr`, `na`, `ru`, or `tw` depending on
+  which region you're playing in.
 
 There are many other configuration values that you can play with, but you don't
 need to change them if all you want is to use Alkahest for a single TERA client
 on your local machine.
-
-You should also check configuration files in the `Plugins` directory. Some
-plugins may require extra configuration.
-
-Note that rebuilding any project in the solution may overwrite configuration
-files in the `Build` directory. Make backups if needed.
 
 ## Usage
 
@@ -95,6 +91,13 @@ necessary so that Alkahest can give the client a modified server list where all
 IP addresses point to where Alkahest is listening for each server. Modifying
 the `hosts` file requires administrative privileges, so you must run Alkahest
 as administrator.
+
+## Plugins
+
+The plugin system in Alkahest is what adds actual functionality to the proxy
+server. Plugins are installed by dropping them into the `Plugins` directory.
+
+[See the wiki for a list of known plugins.](https://github.com/alexrp/alkahest/wiki/Known-Plugins)
 
 ## Disclaimer
 
