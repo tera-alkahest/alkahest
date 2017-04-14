@@ -55,16 +55,12 @@ namespace Alkahest.Core.Net
                     {
                         resp = client.SendAsync(req).Result.EnsureSuccessStatusCode();
                     }
-                    catch (Exception e) when (IsHttpException(e))
+                    catch (Exception e) when (IsHttpException(e) &&
+                        retriesSoFar < _parameters.Retries)
                     {
-                        if (retriesSoFar < _parameters.Retries)
-                        {
-                            _log.Error("Could not fetch official server list, retrying...");
-                            retriesSoFar++;
-                            continue;
-                        }
-
-                        throw;
+                        _log.Error("Could not fetch official server list, retrying...");
+                        retriesSoFar++;
+                        continue;
                     }
 
                     break;

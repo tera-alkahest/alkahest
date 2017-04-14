@@ -157,11 +157,8 @@ namespace Alkahest.Core.Net.Protocol
                         lock (handler)
                             send &= handler(client, direction, packet);
                     }
-                    catch (Exception e)
+                    catch (Exception e) when (!Debugger.IsAttached)
                     {
-                        if (Debugger.IsAttached)
-                            throw;
-
                         _log.Error("Unhandled exception in raw packet handler:");
                         _log.Error(e.ToString());
                     }
@@ -190,11 +187,8 @@ namespace Alkahest.Core.Net.Protocol
                             send &= (bool)handler.DynamicInvoke(client,
                                 direction, packet);
                     }
-                    catch (Exception e)
+                    catch (Exception e) when (!Debugger.IsAttached)
                     {
-                        if (Debugger.IsAttached)
-                            throw;
-
                         _log.Error("Unhandled exception in packet handler:");
                         _log.Error(e.ToString());
                     }
