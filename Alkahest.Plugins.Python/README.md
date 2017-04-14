@@ -10,8 +10,8 @@ languages.
 
 ## Configuration
 
-Configuration is done in the `Alkahest.Plugins.Python.dll.config` file in the
-`Build\Plugins` directory.
+Configuration is done in the `alkahest-python.dll.config` file in the `Plugins`
+directory.
 
 You shouldn't need to change anything by default, but you can change the
 `disablePackages` list if you need to temporarily disable a script package.
@@ -19,7 +19,7 @@ You shouldn't need to change anything by default, but you can change the
 ## Usage
 
 The unit of encapsulation is a script package. Each directory under
-`Build\Python` is considered a package and will be loaded separately. Within a
+`Python` is considered a package and will be loaded separately. Within a
 package, you can have as many Python files as you need. To use someone else's
 script package, simply drop it into its own directory.
 
