@@ -20,23 +20,23 @@ grown to be a more general-purpose framework for TERA modding.
 
 ## Features
 
+* **.NET plugins:** Plugins can be written in any .NET language, including C#,
+  F#, Nemerle, etc.
 * **Complete region support:** All TERA regions are supported: EU, JP, KR, NA,
   RU, and TW.
-* **Packet editing:** Packets can easily be intercepted, modified, or even
-  constructed from scratch, in either raw or typed form.
 * **Fast packet serialization**: Specialized serialization functions are
   automatically generated and compiled at runtime, making packet serialization
   fast and painless.
+* **Packet editing:** Packets can easily be intercepted, modified, or even
+  constructed from scratch, in either raw or typed form.
 * **Packet logging:** Compressed packet logs can be saved for later parsing and
   analysis.
-* **.NET plugins:** Plugins can be written in any .NET language, including C#,
-  F#, Nemerle, etc.
+* **Packet parser:** An offline packet parsing tool can generate text dumps of
+  packet logs and analyze raw packet structures to find arrays and strings.
 * **Python scripting:** One of the default plugins implements Python scripting
   support using IronPython.
 * **Reusable core library:** The Alkahest server is only a wrapper around the
   `Alkahest.Core` library which can be embedded in any .NET application.
-* **Packet parser:** An offline packet parsing tool can generate text dumps of
-  packet logs and analyze raw packet structures to find arrays and strings.
 
 ## Installation
 
@@ -97,7 +97,10 @@ as administrator.
 The plugin system in Alkahest is what adds actual functionality to the proxy
 server. Plugins are installed by dropping them into the `Plugins` directory.
 
-[See the wiki for a list of known plugins.](https://github.com/alexrp/alkahest/wiki/Known-Plugins)
+A list of known plugins is maintained on
+[this wiki page](https://github.com/alexrp/alkahest/wiki/Known-Plugins). If
+you're interested in plugin development, see
+[this wiki page](https://github.com/alexrp/alkahest/wiki/Plugin-Development).
 
 ## Disclaimer
 
