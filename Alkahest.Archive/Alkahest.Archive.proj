@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <ProjectGuid>{8B4B4367-7056-42FB-9ADF-31CCE0FA9309}</ProjectGuid>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="..\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets" Condition="Exists('..\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSBuildTasks.1.5.0.235\build\MSBuildTasks.targets'))" />
+  </Target>
+  <Target Name="Build">
+    <ItemGroup>
+      <ReleaseFiles Include="..\Build\*.exe*; ..\Build\*.dll; ..\Build\*.pdb" />
+      <ReleaseFiles Include="..\Build\Plugins\Alkahest.Plugins.*; ..\Build\Plugins\IronPython.*; ..\Build\Plugins\Microsoft.*" />
+      <ReleaseFiles Include="..\Build\Python\**" />
+      <ReleaseFiles Include="..\Build\PythonLibs\**" />
+    </ItemGroup>
+    <Zip ZipFileName="..\Build\Release\Alkahest.zip" WorkingDirectory="..\Build" Files="@(ReleaseFiles)" />
+  </Target>
+  <Target Name="Clean">
+    <Delete Files="..\Build\Release\Alkahest.zip" />
+  </Target>
+  <Target Name="Rebuild" DependsOnTargets="Clean; Build" />
+</Project>
