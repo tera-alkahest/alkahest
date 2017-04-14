@@ -44,7 +44,6 @@
     <None Include="..\Alkahest.snk">
       <Link>Properties\Alkahest.snk</Link>
     </None>
-    <None Include="Properties\App.config" />
     <None Include="Lib\abc.py" />
     <None Include="Lib\aifc.py" />
     <None Include="Lib\antigravity.py" />
@@ -458,6 +457,7 @@
     <None Include="Lib\SimpleHTTPServer.py" />
     <None Include="Lib\SimpleXMLRPCServer.py" />
     <None Include="Lib\site.py" />
+    <None Include="Lib\site-packages\README.txt" />
     <None Include="Lib\smtpd.py" />
     <None Include="Lib\smtplib.py" />
     <None Include="Lib\sndhdr.py" />
@@ -568,7 +568,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Lib\site-packages\README.txt" />
+    <Content Include="alkahest-python.dll.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="IronPython">

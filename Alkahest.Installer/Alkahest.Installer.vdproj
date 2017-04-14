@@ -3640,6 +3640,12 @@
         "Entry"
         {
         "MsmKey" = "8:_B520B4BCAC620060F4EB673568253662"
+        "OwnerKey" = "8:_4255650B4143489EB380CEAFFD437CFC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B520B4BCAC620060F4EB673568253662"
         "OwnerKey" = "8:_8F0EEB258BEC461C8AC739BC7E86EFE2"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -3647,12 +3653,6 @@
         {
         "MsmKey" = "8:_B520B4BCAC620060F4EB673568253662"
         "OwnerKey" = "8:_4F590AE8C1F249C3A63C07CE2D51A0D8"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_B520B4BCAC620060F4EB673568253662"
-        "OwnerKey" = "8:_4255650B4143489EB380CEAFFD437CFC"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -18712,7 +18712,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Alkahest"
         "ProductCode" = "8:{BB77A432-8225-4A19-A226-30407243904F}"
-        "PackageCode" = "8:{BED5E056-3336-4BF8-992D-4B2444C7F948}"
+        "PackageCode" = "8:{04900F12-B32C-4789-9E5B-A6C5878BBB4C}"
         "UpgradeCode" = "8:{E9DD51A7-EBEF-4BC9-93B7-314157590FA4}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -19287,6 +19287,34 @@
                 {
                 }
             }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_0D96B35261DD4B6C8D537F8243ABA7A2"
+            {
+            "SourcePath" = "8:"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_9D2D36622F7F474D8DEFBE980837DC27"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:ContentFiles"
+            "OutputProjectGuid" = "8:{F85463D3-9795-4C7D-A041-3BAA652D0BB5}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_35A335067D484B9C8910CE896F06C64E"
             {
             "SourcePath" = "8:"
@@ -19422,6 +19450,34 @@
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:Built"
             "OutputProjectGuid" = "8:{4CB2D190-FC09-4D4D-9598-D0CFC0C725DB}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_78414B2A67F346FDBEBC6F74DB6DC0EA"
+            {
+            "SourcePath" = "8:"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_9D2D36622F7F474D8DEFBE980837DC27"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:ContentFiles"
+            "OutputProjectGuid" = "8:{92CD0899-A58E-4196-BD8D-4B96CB12A384}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {
