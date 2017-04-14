@@ -19317,7 +19317,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_4255650B4143489EB380CEAFFD437CFC"
             {
-            "SourcePath" = "8:..\\Alkahest.Plugins.Python\\obj\\Debug\\Alkahest.Plugins.Python.dll"
+            "SourcePath" = "8:..\\Alkahest.Plugins.Python\\obj\\Debug\\alkahest-python.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_9D2D36622F7F474D8DEFBE980837DC27"
@@ -19457,7 +19457,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_8F0EEB258BEC461C8AC739BC7E86EFE2"
             {
-            "SourcePath" = "8:..\\Alkahest.Plugins.SimpleTest\\obj\\Debug\\Alkahest.Plugins.SimpleTest.dll"
+            "SourcePath" = "8:..\\Alkahest.Plugins.SimpleTest\\obj\\Debug\\alkahest-simple-test.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_9D2D36622F7F474D8DEFBE980837DC27"

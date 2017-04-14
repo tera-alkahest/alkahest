@@ -19,7 +19,7 @@
   <Target Name="Build">
     <ItemGroup>
       <ReleaseFiles Include="..\Build\*.exe*; ..\Build\*.dll; ..\Build\*.pdb" />
-      <ReleaseFiles Include="..\Build\Plugins\Alkahest.Plugins.*; ..\Build\Plugins\IronPython.*; ..\Build\Plugins\Microsoft.*" />
+      <ReleaseFiles Include="..\Build\Plugins\alkahest-*; ..\Build\Plugins\IronPython.*; ..\Build\Plugins\Microsoft.*" />
       <ReleaseFiles Include="..\Build\Python\**" />
       <ReleaseFiles Include="..\Build\PythonLibs\**" />
     </ItemGroup>
