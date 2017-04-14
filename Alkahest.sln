@@ -24,8 +24,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{C60F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alkahest.Plugins.SimpleTest", "Alkahest.Plugins.SimpleTest\Alkahest.Plugins.SimpleTest.csproj", "{F85463D3-9795-4C7D-A041-3BAA652D0BB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alkahest.Plugins.Overlay", "Alkahest.Plugins.Overlay\Alkahest.Plugins.Overlay.csproj", "{46B28B13-CBB6-4D5F-94F9-004E0643CAF5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alkahest.Parser", "Alkahest.Parser\Alkahest.Parser.csproj", "{0238DD2F-47AD-4B4C-8118-DDDA7C33716B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alkahest.Plugins.Python", "Alkahest.Plugins.Python\Alkahest.Plugins.Python.csproj", "{92CD0899-A58E-4196-BD8D-4B96CB12A384}"
@@ -45,8 +43,6 @@ Global
 		{FB4516B0-8850-49F1-B65D-AD5ECE07670C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F85463D3-9795-4C7D-A041-3BAA652D0BB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F85463D3-9795-4C7D-A041-3BAA652D0BB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{46B28B13-CBB6-4D5F-94F9-004E0643CAF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{46B28B13-CBB6-4D5F-94F9-004E0643CAF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0238DD2F-47AD-4B4C-8118-DDDA7C33716B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0238DD2F-47AD-4B4C-8118-DDDA7C33716B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92CD0899-A58E-4196-BD8D-4B96CB12A384}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -59,7 +55,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F85463D3-9795-4C7D-A041-3BAA652D0BB5} = {C60FBBE6-4B76-4D6F-BADC-377D3878FF93}
-		{46B28B13-CBB6-4D5F-94F9-004E0643CAF5} = {C60FBBE6-4B76-4D6F-BADC-377D3878FF93}
 		{92CD0899-A58E-4196-BD8D-4B96CB12A384} = {C60FBBE6-4B76-4D6F-BADC-377D3878FF93}
 	EndGlobalSection
 EndGlobal

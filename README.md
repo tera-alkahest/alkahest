@@ -15,8 +15,8 @@ within the framework of the game's network protocol.
 This project was started out of a need to have a program similar to
 [tera-proxy](https://github.com/meishuu/tera-proxy), but written in a .NET
 language so that it could easily use the Windows Presentation Foundation
-libraries for the purpose of making a UI overlay for the game (the
-`Alkahest.Plugins.Overlay` project in this repository).
+libraries for the purpose of making a UI overlay for the game. It has since
+grown to be a more general purpose framework for TERA modding.
 
 ## Features
 
