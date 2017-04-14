@@ -1,4 +1,4 @@
-﻿from Alkahest.Core.Net.Protocol.Packets import *
+from Alkahest.Core.Net.Protocol.Packets import *
 
 # The special function __start__ is invoked on startup. The proxies parameter
 # is an array of Alkahest.Core.Net.GameProxy instances.

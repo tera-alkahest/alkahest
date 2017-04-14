@@ -46,7 +46,11 @@ namespace Alkahest.Plugins.Python
                 opts.TrueDivision = true;
                 opts.UnicodeLiterals = true;
 
-                engine.GetSearchPaths().Add(Configuration.StdLibDirectory);
+                var paths = engine.GetSearchPaths();
+
+                paths.Add(Configuration.StdLibDirectory);
+
+                engine.SetSearchPaths(paths);
 
                 var io = engine.Runtime.IO;
 
