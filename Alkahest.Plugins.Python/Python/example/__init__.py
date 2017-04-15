@@ -19,7 +19,7 @@ def __stop__(proxies):
     __log__.Basic("Stopped example script")
 
 def _handle_check_version(client, direction, packet):
-    for ver in packet.VersionValues:
+    for ver in packet.Versions:
         __log__.Info("Client reported version: {0}", ver.Value)
 
     return True
