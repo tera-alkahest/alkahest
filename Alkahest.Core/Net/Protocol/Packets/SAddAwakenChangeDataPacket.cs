@@ -17,7 +17,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public sealed class AwakeningCostInfo
         {
             [PacketField]
-            public uint UniqueId { get; set; }
+            public uint Index { get; set; }
 
             [PacketField]
             public uint AlkahestItemId { get; set; }

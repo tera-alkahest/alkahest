@@ -18,7 +18,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public sealed class EnchamentCostInfo
         {
             [PacketField]
-            public uint UniqueId { get; set; }
+            public uint Index { get; set; }
 
             [PacketField]
             public uint EnchantmentLevel { get; set; }

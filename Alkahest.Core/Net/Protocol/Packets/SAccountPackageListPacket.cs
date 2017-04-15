@@ -14,19 +14,19 @@ namespace Alkahest.Core.Net.Protocol.Packets
             return new SAccountPackageListPacket();
         }
 
-        public sealed class Package
+        public sealed class PackageInfo
         {
             [PacketField]
-            public uint Unknown2 { get; set; }
+            public uint PackageId { get; set; }
 
             [PacketField]
-            public uint Unknown3 { get; set; }
+            public int TimeRemaining { get; set; }
 
             [PacketField]
-            public uint Unknown4 { get; set; }
+            public uint Unknown1 { get; set; }
         }
 
         [PacketField]
-        public List<Package> Packages { get; } = new List<Package>();
+        public List<PackageInfo> Packages { get; } = new List<PackageInfo>();
     }
 }
