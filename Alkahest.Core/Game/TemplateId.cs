@@ -10,7 +10,7 @@ namespace Alkahest.Core.Game
 
         public Race Race => (Race)((Raw - 100) / 200 % 50);
 
-        public Gender Gender => (Gender)(Raw / 100 % 2);
+        public Gender Gender => (Gender)(Raw / 100 % 2 + 1);
 
         public Class Class => (Class)(Raw % 100 - 1);
 
@@ -22,7 +22,7 @@ namespace Alkahest.Core.Game
         public static TemplateId FromValues(Race race, Gender gender, Class @class)
         {
             return new TemplateId(10200 + 200 * (uint)race -
-                100 * (uint)gender + (uint)@class + 1);
+                100 * ((uint)gender - 1) + (uint)@class + 1);
         }
 
         public bool Equals(TemplateId other)
