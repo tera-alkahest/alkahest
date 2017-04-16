@@ -80,12 +80,12 @@ to just start TERA and play.
 
 For some regions, you may need to log into TERA first, then start Alkahest just
 before actually launching the game. This is necessary because some regions use
-the same domain name for logging in and for retrieving the server list, the
+the same host name for logging in and for retrieving the server list, the
 latter of which gets redirected by Alkahest. For KR specifically, you need to
 start Alkahest right after launching the game, during the splash screen.
 
 Note that, by default, Alkahest will adjust your `hosts` file so that the
-hostname that the TERA launcher fetches the official server list from will be
+host name that the TERA launcher fetches the official server list from will be
 redirected to wherever Alkahest is configured to be listening. This is
 necessary so that Alkahest can give the client a modified server list where all
 IP addresses point to where Alkahest is listening for each server. Modifying
