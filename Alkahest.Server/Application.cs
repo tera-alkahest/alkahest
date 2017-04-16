@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Runtime.ExceptionServices;
 using System.Security;
 using System.Threading;
+using Mono.Options;
 using Alkahest.Core;
 using Alkahest.Core.Logging;
 using Alkahest.Core.Logging.Loggers;
@@ -14,6 +15,7 @@ using Alkahest.Core.Net.Protocol;
 using Alkahest.Core.Net.Protocol.OpCodes;
 using Alkahest.Core.Net.Protocol.Serializers;
 using Alkahest.Core.Plugins;
+using System.Reflection;
 
 namespace Alkahest.Server
 {
@@ -30,8 +32,65 @@ namespace Alkahest.Server
 
         static readonly Log _log = new Log(typeof(Application));
 
+        static bool HandleArguments(ref string[] args)
+        {
+            var asm = Assembly.GetExecutingAssembly();
+            var name = asm.GetName().Name;
+            var version = false;
+            var help = false;
+            var set = new OptionSet
+            {
+                $"This is {name}, part of the {nameof(Alkahest)} project.",
+                "",
+                "Usage:",
+                "",
+                $"  {name} [options...] [--] <file>",
+                "",
+                "General",
+                {
+                    "h|?|help",
+                    "Print version and exit.",
+                    h => help = h != null
+                },
+                {
+                    "v|version",
+                    "Print help and exit.",
+                    v => version = v != null
+                }
+            };
+
+            args = set.Parse(args).ToArray();
+
+            if (version)
+            {
+                Console.WriteLine("{0} {1}", name,
+                    asm.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                    .InformationalVersion);
+                return false;
+            }
+
+            if (help)
+            {
+                set.WriteOptionDescriptions(Console.Out);
+                return false;
+            }
+
+            return true;
+        }
+
         public static int Run(string[] args)
         {
+            try
+            {
+                if (!HandleArguments(ref args))
+                    return 0;
+            }
+            catch (OptionException e)
+            {
+                Console.WriteLine(e.Message);
+                return 1;
+            }
+
             AppDomain.CurrentDomain.ProcessExit += ProcessExit;
             Console.CancelKeyPress += CancelKeyPress;
             ConsoleUtility.AddConsoleEventHandler(ConsoleEvent);
