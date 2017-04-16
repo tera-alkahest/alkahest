@@ -102,11 +102,14 @@ namespace Alkahest.Core.Net
             if (packet == null)
                 throw new ArgumentNullException(nameof(packet));
 
+            if (packet.Payload.Length > PacketHeader.MaxPayloadSize)
+                throw new ArgumentException("Packet is too big.", nameof(packet));
+
+            var header = new PacketHeader((ushort)packet.Payload.Length,
+                Proxy.Processor.Serializer.Messages.Game.NameToOpCode[packet.OpCode]);
+
             lock (socket)
             {
-                var header = new PacketHeader((ushort)packet.Payload.Length,
-                    Proxy.Processor.Serializer.Messages.Game.NameToOpCode[packet.OpCode]);
-
                 PacketProcessor.WriteHeader(header, buffer);
                 Buffer.BlockCopy(packet.Payload, 0, buffer,
                     PacketHeader.HeaderSize, header.Length);
@@ -142,12 +145,16 @@ namespace Alkahest.Core.Net
             if (packet == null)
                 throw new ArgumentNullException(nameof(packet));
 
+            var data = Proxy.Processor.Serializer.Serialize(packet);
+
+            if (data.Length > PacketHeader.MaxPayloadSize)
+                throw new ArgumentException("Packet is too big.", nameof(packet));
+
+            var header = new PacketHeader((ushort)data.Length,
+                Proxy.Processor.Serializer.Messages.Game.NameToOpCode[packet.OpCode]);
+
             lock (socket)
             {
-                var data = Proxy.Processor.Serializer.Serialize(packet);
-                var header = new PacketHeader((ushort)data.Length,
-                    Proxy.Processor.Serializer.Messages.Game.NameToOpCode[packet.OpCode]);
-
                 PacketProcessor.WriteHeader(header, buffer);
                 Buffer.BlockCopy(data, 0, buffer, PacketHeader.HeaderSize,
                     header.Length);
@@ -344,6 +351,23 @@ namespace Alkahest.Core.Net
                         from, fromEnc, fromServer);
 
                     var header = PacketProcessor.ReadHeader(headerBuffer);
+
+                    if (!Proxy.Processor.Serializer.Messages.Game.OpCodeToName
+                        .ContainsKey(header.OpCode))
+                    {
+                        DisconnectInternal();
+                        _log.Error("Disconnected client {0} from {1} due to invalid opcode: {2}",
+                            EndPoint, Proxy.Info.Name, header.OpCode);
+                        return false;
+                    }
+
+                    if (header.Length > PacketHeader.MaxPayloadSize)
+                    {
+                        DisconnectInternal();
+                        _log.Error("Disconnected client {0} from {1} due to invalid packet length: {2}",
+                            EndPoint, Proxy.Info.Name, header.Length);
+                        return false;
+                    }
 
                     ReceiveInternal(payloadBuffer, header.Length,
                         from, fromEnc, fromServer);

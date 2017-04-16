@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Alkahest.Core.IO;
@@ -168,6 +169,7 @@ namespace Alkahest.Core.Net.Protocol
 
             var send = true;
             var name = Serializer.Messages.Game.OpCodeToName[header.OpCode];
+            var original = payload;
 
             if (rawHandlers.Count != 0)
             {
@@ -202,30 +204,52 @@ namespace Alkahest.Core.Net.Protocol
             if (handlers.Count != 0)
             {
                 var packet = Serializer.Create(header.OpCode);
+                var good = true;
 
-                Serializer.Deserialize(payload.Slice(0, header.Length), packet);
-
-                foreach (var handler in handlers)
+                try
                 {
-                    try
-                    {
-                        lock (handler)
-                            send &= (bool)handler.DynamicInvoke(client,
-                                direction, packet);
-                    }
-                    catch (Exception e) when (!Debugger.IsAttached)
-                    {
-                        _log.Error("Unhandled exception in packet handler:");
-                        _log.Error(e.ToString());
-                    }
+                    Serializer.Deserialize(payload.Slice(0, header.Length), packet);
+                }
+                catch (EndOfStreamException)
+                {
+                    _log.Error("{0}: {1} failed to deserialize; skipping typed packet handlers",
+                        direction.ToDirectionString(), name);
+                    good = false;
                 }
 
-                payload = Serializer.Serialize(packet);
-                header = new PacketHeader((ushort)payload.Length, header.OpCode);
+                if (good)
+                {
+                    foreach (var handler in handlers)
+                    {
+                        try
+                        {
+                            lock (handler)
+                                send &= (bool)handler.DynamicInvoke(client,
+                                    direction, packet);
+                        }
+                        catch (Exception e) when (!Debugger.IsAttached)
+                        {
+                            _log.Error("Unhandled exception in packet handler:");
+                            _log.Error(e.ToString());
+                        }
+                    }
+
+                    payload = Serializer.Serialize(packet);
+                    header = new PacketHeader((ushort)payload.Length, header.OpCode);
+                }
             }
 
             _log.Debug("{0}: {1} ({2} bytes{3})", direction.ToDirectionString(),
                 name, header.Length, send ? string.Empty : ", discarded");
+
+            if (send && payload.Length > PacketHeader.MaxPayloadSize)
+            {
+                _log.Error("{0}: {1} is too big ({2} bytes) to be sent correctly; sending original",
+                    direction.ToDirectionString(), name, payload.Length);
+
+                payload = original;
+                header = new PacketHeader((ushort)payload.Length, header.OpCode);
+            }
 
             return send;
         }
