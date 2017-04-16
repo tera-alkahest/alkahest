@@ -245,6 +245,7 @@
     <Compile Include="Net\ServerListRequestHandler.cs" />
     <Compile Include="Net\SocketDisconnectedException.cs" />
     <Compile Include="Plugins\IPlugin.cs" />
+    <Compile Include="Plugins\PluginException.cs" />
     <Compile Include="Plugins\PluginLoader.cs" />
     <Compile Include="Cryptography\TeraEncryptionHash.cs" />
     <Compile Include="Cryptography\TeraEncryptionSession.cs" />

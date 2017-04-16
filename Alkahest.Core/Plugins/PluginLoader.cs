@@ -10,6 +10,10 @@ namespace Alkahest.Core.Plugins
 {
     public sealed class PluginLoader
     {
+        const string ClassSuffix = "Plugin";
+
+        const string NamespacePrefix = "Alkahest.Plugins.";
+
         static readonly Log _log = new Log(typeof(PluginLoader));
 
         public IReadOnlyCollection<IPlugin> Plugins => _plugins;
@@ -26,6 +30,36 @@ namespace Alkahest.Core.Plugins
                         .Select(x => x.Value)
                         .Where(x => !exclude.Contains(x.Name))
                         .ToArray();
+
+            foreach (var plugin in _plugins)
+                EnforceConventions(plugin);
+        }
+
+        static void EnforceConventions(IPlugin plugin)
+        {
+            var name = plugin.Name;
+
+            if (name.Any(c => char.IsUpper(c)))
+                throw new PluginException($"{name}: Plugin name must not contain upper case characters.");
+
+            var type = plugin.GetType();
+
+            if (!type.Name.EndsWith(ClassSuffix))
+                throw new PluginException($"{name}: Plugin class name must end with '{ClassSuffix}'.");
+
+            if (!type.Namespace.StartsWith(NamespacePrefix))
+                throw new PluginException($"{name}: Plugin namespace must start with '{NamespacePrefix}'.");
+
+            var asm = type.Assembly;
+            var asmName = $"alkahest-{name}";
+
+            if (asm.GetName().Name != asmName)
+                throw new PluginException($"{name}: Plugin assembly name must be '{asmName}'.");
+
+            var fileName = asmName + ".dll";
+
+            if (Path.GetFileName(asm.Location.ToLowerInvariant()) != fileName)
+                throw new PluginException($"{name}: Plugin file name must be '{fileName}'.");
         }
 
         static void CheckProxies(GameProxy[] proxies)
