@@ -14,8 +14,6 @@ namespace Alkahest.Core.Net.Protocol.Logging
 
         public int Version { get; }
 
-        public Region Region { get; }
-
         public MessageTables Messages { get; }
 
         public IReadOnlyDictionary<int, ServerInfo> Servers { get; }
@@ -24,12 +22,9 @@ namespace Alkahest.Core.Net.Protocol.Logging
 
         bool _disposed;
 
-        public PacketLogWriter(Region region, MessageTables messages,
-            ServerInfo[] servers, string directory, string fileNameFormat,
-            bool compress)
+        public PacketLogWriter(MessageTables messages, ServerInfo[] servers,
+            string directory, string fileNameFormat, bool compress)
         {
-            region.CheckValidity(nameof(region));
-
             if (servers == null)
                 throw new ArgumentNullException(nameof(servers));
 
@@ -42,7 +37,6 @@ namespace Alkahest.Core.Net.Protocol.Logging
 
             Compressed = compress;
             Version = PacketLogEntry.Version;
-            Region = region;
             Messages = messages ??
                 throw new ArgumentNullException(nameof(messages));
             Servers = servers.ToDictionary(x => x.Id);
@@ -63,7 +57,7 @@ namespace Alkahest.Core.Net.Protocol.Logging
 
             _writer = new BinaryWriter(stream);
             _writer.Write(Version);
-            _writer.Write((byte)region);
+            _writer.Write((byte)messages.Region);
             _writer.Write(messages.Game.Version);
             _writer.Write(servers.Length);
 

@@ -444,7 +444,7 @@ namespace Alkahest.Parser
                     _log.Info(string.Empty);
                     _log.Info("Version: {0}", reader.Version);
                     _log.Info("Compressed: {0}", reader.Compressed);
-                    _log.Info("Region: {0}", reader.Region);
+                    _log.Info("Region: {0}", reader.Messages.Region);
                     _log.Info("Servers:");
 
                     foreach (var srv in reader.Servers.Values)

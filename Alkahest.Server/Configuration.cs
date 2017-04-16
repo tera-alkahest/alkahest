@@ -33,14 +33,6 @@ namespace Alkahest.Server
 
         public static string LogFileNameFormat { get; }
 
-        public static bool EnablePacketLogs { get; }
-
-        public static string PacketLogDirectory { get; }
-
-        public static string PacketLogFileNameFormat { get; }
-
-        public static bool CompressPacketLogs { get; }
-
         public static string PluginDirectory { get; }
 
         public static string PluginPattern { get; }
@@ -87,10 +79,6 @@ namespace Alkahest.Server
             DebugColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), cfg["debugColor"], true);
             LogDirectory = cfg["logDirectory"];
             LogFileNameFormat = cfg["logFileNameFormat"];
-            EnablePacketLogs = bool.Parse(cfg["enablePacketLogs"]);
-            PacketLogDirectory = cfg["packetLogDirectory"];
-            PacketLogFileNameFormat = cfg["packetLogFileNameFormat"];
-            CompressPacketLogs = bool.Parse(cfg["compressPacketLogs"]);
             PluginDirectory = cfg["pluginDirectory"];
             PluginPattern = cfg["pluginPattern"];
             DisablePlugins = Split(cfg["disablePlugins"], ',');

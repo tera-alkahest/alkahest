@@ -61,10 +61,9 @@ The most important configuration values you'll need to change are:
   `debug`.
 * `loggers`: If you don't care much about keeping logs around, remove the
   `file` logger from this list to save disk space.
-* `enablePacketLogs`: Unless you're a developer, you should set this to
-  `false`. Packet logs can get quite big and aren't useful to most users.
 * `disablePlugins`: Remove any core plugins from this list that you want to
-  use. You can also add plugins here that you want to temporarily disable.
+  use. You can also add plugins here that you want to temporarily disable, such
+  as the `packet-logger` plugin which is only useful to developers.
 * `region`: Set this to `eu`, `jp`, `kr`, `na`, `ru`, or `tw` depending on
   which region you're playing in.
 

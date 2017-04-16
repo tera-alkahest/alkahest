@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FB4516B0-8850-49F1-B65D-AD5ECE07670C}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>Alkahest.Server</RootNamespace>
-    <AssemblyName>alkahest-server</AssemblyName>
+    <ProjectGuid>{CCB59799-5CB1-4595-B34E-068B12791E46}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Alkahest.Plugins.PacketLogger</RootNamespace>
+    <AssemblyName>alkahest-packet-logger</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -18,67 +18,43 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Build\</OutputPath>
+    <OutputPath>..\Build\Plugins\</OutputPath>
     <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <LangVersion>7</LangVersion>
-    <ApplicationManifest>Properties\App.manifest</ApplicationManifest>
-    <StartupObject>Alkahest.Server.Program</StartupObject>
-    <ApplicationIcon>..\Alkahest.ico</ApplicationIcon>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Alkahest.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="..\SolutionInfo.cs">
-      <Link>Properties\SolutionInfo.cs</Link>
-    </Compile>
-    <Compile Include="Application.cs" />
-    <Compile Include="Configuration.cs" />
-    <Compile Include="ConsoleUtility.cs" />
-    <Compile Include="Program.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Alkahest.snk">
-      <Link>Properties\Alkahest.snk</Link>
-    </None>
-    <None Include="Properties\App.config">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Properties\App.manifest" />
-  </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Alkahest.ico">
-      <Link>Properties\Alkahest.ico</Link>
-    </Content>
+    <Compile Include="..\SolutionInfo.cs">
+      <Link>Properties\SolutionInfo.cs</Link>
+    </Compile>
+    <Compile Include="Configuration.cs" />
+    <Compile Include="PacketLoggerPlugin.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Alkahest.snk">
+      <Link>Properties\Alkahest.snk</Link>
+    </None>
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Alkahest.Core\Alkahest.Core.csproj">
       <Project>{4cb2d190-fc09-4d4d-9598-d0cfc0c725db}</Project>
       <Name>Alkahest.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Alkahest.Plugins.PacketLogger\Alkahest.Plugins.PacketLogger.csproj">
-      <Project>{CCB59799-5CB1-4595-B34E-068B12791E46}</Project>
-      <Name>Alkahest.Plugins.PacketLogger</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\Alkahest.Plugins.Python\Alkahest.Plugins.Python.csproj">
-      <Project>{92CD0899-A58E-4196-BD8D-4B96CB12A384}</Project>
-      <Name>Alkahest.Plugins.Python</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\Alkahest.Plugins.SimpleTest\Alkahest.Plugins.SimpleTest.csproj">
-      <Project>{f85463d3-9795-4c7d-a041-3baa652d0bb5}</Project>
-      <Name>Alkahest.Plugins.SimpleTest</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="alkahest-packet-logger.dll.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

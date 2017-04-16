@@ -20,8 +20,6 @@ namespace Alkahest.Core.Net.Protocol
 
         public PacketSerializer Serializer { get; }
 
-        internal PacketLogWriter LogWriter { get; }
-
         readonly HashSet<RawPacketHandler> _wildcardRawHandlers =
             new HashSet<RawPacketHandler>();
 
@@ -36,13 +34,10 @@ namespace Alkahest.Core.Net.Protocol
 
         readonly object _lock = new object();
 
-        public PacketProcessor(PacketSerializer serializer,
-            PacketLogWriter logWriter)
+        public PacketProcessor(PacketSerializer serializer)
         {
             Serializer = serializer ??
                 throw new ArgumentNullException(nameof(serializer));
-            LogWriter = logWriter ??
-                throw new ArgumentNullException(nameof(logWriter));
 
             foreach (var code in serializer.Messages.Game.OpCodeToName.Keys)
             {
@@ -228,12 +223,6 @@ namespace Alkahest.Core.Net.Protocol
                 payload = Serializer.Serialize(packet);
                 header = new PacketHeader((ushort)payload.Length, header.OpCode);
             }
-
-            if (LogWriter != null)
-                lock (LogWriter)
-                    LogWriter.Write(new PacketLogEntry(DateTime.Now,
-                        client.Proxy.Info.Id, direction, header.OpCode,
-                        payload.Slice(0, header.Length)));
 
             _log.Debug("{0}: {1} ({2} bytes{3})", direction.ToDirectionString(),
                 name, header.Length, send ? string.Empty : ", discarded");

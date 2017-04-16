@@ -2,12 +2,17 @@ namespace Alkahest.Core.Net.Protocol.OpCodes
 {
     public sealed class MessageTables
     {
-        public GameMessageTable Game { get; set; }
+        public Region Region { get; }
 
-        public SystemMessageTable System { get; set; }
+        public GameMessageTable Game { get; }
 
-        public MessageTables(int version)
+        public SystemMessageTable System { get; }
+
+        public MessageTables(Region region, int version)
         {
+            region.CheckValidity(nameof(region));
+
+            Region = region;
             Game = new GameMessageTable(version);
             System = new SystemMessageTable(version);
         }

@@ -11,7 +11,6 @@ using Alkahest.Core.Logging;
 using Alkahest.Core.Logging.Loggers;
 using Alkahest.Core.Net;
 using Alkahest.Core.Net.Protocol;
-using Alkahest.Core.Net.Protocol.Logging;
 using Alkahest.Core.Net.Protocol.OpCodes;
 using Alkahest.Core.Net.Protocol.Serializers;
 using Alkahest.Core.Plugins;
@@ -83,40 +82,29 @@ namespace Alkahest.Server
                     var pool = new ObjectPool<SocketAsyncEventArgs>(
                         () => new SocketAsyncEventArgs(), x => x.Reset(),
                         Configuration.PoolLimit != 0 ? (int?)Configuration.PoolLimit : null);
-                    var messages = new MessageTables(OpCodeTable.Versions[region]);
-                    var servers = slsProxy.Servers.ToArray();
-
-                    using (var writer = Configuration.EnablePacketLogs ?
-                        new PacketLogWriter(region, messages, servers,
-                            Configuration.PacketLogDirectory,
-                            Configuration.PacketLogFileNameFormat,
-                            Configuration.CompressPacketLogs) : null)
+                    var proc = new PacketProcessor(new CompilerPacketSerializer(
+                        new MessageTables(region, OpCodeTable.Versions[region])));
+                    var proxies = slsProxy.Servers.Select(x => new GameProxy(x,
+                        pool, proc, Configuration.GameBacklog,
+                        Configuration.GameTimeout)
                     {
-                        var ver = OpCodeTable.Versions[region];
-                        var proc = new PacketProcessor(
-                            new CompilerPacketSerializer(messages), writer);
-                        var proxies = servers.Select(x => new GameProxy(x,
-                            pool, proc, Configuration.GameBacklog,
-                            Configuration.GameTimeout)
-                        {
-                            MaxClients = Configuration.GameMaxClients
-                        }).ToArray();
-                        var loader = new PluginLoader(Configuration.PluginDirectory,
-                            Configuration.PluginPattern, Configuration.DisablePlugins);
+                        MaxClients = Configuration.GameMaxClients
+                    }).ToArray();
+                    var loader = new PluginLoader(Configuration.PluginDirectory,
+                        Configuration.PluginPattern, Configuration.DisablePlugins);
 
-                        loader.Start(proxies);
+                    loader.Start(proxies);
 
-                        _log.Basic("{0} started", Name);
+                    _log.Basic("{0} started", Name);
 
-                        _runningEvent.Wait();
+                    _runningEvent.Wait();
 
-                        _log.Basic("{0} shutting down...", Name);
+                    _log.Basic("{0} shutting down...", Name);
 
-                        loader.Stop(proxies);
+                    loader.Stop(proxies);
 
-                        foreach (var proxy in proxies)
-                            proxy.Dispose();
-                    }
+                    foreach (var proxy in proxies)
+                        proxy.Dispose();
                 }
             }
 

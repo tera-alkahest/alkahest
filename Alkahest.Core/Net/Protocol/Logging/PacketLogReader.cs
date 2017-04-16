@@ -15,8 +15,6 @@ namespace Alkahest.Core.Net.Protocol.Logging
 
         public int Version { get; }
 
-        public Region Region { get; }
-
         public MessageTables Messages { get; }
 
         public IReadOnlyDictionary<int, ServerInfo> Servers { get; }
@@ -48,9 +46,9 @@ namespace Alkahest.Core.Net.Protocol.Logging
             if (Version != PacketLogEntry.Version)
                 throw new InvalidDataException();
 
-            Region = (Region)_reader.ReadByte();
+            var region = (Region)_reader.ReadByte();
 
-            if (!Enum.IsDefined(typeof(Region), Region))
+            if (!Enum.IsDefined(typeof(Region), region))
                 throw new InvalidDataException();
 
             var clientVersion = _reader.ReadInt32();
@@ -58,7 +56,7 @@ namespace Alkahest.Core.Net.Protocol.Logging
             if (!OpCodeTable.Versions.Values.Contains(clientVersion))
                 throw new InvalidDataException();
 
-            Messages = new MessageTables(clientVersion);
+            Messages = new MessageTables(region, clientVersion);
 
             var serverCount = _reader.ReadInt32();
 
