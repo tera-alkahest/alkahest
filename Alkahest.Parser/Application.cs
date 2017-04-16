@@ -382,13 +382,13 @@ namespace Alkahest.Parser
             }
             catch (OptionException e)
             {
-                Console.WriteLine(e.Message);
+                Console.Error.WriteLine(e.Message);
                 return 1;
             }
 
             if (args.Length != 1)
             {
-                Console.WriteLine("Expected exactly one input file argument.");
+                Console.Error.WriteLine("Expected exactly one input file argument.");
                 return 1;
             }
 

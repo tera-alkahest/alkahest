@@ -87,7 +87,7 @@ namespace Alkahest.Server
             }
             catch (OptionException e)
             {
-                Console.WriteLine(e.Message);
+                Console.Error.WriteLine(e.Message);
                 return 1;
             }
 
