@@ -92,6 +92,7 @@
     <Compile Include="Net\Protocol\Packets\CDungeonCoolTimeListPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CEditPrivateChannelPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CEndMoviePacket.cs" />
+    <Compile Include="Net\Protocol\Packets\CExtendPartyPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CGetUserListPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CGuardPKPolicyPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CGuildApplyListPacket.cs" />
