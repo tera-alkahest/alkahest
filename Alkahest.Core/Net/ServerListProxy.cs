@@ -19,7 +19,8 @@ namespace Alkahest.Core.Net
 
         public ServerListProxy(ServerListParameters parameters)
         {
-            Parameters = parameters;
+            Parameters = parameters ??
+                throw new ArgumentNullException(nameof(parameters));
 
             var ep = parameters.ProxyServerListEndPoint;
             var cfg = new HttpSelfHostConfiguration(

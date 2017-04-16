@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace Alkahest.Core.Net.Protocol.OpCodes
@@ -25,6 +27,9 @@ namespace Alkahest.Core.Net.Protocol.OpCodes
 
         internal OpCodeTable(bool opCodes, int version)
         {
+            if (!Versions.Values.Contains(version))
+                throw new ArgumentOutOfRangeException(nameof(version));
+
             Version = version;
 
             var asm = Assembly.GetExecutingAssembly();

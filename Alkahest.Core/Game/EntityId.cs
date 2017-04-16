@@ -19,6 +19,11 @@ namespace Alkahest.Core.Game
             Raw = raw;
         }
 
+        public static EntityId FromValues(uint id, EntityFlags flags)
+        {
+            return new EntityId(id | Bits.Insert(0UL, (ulong)flags, 32, 63));
+        }
+
         public bool Equals(EntityId other)
         {
             return Raw == other.Raw;

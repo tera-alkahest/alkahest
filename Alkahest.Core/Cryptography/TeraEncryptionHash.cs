@@ -1,6 +1,6 @@
 namespace Alkahest.Core.Cryptography
 {
-    internal static class TeraEncryptionHash
+    static class TeraEncryptionHash
     {
         // TODO: Do we really need this?
 

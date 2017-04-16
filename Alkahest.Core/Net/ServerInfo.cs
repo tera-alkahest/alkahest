@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 
 namespace Alkahest.Core.Net
@@ -16,9 +17,11 @@ namespace Alkahest.Core.Net
             IPEndPoint proxyEndPoint)
         {
             Id = id;
-            Name = name;
-            RealEndPoint = realEndPoint;
-            ProxyEndPoint = proxyEndPoint;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            RealEndPoint = realEndPoint ??
+                throw new ArgumentNullException(nameof(realEndPoint));
+            ProxyEndPoint = proxyEndPoint ??
+                throw new ArgumentNullException(nameof(proxyEndPoint));
         }
     }
 }

@@ -9,6 +9,9 @@ namespace Alkahest.Core
 
         public static void Check(bool condition, string message)
         {
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
+
             if (!condition)
                 throw new Exception($"Assertion failed: {message}");
         }

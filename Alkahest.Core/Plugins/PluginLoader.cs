@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition.Hosting;
 using System.IO;
@@ -27,8 +28,19 @@ namespace Alkahest.Core.Plugins
                         .ToArray();
         }
 
+        static void CheckProxies(GameProxy[] proxies)
+        {
+            if (proxies == null)
+                throw new ArgumentNullException(nameof(proxies));
+
+            if (proxies.Any(x => x == null))
+                throw new ArgumentException("A null proxy was given.", nameof(proxies));
+        }
+
         public void Start(GameProxy[] proxies)
         {
+            CheckProxies(proxies);
+
             foreach (var p in _plugins)
             {
                 p.Start(proxies.ToArray());
@@ -41,6 +53,8 @@ namespace Alkahest.Core.Plugins
 
         public void Stop(GameProxy[] proxies)
         {
+            CheckProxies(proxies);
+
             foreach (var p in _plugins)
             {
                 p.Stop(proxies.ToArray());

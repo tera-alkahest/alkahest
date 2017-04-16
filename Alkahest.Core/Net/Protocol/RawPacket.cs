@@ -11,7 +11,7 @@ namespace Alkahest.Core.Net.Protocol
 
         public RawPacket(string opCode)
         {
-            OpCode = opCode;
+            OpCode = opCode ?? throw new ArgumentNullException(nameof(opCode));
         }
 
         public override string ToString()

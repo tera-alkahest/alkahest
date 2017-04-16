@@ -39,8 +39,10 @@ namespace Alkahest.Core.Net.Protocol
         public PacketProcessor(PacketSerializer serializer,
             PacketLogWriter logWriter)
         {
-            Serializer = serializer;
-            LogWriter = logWriter;
+            Serializer = serializer ??
+                throw new ArgumentNullException(nameof(serializer));
+            LogWriter = logWriter ??
+                throw new ArgumentNullException(nameof(logWriter));
 
             foreach (var code in serializer.Messages.Game.OpCodeToName.Keys)
             {
@@ -51,29 +53,49 @@ namespace Alkahest.Core.Net.Protocol
 
         ushort GetOpCode(string name)
         {
-            return Serializer.Messages.Game.NameToOpCode[name];
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
+            if (!Serializer.Messages.Game.NameToOpCode.TryGetValue(name, out var op))
+                throw new ArgumentException("Invalid opcode name.", nameof(name));
+
+            return op;
         }
 
         static string GetOpCodeName(Type t)
         {
-            return t.GetMethod("Create", CreateFlags, null, Type.EmptyTypes, null)
-                .GetCustomAttribute<PacketAttribute>().OpCode;
+            var name = t.GetMethod("Create", CreateFlags, null, Type.EmptyTypes,
+                null)?.GetCustomAttribute<PacketAttribute>()?.OpCode;
+
+            if (name == null)
+                throw new ArgumentException("Invalid packet type.", "handler");
+
+            return name;
         }
 
         public void AddRawHandler(RawPacketHandler handler)
         {
+            if (handler == null)
+                throw new ArgumentNullException(nameof(handler));
+
             lock (_lock)
                 _wildcardRawHandlers.Add(handler);
         }
 
         public void RemoveRawHandler(RawPacketHandler handler)
         {
+            if (handler == null)
+                throw new ArgumentNullException(nameof(handler));
+
             lock (_lock)
                 _wildcardRawHandlers.Remove(handler);
         }
 
         public void AddRawHandler(string name, RawPacketHandler handler)
         {
+            if (handler == null)
+                throw new ArgumentNullException(nameof(handler));
+
             var opCode = GetOpCode(name);
 
             lock (_lock)
@@ -82,6 +104,9 @@ namespace Alkahest.Core.Net.Protocol
 
         public void RemoveRawHandler(string name, RawPacketHandler handler)
         {
+            if (handler == null)
+                throw new ArgumentNullException(nameof(handler));
+
             var opCode = GetOpCode(name);
 
             lock (_lock)
@@ -91,6 +116,9 @@ namespace Alkahest.Core.Net.Protocol
         public void AddHandler<T>(PacketHandler<T> handler)
             where T : Packet
         {
+            if (handler == null)
+                throw new ArgumentNullException(nameof(handler));
+
             var opCode = GetOpCode(GetOpCodeName(typeof(T)));
 
             lock (_lock)
@@ -100,6 +128,9 @@ namespace Alkahest.Core.Net.Protocol
         public void RemoveHandler<T>(PacketHandler<T> handler)
             where T : Packet
         {
+            if (handler == null)
+                throw new ArgumentNullException(nameof(handler));
+
             var opCode = GetOpCode(GetOpCodeName(typeof(T)));
 
             lock (_lock)

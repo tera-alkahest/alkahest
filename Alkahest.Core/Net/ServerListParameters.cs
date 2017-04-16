@@ -44,11 +44,23 @@ namespace Alkahest.Core.Net
             IPAddress gameAddress, int startingPort, Region region,
             TimeSpan timeout, int retries)
         {
+            if (startingPort < IPEndPoint.MinPort ||
+                startingPort >= IPEndPoint.MaxPort)
+                throw new ArgumentOutOfRangeException(nameof(startingPort));
+
+            region.CheckValidity(nameof(region));
+
+            if (retries < 0)
+                throw new ArgumentOutOfRangeException(nameof(retries));
+
             Uri = GetUri(region);
-            RealServerListAddress = realSlsAddress;
-            ProxyServerListEndPoint = new IPEndPoint(proxySlsAddress,
+            RealServerListAddress = realSlsAddress ??
+                throw new ArgumentNullException(nameof(realSlsAddress));
+            ProxyServerListEndPoint = new IPEndPoint(
+                proxySlsAddress ?? throw new ArgumentNullException(nameof(proxySlsAddress)),
                 proxySlsPort ?? Uri.Port);
-            GameAddress = gameAddress;
+            GameAddress = gameAddress ??
+                throw new ArgumentNullException(nameof(gameAddress));
             StartingPort = startingPort;
             Region = region;
             Timeout = timeout;
@@ -57,6 +69,8 @@ namespace Alkahest.Core.Net
 
         public static Uri GetUri(Region region)
         {
+            region.CheckValidity(nameof(region));
+
             switch (region)
             {
                 case Region.EU:

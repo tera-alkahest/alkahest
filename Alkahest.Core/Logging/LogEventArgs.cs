@@ -10,7 +10,7 @@ namespace Alkahest.Core.Logging
 
         public string Message { get; }
 
-        public LogEventArgs(LogLevel level, DateTime timestamp, string message)
+        internal LogEventArgs(LogLevel level, DateTime timestamp, string message)
         {
             Level = level;
             Timestamp = timestamp;

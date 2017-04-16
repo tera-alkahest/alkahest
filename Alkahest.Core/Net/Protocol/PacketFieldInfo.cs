@@ -23,8 +23,10 @@ namespace Alkahest.Core.Net.Protocol
         protected PacketFieldInfo(PropertyInfo property,
             PacketFieldAttribute attribute)
         {
-            Property = property;
-            Attribute = attribute;
+            Property = property ??
+                throw new ArgumentNullException(nameof(property));
+            Attribute = attribute ??
+                throw new ArgumentNullException(nameof(attribute));
 
             var type = property.PropertyType;
             var isArray = type.IsConstructedGenericType &&

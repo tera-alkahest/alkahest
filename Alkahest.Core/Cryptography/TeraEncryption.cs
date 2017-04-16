@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Alkahest.Core.Cryptography
 {
-    internal sealed class TeraEncryption
+    sealed class TeraEncryption
     {
         sealed class TeraEncryptionKey
         {

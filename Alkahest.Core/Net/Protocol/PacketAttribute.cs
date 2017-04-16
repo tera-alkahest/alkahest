@@ -12,10 +12,10 @@ namespace Alkahest.Core.Net.Protocol
 
         public string OpCode { get; }
 
-        public PacketAttribute(string opCode)
+        internal PacketAttribute(string opCode)
             : base(ThisContractName)
         {
-            OpCode = opCode;
+            OpCode = opCode ?? throw new ArgumentNullException(nameof(opCode));
         }
     }
 }

@@ -150,6 +150,9 @@ namespace Alkahest.Core.IO
 
         public T Seek<T>(int position, Func<TeraBinaryWriter, int, T> func)
         {
+            if (func == null)
+                throw new ArgumentNullException(nameof(func));
+
             var pos = Position;
 
             Position = position;
@@ -163,6 +166,9 @@ namespace Alkahest.Core.IO
 
         public void Seek(int position, Action<TeraBinaryWriter, int> action)
         {
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+
             Seek(position, (w, op) =>
             {
                 action(w, op);
@@ -171,9 +177,12 @@ namespace Alkahest.Core.IO
             });
         }
 
-        public bool CanWrite(int size)
+        public bool CanWrite(int count)
         {
-            return Length - Position >= size;
+            if (count < 0)
+                throw new ArgumentOutOfRangeException(nameof(count));
+
+            return Length - Position >= count;
         }
 
         public byte[] ToArray()

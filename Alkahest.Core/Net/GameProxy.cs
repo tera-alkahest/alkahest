@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,9 +36,13 @@ namespace Alkahest.Core.Net
         public GameProxy(ServerInfo info, ObjectPool<SocketAsyncEventArgs> pool,
             PacketProcessor processor, int backlog, TimeSpan timeout)
         {
-            Info = info;
-            ArgsPool = pool;
-            Processor = processor;
+            if (backlog < 0)
+                throw new ArgumentOutOfRangeException(nameof(backlog));
+
+            Info = info ?? throw new ArgumentNullException(nameof(info));
+            ArgsPool = pool ?? throw new ArgumentNullException(nameof(pool));
+            Processor = processor ??
+                throw new ArgumentNullException(nameof(processor));
             Timeout = timeout;
             _serverSocket = new Socket(info.ProxyEndPoint.AddressFamily,
                 SocketType.Stream, ProtocolType.Tcp)

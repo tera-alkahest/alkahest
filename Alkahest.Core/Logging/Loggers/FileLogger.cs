@@ -13,6 +13,9 @@ namespace Alkahest.Core.Logging.Loggers
 
         public FileLogger(string directory, string fileNameFormat)
         {
+            if (fileNameFormat == null)
+                throw new ArgumentNullException(nameof(fileNameFormat));
+
             Directory.CreateDirectory(directory);
 
             _writer = new StreamWriter(File.Open(Path.Combine(directory,
@@ -42,6 +45,14 @@ namespace Alkahest.Core.Logging.Loggers
         public void Log(LogLevel level, string timestamp, Type source,
             string category, string message)
         {
+            level.CheckValidity(nameof(level));
+
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
+
             if (_disposed)
                 throw new ObjectDisposedException(GetType().FullName);
 

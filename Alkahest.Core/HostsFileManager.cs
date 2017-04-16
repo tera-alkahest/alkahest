@@ -55,7 +55,16 @@ namespace Alkahest.Core
 
         string MakeEntry(string host, IPAddress destination)
         {
-            return $"{destination.ToString()} {host}";
+            if (host == null)
+                throw new ArgumentNullException(nameof(host));
+
+            if (Uri.CheckHostName(host) != UriHostNameType.Dns)
+                throw new ArgumentException("Invalid host name.", nameof(host));
+
+            if (destination == null)
+                throw new ArgumentNullException(nameof(destination));
+
+            return $"{destination} {host}";
         }
 
         public void AddEntry(string host, IPAddress destination)

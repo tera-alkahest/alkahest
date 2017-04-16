@@ -100,15 +100,12 @@ namespace Alkahest.Core.IO
         {
             var list = new List<char>();
 
-            while (true)
-            {
-                var ch = (char)_reader.ReadUInt16();
+            char c;
 
-                if (ch == char.MinValue)
-                    return new string(list.ToArray());
+            while ((c = (char)_reader.ReadUInt16()) != char.MinValue)
+                list.Add(c);
 
-                list.Add(ch);
-            }
+            return new string(list.ToArray());
         }
 
         public Vector3 ReadVector3()
@@ -154,6 +151,9 @@ namespace Alkahest.Core.IO
 
         public T Seek<T>(int position, Func<TeraBinaryReader, int, T> func)
         {
+            if (func == null)
+                throw new ArgumentNullException(nameof(func));
+
             var pos = Position;
 
             Position = position;
@@ -167,6 +167,9 @@ namespace Alkahest.Core.IO
 
         public void Seek(int position, Action<TeraBinaryReader, int> action)
         {
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+
             Seek(position, (r, op) =>
             {
                 action(r, op);
@@ -175,9 +178,12 @@ namespace Alkahest.Core.IO
             });
         }
 
-        public bool CanRead(int size)
+        public bool CanRead(int count)
         {
-            return Length - Position >= size;
+            if (count < 0)
+                throw new ArgumentOutOfRangeException(nameof(count));
+
+            return Length - Position >= count;
         }
 
         public byte[] ToArray()

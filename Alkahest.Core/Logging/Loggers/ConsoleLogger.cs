@@ -22,6 +22,18 @@ namespace Alkahest.Core.Logging.Loggers
             ConsoleColor warningColor, ConsoleColor basicColor,
             ConsoleColor infoColor, ConsoleColor debugColor)
         {
+            void CheckColor(ConsoleColor color, string name)
+            {
+                if (!Enum.IsDefined(typeof(ConsoleColor), color))
+                    throw new ArgumentException("Invalid console color.", name);
+            }
+
+            CheckColor(errorColor, nameof(errorColor));
+            CheckColor(warningColor, nameof(warningColor));
+            CheckColor(basicColor, nameof(basicColor));
+            CheckColor(infoColor, nameof(infoColor));
+            CheckColor(debugColor, nameof(debugColor));
+
             _colors = colors;
             _errorColor = errorColor;
             _warningColor = warningColor;
@@ -33,6 +45,14 @@ namespace Alkahest.Core.Logging.Loggers
         public void Log(LogLevel level, string timestamp, Type source,
             string category, string message)
         {
+            level.CheckValidity(nameof(level));
+
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
+
             ConsoleColor color;
             string lvl;
 

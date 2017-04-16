@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace Alkahest.Core.IO
@@ -6,6 +7,9 @@ namespace Alkahest.Core.IO
     {
         public static byte[] ReadBytesFull(this BinaryReader reader, int count)
         {
+            if (reader == null)
+                throw new ArgumentNullException(nameof(reader));
+
             var bytes = reader.ReadBytes(count);
 
             if (bytes.Length != count)

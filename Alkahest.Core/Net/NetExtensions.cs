@@ -8,12 +8,17 @@ namespace Alkahest.Core.Net
     {
         public static string ToErrorString(this SocketError error)
         {
+            error.CheckValidity(nameof(error));
+
             return new Win32Exception((int)error).Message;
         }
 
         public static void SendFull(this Socket socket,
             byte[] data, int offset, int length)
         {
+            if (socket == null)
+                throw new ArgumentNullException(nameof(socket));
+
             var progress = 0;
 
             while (progress < length)
@@ -31,6 +36,9 @@ namespace Alkahest.Core.Net
         public static void ReceiveFull(this Socket socket,
             byte[] data, int offset, int length)
         {
+            if (socket == null)
+                throw new ArgumentNullException(nameof(socket));
+
             var progress = 0;
 
             while (progress < length)
@@ -47,6 +55,9 @@ namespace Alkahest.Core.Net
 
         public static void SafeClose(this Socket socket)
         {
+            if (socket == null)
+                throw new ArgumentNullException(nameof(socket));
+
             try
             {
                 socket.Shutdown(SocketShutdown.Both);
@@ -63,6 +74,9 @@ namespace Alkahest.Core.Net
 
         public static void Reset(this SocketAsyncEventArgs args)
         {
+            if (args == null)
+                throw new ArgumentNullException(nameof(args));
+
             args.AcceptSocket = null;
             args.BufferList = null;
             args.DisconnectReuseSocket = false;

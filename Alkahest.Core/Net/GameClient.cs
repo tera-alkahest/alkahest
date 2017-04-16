@@ -99,6 +99,9 @@ namespace Alkahest.Core.Net
         bool SendRawPacketInternal(RawPacket packet, byte[] buffer,
             Socket socket, TeraEncryptionSession encryption, bool server)
         {
+            if (packet == null)
+                throw new ArgumentNullException(nameof(packet));
+
             lock (socket)
             {
                 var header = new PacketHeader((ushort)packet.Payload.Length,
@@ -136,6 +139,9 @@ namespace Alkahest.Core.Net
         bool SendPacketInternal(Packet packet, byte[] buffer, Socket socket,
             TeraEncryptionSession encryption, bool server)
         {
+            if (packet == null)
+                throw new ArgumentNullException(nameof(packet));
+
             lock (socket)
             {
                 var data = Proxy.Processor.Serializer.Serialize(packet);

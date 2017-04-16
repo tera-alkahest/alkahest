@@ -138,8 +138,7 @@ namespace Alkahest.Core.Data
 
         public IEnumerator<DataCenterElement> GetEnumerator()
         {
-            foreach (var child in _children.Value)
-                yield return child;
+            return _children.Value.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -149,16 +148,25 @@ namespace Alkahest.Core.Data
 
         public DataCenterAttribute Attribute(string name)
         {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
             return Attributes.SingleOrDefault(x => x.Name == name);
         }
 
         public DataCenterElement Child(string name)
         {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
             return this.SingleOrDefault(x => x.Name == name);
         }
 
         public IEnumerable<DataCenterElement> Children(string name)
         {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
             return this.Where(x => x.Name == name);
         }
 

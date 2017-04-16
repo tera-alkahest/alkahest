@@ -24,11 +24,14 @@ namespace Alkahest.Core.Net.Protocol.Logging
         public PacketLogEntry(DateTime timestamp, int serverId,
             Direction direction, ushort opCode, byte[] payload)
         {
+            direction.CheckValidity(nameof(direction));
+
             Timestamp = timestamp;
             ServerId = serverId;
             Direction = direction;
             OpCode = opCode;
-            Payload = payload.ToArray();
+            Payload = (payload ??
+                throw new ArgumentNullException(nameof(payload))).ToArray();
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -40,6 +41,20 @@ namespace Alkahest.Core.Cryptography
         public TeraEncryptionSession(Direction direction, byte[] clientKey1,
             byte[] clientKey2, byte[] serverKey1, byte[] serverKey2)
         {
+            void CheckKey(byte[] key, string name)
+            {
+                if (key == null)
+                    throw new ArgumentNullException(name);
+
+                if (key.Length != KeySize)
+                    throw new ArgumentException("Invalid key length", name);
+            }
+
+            CheckKey(clientKey1, nameof(clientKey1));
+            CheckKey(clientKey2, nameof(clientKey2));
+            CheckKey(serverKey1, nameof(serverKey1));
+            CheckKey(serverKey2, nameof(serverKey2));
+
             Direction = direction;
 
             _clientKey1 = clientKey1.ToArray();
@@ -64,12 +79,18 @@ namespace Alkahest.Core.Cryptography
 
         public void Decrypt(byte[] data, int offset, int length)
         {
+            if (data == null)
+                throw new ArgumentNullException(nameof(data));
+
             (Direction == Direction.ClientToServer ?
                 _decryptor : _encryptor).Apply(data, offset, length);
         }
 
         public void Encrypt(byte[] data, int offset, int length)
         {
+            if (data == null)
+                throw new ArgumentNullException(nameof(data));
+
             (Direction == Direction.ClientToServer ?
                 _encryptor : _decryptor).Apply(data, offset, length);
         }

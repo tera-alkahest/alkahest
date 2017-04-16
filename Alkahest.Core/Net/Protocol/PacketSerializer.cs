@@ -25,7 +25,8 @@ namespace Alkahest.Core.Net.Protocol
 
         protected PacketSerializer(MessageTables messages)
         {
-            Messages = messages;
+            Messages = messages ??
+                throw new ArgumentNullException(nameof(messages));
 
             var creators = new Dictionary<ushort, Func<Packet>>();
 
@@ -65,6 +66,9 @@ namespace Alkahest.Core.Net.Protocol
         protected IReadOnlyList<T> GetPacketFields<T>(Type type)
             where T : PacketFieldInfo
         {
+            if (type == null)
+                throw new ArgumentNullException(nameof(type));
+
             return _info.GetOrAdd(type, t =>
             {
                 return (from prop in t.GetProperties(FieldFlags)
@@ -84,6 +88,9 @@ namespace Alkahest.Core.Net.Protocol
 
         public byte[] Serialize(Packet packet)
         {
+            if (packet == null)
+                throw new ArgumentNullException(nameof(packet));
+
             packet.OnSerialize(this);
 
             using (var writer = new TeraBinaryWriter())
@@ -99,6 +106,12 @@ namespace Alkahest.Core.Net.Protocol
 
         public void Deserialize(byte[] payload, Packet packet)
         {
+            if (payload == null)
+                throw new ArgumentNullException(nameof(payload));
+
+            if (packet == null)
+                throw new ArgumentNullException(nameof(packet));
+
             using (var reader = new TeraBinaryReader(payload))
                 OnDeserialize(reader, packet);
 

@@ -30,7 +30,7 @@ namespace Alkahest.Core.Logging
 
         public Log(Type source, string category)
         {
-            Source = source;
+            Source = source ?? throw new ArgumentNullException(nameof(source));
             Category = category;
         }
 
@@ -69,6 +69,12 @@ namespace Alkahest.Core.Logging
 
         void LogMessage(LogLevel level, string format, params object[] args)
         {
+            if (format == null)
+                throw new ArgumentNullException(nameof(format));
+
+            if (args == null)
+                throw new ArgumentNullException(nameof(args));
+
             if (!ShouldLog(level))
                 return;
 
