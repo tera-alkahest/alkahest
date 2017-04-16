@@ -33,8 +33,9 @@ namespace Alkahest.Core.Net.Protocol
                 new AssemblyCatalog(Assembly.GetExecutingAssembly()), true))
                 foreach (var lazy in container.GetExports<Func<Packet>,
                     IPacketMetadata>(PacketAttribute.ThisContractName))
-                    creators.Add(messages.Game.NameToOpCode[lazy.Metadata.OpCode],
-                        lazy.Value);
+                    if (messages.Game.NameToOpCode.ContainsKey(lazy.Metadata.OpCode))
+                        creators.Add(messages.Game.NameToOpCode[lazy.Metadata.OpCode],
+                            lazy.Value);
 
             _packetCreators = creators;
         }
