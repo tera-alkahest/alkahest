@@ -1,5 +1,3 @@
-using Alkahest.Core.Game;
-
 namespace Alkahest.Core.Net.Protocol.Packets
 {
     public sealed class SSkillCategoryPacket : Packet

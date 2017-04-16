@@ -15,7 +15,6 @@ using Alkahest.Core.Net.Protocol;
 using Alkahest.Core.Net.Protocol.Logging;
 using Alkahest.Core.Net.Protocol.Serializers;
 using Alkahest.Parser.Analysis;
-using Alkahest.Core.Net.Protocol.OpCodes;
 
 namespace Alkahest.Parser
 {

@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using Alkahest.Core.IO;
 using Alkahest.Core.Logging;
-using Alkahest.Core.Net.Protocol.Logging;
 
 namespace Alkahest.Core.Net.Protocol
 {
