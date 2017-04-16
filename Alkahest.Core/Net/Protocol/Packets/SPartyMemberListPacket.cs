@@ -45,7 +45,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
             public byte Unknown1 { get; set; }
 
             [PacketField]
-            public uint Unknown2 { get; set; }
+            public LaurelKind Laurel { get; set; }
         }
 
         [PacketField]
