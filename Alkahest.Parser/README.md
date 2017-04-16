@@ -39,9 +39,9 @@ structures will be deserialized (enabled by default).
 The `--backend` option can be given to specify which packet serialization
 backend should be used. `reflection` (default) will use the reflection-based
 backend which has fast startup time but is slower for very large files.
-`compiler` will use the JIT-compiling backend which has slower startup but is
-significantly faster on very large files. Note that the `compiler` backend does
-not include some of the sanity checks that `reflection` does.
+`compiler` will use the runtime-compiling backend which has slower startup but
+is significantly faster on very large files. Note that the `compiler` backend
+does not include some of the sanity checks that `reflection` does.
 
 The `--roundtrips` option specifies how many times packets should be
 deserialized and reserialized during parsing. The default is zero. This option

@@ -55,62 +55,20 @@ namespace Alkahest.Parser
 
         static bool _control;
 
-        static void ShowVersion()
-        {
-            var asmName = Assembly.GetExecutingAssembly().GetName();
-
-            Console.WriteLine("{0} {1}", asmName.Name, asmName.Version);
-        }
-
-        static void ShowHelp(OptionSet set)
-        {
-            var name = Assembly.GetExecutingAssembly().GetName().Name;
-
-            Console.WriteLine("This is {0}, part of the {1} project.",
-                name, nameof(Alkahest));
-            Console.WriteLine();
-            Console.WriteLine("Usage:");
-            Console.WriteLine();
-            Console.WriteLine("  {0} [options...] [--] <file>", name);
-            Console.WriteLine();
-            Console.WriteLine("Options:");
-            Console.WriteLine();
-
-            set.WriteOptionDescriptions(Console.Out);
-
-            Console.WriteLine();
-            Console.WriteLine("Hex dump modes:");
-            Console.WriteLine();
-            Console.WriteLine("  {0}: Don't do hex dumps.",
-                HexDumpMode.None);
-            Console.WriteLine("  {0}: Do hex dumps for packets with unknown structure.",
-                HexDumpMode.Unknown);
-            Console.WriteLine("  {0}: Do hex dumps for all packets.",
-                HexDumpMode.All);
-            Console.WriteLine();
-            Console.WriteLine("Packet serializer backends:");
-            Console.WriteLine();
-            Console.WriteLine("  {0}: Reflection-based serializer (default).",
-                PacketSerializerBackend.Reflection);
-            Console.WriteLine("  {0}: JIT-compiling serializer.",
-                PacketSerializerBackend.Compiler);
-            Console.WriteLine();
-            Console.WriteLine("Analysis modes:");
-            Console.WriteLine();
-            Console.WriteLine("  {0}: Don't perform analysis (default).",
-                AnalysisMode.None);
-            Console.WriteLine("  {0}: Analyze packets with unknown structure.",
-                AnalysisMode.Unknown);
-            Console.WriteLine("  {0}: Analyze all packets.",
-                AnalysisMode.All);
-        }
-
         static bool HandleArguments(ref string[] args)
         {
+            var asm = Assembly.GetExecutingAssembly();
+            var name = asm.GetName().Name;
             var version = false;
             var help = false;
             var set = new OptionSet
             {
+                $"This is {name}, part of the {nameof(Alkahest)} project.",
+                "",
+                "Usage:",
+                "",
+                $"  {name} [options...] [--] <file>",
+                "",
                 "General",
                 {
                     "h|?|help",
@@ -188,20 +146,39 @@ namespace Alkahest.Parser
                     "c|allow-control-chars",
                     "Enable/disable showing strings containing control characters.",
                     c => _control = c != null
-                }
+                },
+                "",
+                "Hex dump modes:",
+                "",
+                $"  {HexDumpMode.None}: Don't do hex dumps.",
+                $"  {HexDumpMode.Unknown}: Do hex dumps for packets with unknown structure.",
+                $"  {HexDumpMode.All}: Do hex dumps for all packets.",
+                "",
+                "Packet serializer backends:",
+                "",
+                $"  {PacketSerializerBackend.Reflection}: Reflection-based serializer (default).",
+                $"  {PacketSerializerBackend.Compiler}: Runtime-compiled serializer (default).",
+                "",
+                "Analysis modes:",
+                "",
+                $"  {AnalysisMode.None}: Don't perform analysis (default).",
+                $"  {AnalysisMode.Unknown}: Analyze packets with unknown structure.",
+                $"  {AnalysisMode.All}: Analyze all packets."
             };
 
             args = set.Parse(args).ToArray();
 
             if (version)
             {
-                ShowVersion();
+                Console.WriteLine("{0} {1}", name,
+                    asm.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                    .InformationalVersion);
                 return false;
             }
 
             if (help)
             {
-                ShowHelp(set);
+                set.WriteOptionDescriptions(Console.Out);
                 return false;
             }
 
