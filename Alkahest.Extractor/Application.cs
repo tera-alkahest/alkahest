@@ -20,7 +20,7 @@ namespace Alkahest.Extractor
 
         static readonly Log _log = new Log(typeof(Application));
 
-        static readonly IList<Command> _commands = new List<Command>
+        static readonly IList<ICommand> _commands = new List<ICommand>
         {
             new DumpJsonCommand(),
             new DumpXmlCommand()

@@ -5,18 +5,18 @@ using Alkahest.Core.Data;
 
 namespace Alkahest.Extractor.Commands
 {
-    sealed class DumpJsonCommand : Command
+    sealed class DumpJsonCommand : ICommand
     {
-        public override string Name { get; } = "dump-json";
+        public string Name { get; } = "dump-json";
 
-        public override string Syntax => $"{Name} <file>";
+        public string Syntax => $"{Name} <file>";
 
-        public override string Description =>
+        public string Description =>
             "Dump data center contents to a specified directory as JSON.";
 
-        public override int RequiredArguments { get; } = 1;
+        public int RequiredArguments { get; } = 1;
 
-        public override void Run(string output, string[] args)
+        public void Run(string output, string[] args)
         {
             if (output == null)
                 output = "Json";

@@ -5,18 +5,18 @@ using Alkahest.Core.Data;
 
 namespace Alkahest.Extractor.Commands
 {
-    sealed class DumpXmlCommand : Command
+    sealed class DumpXmlCommand : ICommand
     {
-        public override string Name { get; } = "dump-xml";
+        public string Name { get; } = "dump-xml";
 
-        public override string Syntax => $"{Name} <file>";
+        public string Syntax => $"{Name} <file>";
 
-        public override string Description =>
+        public string Description =>
             "Dump data center contents to a specified directory as XML.";
 
-        public override int RequiredArguments { get; } = 1;
+        public int RequiredArguments { get; } = 1;
 
-        public override void Run(string output, string[] args)
+        public void Run(string output, string[] args)
         {
             if (output == null)
                 output = "Xml";
