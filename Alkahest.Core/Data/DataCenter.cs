@@ -10,6 +10,8 @@ namespace Alkahest.Core.Data
 {
     public sealed class DataCenter : IDisposable
     {
+        public const int KeySize = 16;
+
         const int Unknown1Size = 8;
 
         const int AttributeSize = 8;
