@@ -6,19 +6,29 @@ using System.Linq;
 
 namespace Alkahest.Core.Data
 {
-    public sealed class DataCenterElement : IEnumerable<DataCenterElement>
+    public sealed class DataCenterElement : IEnumerable<DataCenterElement>,
+        IDisposable
     {
         public DataCenterElement Parent { get; private set; }
 
         public string Name { get; }
 
-        public IReadOnlyList<DataCenterAttribute> Attributes => _attributes.Value;
+        public IReadOnlyList<DataCenterAttribute> Attributes
+        {
+            get
+            {
+                if (_attributes == null)
+                    throw new ObjectDisposedException(GetType().FullName);
+
+                return _attributes.Value;
+            }
+        }
 
         public DataCenterAttribute this[string name] => Attribute(name);
 
-        readonly Lazy<IReadOnlyList<DataCenterAttribute>> _attributes;
+        Lazy<IReadOnlyList<DataCenterAttribute>> _attributes;
 
-        readonly Lazy<IReadOnlyList<DataCenterElement>> _children;
+        Lazy<IReadOnlyList<DataCenterElement>> _children;
 
         internal DataCenterElement(DataCenter center,
             DataCenterAddress address)
@@ -136,8 +146,17 @@ namespace Alkahest.Core.Data
             });
         }
 
+        public void Dispose()
+        {
+            _attributes = null;
+            _children = null;
+        }
+
         public IEnumerator<DataCenterElement> GetEnumerator()
         {
+            if (_children == null)
+                throw new ObjectDisposedException(GetType().FullName);
+
             return _children.Value.GetEnumerator();
         }
 
@@ -166,6 +185,9 @@ namespace Alkahest.Core.Data
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
+
+            if (_children == null)
+                throw new ObjectDisposedException(GetType().FullName);
 
             return this.Where(x => x.Name == name);
         }
