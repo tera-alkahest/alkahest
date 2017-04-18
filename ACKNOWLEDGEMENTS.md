@@ -7,3 +7,10 @@ research done by the developers of the
 
 The encryption code is based on the defunct TERA emulator project; a license
 was not specified for that code.
+
+The data center parsing code is based on the file format knowledge in the
+[TeraDataTools](https://github.com/gothos-folly/TeraDataTools) project.
+
+The scanner application uses search patterns from the
+[TeraScanners](https://github.com/meishuu/TeraScanners) project and
+[Mirrawrs's Tera framework](https://github.com/Mirrawrs/Tera).
