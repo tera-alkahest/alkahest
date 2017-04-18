@@ -64,21 +64,6 @@
       <Project>{4cb2d190-fc09-4d4d-9598-d0cfc0c725db}</Project>
       <Name>Alkahest.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Alkahest.Plugins.PacketLogger\Alkahest.Plugins.PacketLogger.csproj">
-      <Project>{CCB59799-5CB1-4595-B34E-068B12791E46}</Project>
-      <Name>Alkahest.Plugins.PacketLogger</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\Alkahest.Plugins.Python\Alkahest.Plugins.Python.csproj">
-      <Project>{92CD0899-A58E-4196-BD8D-4B96CB12A384}</Project>
-      <Name>Alkahest.Plugins.Python</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\Alkahest.Plugins.SimpleTest\Alkahest.Plugins.SimpleTest.csproj">
-      <Project>{f85463d3-9795-4c7d-a041-3baa652d0bb5}</Project>
-      <Name>Alkahest.Plugins.SimpleTest</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Mono.Options.Signed">
