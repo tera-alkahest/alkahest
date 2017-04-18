@@ -34,6 +34,7 @@
     </Compile>
     <Compile Include="Assert.cs" />
     <Compile Include="Bits.cs" />
+    <Compile Include="Cryptography\PaddingCryptoTransform.cs" />
     <Compile Include="Data\DataCenter.cs" />
     <Compile Include="Data\DataCenterAddress.cs" />
     <Compile Include="Data\DataCenterAttribute.cs" />

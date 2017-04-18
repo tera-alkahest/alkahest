@@ -22,6 +22,7 @@ namespace Alkahest.Extractor
 
         static readonly IList<ICommand> _commands = new List<ICommand>
         {
+            new DecryptCommand(),
             new DumpJsonCommand(),
             new DumpXmlCommand()
         };

@@ -7,14 +7,15 @@ namespace Alkahest.Extractor.Commands
 {
     sealed class DumpXmlCommand : ICommand
     {
-        public string Name { get; } = "dump-xml";
+        public string Name => "dump-xml";
 
-        public string Syntax => $"{Name} <file>";
+        public string Syntax =>
+            $"{Name} <data center file>";
 
         public string Description =>
             "Dump data center contents to a specified directory as XML.";
 
-        public int RequiredArguments { get; } = 1;
+        public int RequiredArguments => 1;
 
         public void Run(string output, string[] args)
         {

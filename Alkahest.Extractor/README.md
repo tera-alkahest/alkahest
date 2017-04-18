@@ -10,10 +10,12 @@ Basic usage is of the form:
 
 Currently, these commands are supported:
 
-* `dump-json <file>`: Dump data center contents to a specified directory as
-  JSON. The default output directory is `Json`.
-* `dump-xml <file>`: Dump data center contents to a specified directory as XML.
-  The default output directory is `Xml`.
+* `decrypt <data center file> <key file> <iv file>`: Decrypt and decompress a
+  data center file. Allows it to be read by other commands.
+* `dump-json <data center file>`: Dump data center contents to a specified
+  directory as JSON. The default output directory is `Json`.
+* `dump-xml <data center file>`: Dump data center contents to a specified
+  directory as XML. The default output directory is `Xml`.
 
 You can specify the output file or directory for a command by giving the
 `--output` option.

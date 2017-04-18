@@ -7,14 +7,15 @@ namespace Alkahest.Extractor.Commands
 {
     sealed class DumpJsonCommand : ICommand
     {
-        public string Name { get; } = "dump-json";
+        public string Name => "dump-json";
 
-        public string Syntax => $"{Name} <file>";
+        public string Syntax =>
+            $"{Name} <data center file>";
 
         public string Description =>
             "Dump data center contents to a specified directory as JSON.";
 
-        public int RequiredArguments { get; } = 1;
+        public int RequiredArguments => 1;
 
         public void Run(string output, string[] args)
         {
