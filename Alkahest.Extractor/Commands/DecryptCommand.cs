@@ -1,4 +1,4 @@
-using System.Globalization;
+using System;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -58,7 +58,7 @@ namespace Alkahest.Extractor.Commands
         static byte[] ReadKey(string path)
         {
             return File.ReadAllLines(path).Single().Split(' ')
-                .Select(x => byte.Parse(x, NumberStyles.HexNumber)).ToArray();
+                .Select(x => Convert.ToByte(x, 16)).ToArray();
         }
     }
 }

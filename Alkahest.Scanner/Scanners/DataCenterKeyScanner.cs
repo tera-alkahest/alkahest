@@ -14,9 +14,8 @@ namespace Alkahest.Scanner.Scanners
             0x57, // push edi
             0x50, // push eax
             0x8D, 0x45, 0xF4, // lea eax, [ebp - 0xC]
-            0x64, 0xA3, 0x00, 0x00, 0x00, 0x00, // mov fs:[0x0], eax
-            0x8B, 0x73, 0x08, // mov esi, [ebx + 0x8]
-            0x8B, 0xCE // mov ecx, esi
+            0x64, 0xA3, 0x00, 0x00, 0x00, 0x00, // mov large fs:0x0, eax
+            0x8B, 0x73, 0x08 // mov esi, [ebx + 0x8]
         };
 
         public void Run(MemoryReader reader, IpcChannel channel)
@@ -29,13 +28,32 @@ namespace Alkahest.Scanner.Scanners
                 return;
             }
 
-            using (var disasm = new Disassembler(reader.ToAbsolute((int)o),
-                reader.Length, ArchitectureMode.x86_32,
+            var off = (int)o + _pattern.Length;
+
+            using (var disasm = new Disassembler(reader.ToAbsolute(off),
+                reader.Length - off, ArchitectureMode.x86_32,
                 (ulong)reader.BaseAddress))
             {
-                channel.DataCenterKey = ReadKey(disasm);
-                channel.DataCenterIV = ReadKey(disasm);
+                var key = ReadKey(disasm);
+                var iv = ReadKey(disasm);
+
+                if (key == null || iv == null)
+                {
+                    channel.LogError("Could not find data center key/IV");
+                    return;
+                }
+
+                channel.LogBasic("Found data center key: {0}", StringizeKey(key));
+                channel.LogBasic("Found data center IV: {0}", StringizeKey(iv));
+
+                channel.DataCenterKey = key;
+                channel.DataCenterIV = iv;
             }
+        }
+
+        static string StringizeKey(byte[] key)
+        {
+            return string.Join(" ", key.Select(x => x.ToString("X2")));
         }
 
         static byte[] ReadKey(Disassembler disassembler)
@@ -47,6 +65,9 @@ namespace Alkahest.Scanner.Scanners
                 while (stream.Position < stream.Capacity)
                 {
                     var insn = disassembler.NextInstruction();
+
+                    if (insn == null)
+                        return null;
 
                     if (insn.Mnemonic == ud_mnemonic_code.UD_Imov &&
                         insn.Operands[0].Base == ud_type.UD_R_EBP)

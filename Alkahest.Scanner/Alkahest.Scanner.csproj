@@ -50,6 +50,7 @@
     <Compile Include="IScanner.cs" />
     <Compile Include="MemoryReader.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Scanners\ClientVersionScanner.cs" />
     <Compile Include="Scanners\GameMessageScanner.cs" />
     <Compile Include="Scanners\DataCenterKeyScanner.cs" />
     <Compile Include="Scanners\SystemMessageScanner.cs" />

@@ -135,16 +135,29 @@ namespace Alkahest.Scanner
 
             Directory.CreateDirectory(_output);
 
+            if (chan.Version1 != null && chan.Version2 != null)
+            {
+                var verPath = Path.Combine(_output, "ver.txt");
+
+                File.WriteAllLines(verPath, new[]
+                {
+                    chan.Version1.ToString(),
+                    chan.Version2.ToString()
+                });
+
+                _log.Basic("Wrote client versions to {0}", verPath);
+            }
+
             if (chan.DataCenterKey != null)
             {
-                var keysPath = Path.Combine(_output, "key.txt");
+                var keyPath = Path.Combine(_output, "key.txt");
 
-                File.WriteAllLines(keysPath, new[]
+                File.WriteAllLines(keyPath, new[]
                 {
                     string.Join(" ", chan.DataCenterKey.Select(x => x.ToString("X2")))
                 });
 
-                _log.Basic("Wrote data center key to {0}", keysPath);
+                _log.Basic("Wrote data center key to {0}", keyPath);
             }
 
             if (chan.DataCenterIV != null)

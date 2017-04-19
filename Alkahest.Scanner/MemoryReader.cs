@@ -22,6 +22,16 @@ namespace Alkahest.Scanner
             return BaseAddress + offset;
         }
 
+        public int ToOffset(IntPtr address)
+        {
+            return address.ToInt32() - BaseAddress.ToInt32();
+        }
+
+        public bool IsValid(int offset)
+        {
+            return offset >= 0 && offset < Length;
+        }
+
         public IEnumerable<int> FindOffset(params byte?[][] patterns)
         {
             bool IsMatch(byte?[] pattern, int offset)
@@ -98,14 +108,9 @@ namespace Alkahest.Scanner
             return *(double*)&value;
         }
 
-        public IntPtr ReadIntPtr(int offset)
+        public int ReadOffset(int offset)
         {
-            return Marshal.ReadIntPtr(ToAbsolute(offset));
-        }
-
-        public unsafe UIntPtr ReadUIntPtr(int offset)
-        {
-            return (UIntPtr)Marshal.ReadIntPtr(ToAbsolute(offset)).ToPointer();
+            return ToOffset(Marshal.ReadIntPtr(ToAbsolute(offset)));
         }
 
         public byte[] ReadBytes(int offset, int count)

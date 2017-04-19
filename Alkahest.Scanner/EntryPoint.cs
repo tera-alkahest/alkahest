@@ -10,6 +10,7 @@ namespace Alkahest.Scanner
     {
         static readonly IEnumerable<IScanner> _scanners = new IScanner[]
         {
+            new ClientVersionScanner(),
             new DataCenterKeyScanner(),
             new GameMessageScanner(),
             new SystemMessageScanner()

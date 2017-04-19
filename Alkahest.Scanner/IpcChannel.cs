@@ -28,6 +28,10 @@ namespace Alkahest.Scanner
 
         readonly ManualResetEventSlim _event = new ManualResetEventSlim();
 
+        public uint? Version1 { get; set; }
+
+        public uint? Version2 { get; set; }
+
         public IReadOnlyList<byte> DataCenterKey { get; set; }
 
         public IReadOnlyList<byte> DataCenterIV { get; set; }
