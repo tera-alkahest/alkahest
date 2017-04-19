@@ -1,5 +1,6 @@
 # ![Alkahest](Alkahest.ico) Alkahest
 
+[![Release](https://img.shields.io/github/release/alexrp/alkahest.svg)](https://github.com/alexrp/alkahest/releases)
 [![NuGet](https://img.shields.io/nuget/v/Alkahest.Core.svg)](https://www.nuget.org/packages/Alkahest.Core)
 [![Build Status](https://ci.appveyor.com/api/projects/status/g4975y955sgosiej?svg=true)](https://ci.appveyor.com/project/alexrp/alkahest)
 [![Discord](https://discordapp.com/api/guilds/302077598593318912/widget.png)](https://discord.gg/5GTr5mw)
