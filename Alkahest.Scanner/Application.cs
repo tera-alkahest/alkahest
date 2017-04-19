@@ -177,7 +177,7 @@ namespace Alkahest.Scanner
                 var opcPath = Path.Combine(_output, "opc.txt");
 
                 File.WriteAllLines(opcPath, chan.GameMessages.Select(
-                    x => $"{x.Value} = {x.Key}").ToArray());
+                    x => $"{x.Item2} = {x.Item1}").ToArray());
 
                 _log.Basic("Wrote opcodes to {0}", opcPath);
             }
@@ -187,7 +187,7 @@ namespace Alkahest.Scanner
                 var smtPath = Path.Combine(_output, "smt.txt");
 
                 File.WriteAllLines(smtPath, chan.SystemMessages.Select(
-                    x => $"{x.Value} = {x.Key}").ToArray());
+                    x => $"{x.Item2} = {x.Item1}").ToArray());
 
                 _log.Basic("Wrote system messages to {0}", smtPath);
             }

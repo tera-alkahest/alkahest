@@ -39,19 +39,19 @@ namespace Alkahest.Scanner.Scanners
             }
 
             var func = reader.GetDelegate<GetMessageNameFunc>((int)o);
-            var dict = new Dictionary<ushort, string>();
+            var list = new List<Tuple<ushort, string>>();
 
             for (ushort i = 0; i < ushort.MaxValue; i++)
             {
                 string s;
 
                 if ((s = Marshal.PtrToStringAnsi(func(i))) != string.Empty)
-                    dict.Add(i, s);
+                    list.Add(Tuple.Create(i, s));
             }
 
-            channel.LogBasic("Found {0} opcodes", dict.Count);
+            channel.LogBasic("Found {0} opcodes", list.Count);
 
-            channel.GameMessages = dict;
+            channel.GameMessages = list;
         }
     }
 }

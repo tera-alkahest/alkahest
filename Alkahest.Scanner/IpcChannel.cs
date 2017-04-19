@@ -36,9 +36,9 @@ namespace Alkahest.Scanner
 
         public IReadOnlyList<byte> DataCenterIV { get; set; }
 
-        public IReadOnlyDictionary<ushort, string> GameMessages { get; set; }
+        public IReadOnlyList<Tuple<ushort, string>> GameMessages { get; set; }
 
-        public IReadOnlyDictionary<ushort, string> SystemMessages { get; set; }
+        public IReadOnlyList<Tuple<ushort, string>> SystemMessages { get; set; }
 
         public void LogBasic(string format, params object[] args)
         {

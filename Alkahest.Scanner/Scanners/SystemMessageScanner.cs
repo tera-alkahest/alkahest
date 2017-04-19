@@ -32,14 +32,14 @@ namespace Alkahest.Scanner.Scanners
             var count = reader.ReadUInt32((int)o +
                 _pattern.TakeWhile(x => x != null).Count());
             var func = reader.GetDelegate<GetMessageNameFunc>((int)o);
-            var dict = new Dictionary<ushort, string>();
+            var list = new List<Tuple<ushort, string>>();
 
             for (ushort i = 0; i < count; i++)
-                dict.Add(i, Marshal.PtrToStringUni(func(i)));
+                list.Add(Tuple.Create(i, Marshal.PtrToStringUni(func(i))));
 
-            channel.LogBasic("Found {0} system messages", dict.Count);
+            channel.LogBasic("Found {0} system messages", list.Count);
 
-            channel.SystemMessages = dict;
+            channel.SystemMessages = list;
         }
     }
 }
