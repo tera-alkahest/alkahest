@@ -12,5 +12,6 @@ The data center parsing code is based on the file format knowledge in the
 [TeraDataTools](https://github.com/gothos-folly/TeraDataTools) project.
 
 The scanner application uses search patterns from the
-[TeraScanners](https://github.com/meishuu/TeraScanners) project and
-[Mirrawrs's Tera framework](https://github.com/Mirrawrs/Tera).
+[TeraScanners](https://github.com/meishuu/TeraScanners) project,
+[Mirrawrs's Tera framework](https://github.com/Mirrawrs/Tera), and
+[Gl0's DLL](https://github.com/neowutran/TeraDpsMeterData/blob/master/copypaste-tuto/Gl0-dll.txt).
