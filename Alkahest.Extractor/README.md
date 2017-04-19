@@ -17,6 +17,8 @@ Currently, these commands are supported:
 * `dump-xml <data center file>`: Dump data center contents to a specified
   directory as XML. The default output directory is `Xml`.
 
+Note that the dump commands will create over 20,000 files.
+
 You can specify the output file or directory for a command by giving the
 `--output` option.
 

@@ -2,11 +2,14 @@ using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using Alkahest.Core.Data;
+using Alkahest.Core.Logging;
 
 namespace Alkahest.Extractor.Commands
 {
     sealed class DumpJsonCommand : ICommand
     {
+        static readonly Log _log = new Log(typeof(DumpJsonCommand));
+
         public string Name => "dump-json";
 
         public string Syntax =>
@@ -22,9 +25,13 @@ namespace Alkahest.Extractor.Commands
             if (output == null)
                 output = "Json";
 
+            var input = args[0];
+
+            _log.Basic("Dumping {0} as JSON...", input);
+
             Directory.CreateDirectory(output);
 
-            using (var dc = new DataCenter(args[0]))
+            using (var dc = new DataCenter(input))
             {
                 foreach (var grp in dc.Root.GroupBy(x => x.Name))
                 {
@@ -52,6 +59,8 @@ namespace Alkahest.Extractor.Commands
                     }
                 }
             }
+
+            _log.Basic("Dumped JSON files to directory {0}", output);
         }
 
         static void WriteElement(JsonWriter writer, DataCenterElement element)

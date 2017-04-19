@@ -2,11 +2,14 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using Alkahest.Core.Data;
+using Alkahest.Core.Logging;
 
 namespace Alkahest.Extractor.Commands
 {
     sealed class DumpXmlCommand : ICommand
     {
+        static readonly Log _log = new Log(typeof(DumpXmlCommand));
+
         public string Name => "dump-xml";
 
         public string Syntax =>
@@ -22,9 +25,13 @@ namespace Alkahest.Extractor.Commands
             if (output == null)
                 output = "Xml";
 
+            var input = args[0];
+
+            _log.Basic("Dumping {0} as XML...", input);
+
             Directory.CreateDirectory(output);
 
-            using (var dc = new DataCenter(args[0]))
+            using (var dc = new DataCenter(input))
             {
                 foreach (var grp in dc.Root.GroupBy(x => x.Name))
                 {
@@ -52,6 +59,8 @@ namespace Alkahest.Extractor.Commands
                     }
                 }
             }
+
+            _log.Basic("Dumped XML files to directory {0}", output);
         }
 
         static void WriteElement(XmlWriter writer, DataCenterElement element)

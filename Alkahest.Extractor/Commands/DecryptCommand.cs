@@ -5,11 +5,14 @@ using System.Linq;
 using System.Security.Cryptography;
 using Alkahest.Core.Cryptography;
 using Alkahest.Core.IO;
+using Alkahest.Core.Logging;
 
 namespace Alkahest.Extractor.Commands
 {
     sealed class DecryptCommand : ICommand
     {
+        static readonly Log _log = new Log(typeof(DecryptCommand));
+
         public string Name => "decrypt";
 
         public string Syntax =>
@@ -26,6 +29,8 @@ namespace Alkahest.Extractor.Commands
 
             if (output == null)
                 output = Path.ChangeExtension(input, "dec");
+
+            _log.Basic("Decrypting {0}...", input);
 
             var aes = new RijndaelManaged
             {
@@ -53,6 +58,8 @@ namespace Alkahest.Extractor.Commands
                         FileMode.Create, FileAccess.Write))
                         stream2.CopyTo(stream3);
             }
+
+            _log.Basic("Decrypted data center to {0}", output);
         }
 
         static byte[] ReadKey(string path)
