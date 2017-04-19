@@ -64,8 +64,8 @@ The most important configuration values you'll need to change are:
 * `disablePlugins`: Remove any core plugins from this list that you want to
   use. You can also add plugins here that you want to temporarily disable, such
   as the `packet-logger` plugin which is only useful to developers.
-* `region`: Set this to `eu`, `jp`, `kr`, `na`, `ru`, or `tw` depending on
-  which region you're playing in.
+* `region`: Set this to `eu`, `jp`, `kr`, `na`, `ru`, or `tw`, or if you're
+  playing in EU, `de`, `fr`, or `uk`.
 
 There are many other configuration values that you can play with, but you don't
 need to change them if all you want is to use Alkahest for a single TERA client

@@ -5,8 +5,11 @@ namespace Alkahest.Core.Net
 {
     public sealed class ServerListParameters
     {
-        static readonly Uri _eu = new Uri(
-            "http://web-sls.tera.gameforge.com:4566/servers/list.uk");
+        static readonly Uri _de = new Uri(
+            "http://web-sls.tera.gameforge.com:4566/servers/list.de");
+
+        static readonly Uri _fr = new Uri(
+            "http://web-sls.tera.gameforge.com:4566/servers/list.fr");
 
         static readonly Uri _jp = new Uri(
             "http://tera.pmang.jp:80/game_launcher/server_list.xml");
@@ -22,6 +25,9 @@ namespace Alkahest.Core.Net
 
         static readonly Uri _tw = new Uri(
             "http://tera.mangot5.com:80/game/tera/serverList.xml");
+
+        static readonly Uri _uk = new Uri(
+            "http://web-sls.tera.gameforge.com:4566/servers/list.uk");
 
         public IPAddress RealServerListAddress { get; }
 
@@ -73,8 +79,10 @@ namespace Alkahest.Core.Net
 
             switch (region)
             {
-                case Region.EU:
-                    return _eu;
+                case Region.DE:
+                    return _de;
+                case Region.FR:
+                    return _fr;
                 case Region.JP:
                     return _jp;
                 case Region.KR:
@@ -85,6 +93,8 @@ namespace Alkahest.Core.Net
                     return _ru;
                 case Region.TW:
                     return _tw;
+                case Region.UK:
+                    return _uk;
                 default:
                     throw Assert.Unreachable();
             }
