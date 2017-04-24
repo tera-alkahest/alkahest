@@ -136,7 +136,13 @@ namespace Alkahest.Core.Net
             {
                 HttpResponseMessage resp;
 
-                using (var client = new HttpClient())
+                var handler = new HttpClientHandler
+                {
+                    AllowAutoRedirect = false,
+                    UseCookies = false
+                };
+
+                using (var client = new HttpClient(handler))
                 {
                     client.Timeout = _parameters.Timeout;
 
@@ -156,6 +162,9 @@ namespace Alkahest.Core.Net
 
                         foreach (var hdr in request.Headers)
                             req.Headers.Add(hdr.Key, hdr.Value);
+
+                        foreach (var cookie in request.Headers.GetCookies())
+                            req.Headers.Add("Cookie", cookie.ToString());
 
                         req.Headers.Host = _parameters.Uri.Authority;
 
