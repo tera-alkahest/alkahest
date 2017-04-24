@@ -106,6 +106,12 @@ namespace Alkahest.Core.IO
             _writer.Write(char.MinValue);
         }
 
+        public void WriteVector2(Vector2 value)
+        {
+            _writer.Write(value.X);
+            _writer.Write(value.Y);
+        }
+
         public void WriteVector3(Vector3 value)
         {
             _writer.Write(value.X);

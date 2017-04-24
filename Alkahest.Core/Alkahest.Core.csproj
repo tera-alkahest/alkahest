@@ -105,6 +105,7 @@
     <Compile Include="Net\Protocol\Packets\CLoginArbiterPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CNotifyLocationInActionPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CNotifyLocationInDashPacket.cs" />
+    <Compile Include="Net\Protocol\Packets\CNoTimelineSkillPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CPartyMarkerPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CPCBangInventoryUseSlotPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CPlayerFlyingLocationPacket.cs" />
@@ -132,6 +133,7 @@
     <Compile Include="Net\Protocol\PacketHandler.cs" />
     <Compile Include="Net\Protocol\Packets\CChatPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CStartComboInstantSkill.cs" />
+    <Compile Include="Net\Protocol\Packets\CStartInstanceSkillExPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CStartInstanceSkillPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CStartSkillPacket.cs" />
     <Compile Include="Net\Protocol\Packets\CStartTargetedSkillPacket.cs" />
