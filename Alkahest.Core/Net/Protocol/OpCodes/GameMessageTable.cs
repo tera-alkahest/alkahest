@@ -2,7 +2,7 @@ namespace Alkahest.Core.Net.Protocol.OpCodes
 {
     public sealed class GameMessageTable : OpCodeTable
     {
-        public GameMessageTable(int version)
+        public GameMessageTable(uint version)
             : base(true, version)
         {
         }

@@ -1,15 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Alkahest.Core.Net.Protocol.Logging
 {
     public sealed class PacketLogEntry
     {
         public static IReadOnlyList<byte> Magic { get; } =
-            new[] { 'A', 'T', 'P', 'L' }.Select(x => (byte)x).ToArray();
+            Encoding.ASCII.GetBytes("TPPL");
 
-        public static int Version { get; } = 0;
+        public static uint Version { get; } = 0;
 
         public DateTime Timestamp { get; }
 

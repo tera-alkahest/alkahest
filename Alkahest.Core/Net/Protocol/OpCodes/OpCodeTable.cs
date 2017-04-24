@@ -8,14 +8,14 @@ namespace Alkahest.Core.Net.Protocol.OpCodes
 {
     public abstract class OpCodeTable
     {
-        public int Version { get; }
+        public uint Version { get; }
 
         public IReadOnlyDictionary<ushort, string> OpCodeToName { get; }
 
         public IReadOnlyDictionary<string, ushort> NameToOpCode { get; }
 
-        public static IReadOnlyDictionary<Region, int> Versions { get; } =
-            new Dictionary<Region, int>
+        public static IReadOnlyDictionary<Region, uint> Versions { get; } =
+            new Dictionary<Region, uint>
             {
                 { Region.DE, 311383 },
                 { Region.FR, 311383 },
@@ -27,7 +27,7 @@ namespace Alkahest.Core.Net.Protocol.OpCodes
                 { Region.UK, 311383 }
             };
 
-        internal OpCodeTable(bool opCodes, int version)
+        internal OpCodeTable(bool opCodes, uint version)
         {
             if (!Versions.Values.Contains(version))
                 throw new ArgumentOutOfRangeException(nameof(version));

@@ -13,7 +13,7 @@ namespace Alkahest.Core.Net.Protocol.Logging
     {
         public bool Compressed { get; }
 
-        public int Version { get; }
+        public uint Version { get; } = PacketLogEntry.Version;
 
         public MessageTables Messages { get; }
 
@@ -37,7 +37,6 @@ namespace Alkahest.Core.Net.Protocol.Logging
                 throw new ArgumentNullException(nameof(fileNameFormat));
 
             Compressed = compress;
-            Version = PacketLogEntry.Version;
             Messages = messages ??
                 throw new ArgumentNullException(nameof(messages));
             Servers = servers.ToDictionary(x => x.Id);
@@ -51,16 +50,16 @@ namespace Alkahest.Core.Net.Protocol.Logging
             var magic = PacketLogEntry.Magic.ToArray();
 
             stream.Write(magic, 0, magic.Length);
-            stream.WriteByte((byte)(compress ? 1 : 0));
+            stream.WriteByte((byte)(compress ? 6 : 0));
 
             if (compress)
                 stream = new DeflateStream(stream, CompressionLevel.Optimal);
 
             _writer = new TeraBinaryWriter(stream);
-            _writer.WriteInt32(Version);
+            _writer.WriteUInt32(Version);
             _writer.WriteByte((byte)messages.Region);
-            _writer.WriteInt32(messages.Game.Version);
-            _writer.WriteInt32(servers.Length);
+            _writer.WriteUInt32(messages.Game.Version);
+            _writer.WriteUInt32((uint)servers.Length);
 
             foreach (var server in servers)
             {
@@ -69,9 +68,9 @@ namespace Alkahest.Core.Net.Protocol.Logging
                 _writer.WriteBoolean(server.RealEndPoint.AddressFamily ==
                     AddressFamily.InterNetworkV6);
                 _writer.WriteBytes(server.RealEndPoint.Address.GetAddressBytes());
-                _writer.WriteInt32(server.RealEndPoint.Port);
+                _writer.WriteUInt16((ushort)server.RealEndPoint.Port);
                 _writer.WriteBytes(server.ProxyEndPoint.Address.GetAddressBytes());
-                _writer.WriteInt32(server.ProxyEndPoint.Port);
+                _writer.WriteUInt16((ushort)server.ProxyEndPoint.Port);
             }
         }
 

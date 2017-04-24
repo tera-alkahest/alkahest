@@ -13,7 +13,7 @@ namespace Alkahest.Core.Net.Protocol.Logging
     {
         public bool Compressed { get; }
 
-        public int Version { get; }
+        public uint Version { get; }
 
         public MessageTables Messages { get; }
 
@@ -41,7 +41,7 @@ namespace Alkahest.Core.Net.Protocol.Logging
                 stream = new DeflateStream(stream, CompressionMode.Decompress);
 
             _reader = new TeraBinaryReader(stream);
-            Version = _reader.ReadInt32();
+            Version = _reader.ReadUInt32();
 
             if (Version != PacketLogEntry.Version)
                 throw new InvalidDataException();
@@ -51,14 +51,14 @@ namespace Alkahest.Core.Net.Protocol.Logging
             if (!Enum.IsDefined(typeof(Region), region))
                 throw new InvalidDataException();
 
-            var clientVersion = _reader.ReadInt32();
+            var clientVersion = _reader.ReadUInt32();
 
             if (!OpCodeTable.Versions.Values.Contains(clientVersion))
                 throw new InvalidDataException();
 
             Messages = new MessageTables(region, clientVersion);
 
-            var serverCount = _reader.ReadInt32();
+            var serverCount = (int)_reader.ReadUInt32();
 
             if (serverCount < 0)
                 throw new InvalidDataException();
@@ -75,9 +75,9 @@ namespace Alkahest.Core.Net.Protocol.Logging
                 var name = _reader.ReadString();
                 var size = _reader.ReadBoolean() ? 16 : 4;
                 var realIPBytes = _reader.ReadBytes(size);
-                var realPort = _reader.ReadInt32();
+                var realPort = _reader.ReadUInt16();
                 var proxyIPBytes = _reader.ReadBytes(size);
-                var proxyPort = _reader.ReadInt32();
+                var proxyPort = _reader.ReadUInt16();
 
                 IPEndPoint realEP;
                 IPEndPoint proxyEP;

@@ -8,7 +8,7 @@ namespace Alkahest.Core.Net.Protocol.OpCodes
 
         public SystemMessageTable System { get; }
 
-        public MessageTables(Region region, int version)
+        public MessageTables(Region region, uint version)
         {
             region.CheckValidity(nameof(region));
 
