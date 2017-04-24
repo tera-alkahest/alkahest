@@ -4,6 +4,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net.Sockets;
+using Alkahest.Core.IO;
 using Alkahest.Core.Net.Protocol.OpCodes;
 
 namespace Alkahest.Core.Net.Protocol.Logging
@@ -18,7 +19,7 @@ namespace Alkahest.Core.Net.Protocol.Logging
 
         public IReadOnlyDictionary<int, ServerInfo> Servers { get; }
 
-        readonly BinaryWriter _writer;
+        readonly TeraBinaryWriter _writer;
 
         bool _disposed;
 
@@ -55,22 +56,22 @@ namespace Alkahest.Core.Net.Protocol.Logging
             if (compress)
                 stream = new DeflateStream(stream, CompressionLevel.Optimal);
 
-            _writer = new BinaryWriter(stream);
-            _writer.Write(Version);
-            _writer.Write((byte)messages.Region);
-            _writer.Write(messages.Game.Version);
-            _writer.Write(servers.Length);
+            _writer = new TeraBinaryWriter(stream);
+            _writer.WriteInt32(Version);
+            _writer.WriteByte((byte)messages.Region);
+            _writer.WriteInt32(messages.Game.Version);
+            _writer.WriteInt32(servers.Length);
 
             foreach (var server in servers)
             {
-                _writer.Write(server.Id);
-                _writer.Write(server.Name);
-                _writer.Write(server.RealEndPoint.AddressFamily ==
+                _writer.WriteInt32(server.Id);
+                _writer.WriteString(server.Name);
+                _writer.WriteBoolean(server.RealEndPoint.AddressFamily ==
                     AddressFamily.InterNetworkV6);
-                _writer.Write(server.RealEndPoint.Address.GetAddressBytes());
-                _writer.Write((ushort)server.RealEndPoint.Port);
-                _writer.Write(server.ProxyEndPoint.Address.GetAddressBytes());
-                _writer.Write((ushort)server.ProxyEndPoint.Port);
+                _writer.WriteBytes(server.RealEndPoint.Address.GetAddressBytes());
+                _writer.WriteInt32(server.RealEndPoint.Port);
+                _writer.WriteBytes(server.ProxyEndPoint.Address.GetAddressBytes());
+                _writer.WriteInt32(server.ProxyEndPoint.Port);
             }
         }
 
@@ -106,12 +107,13 @@ namespace Alkahest.Core.Net.Protocol.Logging
             if (_disposed)
                 throw new ObjectDisposedException(GetType().FullName);
 
-            _writer.Write(entry.Timestamp.ToUniversalTime().ToBinary());
-            _writer.Write(entry.ServerId);
-            _writer.Write((byte)entry.Direction);
-            _writer.Write(entry.OpCode);
-            _writer.Write((ushort)entry.Payload.Count);
-            _writer.Write(entry.Payload.ToArray());
+            _writer.WriteInt64(new DateTimeOffset(entry.Timestamp)
+                .ToUnixTimeMilliseconds());
+            _writer.WriteInt32(entry.ServerId);
+            _writer.WriteByte((byte)entry.Direction);
+            _writer.WriteUInt16(entry.OpCode);
+            _writer.WriteUInt16((ushort)entry.Payload.Count);
+            _writer.WriteBytes(entry.Payload.ToArray());
         }
     }
 }

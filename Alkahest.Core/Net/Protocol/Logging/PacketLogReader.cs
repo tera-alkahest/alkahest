@@ -19,7 +19,7 @@ namespace Alkahest.Core.Net.Protocol.Logging
 
         public IReadOnlyDictionary<int, ServerInfo> Servers { get; }
 
-        readonly BinaryReader _reader;
+        readonly TeraBinaryReader _reader;
 
         bool _disposed;
 
@@ -40,7 +40,7 @@ namespace Alkahest.Core.Net.Protocol.Logging
             if (Compressed)
                 stream = new DeflateStream(stream, CompressionMode.Decompress);
 
-            _reader = new BinaryReader(stream);
+            _reader = new TeraBinaryReader(stream);
             Version = _reader.ReadInt32();
 
             if (Version != PacketLogEntry.Version)
@@ -74,26 +74,25 @@ namespace Alkahest.Core.Net.Protocol.Logging
 
                 var name = _reader.ReadString();
                 var size = _reader.ReadBoolean() ? 16 : 4;
-                var realIPBytes = _reader.ReadBytesFull(size);
-                var realPort = _reader.ReadUInt16();
-                var proxyIPBytes = _reader.ReadBytesFull(size);
-                var proxyPort = _reader.ReadUInt16();
+                var realIPBytes = _reader.ReadBytes(size);
+                var realPort = _reader.ReadInt32();
+                var proxyIPBytes = _reader.ReadBytes(size);
+                var proxyPort = _reader.ReadInt32();
 
-                IPAddress realIP;
-                IPAddress proxyIP;
+                IPEndPoint realEP;
+                IPEndPoint proxyEP;
 
                 try
                 {
-                    realIP = new IPAddress(realIPBytes);
-                    proxyIP = new IPAddress(proxyIPBytes);
+                    realEP = new IPEndPoint(new IPAddress(realIPBytes), realPort);
+                    proxyEP = new IPEndPoint(new IPAddress(proxyIPBytes), proxyPort);
                 }
                 catch (ArgumentException)
                 {
                     throw new InvalidDataException();
                 }
 
-                servers.Add(id, new ServerInfo(id, name, new IPEndPoint(realIP,
-                    realPort), new IPEndPoint(proxyIP, proxyPort)));
+                servers.Add(id, new ServerInfo(id, name, realEP, proxyEP));
             }
 
             Servers = servers;
@@ -128,9 +127,10 @@ namespace Alkahest.Core.Net.Protocol.Logging
 
                 try
                 {
-                    stamp = DateTime.FromBinary(_reader.ReadInt64()).ToLocalTime();
+                    stamp = DateTimeOffset.FromUnixTimeMilliseconds(
+                        _reader.ReadInt64()).LocalDateTime;
                 }
-                catch (ArgumentException)
+                catch (ArgumentOutOfRangeException)
                 {
                     throw new InvalidDataException();
                 }
@@ -151,7 +151,7 @@ namespace Alkahest.Core.Net.Protocol.Logging
                     throw new InvalidDataException();
 
                 var length = _reader.ReadUInt16();
-                var payload = _reader.ReadBytesFull(length);
+                var payload = _reader.ReadBytes(length);
 
                 return new PacketLogEntry(stamp, id, direction, opCode, payload);
             }
