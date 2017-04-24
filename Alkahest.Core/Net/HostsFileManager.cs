@@ -6,7 +6,7 @@ using System.Net;
 using Microsoft.Win32;
 using Alkahest.Core.Logging;
 
-namespace Alkahest.Core
+namespace Alkahest.Core.Net
 {
     public sealed class HostsFileManager : IDisposable
     {

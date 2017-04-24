@@ -256,7 +256,7 @@
     <Compile Include="Cryptography\TeraEncryption.cs" />
     <Compile Include="Direction.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="HostsFileManager.cs" />
+    <Compile Include="Net\HostsFileManager.cs" />
     <Compile Include="IO\TeraBinaryReader.cs" />
     <Compile Include="IO\TeraBinaryWriter.cs" />
     <Compile Include="Logging\ILogger.cs" />
