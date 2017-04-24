@@ -17,12 +17,16 @@ This project was started out of a need to have a program similar to
 [tera-proxy](https://github.com/meishuu/tera-proxy), but written in a .NET
 language so that it could easily use the Windows Presentation Foundation
 libraries for the purpose of making a UI overlay for the game. It has since
-grown to be a more general-purpose framework for TERA modding.
+grown to be a more general-purpose framework for TERA modding, featuring tools
+and APIs for accessing data stored with the game client.
 
 ## Features
 
 * **.NET plugins:** Plugins can be written in any .NET language, including C#,
   F#, Nemerle, etc.
+* **Client analysis tools:** Data mining tools allow extraction of opcodes,
+  system messages, and data center keys, as well as decryption of the client's
+  data center files.
 * **Complete region support:** All TERA regions are supported: EU, JP, KR, NA,
   RU, and TW.
 * **Fast packet serialization**: Specialized serialization functions are
