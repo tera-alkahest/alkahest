@@ -116,7 +116,12 @@ namespace Alkahest.Server
 
             _log.Basic("Starting {0}...", Name);
 
-            using (var hosts = Configuration.AdjustHostsFile ? new HostsFileManager() : null)
+            var hosts = Configuration.AdjustHostsFile ?
+                new HostsFileManager() : null;
+            var shell = Configuration.AdjustNetworkShell ?
+                new NetworkShellManager() : null;
+
+            try
             {
                 var region = Configuration.Region;
                 var slsHost = ServerListParameters.GetUri(region).Host;
@@ -127,6 +132,12 @@ namespace Alkahest.Server
                 var real = Dns.GetHostEntry(slsHost).AddressList[0];
 
                 hosts?.AddEntry(slsHost, slsAddress);
+
+                var slsHttps = new IPEndPoint(slsAddress, 443);
+                var realHttps = new IPEndPoint(real, slsHttps.Port);
+
+                shell?.RemovePortProxy(slsHttps, realHttps);
+                shell?.AddPortProxy(slsHttps, realHttps);
 
                 var slsPort = Configuration.ServerListPort;
                 var slsParams = new ServerListParameters(real,
@@ -165,6 +176,11 @@ namespace Alkahest.Server
                     foreach (var proxy in proxies)
                         proxy.Dispose();
                 }
+            }
+            finally
+            {
+                hosts?.Dispose();
+                shell?.Dispose();
             }
 
             _exitEvent.Set();

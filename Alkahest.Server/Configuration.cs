@@ -63,6 +63,8 @@ namespace Alkahest.Server
 
         public static bool AdjustHostsFile { get; }
 
+        public static bool AdjustNetworkShell { get; }
+
         static Configuration()
         {
             var cfg = ConfigurationManager.AppSettings;
@@ -94,6 +96,7 @@ namespace Alkahest.Server
             GameTimeout = TimeSpan.FromMinutes(int.Parse(cfg["gameTimeout"]));
             PoolLimit = int.Parse(cfg["poolLimit"]);
             AdjustHostsFile = bool.Parse(cfg["adjustHostsFile"]);
+            AdjustNetworkShell = bool.Parse(cfg["adjustNetworkShell"]);
         }
 
         static string[] Split(string value, char separator)
