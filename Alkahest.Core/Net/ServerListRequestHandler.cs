@@ -163,9 +163,6 @@ namespace Alkahest.Core.Net
                         foreach (var hdr in request.Headers)
                             req.Headers.Add(hdr.Key, hdr.Value);
 
-                        foreach (var cookie in request.Headers.GetCookies())
-                            req.Headers.Add("Cookie", cookie.ToString());
-
                         req.Headers.Host = _parameters.Uri.Authority;
 
                         var content = request.Content.ReadAsByteArrayAsync().Result;
