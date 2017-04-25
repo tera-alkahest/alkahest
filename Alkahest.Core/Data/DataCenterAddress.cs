@@ -31,8 +31,8 @@ namespace Alkahest.Core.Data
 
         public override int GetHashCode()
         {
-            return (SegmentIndex | Bits.Insert(0, ElementIndex, 16, 31))
-                .GetHashCode();
+            return Bits.Compose(((uint)SegmentIndex, 0, 16),
+                (ElementIndex, 16, 16)).GetHashCode();
         }
     }
 }

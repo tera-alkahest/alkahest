@@ -21,7 +21,8 @@ namespace Alkahest.Core.Game
 
         public static EntityId FromValues(uint id, EntityFlags flags)
         {
-            return new EntityId(id | Bits.Insert(0UL, (ulong)flags, 32, 63));
+            return new EntityId(Bits.Compose((id, 0, 32),
+                ((ulong)flags, 32, 32)));
         }
 
         public bool Equals(EntityId other)

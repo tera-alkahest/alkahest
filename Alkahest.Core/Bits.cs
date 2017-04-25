@@ -1,3 +1,5 @@
+using System.Linq;
+
 namespace Alkahest.Core
 {
     public static class Bits
@@ -128,6 +130,30 @@ namespace Alkahest.Core
         public static bool Check(ulong value, int bit)
         {
             return (value & 1UL << bit) != 0;
+        }
+
+        public static int Compose(params (int value, int start, int count)[] values)
+        {
+            return values.Aggregate(0, (acc, x) =>
+                Insert(acc, x.value, x.start, x.count));
+        }
+
+        public static uint Compose(params (uint value, int start, int count)[] values)
+        {
+            return values.Aggregate(0U, (acc, x) =>
+                Insert(acc, x.value, x.start, x.count));
+        }
+
+        public static long Compose(params (long value, int start, int count)[] values)
+        {
+            return values.Aggregate(0L, (acc, x) =>
+                Insert(acc, x.value, x.start, x.count));
+        }
+
+        public static ulong Compose(params (ulong value, int start, int count)[] values)
+        {
+            return values.Aggregate(0UL, (acc, x) =>
+                Insert(acc, x.value, x.start, x.count));
         }
     }
 }
