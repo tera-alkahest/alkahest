@@ -10,6 +10,8 @@ namespace Alkahest.Core.Game
 
         public readonly uint Raw;
 
+        public bool IsZero => this == Zero;
+
         public uint Skill => Raw - LocalSkillBase;
 
         public uint Group => Skill / 10000;

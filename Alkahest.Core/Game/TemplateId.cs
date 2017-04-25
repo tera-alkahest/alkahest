@@ -8,6 +8,8 @@ namespace Alkahest.Core.Game
 
         public readonly uint Raw;
 
+        public bool IsZero => this == Zero;
+
         public Race Race => (Race)((Raw - 100) / 200 % 50);
 
         public Gender Gender => (Gender)(Raw / 100 % 2 + 1);
