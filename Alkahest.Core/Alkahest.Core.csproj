@@ -197,6 +197,7 @@
     <Compile Include="Net\Protocol\Packets\SLogOutPartyMemberPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SMountVehiclePacket.cs" />
     <Compile Include="Net\Protocol\Packets\SNpcLocationPacket.cs" />
+	<Compile Include="Net\Protocol\Packets\SNpcMenuSelectPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SNpcStatusPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SNpcTargetUserPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SPartyInfoPacket.cs" />
