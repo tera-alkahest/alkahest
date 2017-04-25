@@ -252,7 +252,7 @@
     <Compile Include="Plugins\IPlugin.cs" />
     <Compile Include="Plugins\PluginException.cs" />
     <Compile Include="Plugins\PluginLoader.cs" />
-    <Compile Include="Cryptography\TeraEncryptionHash.cs" />
+    <Compile Include="Cryptography\SHA1Tera.cs" />
     <Compile Include="Cryptography\TeraEncryptionSession.cs" />
     <Compile Include="Cryptography\TeraEncryption.cs" />
     <Compile Include="Direction.cs" />

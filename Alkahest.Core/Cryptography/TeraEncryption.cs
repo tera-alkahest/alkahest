@@ -5,144 +5,104 @@ namespace Alkahest.Core.Cryptography
 {
     sealed class TeraEncryption
     {
-        sealed class TeraEncryptionKey
+        sealed class KeyBlockGenerator
         {
-            public int Size { get; set; }
+            public int Size { get; }
 
-            public uint[] Buffer { get; }
+            public uint Value { get; private set; }
 
-            public int Key { get; set; }
+            public bool InOverflow { get; private set; }
 
-            public int Position1 { get; set; }
+            readonly uint[] _key;
 
-            public int Position2 { get; set; }
+            int _positionA;
 
-            public uint Sum { get; set; }
+            int _positionB;
 
-            public TeraEncryptionKey(int size, int position2)
+            public KeyBlockGenerator(int size, int positionB)
             {
                 Size = size;
-                Buffer = new uint[size * sizeof(uint)];
-                Position2 = position2;
+                _key = new uint[size];
+                _positionB = positionB;
+            }
+
+            public void SetKey(byte[] buffer, int offset)
+            {
+                Buffer.BlockCopy(buffer, offset * sizeof(uint),
+                    _key, 0, Size * sizeof(uint));
+            }
+
+            public void Advance()
+            {
+                var a = _key[_positionA++ % Size];
+                var b = _key[_positionB++ % Size];
+
+                Value = a + b;
+                InOverflow = Math.Min(a, b) > Value;
             }
         }
 
-        readonly TeraEncryptionKey[] _keys = new[]
+        readonly KeyBlockGenerator[] _generators = new[]
         {
-            new TeraEncryptionKey(55, 31),
-            new TeraEncryptionKey(57, 50),
-            new TeraEncryptionKey(58, 39)
+            new KeyBlockGenerator(55, 31),
+            new KeyBlockGenerator(57, 50),
+            new KeyBlockGenerator(58, 39)
         };
 
-        int _changeData;
+        uint _keyBlock;
 
-        int _changeLength;
+        byte _remaining;
 
         public TeraEncryption(byte[] key)
         {
-            GenerateKey(key);
-        }
+            var buf = new byte[_generators.Aggregate(0,
+                (acc, x) => acc + x.Size) * sizeof(uint)];
 
-        void GenerateKey(byte[] key)
-        {
-            // FIXME: Use BinaryReader instead of BitConverter here.
-
-            var buf = new byte[_keys.Aggregate(0, (acc, x) => acc + x.Size) * sizeof(uint)];
-
-            buf[0] = 128;
+            buf[0] = (byte)key.Length;
 
             for (var i = 1; i < buf.Length; i++)
-                buf[i] = key[i % 128];
+                buf[i] = key[i % key.Length];
 
-            for (var i = 0; i < buf.Length; i += TeraEncryptionHash.HashSize)
+            using (var sha = new SHA1Tera())
             {
-                var sha = TeraEncryptionHash.ComputeHash(buf);
+                for (var i = 0; i < buf.Length; i += sha.HashSize / 8)
+                {
+                    var hash = sha.ComputeHash(buf);
 
-                for (var j = 0; j < sha.Length; j++)
-                    Buffer.BlockCopy(BitConverter.GetBytes(sha[j]), 0,
-                        buf, i + j * sizeof(uint), sizeof(uint));
+                    Buffer.BlockCopy(hash, 0, buf, i, hash.Length);
+                }
             }
 
-            // TODO: What's the deal with the magic indices into buf?
+            var offset = 0;
 
-            for (var i = 0; i < _keys[0].Buffer.Length; i += sizeof(uint))
-                _keys[0].Buffer[i / sizeof(uint)] =
-                    BitConverter.ToUInt32(buf, i);
-
-            for (var i = 0; i < _keys[1].Buffer.Length; i += sizeof(uint))
-                _keys[1].Buffer[i / sizeof(uint)] =
-                    BitConverter.ToUInt32(buf, 220 + i);
-
-            for (var i = 0; i < _keys[2].Buffer.Length; i += sizeof(uint))
-                _keys[2].Buffer[i / sizeof(uint)] =
-                    BitConverter.ToUInt32(buf, 448 + i);
-        }
-
-        void DoRound()
-        {
-            var result = _keys[0].Key & _keys[1].Key | _keys[2].Key &
-                (_keys[0].Key | _keys[1].Key);
-
-            for (var j = 0; j < _keys.Length; j++)
+            foreach (var gen in _generators)
             {
-                var key = _keys[j];
-
-                if (result == key.Key)
-                {
-                    var t1 = key.Buffer[key.Position1];
-                    var t2 = key.Buffer[key.Position2];
-                    var t3 = t1 <= t2 ? t1 : t2;
-
-                    key.Sum = t1 + t2;
-                    key.Key = t3 > key.Sum ? 1 : 0;
-                    key.Position1 = (key.Position1 + 1) % key.Size;
-                    key.Position2 = (key.Position2 + 1) % key.Size;
-                }
+                gen.SetKey(buf, offset);
+                offset += gen.Size;
             }
         }
 
         public void Apply(byte[] data, int offset, int length)
         {
-            // TODO: Figure out the significance of the magic numbers here.
-
-            var pre = length < _changeLength ? length : _changeLength;
-
-            if (pre != 0)
+            for (var i = 0; i < length; i++)
             {
-                for (var i = 0; i < pre; i++)
-                    data[offset + i] ^= (byte)(_changeData >> (8 * (4 - _changeLength + i)));
-
-                _changeLength -= pre;
-            }
-
-            for (var i = pre; i < length - 3; i += sizeof(uint))
-            {
-                DoRound();
-
-                foreach (var key in _keys)
+                if (_remaining == 0)
                 {
-                    data[offset + i] ^= (byte)key.Sum;
-                    data[offset + i + 1] ^= (byte)(key.Sum >> 8);
-                    data[offset + i + 2] ^= (byte)(key.Sum >> 16);
-                    data[offset + i + 3] ^= (byte)(key.Sum >> 24);
+                    var states = _generators.Select(x =>
+                        (gen: x, overflow: x.InOverflow));
+                    var overflowed = states.Count(x => x.overflow) >= 2;
+
+                    foreach (var (gen, overflow) in states)
+                        if (overflow == overflowed)
+                            gen.Advance();
+
+                    _keyBlock = _generators.Aggregate(0U, (acc, x) => acc ^ x.Value);
+                    _remaining = 4;
                 }
-            }
 
-            var remain = (length - pre) & 3;
-
-            if (remain != 0)
-            {
-                DoRound();
-
-                _changeData = 0;
-
-                foreach (var key in _keys)
-                    _changeData ^= (int)key.Sum;
-
-                for (var i = 0; i < remain; i++)
-                    data[offset + length - remain + i] ^= (byte)(_changeData >> (i * 8));
-
-                _changeLength = 4 - remain;
+                data[offset + i] = (byte)(data[offset + i] ^ _keyBlock);
+                _keyBlock >>= 8;
+                _remaining--;
             }
         }
     }

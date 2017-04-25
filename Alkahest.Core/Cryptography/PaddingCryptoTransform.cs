@@ -36,6 +36,15 @@ namespace Alkahest.Core.Cryptography
         public byte[] TransformFinalBlock(byte[] inputBuffer, int inputOffset,
             int inputCount)
         {
+            if (inputBuffer == null)
+                throw new ArgumentNullException(nameof(inputBuffer));
+
+            if (inputOffset < 0 || inputOffset > inputBuffer.Length)
+                throw new ArgumentException("Offset is invalid.", nameof(inputOffset));
+
+            if (inputCount < 0 || inputCount > inputBuffer.Length - inputOffset)
+                throw new ArgumentException("Count is invalid.", nameof(inputCount));
+
             var blockSize = Transform.InputBlockSize;
             var block = new byte[inputCount / blockSize + blockSize];
 

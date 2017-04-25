@@ -87,20 +87,20 @@ namespace Alkahest.Core.Cryptography
                 throw new ArgumentOutOfRangeException(nameof(length));
         }
 
-        public void Decrypt(byte[] data, int offset, int length)
+        public void Decrypt(byte[] data, int offset, int count)
         {
-            CheckParameters(data, offset, length);
+            CheckParameters(data, offset, count);
 
             (Direction == Direction.ClientToServer ?
-                _decryptor : _encryptor).Apply(data, offset, length);
+                _decryptor : _encryptor).Apply(data, offset, count);
         }
 
-        public void Encrypt(byte[] data, int offset, int length)
+        public void Encrypt(byte[] data, int offset, int count)
         {
-            CheckParameters(data, offset, length);
+            CheckParameters(data, offset, count);
 
             (Direction == Direction.ClientToServer ?
-                _encryptor : _decryptor).Apply(data, offset, length);
+                _encryptor : _decryptor).Apply(data, offset, count);
         }
 
         static byte[] XorKey(byte[] key1, byte[] key2)
