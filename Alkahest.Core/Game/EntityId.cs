@@ -10,9 +10,9 @@ namespace Alkahest.Core.Game
 
         public bool IsZero => this == Zero;
 
-        public uint Id => (uint)Bits.Extract(Raw, 0, 31);
+        public uint Id => (uint)Bits.Extract(Raw, 0, 32);
 
-        public EntityFlags Flags => (EntityFlags)Bits.Extract(Raw, 32, 63);
+        public EntityFlags Flags => (EntityFlags)Bits.Extract(Raw, 32, 32);
 
         public EntityId(ulong raw)
         {
