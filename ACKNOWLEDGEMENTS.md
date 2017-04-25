@@ -6,7 +6,8 @@ research done by the developers of the
 [Shinra Meter](https://github.com/neowutran/ShinraMeter) projects.
 
 The encryption code is based on the defunct TERA emulator project; a license
-was not specified for that code.
+was not specified for that code. It has been simplified based on
+[Mirrawrs's Tera framework](https://github.com/Mirrawrs/Tera).
 
 The data center parsing code is based on the file format knowledge in the
 [TeraDataTools](https://github.com/gothos-folly/TeraDataTools) project.
