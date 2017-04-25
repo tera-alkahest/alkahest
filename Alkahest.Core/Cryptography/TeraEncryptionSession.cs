@@ -38,18 +38,19 @@ namespace Alkahest.Core.Cryptography
 
         readonly TeraEncryption _encryptor;
 
+        static void CheckKey(byte[] key, string name)
+        {
+            if (key == null)
+                throw new ArgumentNullException(name);
+
+            if (key.Length != KeySize)
+                throw new ArgumentException("Invalid key length.", name);
+        }
+
         public TeraEncryptionSession(Direction direction, byte[] clientKey1,
             byte[] clientKey2, byte[] serverKey1, byte[] serverKey2)
         {
-            void CheckKey(byte[] key, string name)
-            {
-                if (key == null)
-                    throw new ArgumentNullException(name);
-
-                if (key.Length != KeySize)
-                    throw new ArgumentException("Invalid key length", name);
-            }
-
+            direction.CheckValidity(nameof(direction));
             CheckKey(clientKey1, nameof(clientKey1));
             CheckKey(clientKey2, nameof(clientKey2));
             CheckKey(serverKey1, nameof(serverKey1));
@@ -62,25 +63,33 @@ namespace Alkahest.Core.Cryptography
             _serverKey1 = serverKey1.ToArray();
             _serverKey2 = serverKey2.ToArray();
 
-            var tmpKey1 = ShiftKey(serverKey1, 67, true);
-            var tmpKey2 = XorKey(tmpKey1, clientKey1);
-            tmpKey1 = ShiftKey(clientKey2, 29, false);
-
-            _decryptKey = XorKey(tmpKey1, tmpKey2);
+            _decryptKey = XorKey(ShiftKey(clientKey2, 29, false),
+                XorKey(ShiftKey(serverKey1, 67, true), clientKey1));
             _decryptor = new TeraEncryption(_decryptKey);
-            
-            tmpKey1 = ShiftKey(serverKey2, 41, true);
 
-            _decryptor.Apply(tmpKey1, 0, tmpKey1.Length);
+            var tmp = ShiftKey(serverKey2, 41, true);
 
-            _encryptKey = tmpKey1;
+            _decryptor.Apply(tmp, 0, tmp.Length);
+
+            _encryptKey = tmp;
             _encryptor = new TeraEncryption(_encryptKey);
+        }
+
+        static void CheckParameters(byte[] data, int offset, int length)
+        {
+            if (data == null)
+                throw new ArgumentNullException(nameof(data));
+
+            if (offset < 0 || offset > data.Length)
+                throw new ArgumentOutOfRangeException(nameof(offset));
+
+            if (length < 0 || length > data.Length - offset)
+                throw new ArgumentOutOfRangeException(nameof(length));
         }
 
         public void Decrypt(byte[] data, int offset, int length)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            CheckParameters(data, offset, length);
 
             (Direction == Direction.ClientToServer ?
                 _decryptor : _encryptor).Apply(data, offset, length);
@@ -88,8 +97,7 @@ namespace Alkahest.Core.Cryptography
 
         public void Encrypt(byte[] data, int offset, int length)
         {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
+            CheckParameters(data, offset, length);
 
             (Direction == Direction.ClientToServer ?
                 _encryptor : _decryptor).Apply(data, offset, length);
@@ -97,12 +105,7 @@ namespace Alkahest.Core.Cryptography
 
         static byte[] XorKey(byte[] key1, byte[] key2)
         {
-            var result = new byte[key1.Length];
-
-            for (var i = 0; i < result.Length; i++)
-                result[i] = (byte)(key1[i] ^ key2[i]);
-
-            return result;
+            return key1.Zip(key2, (a, b) => (byte)(a ^ b)).ToArray();
         }
 
         static byte[] ShiftKey(byte[] key, int shift, bool direction)
