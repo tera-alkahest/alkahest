@@ -22,12 +22,15 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public EntityId Target { get; set; }
 
         [PacketField]
-        public Vector2 Position { get; set; }
+        public Vector3 Position { get; set; }
 
         [PacketField]
-        public float Direction { get; set; }
+        public Vector3 Destination { get; set; }
 
         [PacketField]
-        public Vector3 Unknown1 { get; set; }
+        public Angle Direction { get; set; }
+
+        [PacketField]
+        public byte Unknown1 { get; set; }
     }
 }
