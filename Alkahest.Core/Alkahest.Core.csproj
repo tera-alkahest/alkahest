@@ -293,6 +293,9 @@
     <EmbeddedResource Include="Net\Protocol\OpCodes\opc_311383.txt">
       <LogicalName>%(Identity)</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="Net\Protocol\OpCodes\opc_313523.txt">
+      <LogicalName>%(Identity)</LogicalName>
+    </EmbeddedResource>
     <EmbeddedResource Include="Net\Protocol\OpCodes\opc_313577.txt">
       <LogicalName>%(Identity)</LogicalName>
     </EmbeddedResource>
@@ -303,6 +306,9 @@
       <LogicalName>%(Identity)</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="Net\Protocol\OpCodes\smt_311383.txt">
+      <LogicalName>%(Identity)</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Net\Protocol\OpCodes\smt_313523.txt">
       <LogicalName>%(Identity)</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="Net\Protocol\OpCodes\smt_313577.txt">
