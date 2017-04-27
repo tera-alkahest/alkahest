@@ -108,11 +108,6 @@ namespace Alkahest.Core.IO
             return new string(list.ToArray());
         }
 
-        public Vector2 ReadVector2()
-        {
-            return new Vector2(_reader.ReadSingle(), _reader.ReadSingle());
-        }
-
         public Vector3 ReadVector3()
         {
             return new Vector3(_reader.ReadSingle(), _reader.ReadSingle(),
