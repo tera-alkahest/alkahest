@@ -32,7 +32,9 @@ namespace Alkahest.Core.Net.Protocol
         readonly IReadOnlyCollection<Delegate> _emptyHandlers =
             new List<Delegate>();
 
-        readonly object _lock = new object();
+        readonly object _listLock = new object();
+
+        readonly object _invokeLock = new object();
 
         public PacketProcessor(PacketSerializer serializer)
         {
@@ -73,7 +75,7 @@ namespace Alkahest.Core.Net.Protocol
             if (handler == null)
                 throw new ArgumentNullException(nameof(handler));
 
-            lock (_lock)
+            lock (_listLock)
                 _wildcardRawHandlers.Add(handler);
         }
 
@@ -82,7 +84,7 @@ namespace Alkahest.Core.Net.Protocol
             if (handler == null)
                 throw new ArgumentNullException(nameof(handler));
 
-            lock (_lock)
+            lock (_listLock)
                 _wildcardRawHandlers.Remove(handler);
         }
 
@@ -93,7 +95,7 @@ namespace Alkahest.Core.Net.Protocol
 
             var opCode = GetOpCode(name);
 
-            lock (_lock)
+            lock (_listLock)
                 _rawHandlers[opCode].Add(handler);
         }
 
@@ -104,7 +106,7 @@ namespace Alkahest.Core.Net.Protocol
 
             var opCode = GetOpCode(name);
 
-            lock (_lock)
+            lock (_listLock)
                 _rawHandlers[opCode].Remove(handler);
         }
 
@@ -116,7 +118,7 @@ namespace Alkahest.Core.Net.Protocol
 
             var opCode = GetOpCode(GetOpCodeName(typeof(T)));
 
-            lock (_lock)
+            lock (_listLock)
                 _handlers[opCode].Add(handler);
         }
 
@@ -128,7 +130,7 @@ namespace Alkahest.Core.Net.Protocol
 
             var opCode = GetOpCode(GetOpCodeName(typeof(T)));
 
-            lock (_lock)
+            lock (_listLock)
                 _handlers[opCode].Remove(handler);
         }
 
@@ -160,7 +162,7 @@ namespace Alkahest.Core.Net.Protocol
             var rawHandlers = new List<RawPacketHandler>();
 
             // Make a copy so we don't have to lock while iterating.
-            lock (_lock)
+            lock (_listLock)
             {
                 rawHandlers.AddRange(_wildcardRawHandlers);
                 rawHandlers.AddRange(_rawHandlers[header.OpCode]);
@@ -181,7 +183,7 @@ namespace Alkahest.Core.Net.Protocol
                 {
                     try
                     {
-                        lock (handler)
+                        lock (_invokeLock)
                             send &= handler(client, direction, packet);
                     }
                     catch (Exception e) when (!Debugger.IsAttached)
@@ -197,7 +199,7 @@ namespace Alkahest.Core.Net.Protocol
 
             IReadOnlyCollection<Delegate> handlers = _handlers[header.OpCode];
 
-            lock (_lock)
+            lock (_listLock)
                 handlers = handlers.Count != 0 ? handlers.ToArray() : _emptyHandlers;
 
             if (handlers.Count != 0)
@@ -222,7 +224,7 @@ namespace Alkahest.Core.Net.Protocol
                     {
                         try
                         {
-                            lock (handler)
+                            lock (_invokeLock)
                                 send &= (bool)handler.DynamicInvoke(client,
                                     direction, packet);
                         }
