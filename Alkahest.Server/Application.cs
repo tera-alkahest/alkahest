@@ -163,6 +163,10 @@ namespace Alkahest.Server
                     {
                         MaxClients = Configuration.GameMaxClients
                     }).ToArray();
+
+                    foreach (var proxy in proxies)
+                        proxy.Start();
+
                     var loader = new PluginLoader(Configuration.PluginDirectory,
                         Configuration.PluginPattern, Configuration.DisablePlugins);
 
