@@ -54,8 +54,12 @@ namespace Alkahest.Core.Net
 
             _disposed = true;
 
-            if (_server != null)
-                Stop();
+            if (_server == null)
+                return;
+
+            _server.CloseAsync().Wait();
+
+            _log.Basic("{0} server list proxy stopped", Parameters.Region);
         }
 
         public void Start()
@@ -65,13 +69,6 @@ namespace Alkahest.Core.Net
             _log.Basic("{0} server list proxy listening at {1}",
                 Parameters.Region,
                 ((HttpSelfHostConfiguration)_server.Configuration).BaseAddress);
-        }
-
-        public void Stop()
-        {
-            _server.CloseAsync().Wait();
-
-            _log.Basic("{0} server list proxy stopped", Parameters.Region);
         }
     }
 }

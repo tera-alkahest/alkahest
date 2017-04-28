@@ -31,6 +31,8 @@ namespace Alkahest.Core.Net
 
         readonly Socket _serverSocket;
 
+        readonly int _backlog;
+
         bool _disposed;
 
         public GameProxy(ServerInfo info, ObjectPool<SocketAsyncEventArgs> pool,
@@ -50,14 +52,7 @@ namespace Alkahest.Core.Net
                 ExclusiveAddressUse = true,
                 NoDelay = true
             };
-
-            _serverSocket.Bind(info.ProxyEndPoint);
-            _serverSocket.Listen(backlog);
-
-            _log.Basic("Game proxy for {0} listening at {1}", info.Name,
-                info.ProxyEndPoint);
-
-            Accept();
+            _backlog = backlog;
         }
 
         ~GameProxy()
@@ -78,13 +73,28 @@ namespace Alkahest.Core.Net
 
             _disposed = true;
 
-            _serverSocket?.SafeClose();
+            if (_serverSocket == null)
+                return;
+
+            _serverSocket.SafeClose();
             _event.Wait();
+            _event.Dispose();
 
             foreach (var client in _clients.ToArray())
                 client.Disconnect();
 
             _log.Basic("Game proxy for {0} stopped", Info.Name);
+        }
+
+        public void Start()
+        {
+            _serverSocket.Bind(Info.ProxyEndPoint);
+            _serverSocket.Listen(_backlog);
+
+            Accept();
+
+            _log.Basic("Game proxy for {0} listening at {1}", Info.Name,
+                Info.ProxyEndPoint);
         }
 
         void Accept()
