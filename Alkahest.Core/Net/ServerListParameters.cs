@@ -35,7 +35,7 @@ namespace Alkahest.Core.Net
 
         public IPAddress GameAddress { get; }
 
-        public int StartingPort { get; }
+        public int BasePort { get; }
 
         public Region Region { get; }
 
@@ -47,12 +47,12 @@ namespace Alkahest.Core.Net
 
         public ServerListParameters(IPAddress realSlsAddress,
             IPAddress proxySlsAddress, int? proxySlsPort,
-            IPAddress gameAddress, int startingPort, Region region,
+            IPAddress gameAddress, int basePort, Region region,
             TimeSpan timeout, int retries)
         {
-            if (startingPort < IPEndPoint.MinPort ||
-                startingPort >= IPEndPoint.MaxPort)
-                throw new ArgumentOutOfRangeException(nameof(startingPort));
+            if (basePort < IPEndPoint.MinPort ||
+                basePort >= IPEndPoint.MaxPort)
+                throw new ArgumentOutOfRangeException(nameof(basePort));
 
             region.CheckValidity(nameof(region));
 
@@ -67,7 +67,7 @@ namespace Alkahest.Core.Net
                 proxySlsPort ?? Uri.Port);
             GameAddress = gameAddress ??
                 throw new ArgumentNullException(nameof(gameAddress));
-            StartingPort = startingPort;
+            BasePort = basePort;
             Region = region;
             Timeout = timeout;
             Retries = retries;

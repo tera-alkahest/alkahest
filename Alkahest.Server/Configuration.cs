@@ -53,7 +53,7 @@ namespace Alkahest.Server
 
         public static int ServerListPort { get; }
 
-        public static int GameStartingPort { get; }
+        public static int GameBasePort { get; }
 
         public static int GameBacklog { get; }
 
@@ -91,7 +91,7 @@ namespace Alkahest.Server
             ServerListAddress = IPAddress.Parse(cfg["slsAddress"]);
             GameAddress = IPAddress.Parse(cfg["gameAddress"]);
             ServerListPort = int.Parse(cfg["slsPort"]);
-            GameStartingPort = int.Parse(cfg["gameStartingPort"]);
+            GameBasePort = int.Parse(cfg["gameBasePort"]);
             ServerListTimeout = TimeSpan.FromSeconds(int.Parse(cfg["slsTimeout"]));
             ServerListRetries = int.Parse(cfg["slsRetries"]);
             GameBacklog = int.Parse(cfg["gameBacklog"]);

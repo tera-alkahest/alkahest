@@ -143,7 +143,7 @@ namespace Alkahest.Server
                 var slsParams = new ServerListParameters(real,
                     Configuration.ServerListAddress,
                     slsPort != 0 ? (int?)slsPort : null,
-                    Configuration.GameAddress, Configuration.GameStartingPort,
+                    Configuration.GameAddress, Configuration.GameBasePort,
                     region, Configuration.ServerListTimeout,
                     Configuration.ServerListRetries);
 

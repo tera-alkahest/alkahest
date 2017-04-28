@@ -20,15 +20,12 @@ namespace Alkahest.Core.Net
 
         readonly ServerListParameters _parameters;
 
-        int _lastPort;
-
         readonly string _servers;
 
         public ServerListRequestHandler(ServerListParameters parameters,
             out IReadOnlyList<ServerInfo> servers)
         {
             _parameters = parameters;
-            _lastPort = parameters.StartingPort;
             _servers = GetAndAdjustServers(out servers);
         }
 
@@ -84,7 +81,7 @@ namespace Alkahest.Core.Net
                 var ip = IPAddress.Parse(ipElem.Value);
                 var newIP = _parameters.GameAddress;
                 var port = int.Parse(portElem.Value);
-                var newPort = _lastPort++;
+                var newPort = _parameters.BasePort + id;
 
                 nameElem.Value += " (Proxy)";
                 rawNameAttr.Value += " (Proxy)";
