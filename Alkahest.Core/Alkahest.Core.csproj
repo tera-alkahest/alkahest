@@ -64,6 +64,8 @@
     <Compile Include="Game\MovementKind.cs" />
     <Compile Include="Game\Race.cs" />
     <Compile Include="Game\SkillId.cs" />
+    <Compile Include="Game\UserEffectKind.cs" />
+    <Compile Include="Game\UserEffectOperation.cs" />
     <Compile Include="Game\UserStatus.cs" />
     <Compile Include="IO\IOExtensions.cs" />
     <Compile Include="Logging\LogEventArgs.cs" />
@@ -241,6 +243,7 @@
     <Compile Include="Net\Protocol\Packets\STradeBrokerHighestItemLevelPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SUnmountVehiclePacket.cs" />
     <Compile Include="Net\Protocol\Packets\SUpdateEventSeedStatePacket.cs" />
+    <Compile Include="Net\Protocol\Packets\SUserEffectPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SUserFlyingLocationPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SUserLocationPacket.cs" />
     <Compile Include="Net\Protocol\Packets\SUserStatusPacket.cs" />
