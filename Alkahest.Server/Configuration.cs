@@ -41,6 +41,8 @@ namespace Alkahest.Server
 
         public static Region Region { get; }
 
+        public static bool EnableServerList { get; }
+
         public static TimeSpan ServerListTimeout { get; }
 
         public static int ServerListRetries { get; }
@@ -85,6 +87,7 @@ namespace Alkahest.Server
             PluginPattern = cfg["pluginPattern"];
             DisablePlugins = Split(cfg["disablePlugins"], ',');
             Region = (Region)Enum.Parse(typeof(Region), cfg["region"], true);
+            EnableServerList = bool.Parse(cfg["enableSls"]);
             ServerListAddress = IPAddress.Parse(cfg["slsAddress"]);
             GameAddress = IPAddress.Parse(cfg["gameAddress"]);
             ServerListPort = int.Parse(cfg["slsPort"]);

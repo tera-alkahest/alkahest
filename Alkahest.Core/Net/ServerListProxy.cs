@@ -33,11 +33,7 @@ namespace Alkahest.Core.Net
             };
 
             Servers = servers;
-
             _server = new HttpSelfHostServer(cfg);
-            _server.OpenAsync().Wait();
-
-            _log.Basic("Server list proxy listening at {0}", cfg.BaseAddress);
         }
 
         ~ServerListProxy()
@@ -58,9 +54,24 @@ namespace Alkahest.Core.Net
 
             _disposed = true;
 
-            _server?.CloseAsync().Wait();
+            if (_server != null)
+                Stop();
+        }
 
-            _log.Basic("Server list proxy stopped");
+        public void Start()
+        {
+            _server.OpenAsync().Wait();
+
+            _log.Basic("{0} server list proxy listening at {1}",
+                Parameters.Region,
+                ((HttpSelfHostConfiguration)_server.Configuration).BaseAddress);
+        }
+
+        public void Stop()
+        {
+            _server.CloseAsync().Wait();
+
+            _log.Basic("{0} server list proxy stopped", Parameters.Region);
         }
     }
 }

@@ -149,6 +149,9 @@ namespace Alkahest.Server
 
                 using (var slsProxy = new ServerListProxy(slsParams))
                 {
+                    if (Configuration.EnableServerList)
+                        slsProxy.Start();
+
                     var pool = new ObjectPool<SocketAsyncEventArgs>(
                         () => new SocketAsyncEventArgs(), x => x.Reset(),
                         Configuration.PoolLimit != 0 ? (int?)Configuration.PoolLimit : null);
