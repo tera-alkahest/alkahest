@@ -246,7 +246,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
             public uint Unknown38 { get; set; }
 
             [PacketField]
-            public uint Unknown39 { get; set; }
+            public uint WeaponEnchantmentLevel { get; set; }
 
             [PacketField]
             public uint CurrentRestedExperience { get; set; }
@@ -273,10 +273,10 @@ namespace Alkahest.Core.Net.Protocol.Packets
             public LaurelKind Laurel { get; set; }
 
             [PacketField]
-            public uint Unknown45 { get; set; }
+            public uint Position { get; set; }
 
             [PacketField]
-            public uint Unknown46 { get; set; }
+            public uint GuildId { get; set; }
         }
 
         [PacketField]
