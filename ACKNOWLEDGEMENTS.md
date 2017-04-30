@@ -5,7 +5,8 @@ research done by the developers of the
 [tera-data](https://github.com/meishuu/tera-data) and
 [Shinra Meter](https://github.com/neowutran/ShinraMeter) projects.
 
-The encryption code is based on the defunct TERA emulator project; a license
+The encryption code is based on the defunct
+[TERA emulator](https://github.com/iceblade112/TeraEmulator) project; a license
 was not specified for that code. It has been simplified based on
 [Mirrawrs's Tera framework](https://github.com/Mirrawrs/Tera).
 
