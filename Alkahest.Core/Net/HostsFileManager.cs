@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using Microsoft.Win32;
 using Alkahest.Core.Logging;
 
@@ -16,18 +18,50 @@ namespace Alkahest.Core.Net
 
         const string HostsFileName = "hosts";
 
+        const string MutexName =
+            @"Global\" + nameof(Alkahest) + "-" + nameof(HostsFileManager);
+
         static readonly Log _log = new Log(typeof(HostsFileManager));
 
-        readonly string _hosts;
+        static readonly Mutex _mutex = new Mutex(false, MutexName);
+
+        static readonly string _hostsPath;
+
+        readonly string _id;
 
         readonly List<string> _entries = new List<string>();
 
         bool _disposed;
 
-        public HostsFileManager()
+        static HostsFileManager()
         {
             using (var key = Registry.LocalMachine.OpenSubKey(HostsFileRegistryPath))
-                _hosts = Path.Combine((string)key.GetValue(HostsFileRegistryKey), HostsFileName);
+                _hostsPath = Path.Combine((string)key.GetValue(HostsFileRegistryKey), HostsFileName);
+        }
+
+        static void RunLocked(Action action)
+        {
+            try
+            {
+                try
+                {
+                    _mutex.WaitOne();
+                }
+                catch (AbandonedMutexException)
+                {
+                }
+
+                action();
+            }
+            finally
+            {
+                _mutex.ReleaseMutex();
+            }
+        }
+
+        public HostsFileManager()
+        {
+            _id = $"{nameof(Alkahest)} {Process.GetCurrentProcess().Id}";
         }
 
         ~HostsFileManager()
@@ -48,7 +82,8 @@ namespace Alkahest.Core.Net
 
             _disposed = true;
 
-            File.WriteAllLines(_hosts, File.ReadAllLines(_hosts).Where(x => !_entries.Contains(x)));
+            RunLocked(() => File.WriteAllLines(_hostsPath,
+                File.ReadAllLines(_hostsPath).Where(x => !_entries.Contains(x))));
 
             _log.Basic("Removed all hosts entries");
         }
@@ -64,7 +99,7 @@ namespace Alkahest.Core.Net
             if (destination == null)
                 throw new ArgumentNullException(nameof(destination));
 
-            return $"{destination} {host}";
+            return $"{destination} {host} # {_id}";
         }
 
         public void AddEntry(string host, IPAddress destination)
@@ -75,7 +110,7 @@ namespace Alkahest.Core.Net
             var entry = MakeEntry(host, destination);
 
             _entries.Add(entry);
-            File.AppendAllLines(_hosts, new[] { entry });
+            RunLocked(() => File.AppendAllLines(_hostsPath, new[] { entry }));
 
             _log.Basic("Added hosts entry: {0} -> {1}", host, destination);
         }
@@ -88,7 +123,8 @@ namespace Alkahest.Core.Net
             var entry = MakeEntry(host, destination);
 
             _entries.Remove(entry);
-            File.WriteAllLines(_hosts, File.ReadAllLines(_hosts).Where(x => x != entry));
+            RunLocked(() => File.WriteAllLines(_hostsPath,
+                File.ReadAllLines(_hostsPath).Where(x => x != entry)));
 
             _log.Basic("Removed hosts entry: {0} -> {1}", host, destination);
         }

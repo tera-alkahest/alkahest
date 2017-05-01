@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Text;
 using Alkahest.Core.Logging;
@@ -14,6 +15,10 @@ namespace Alkahest.Core.Net
         const string ContextName = "interface portproxy";
 
         static readonly Log _log = new Log(typeof(NetworkShellManager));
+
+        static readonly string _exePath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.System),
+            ShellName);
 
         readonly List<IPEndPoint> _proxies = new List<IPEndPoint>();
 
@@ -50,7 +55,7 @@ namespace Alkahest.Core.Net
                 StartInfo =
                 {
                     Arguments = $"{ContextName} {arguments}",
-                    FileName = ShellName,
+                    FileName = _exePath,
                     RedirectStandardError = true,
                     RedirectStandardInput = true,
                     RedirectStandardOutput = true,
