@@ -23,7 +23,7 @@ namespace Alkahest.Core.Net.Protocol.OpCodes
                 { Region.KR, 313523 },
                 { Region.NA, 311383 },
                 { Region.RU, 311383 },
-                { Region.TW, 311383 },
+                { Region.TW, 313623 },
                 { Region.UK, 313623 }
             };
 
