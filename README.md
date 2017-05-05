@@ -76,6 +76,9 @@ There are many other configuration values that you can play with, but you don't
 need to change them if all you want is to use Alkahest for a single TERA client
 on your local machine.
 
+If you want to run Alkahest with tera-proxy, see
+[this wiki page](https://github.com/alexrp/alkahest/wiki/Interoperability).
+
 ## Usage
 
 Once you've configured Alkahest, run `alkahest-server.exe` to start it. Once
