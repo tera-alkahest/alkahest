@@ -68,8 +68,9 @@ namespace Alkahest.Core.Net
 
             var doc = XDocument.Parse(resp.Content.ReadAsStringAsync().Result);
             var servs = new List<ServerInfo>();
+            var elems = _parameters.Region == Region.JP ? doc.Root.Elements("serverlist").Elements("server") : doc.Root.Elements("server");
 
-            foreach (var elem in doc.Root.Elements("server"))
+            foreach (var elem in elems)
             {
                 var nameElem = elem.Element("name");
                 var rawNameAttr = nameElem.Attribute("raw_name");
