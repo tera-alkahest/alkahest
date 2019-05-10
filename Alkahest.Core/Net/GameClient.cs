@@ -475,7 +475,7 @@ namespace Alkahest.Core.Net
                 if (rethrow)
                     throw;
 
-                return default(T);
+                return default;
             }
 
             then?.Invoke(result);
