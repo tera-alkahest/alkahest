@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Alkahest.Core</RootNamespace>
     <AssemblyName>Alkahest.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
@@ -320,9 +320,6 @@
     </PackageReference>
     <PackageReference Include="System.Numerics.Vectors">
       <Version>4.6.0-preview5.19224.8</Version>
-    </PackageReference>
-    <PackageReference Include="System.ValueTuple">
-      <Version>4.3.0</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

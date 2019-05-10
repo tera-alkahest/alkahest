@@ -48,7 +48,7 @@ and APIs for accessing data stored with the game client.
 [Installers and archives are available from the releases page.](https://github.com/alexrp/alkahest/releases)
 
 If you want to build Alkahest from source, you will need Visual Studio 2019
-(any edition) and .NET Framework 4.6.1. Simply open `Alkahest.sln` and build
+(any edition) and .NET Framework 4.7.2. Simply open `Alkahest.sln` and build
 it with the `Debug` + `Any CPU` configuration. All build artifacts will end up
 in the `Build` directory.
 

@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>Alkahest.Extractor</RootNamespace>
     <AssemblyName>alkahest-extractor</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
