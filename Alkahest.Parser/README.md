@@ -24,8 +24,8 @@ unknown packets, along with the amount encountered and their minimum, maximum,
 and average sizes.
 
 All options have shorthand variants (e.g. `-o` for `--output`). Boolean options
-can be controlled by appending a `+` or `-` to the option name. Use the
-`--help` option for more information.
+can be controlled by appending a `+` or `-` to the option name. Use the `--help`
+option for more information.
 
 ### Controlling Parsing
 
@@ -55,11 +55,11 @@ list of potential arrays and strings will be printed after the hex dump.
 
 The `--min-string-length` option can be used to specify how long a string must
 be for it to be considered a potential string. You can use this to filter out
-unlikely strings when you know that the strings in a packet will be of a
-certain minimum length.
+unlikely strings when you know that the strings in a packet will be of a certain
+minimum length.
 
-If you specify `--allow-white-space`, strings that consist purely of white
-space characters will be considered potential strings. You can also use
+If you specify `--allow-white-space`, strings that consist purely of white space
+characters will be considered potential strings. You can also use
 `--allow-control-chars` to specify whether strings that contain control
-characters (line feeds, tabs, etc) should be considered valid. Both of these
-are off by default.
+characters (line feeds, tabs, etc) should be considered valid. Both of these are
+off by default.
