@@ -1,1 +1,10 @@
+* text
+*.csproj eol=crlf
+*.ico binary
+*.proj eol=crlf
+*.sln eol=crlf
+*.snk binary
+*.vdproj eol=crlf
+*.whl binary
+
 Alkahest.Plugins.Python/Lib/* linguist-vendored
