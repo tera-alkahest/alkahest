@@ -25,7 +25,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <LangVersion>7</LangVersion>
-    <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Alkahest.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
@@ -41,9 +40,6 @@
     <Compile Include="PythonPlugin.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Alkahest.snk">
-      <Link>Properties\Alkahest.snk</Link>
-    </None>
     <None Include="Lib\abc.py" />
     <None Include="Lib\aifc.py" />
     <None Include="Lib\antigravity.py" />

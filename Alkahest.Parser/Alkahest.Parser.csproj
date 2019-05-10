@@ -28,7 +28,6 @@
     <LangVersion>7</LangVersion>
     <StartupObject>Alkahest.Parser.Program</StartupObject>
     <ApplicationIcon>..\Alkahest.ico</ApplicationIcon>
-    <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Alkahest.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
@@ -55,9 +54,6 @@
     <Compile Include="PacketStatistics.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Alkahest.snk">
-      <Link>Properties\Alkahest.snk</Link>
-    </None>
     <None Include="Properties\App.config" />
     <None Include="README.md" />
   </ItemGroup>

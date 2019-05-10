@@ -29,7 +29,6 @@
     <ApplicationManifest>Properties\App.manifest</ApplicationManifest>
     <StartupObject>Alkahest.Server.Program</StartupObject>
     <ApplicationIcon>..\Alkahest.ico</ApplicationIcon>
-    <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Alkahest.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
@@ -42,9 +41,6 @@
     <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Alkahest.snk">
-      <Link>Properties\Alkahest.snk</Link>
-    </None>
     <None Include="Properties\App.config">
       <SubType>Designer</SubType>
     </None>
