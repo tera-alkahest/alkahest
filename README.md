@@ -3,15 +3,14 @@
 [![Release](https://img.shields.io/github/release/alexrp/alkahest/all.svg)](https://github.com/alexrp/alkahest/releases)
 [![NuGet](https://img.shields.io/nuget/v/Alkahest.Core.svg)](https://www.nuget.org/packages/Alkahest.Core)
 [![Build Status](https://ci.appveyor.com/api/projects/status/g4975y955sgosiej?svg=true)](https://ci.appveyor.com/project/alexrp/alkahest)
-[![Discord](https://discordapp.com/api/guilds/302077598593318912/widget.png)](https://discord.gg/5GTr5mw)
 
-Alkahest is a proxy server for [TERA](http://tera.enmasse.com). At its core,
-it's simply a server that relays communication between the game client and
-server. Its main usefulness lies in its extensibility; you can write plugins
-that can inspect packets, modify them, and send newly constructed packets. This
-opens up a lot of possibilities for integrating the game with other software,
-as well as adding entirely new features to the game, so long as you can do so
-within the framework of the game's network protocol.
+**Alkahest** is a proxy server for [TERA](http://tera.enmasse.com). At its
+core, it's simply a server that relays communication between the game client
+and server. Its main usefulness lies in its extensibility; you can write
+plugins that can inspect packets, modify them, and send newly constructed
+packets. This opens up a lot of possibilities for integrating the game with
+other software, as well as adding entirely new features to the game, so long
+as you can do so within the framework of the game's network protocol.
 
 This project was started out of a need to have a program similar to
 [tera-proxy](https://github.com/meishuu/tera-proxy), but written in a .NET
