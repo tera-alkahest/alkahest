@@ -37,7 +37,7 @@ namespace Alkahest.Parser
 
         static bool _summary;
 
-        static List<string> _regexes = new List<string>();
+        static readonly List<string> _regexes = new List<string>();
 
         static HexDumpMode _hex = HexDumpMode.Unknown;
 
