@@ -16,6 +16,6 @@ Finally, if your pull request includes changes to packet structures, I do
 expect you to provide evidence to back up those changes. I will not blindly
 accept such changes, as one of the goals of this project is to properly
 understand the TERA protocol. Also, be sure to submit a pull request with your
-changes to the [tera-data](https://github.com/meishuu/tera-data) project as
-that's the repository where most protocol reverse engineers in the TERA
+changes to the [tera-data](https://github.com/tera-toolbox/tera-data) project
+as that's the repository where most protocol reverse engineers in the TERA
 community store their research.
