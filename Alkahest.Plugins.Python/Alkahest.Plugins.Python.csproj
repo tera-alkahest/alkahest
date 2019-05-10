@@ -4,33 +4,23 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{92CD0899-A58E-4196-BD8D-4B96CB12A384}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>Alkahest.Plugins.Python</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AssemblyName>alkahest-python</AssemblyName>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>embedded</DebugType>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <Deterministic>true</Deterministic>
+    <LangVersion>preview</LangVersion>
+    <OutputPath>..\Build\Plugins\</OutputPath>
+    <OutputType>Library</OutputType>
+    <ProjectGuid>{92CD0899-A58E-4196-BD8D-4B96CB12A384}</ProjectGuid>
+    <RootNamespace>Alkahest.Plugins.Python</RootNamespace>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\Build\Plugins\</OutputPath>
-    <DefineConstants>DEBUG</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <LangVersion>7</LangVersion>
-    <AssemblyOriginatorKeyFile>..\Alkahest.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
@@ -39,19 +29,24 @@
     <Compile Include="PythonPlugin.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="alkahest-python.dll.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Python\example\__init__.py" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Alkahest.Core\Alkahest.Core.csproj">
-      <Project>{4cb2d190-fc09-4d4d-9598-d0cfc0c725db}</Project>
       <Name>Alkahest.Core</Name>
+      <Project>{4cb2d190-fc09-4d4d-9598-d0cfc0c725db}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="alkahest-python.dll.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="IronPython">
@@ -67,7 +62,7 @@
       <LibFiles Include="$(OutputPath)\Lib\**" />
       <PythonFiles Include="Python\**" />
     </ItemGroup>
-    <Move SourceFiles="@(LibFiles)" DestinationFolder="$(OutputPath)\PythonLibs" />
+    <Copy SourceFiles="@(LibFiles)" DestinationFiles="@(LibFiles->'$(OutputPath)\PythonLibs\%(RecursiveDir)%(Filename)%(Extension)')" />
     <RemoveDir Directories="$(OutputPath)\Lib" />
     <Copy SourceFiles="@(PythonFiles)" DestinationFiles="@(PythonFiles->'$(OutputPath)\..\Python\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>

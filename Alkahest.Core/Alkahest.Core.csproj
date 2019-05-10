@@ -4,27 +4,22 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4CB2D190-FC09-4D4D-9598-D0CFC0C725DB}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>Alkahest.Core</RootNamespace>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AssemblyName>Alkahest.Core</AssemblyName>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>embedded</DebugType>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <Deterministic>true</Deterministic>
+    <LangVersion>preview</LangVersion>
+    <OutputPath>..\Build\</OutputPath>
+    <OutputType>Library</OutputType>
+    <ProjectGuid>{4CB2D190-FC09-4D4D-9598-D0CFC0C725DB}</ProjectGuid>
+    <RootNamespace>Alkahest.Core</RootNamespace>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\Build\</OutputPath>
-    <DefineConstants>DEBUG</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <LangVersion>7</LangVersion>
-    <AssemblyOriginatorKeyFile>..\Alkahest.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\SolutionInfo.cs">
@@ -281,13 +276,6 @@
     <Compile Include="Region.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Xml.Linq" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Net\Protocol\OpCodes\opc_311383.txt">
       <LogicalName>%(Identity)</LogicalName>
     </EmbeddedResource>
@@ -309,6 +297,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Alkahest.Core.nuspec" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.SelfHost">
