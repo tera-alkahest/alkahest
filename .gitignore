@@ -1,6 +1,8 @@
-.vs/*
-Build/*
-packages/*
-*/obj/*
-*/*.nupkg
-*/*.user
+/*/bin
+/*/obj
+/Build
+/packages
+.vs
+.vscode
+*.nupkg
+*.user
