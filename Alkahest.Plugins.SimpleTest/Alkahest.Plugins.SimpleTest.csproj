@@ -10,7 +10,7 @@
     <DebugType>embedded</DebugType>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <Deterministic>true</Deterministic>
-    <LangVersion>preview</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <OutputPath>..\Build\Plugins\</OutputPath>
     <OutputType>Library</OutputType>
     <ProjectGuid>{F85463D3-9795-4C7D-A041-3BAA652D0BB5}</ProjectGuid>

@@ -10,7 +10,7 @@
     <DebugType>embedded</DebugType>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <Deterministic>true</Deterministic>
-    <LangVersion>preview</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <OutputPath>..\Build\</OutputPath>
     <OutputType>Library</OutputType>
     <ProjectGuid>{4CB2D190-FC09-4D4D-9598-D0CFC0C725DB}</ProjectGuid>

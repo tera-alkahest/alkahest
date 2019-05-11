@@ -12,12 +12,12 @@
     <DebugType>embedded</DebugType>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <Deterministic>true</Deterministic>
-    <LangVersion>preview</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <OutputPath>..\Build\</OutputPath>
     <OutputType>Exe</OutputType>
     <ProjectGuid>{FC720B91-ECDF-4A7A-8D85-7FE05E84A400}</ProjectGuid>
-    <StartupObject>Alkahest.Scanner.Program</StartupObject>
     <RootNamespace>Alkahest.Scanner</RootNamespace>
+    <StartupObject>Alkahest.Scanner.Program</StartupObject>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>

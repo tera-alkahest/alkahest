@@ -11,7 +11,7 @@
     <DebugType>embedded</DebugType>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <Deterministic>true</Deterministic>
-    <LangVersion>preview</LangVersion>
+    <LangVersion>8.0</LangVersion>
     <OutputPath>..\Build\</OutputPath>
     <OutputType>Exe</OutputType>
     <ProjectGuid>{16943389-7070-4B72-8362-4B21036F15C9}</ProjectGuid>
