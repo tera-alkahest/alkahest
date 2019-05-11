@@ -3,6 +3,7 @@ artifacts:
 build_script:
     - cmd: >-
           for /r %f in (*.csproj) do nuget restore "%f"
+
           msbuild Alkahest.sln
 nuget:
     disable_publish_on_pr: true
