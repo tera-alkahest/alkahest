@@ -1,17 +1,20 @@
 <?xml version="1.0" ?>
 <package>
     <metadata>
-        <id>$id$</id>
-        <version>$version$</version>
-        <title>$title$</title>
         <authors>$author$</authors>
-        <owners>$author$</owners>
-        <licenseUrl>https://github.com/alexrp/alkahest/blob/master/LICENSE.md</licenseUrl>
-        <projectUrl>https://github.com/alexrp/alkahest</projectUrl>
+        <copyright>$copyright$</copyright>
+        <description>$description$</description>
         <iconUrl>https://raw.githubusercontent.com/alexrp/alkahest/master/Alkahest.ico</iconUrl>
+        <id>$id$</id>
+        <license type="file">LICENSE.md</license>
+        <owners>$author$</owners>
+        <projectUrl>https://github.com/alexrp/alkahest</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <summary>$description$</summary>
-        <description>$description$</description>
-        <copyright>$copyright$</copyright>
+        <title>$title$</title>
+        <version>$version$</version>
     </metadata>
+    <files>
+        <file src="..\LICENSE.md" />
+    </files>
 </package>
