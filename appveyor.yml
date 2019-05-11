@@ -2,7 +2,7 @@ artifacts:
     - path: **\*.nupkg
 build_script:
     - cmd: >-
-          nuget restore
+          for /r %f in (*.csproj) do nuget restore "%f"
           msbuild Alkahest.sln
 configuration: Debug
 nuget:
