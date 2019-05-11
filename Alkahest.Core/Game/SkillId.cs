@@ -6,31 +6,31 @@ namespace Alkahest.Core.Game
     {
         public static readonly SkillId Zero = new SkillId();
 
-        const int LocalSkillBase = 0x4000000;
+        const long LocalSkillBase = 0x4000000;
 
-        public readonly uint Raw;
+        public readonly ulong Raw;
 
         public bool IsZero => this == Zero;
 
-        public uint Skill => Raw - LocalSkillBase;
+        public ulong Skill => Raw - LocalSkillBase;
 
-        public uint Group => Skill / 10000;
+        public ulong Group => Skill / 10000;
 
-        public uint Level => Skill / 100 % 100;
+        public ulong Level => Skill / 100 % 100;
 
-        public uint Type => Skill % 100;
+        public ulong Type => Skill % 100;
 
-        public SkillId(uint raw)
+        public SkillId(ulong raw)
         {
             Raw = raw;
         }
 
-        public static SkillId FromSkill(uint skill)
+        public static SkillId FromSkill(ulong skill)
         {
             return new SkillId(skill + LocalSkillBase);
         }
 
-        public static SkillId FromValues(uint group, uint level, uint type)
+        public static SkillId FromValues(ulong group, ulong level, ulong type)
         {
             return FromSkill(group * 10000 + level * 100 + type);
         }

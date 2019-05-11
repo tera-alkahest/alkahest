@@ -110,8 +110,7 @@ namespace Alkahest.Core.IO
 
         public Vector3 ReadVector3()
         {
-            return new Vector3(_reader.ReadSingle(), _reader.ReadSingle(),
-                _reader.ReadSingle());
+            return new Vector3(_reader.ReadSingle(), _reader.ReadSingle(), _reader.ReadSingle());
         }
 
         public GameId ReadEntityId()
@@ -121,12 +120,12 @@ namespace Alkahest.Core.IO
 
         public SkillId ReadSkillId()
         {
-            return new SkillId(_reader.ReadUInt32());
+            return new SkillId(_reader.ReadUInt64());
         }
 
         public SkillId ReadLocalSkillId()
         {
-            return SkillId.FromSkill(_reader.ReadUInt32());
+            return SkillId.FromSkill(_reader.ReadUInt64());
         }
 
         public Angle ReadAngle()

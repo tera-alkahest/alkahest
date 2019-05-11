@@ -191,9 +191,9 @@ namespace Alkahest.Core.IO
 
             return Seek(0, (w, op) =>
             {
-            w.Stream.CopyTo(stream);
+                w.Stream.CopyTo(stream);
 
-            return stream.ToArray();
+                return stream.ToArray();
             });
         }
     }
