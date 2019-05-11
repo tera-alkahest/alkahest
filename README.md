@@ -63,6 +63,14 @@ git submodule update --init --recursive
 Next, simply open `Alkahest.sln` and build it with the `Debug` + `Any CPU`
 configuration. All build artifacts will end up in the `Build` directory.
 
+If you want to build the NuGet package, run this command after building:
+
+```bash
+nuget pack -Symbols Alkahest.Core
+```
+
+This will create a file named something like `Alkahest.Core.1.0.0-alpha4`.
+
 ## Configuration
 
 After you've built Alkahest, you will need to configure it. This is done in the
