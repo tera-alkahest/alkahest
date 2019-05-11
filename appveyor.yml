@@ -1,5 +1,5 @@
 artifacts:
-    - path: **\*.nupkg
+    - path: '**\*.nupkg'
 build_script:
     - cmd: >-
           for /r %f in (*.csproj) do nuget restore "%f"
