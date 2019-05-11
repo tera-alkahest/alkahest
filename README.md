@@ -4,20 +4,21 @@
 [![NuGet](https://img.shields.io/nuget/v/Alkahest.Core.svg)](https://www.nuget.org/packages/Alkahest.Core)
 [![Build Status](https://ci.appveyor.com/api/projects/status/g4975y955sgosiej?svg=true)](https://ci.appveyor.com/project/alexrp/alkahest)
 
-**Alkahest** is a proxy server for [TERA](http://tera.enmasse.com). At its core,
-it's simply a server that relays communication between the game client and
-server. Its main usefulness lies in its extensibility; you can write plugins
-that can inspect packets, modify them, and send newly constructed packets. This
-opens up a lot of possibilities for integrating the game with other software, as
-well as adding entirely new features to the game, so long as you can do so
-within the framework of the game's network protocol.
+**Alkahest** is a proxy server for
+[TERA](https://en.wikipedia.org/wiki/TERA_%28video_game%29). At its core, it's
+simply a server that relays communication between the game client and server.
+Its main usefulness lies in its extensibility; you can write plugins that can
+inspect packets, modify them, and send newly constructed packets. This opens up
+a lot of possibilities for integrating the game with other software, as well as
+adding entirely new features to the game, so long as you can do so within the
+framework of the game's network protocol.
 
 This project was started out of a need to have a program similar to
-[tera-proxy](https://github.com/meishuu/tera-proxy), but written in a .NET
-language so that it could easily use the Windows Presentation Foundation
-libraries for the purpose of making a UI overlay for the game. It has since
-grown to be a more general-purpose framework for TERA modding, featuring tools
-and APIs for accessing data stored with the game client.
+[tera-proxy](https://github.com/tera-proxy), but written in a .NET language so
+that it could easily use the Windows Presentation Foundation libraries for the
+purpose of making a UI overlay for the game. It has since grown to be a more
+general-purpose framework for TERA modding, featuring tools and APIs for
+accessing data stored with the game client.
 
 ## Features
 
