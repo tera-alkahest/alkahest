@@ -20,4 +20,3 @@ notifications:
       url: https://discordapp.com/api/webhooks/302078251520491520/2XX3MlB0zfvV7aIfOiDnQFPZCmqlkMC6-ij5tP0gcgjwyvH1xp7cwSUG6kiP4f5caoY9
 pull_requests:
     do_not_increment_build_number: true
-version: {branch}-{build}
