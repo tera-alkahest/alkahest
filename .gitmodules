@@ -1,0 +1,3 @@
+[submodule "tera-data"]
+    path = tera-data
+    url = ../../tera-toolbox/tera-data
