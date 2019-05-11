@@ -9,7 +9,9 @@ used to verify that packet structures in `Alkahest.Core` are correct.
 
 To parse a log file with default settings, simply say:
 
-    $ alkahest-parser.exe 2017-03-23_02-46-40-249.pkt
+```bash
+alkahest-parser.exe 2017-03-23_02-46-40-249.pkt
+```
 
 The result will be written to `2017-03-23_02-46-40-249.txt`. You can instead
 specify the output file with the `--output` option.
