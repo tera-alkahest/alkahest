@@ -8,6 +8,6 @@ namespace Alkahest.Core.Game
         Jump = 5,
         JumpSteep = 6,
         Stop = 7,
-        HeavyFall = 10
+        HeavyFall = 10,
     }
 }

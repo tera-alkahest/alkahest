@@ -18,8 +18,7 @@ namespace Alkahest.Server
         public delegate bool ConsoleEventHandler(int @event);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        static extern bool SetConsoleCtrlHandler(ConsoleEventHandler handler,
-            bool add);
+        static extern bool SetConsoleCtrlHandler(ConsoleEventHandler handler, bool add);
 
         public static void AddConsoleEventHandler(ConsoleEventHandler handler)
         {

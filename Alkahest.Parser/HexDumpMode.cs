@@ -4,6 +4,6 @@ namespace Alkahest.Parser
     {
         None,
         Unknown,
-        All
+        All,
     }
 }

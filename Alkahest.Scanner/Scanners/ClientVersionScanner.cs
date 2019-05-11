@@ -7,13 +7,13 @@ namespace Alkahest.Scanner.Scanners
         static readonly byte?[] _pattern1 = new byte?[]
         {
             0x8B, 0x55, 0xEC, // mov edx, [ebp - 0x14]
-            0x8B, 0x35, null, null, null, null // mov esi, <addr>
+            0x8B, 0x35, null, null, null, null, // mov esi, <addr>
         };
 
         static readonly byte?[] _pattern2 = new byte?[]
         {
             0x66, 0x83, 0x02, 0x0C, // add word ptr [edx], 0xC
-            0x8B, 0x3D, null, null, null, null // mov edi, <addr>
+            0x8B, 0x3D, null, null, null, null, // mov edi, <addr>
         };
 
         public void Run(MemoryReader reader, IpcChannel channel)
@@ -42,11 +42,9 @@ namespace Alkahest.Scanner.Scanners
             channel.Version2 = ver2;
         }
 
-        static uint? ReadVersion(MemoryReader reader, byte?[] pattern,
-            int offset)
+        static uint? ReadVersion(MemoryReader reader, byte?[] pattern, int offset)
         {
-            var off = reader.ReadOffset(offset +
-                pattern.TakeWhile(x => x != null).Count());
+            var off = reader.ReadOffset(offset + pattern.TakeWhile(x => x != null).Count());
 
             return reader.IsValid(off) ? (uint?)reader.ReadUInt32(off) : null;
         }

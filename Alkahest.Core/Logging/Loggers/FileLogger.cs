@@ -18,8 +18,8 @@ namespace Alkahest.Core.Logging.Loggers
 
             Directory.CreateDirectory(directory);
 
-            _writer = new StreamWriter(File.Open(Path.Combine(directory,
-                DateTime.Now.ToString(fileNameFormat) + ".log"),
+            _writer = new StreamWriter(File.Open(
+                Path.Combine(directory, DateTime.Now.ToString(fileNameFormat) + ".log"),
                 FileMode.Create, FileAccess.Write));
         }
 

@@ -163,7 +163,7 @@ namespace Alkahest.Parser
                 "",
                 $"  {AnalysisMode.None}: Don't perform analysis (default).",
                 $"  {AnalysisMode.Unknown}: Analyze packets with unknown structure.",
-                $"  {AnalysisMode.All}: Analyze all packets."
+                $"  {AnalysisMode.All}: Analyze all packets.",
             };
 
             args = set.Parse(args).ToArray();
@@ -171,8 +171,7 @@ namespace Alkahest.Parser
             if (version)
             {
                 Console.WriteLine("{0} {1}", name,
-                    asm.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-                    .InformationalVersion);
+                    asm.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion);
                 return false;
             }
 
@@ -216,7 +215,7 @@ namespace Alkahest.Parser
                     result.WriteLine();
                     result.WriteLine(new RawPacket(name)
                     {
-                        Payload = payload
+                        Payload = payload,
                     });
                 }
 
@@ -239,8 +238,8 @@ namespace Alkahest.Parser
                         }
                     }
 
-                    var strings = PacketAnalysis.FindStrings(payload,
-                        _whiteSpace, _control, _length);
+                    var strings = PacketAnalysis.FindStrings(
+                        payload, _whiteSpace, _control, _length);
 
                     if (strings.Any())
                     {
@@ -295,20 +294,19 @@ namespace Alkahest.Parser
             result.WriteLine();
         }
 
-        static void PrintStats(PacketStatistics stats)
+        static void PrintStatistics(PacketStatistics stats)
         {
             if (_stats)
             {
-                void PrintValue(string name, int value,
-                    string trail = "")
+                static void PrintValue(string name, int value, string trail = "")
                 {
                     _log.Info("{0,17}: {1}{2}", name, value, trail);
                 }
 
-                void PrintPercentageValue(string name, int value, int total)
+                static void PrintPercentageValue(string name, int value, int total)
                 {
-                    PrintValue(name, value, total == 0 ? string.Empty :
-                        $" ({(double)value / total:P2})");
+                    PrintValue(name, value, total == 0 ?
+                        string.Empty : $" ({(double)value / total:P2})");
                 }
 
                 void PrintTotalPacketValue(string name, int value)
@@ -336,8 +334,7 @@ namespace Alkahest.Parser
 
             if (_summary)
             {
-                void PrintSummary(KeyValuePair<string,
-                    PacketStatistics.SummaryEntry> kvp)
+                void PrintSummary(KeyValuePair<string, PacketStatistics.SummaryEntry> kvp)
                 {
                     var entry = kvp.Value;
                     var total = stats.RelevantPackets;
@@ -354,7 +351,8 @@ namespace Alkahest.Parser
                 void PrintSummaryList(string header,
                     Func<PacketStatistics.SummaryEntry, bool> predicate)
                 {
-                    var packets = stats.Packets.Where(x => predicate(x.Value))
+                    var packets = stats.Packets
+                        .Where(x => predicate(x.Value))
                         .OrderBy(x => x.Key);
 
                     if (!packets.Any())
@@ -397,15 +395,15 @@ namespace Alkahest.Parser
 
             var color = Console.ForegroundColor;
 
-            Log.Loggers.Add(new ConsoleLogger(false,
-                color, color, color, color, color));
+            Log.Loggers.Add(new ConsoleLogger(false, color, color, color, color, color));
 
             if (!Debugger.IsAttached)
                 AppDomain.CurrentDomain.UnhandledException += UnhandledException;
 
             var input = args[0];
             var output = _output ?? Path.ChangeExtension(input, "txt");
-            var regexes = _regexes.Select(x => new Regex(x, RegexOptions))
+            var regexes = _regexes
+                .Select(x => new Regex(x, RegexOptions))
                 .DefaultIfEmpty(new Regex(".*", RegexOptions))
                 .ToArray();
 
@@ -419,7 +417,7 @@ namespace Alkahest.Parser
                 {
                     _log.Info(string.Empty);
                     _log.Info("Version: {0}", reader.Version);
-                    _log.Info("Compressed: {0}", reader.Compressed);
+                    _log.Info("Compressed: {0}", reader.IsCompressed);
                     _log.Info("Region: {0}", reader.Messages.Region);
                     _log.Info("Servers:");
 
@@ -446,16 +444,16 @@ namespace Alkahest.Parser
                         throw Assert.Unreachable();
                 }
 
-                using (var result = new StreamWriter(new FileStream(output,
-                    FileMode.Create, FileAccess.Write)))
-                    foreach (var entry in reader.EnumerateAll())
-                        HandleEntry(reader, entry, regexes, stats, serializer,
-                            result);
+                using var result = new StreamWriter(
+                    new FileStream(output, FileMode.Create, FileAccess.Write));
+
+                foreach (var entry in reader.EnumerateAll())
+                    HandleEntry(reader, entry, regexes, stats, serializer, result);
             }
 
             _log.Basic("Parsed packets to {0}", output);
 
-            PrintStats(stats);
+            PrintStatistics(stats);
 
             return 0;
         }

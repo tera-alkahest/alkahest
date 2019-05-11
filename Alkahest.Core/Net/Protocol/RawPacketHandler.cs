@@ -1,5 +1,5 @@
 namespace Alkahest.Core.Net.Protocol
 {
-    public delegate bool RawPacketHandler(GameClient client,
-        Direction direction, RawPacket packet);
+    public delegate bool RawPacketHandler(
+        GameClient client, Direction direction, RawPacket packet);
 }

@@ -28,8 +28,7 @@ namespace Alkahest.Core.Cryptography
 
             public void SetKey(byte[] buffer, int offset)
             {
-                Buffer.BlockCopy(buffer, offset * sizeof(uint),
-                    _key, 0, Size * sizeof(uint));
+                Buffer.BlockCopy(buffer, offset * sizeof(uint), _key, 0, Size * sizeof(uint));
             }
 
             public void Advance()
@@ -46,7 +45,7 @@ namespace Alkahest.Core.Cryptography
         {
             new KeyBlockGenerator(55, 31),
             new KeyBlockGenerator(57, 50),
-            new KeyBlockGenerator(58, 39)
+            new KeyBlockGenerator(58, 39),
         };
 
         uint _keyBlock;
@@ -55,22 +54,20 @@ namespace Alkahest.Core.Cryptography
 
         public TeraEncryption(byte[] key)
         {
-            var buf = new byte[_generators.Aggregate(0,
-                (acc, x) => acc + x.Size) * sizeof(uint)];
+            var buf = new byte[_generators.Aggregate(0, (acc, x) => acc + x.Size) * sizeof(uint)];
 
             buf[0] = (byte)key.Length;
 
             for (var i = 1; i < buf.Length; i++)
                 buf[i] = key[i % key.Length];
 
-            using (var sha = new SHA1Tera())
-            {
-                for (var i = 0; i < buf.Length; i += sha.HashSize / 8)
-                {
-                    var hash = sha.ComputeHash(buf);
+            using var sha = new SHA1Tera();
 
-                    Buffer.BlockCopy(hash, 0, buf, i, hash.Length);
-                }
+            for (var i = 0; i < buf.Length; i += sha.HashSize / 8)
+            {
+                var hash = sha.ComputeHash(buf);
+
+                Buffer.BlockCopy(hash, 0, buf, i, hash.Length);
             }
 
             var offset = 0;
@@ -88,8 +85,7 @@ namespace Alkahest.Core.Cryptography
             {
                 if (_remaining == 0)
                 {
-                    var states = _generators.Select(x =>
-                        (gen: x, overflow: x.InOverflow));
+                    var states = _generators.Select(x => (gen: x, overflow: x.InOverflow));
                     var overflowed = states.Count(x => x.overflow) >= 2;
 
                     foreach (var (gen, overflow) in states)

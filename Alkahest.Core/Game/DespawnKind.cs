@@ -5,6 +5,6 @@ namespace Alkahest.Core.Game
         Unknown1 = 0,
         OutOfView = 1,
         Unknown2 = 3,
-        Dead = 5
+        Dead = 5,
     }
 }

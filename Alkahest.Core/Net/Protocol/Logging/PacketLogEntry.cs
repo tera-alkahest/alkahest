@@ -7,8 +7,7 @@ namespace Alkahest.Core.Net.Protocol.Logging
 {
     public sealed class PacketLogEntry
     {
-        public static IReadOnlyList<byte> Magic { get; } =
-            Encoding.ASCII.GetBytes("TPPL");
+        public static IReadOnlyList<byte> Magic { get; } = Encoding.ASCII.GetBytes("TPPL");
 
         public static uint Version { get; } = 0;
 
@@ -22,8 +21,8 @@ namespace Alkahest.Core.Net.Protocol.Logging
 
         public IReadOnlyList<byte> Payload { get; }
 
-        public PacketLogEntry(DateTime timestamp, int serverId,
-            Direction direction, ushort opCode, byte[] payload)
+        public PacketLogEntry(DateTime timestamp, int serverId, Direction direction,
+            ushort opCode, byte[] payload)
         {
             direction.CheckValidity(nameof(direction));
 
@@ -31,8 +30,7 @@ namespace Alkahest.Core.Net.Protocol.Logging
             ServerId = serverId;
             Direction = direction;
             OpCode = opCode;
-            Payload = (payload ??
-                throw new ArgumentNullException(nameof(payload))).ToArray();
+            Payload = (payload ?? throw new ArgumentNullException(nameof(payload))).ToArray();
         }
     }
 }

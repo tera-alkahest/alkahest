@@ -22,7 +22,7 @@ namespace Alkahest.Core.Logging.Loggers
             ConsoleColor warningColor, ConsoleColor basicColor,
             ConsoleColor infoColor, ConsoleColor debugColor)
         {
-            void CheckColor(ConsoleColor color, string name)
+            static void CheckColor(ConsoleColor color, string name)
             {
                 if (!Enum.IsDefined(typeof(ConsoleColor), color))
                     throw new ArgumentException("Invalid console color.", name);
@@ -88,9 +88,17 @@ namespace Alkahest.Core.Logging.Loggers
             var console = level <= LogLevel.Warning ?
                 Console.Error : Console.Out;
 
-            Console.ForegroundColor = color;
-            console.WriteLine($"{timestamp}[{lvl}] {source.Name}{category}: {message}");
-            Console.ResetColor();
+            if (_colors)
+                Console.ForegroundColor = color;
+
+            try
+            {
+                console.WriteLine($"{timestamp}[{lvl}] {source.Name}{category}: {message}");
+            }
+            finally
+            {
+                Console.ResetColor();
+            }
         }
     }
 }

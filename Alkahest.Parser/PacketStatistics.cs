@@ -36,8 +36,7 @@ namespace Alkahest.Parser
 
         public int PotentialStrings { get; set; }
 
-        public IReadOnlyDictionary<string, SummaryEntry> Packets =>
-            _packets;
+        public IReadOnlyDictionary<string, SummaryEntry> Packets => _packets;
 
         readonly Dictionary<string, SummaryEntry> _packets =
             new Dictionary<string, SummaryEntry>();

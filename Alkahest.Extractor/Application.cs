@@ -24,7 +24,7 @@ namespace Alkahest.Extractor
         {
             new DecryptCommand(),
             new DumpJsonCommand(),
-            new DumpXmlCommand()
+            new DumpXmlCommand(),
         };
 
         static string _output;
@@ -61,19 +61,18 @@ namespace Alkahest.Extractor
                 },
                 "",
                 "Commands:",
-                ""
+                "",
             };
 
             foreach (var cmd in _commands)
-                set.Add($"  {cmd.Syntax}: {cmd.Description}");
+                set.Add($"  {cmd.Name} {cmd.Syntax}: {cmd.Description}");
 
             args = set.Parse(args).ToArray();
 
             if (version)
             {
                 Console.WriteLine("{0} {1}", name,
-                    asm.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-                    .InformationalVersion);
+                    asm.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion);
                 return false;
             }
 
@@ -128,8 +127,7 @@ namespace Alkahest.Extractor
 
             var color = Console.ForegroundColor;
 
-            Log.Loggers.Add(new ConsoleLogger(false,
-                color, color, color, color, color));
+            Log.Loggers.Add(new ConsoleLogger(false, color, color, color, color, color));
 
             if (!Debugger.IsAttached)
                 AppDomain.CurrentDomain.UnhandledException += UnhandledException;

@@ -5,6 +5,6 @@ namespace Alkahest.Core.Game
         Weapon = 1,
         Armor = 3,
         Handwear = 4,
-        Footwear = 5
+        Footwear = 5,
     }
 }

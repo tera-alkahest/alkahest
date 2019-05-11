@@ -14,6 +14,6 @@ namespace Alkahest.Core.Game
         Gunner = 9,
         Brawler = 10,
         Ninja = 11,
-        Valkyrie = 12
+        Valkyrie = 12,
     }
 }

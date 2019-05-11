@@ -7,6 +7,6 @@ namespace Alkahest.Core.Game
         Aman = 2,
         Castanic = 3,
         Popori = 4,
-        Baraka = 5
+        Baraka = 5,
     }
 }

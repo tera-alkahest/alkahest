@@ -26,8 +26,8 @@ namespace Alkahest.Core.Net.Protocol.Serializers
 
             public Func<object> ElementConstructor { get; }
 
-            public ReflectionPacketFieldInfo(
-                PropertyInfo property, PacketFieldAttribute attribute)
+            public ReflectionPacketFieldInfo(PropertyInfo property,
+                PacketFieldAttribute attribute)
                 : base(property, attribute)
             {
                 var type = property.PropertyType;
@@ -53,16 +53,14 @@ namespace Alkahest.Core.Net.Protocol.Serializers
 
                 if (IsArray)
                 {
-                    var ctor = type.GetGenericArguments()[0]
-                        .GetConstructor(Type.EmptyTypes);
+                    var ctor = type.GetGenericArguments()[0].GetConstructor(Type.EmptyTypes);
                     var empty = Array.Empty<object>();
 
                     ElementConstructor = () => ctor.Invoke(empty);
                 }
             }
 
-            static void GetFunctions(PropertyInfo property,
-                PacketFieldAttribute attribute,
+            static void GetFunctions(PropertyInfo property, PacketFieldAttribute attribute,
                 out Action<TeraBinaryWriter, object> serializer,
                 out Func<TeraBinaryReader, object> deserializer)
             {
@@ -197,8 +195,7 @@ namespace Alkahest.Core.Net.Protocol.Serializers
             return new ReflectionPacketFieldInfo(property, attribute);
         }
 
-        protected override void OnSerialize(TeraBinaryWriter writer,
-            Packet packet)
+        protected override void OnSerialize(TeraBinaryWriter writer, Packet packet)
         {
             SerializeObject(writer, packet);
         }
@@ -230,8 +227,7 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                     writer.WriteUInt16(0);
                 }
                 else
-                    info.PrimitiveSerializer(writer,
-                        info.Property.GetValue(source));
+                    info.PrimitiveSerializer(writer, info.Property.GetValue(source));
             }
 
             foreach (var (info, offset) in offsets)
@@ -265,21 +261,18 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                         SerializeObject(writer, list[i]);
 
                         if (i != list.Count - 1)
-                            writer.Seek(pos + sizeof(ushort),
-                                (w, op) => w.WriteOffset(op));
+                            writer.Seek(pos + sizeof(ushort), (w, op) => w.WriteOffset(op));
                     }
                 }
                 else
                 {
                     writer.Seek(offset, (w, op) => w.WriteOffset(op));
-                    writer.WriteString((string)info.Property.GetValue(source) ??
-                        string.Empty);
+                    writer.WriteString((string)info.Property.GetValue(source) ?? string.Empty);
                 }
             }
         }
 
-        protected override void OnDeserialize(TeraBinaryReader reader,
-            Packet packet)
+        protected override void OnDeserialize(TeraBinaryReader reader, Packet packet)
         {
             DeserializeObject(reader, packet);
         }
@@ -301,8 +294,7 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                     if (count == 0)
                         continue;
 
-                    reader.Seek(offset, (r, op) =>
-                        list.AddRange(r.ReadBytes(count)));
+                    reader.Seek(offset, (r, op) => list.AddRange(r.ReadBytes(count)));
                 }
                 else if (info.IsArray)
                 {
@@ -335,8 +327,7 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                 {
                     var offset = reader.ReadOffset();
 
-                    info.Property.SetValue(target, reader.Seek(offset,
-                        (r, op) => r.ReadString()));
+                    info.Property.SetValue(target, reader.Seek(offset, (r, op) => r.ReadString()));
                 }
                 else
                 {

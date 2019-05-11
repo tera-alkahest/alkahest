@@ -47,8 +47,8 @@ namespace Alkahest.Core.Cryptography
                 throw new ArgumentException("Invalid key length.", name);
         }
 
-        public TeraEncryptionSession(Direction direction, byte[] clientKey1,
-            byte[] clientKey2, byte[] serverKey1, byte[] serverKey2)
+        public TeraEncryptionSession(Direction direction,
+            byte[] clientKey1, byte[] clientKey2, byte[] serverKey1, byte[] serverKey2)
         {
             direction.CheckValidity(nameof(direction));
             CheckKey(clientKey1, nameof(clientKey1));

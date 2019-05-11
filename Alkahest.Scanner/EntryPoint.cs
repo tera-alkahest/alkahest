@@ -13,17 +13,21 @@ namespace Alkahest.Scanner
             new ClientVersionScanner(),
             new DataCenterKeyScanner(),
             new GameMessageScanner(),
-            new SystemMessageScanner()
+            new SystemMessageScanner(),
         };
 
         readonly IpcChannel _channel;
 
+#pragma warning disable IDE0060 // Remove unused parameter
         public EntryPoint(RemoteHooking.IContext context, string channelName)
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             _channel = IpcChannel.Connect(channelName);
         }
 
+#pragma warning disable IDE0060 // Remove unused parameter
         public void Run(RemoteHooking.IContext context, string channelName)
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             var mod = Process.GetCurrentProcess().MainModule;
             var reader = new MemoryReader(mod.BaseAddress,

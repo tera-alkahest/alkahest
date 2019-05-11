@@ -46,9 +46,8 @@ namespace Alkahest.Core.Net
         public Uri Uri { get; }
 
         public ServerListParameters(IPAddress realSlsAddress,
-            IPAddress proxySlsAddress, int? proxySlsPort,
-            IPAddress gameAddress, int basePort, Region region,
-            TimeSpan timeout, int retries)
+            IPAddress proxySlsAddress, int? proxySlsPort, IPAddress gameAddress,
+            int basePort, Region region, TimeSpan timeout, int retries)
         {
             if (basePort < IPEndPoint.MinPort ||
                 basePort >= IPEndPoint.MaxPort)
@@ -65,8 +64,7 @@ namespace Alkahest.Core.Net
             ProxyServerListEndPoint = new IPEndPoint(
                 proxySlsAddress ?? throw new ArgumentNullException(nameof(proxySlsAddress)),
                 proxySlsPort ?? Uri.Port);
-            GameAddress = gameAddress ??
-                throw new ArgumentNullException(nameof(gameAddress));
+            GameAddress = gameAddress ?? throw new ArgumentNullException(nameof(gameAddress));
             BasePort = basePort;
             Region = region;
             Timeout = timeout;

@@ -56,7 +56,7 @@ namespace Alkahest.Server
                     "v|version",
                     "Print help and exit.",
                     v => version = v != null
-                }
+                },
             };
 
             args = set.Parse(args).ToArray();
@@ -64,8 +64,7 @@ namespace Alkahest.Server
             if (version)
             {
                 Console.WriteLine("{0} {1}", name,
-                    asm.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-                    .InformationalVersion);
+                    asm.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion);
                 return false;
             }
 
@@ -116,10 +115,8 @@ namespace Alkahest.Server
 
             _log.Basic("Starting {0}...", Name);
 
-            var hosts = Configuration.AdjustHostsFile ?
-                new HostsFileManager() : null;
-            var shell = Configuration.AdjustNetworkShell ?
-                new NetworkShellManager() : null;
+            var hosts = Configuration.AdjustHostsFile ? new HostsFileManager() : null;
+            var shell = Configuration.AdjustNetworkShell ? new NetworkShellManager() : null;
 
             try
             {
@@ -147,42 +144,41 @@ namespace Alkahest.Server
                     region, Configuration.ServerListTimeout,
                     Configuration.ServerListRetries);
 
-                using (var slsProxy = new ServerListProxy(slsParams))
+                using var slsProxy = new ServerListProxy(slsParams);
+
+                if (Configuration.EnableServerList)
+                    slsProxy.Start();
+
+                var pool = new ObjectPool<SocketAsyncEventArgs>(
+                    () => new SocketAsyncEventArgs(), x => x.Reset(),
+                    Configuration.PoolLimit != 0 ? (int?)Configuration.PoolLimit : null);
+                var proc = new PacketProcessor(new CompilerPacketSerializer(
+                    new MessageTables(region, OpCodeTable.Versions[region])));
+                var proxies = slsProxy.Servers.Select(x => new GameProxy(x,
+                    pool, proc, Configuration.GameBacklog,
+                    Configuration.GameTimeout)
                 {
-                    if (Configuration.EnableServerList)
-                        slsProxy.Start();
+                    MaxClients = Configuration.GameMaxClients,
+                }).ToArray();
 
-                    var pool = new ObjectPool<SocketAsyncEventArgs>(
-                        () => new SocketAsyncEventArgs(), x => x.Reset(),
-                        Configuration.PoolLimit != 0 ? (int?)Configuration.PoolLimit : null);
-                    var proc = new PacketProcessor(new CompilerPacketSerializer(
-                        new MessageTables(region, OpCodeTable.Versions[region])));
-                    var proxies = slsProxy.Servers.Select(x => new GameProxy(x,
-                        pool, proc, Configuration.GameBacklog,
-                        Configuration.GameTimeout)
-                    {
-                        MaxClients = Configuration.GameMaxClients
-                    }).ToArray();
+                foreach (var proxy in proxies)
+                    proxy.Start();
 
-                    foreach (var proxy in proxies)
-                        proxy.Start();
+                var loader = new PluginLoader(Configuration.PluginDirectory,
+                    Configuration.PluginPattern, Configuration.DisablePlugins);
 
-                    var loader = new PluginLoader(Configuration.PluginDirectory,
-                        Configuration.PluginPattern, Configuration.DisablePlugins);
+                loader.Start(proxies);
 
-                    loader.Start(proxies);
+                _log.Basic("{0} started", Name);
 
-                    _log.Basic("{0} started", Name);
+                _runningEvent.Wait();
 
-                    _runningEvent.Wait();
+                _log.Basic("{0} shutting down...", Name);
 
-                    _log.Basic("{0} shutting down...", Name);
+                loader.Stop(proxies);
 
-                    loader.Stop(proxies);
-
-                    foreach (var proxy in proxies)
-                        proxy.Dispose();
-                }
+                foreach (var proxy in proxies)
+                    proxy.Dispose();
             }
             finally
             {

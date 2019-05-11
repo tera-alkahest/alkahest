@@ -5,6 +5,6 @@ namespace Alkahest.Core.Game
         Change = 0,
         Detonate = 1,
         Expire = 2,
-        Reclaim = 3
+        Reclaim = 3,
     }
 }

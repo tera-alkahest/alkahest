@@ -4,6 +4,6 @@ namespace Alkahest.Core.Game
     {
         Normal = 0,
         InCombat = 1,
-        Resting = 2
+        Resting = 2,
     }
 }

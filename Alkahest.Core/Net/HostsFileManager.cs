@@ -12,7 +12,7 @@ namespace Alkahest.Core.Net
 {
     public sealed class HostsFileManager : IDisposable
     {
-        const string HostsFileRegistryPath = @"SYSTEM\CurrentControlSet\services\Tcpip\Parameters";
+        const string HostsFileRegistryPath = @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters";
 
         const string HostsFileRegistryKey = "DataBasePath";
 
@@ -35,8 +35,9 @@ namespace Alkahest.Core.Net
 
         static HostsFileManager()
         {
-            using (var key = Registry.LocalMachine.OpenSubKey(HostsFileRegistryPath))
-                _hostsPath = Path.Combine((string)key.GetValue(HostsFileRegistryKey), HostsFileName);
+            using var key = Registry.LocalMachine.OpenSubKey(HostsFileRegistryPath);
+
+            _hostsPath = Path.Combine((string)key.GetValue(HostsFileRegistryKey), HostsFileName);
         }
 
         static void RunLocked(Action action)

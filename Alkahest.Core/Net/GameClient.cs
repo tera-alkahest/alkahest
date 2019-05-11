@@ -23,15 +23,13 @@ namespace Alkahest.Core.Net
 
         TeraEncryptionSession _clientEncryption;
 
-        readonly byte[] _clientSendBuffer =
-            new byte[PacketHeader.MaxPacketSize];
+        readonly byte[] _clientSendBuffer = new byte[PacketHeader.MaxPacketSize];
 
         readonly Socket _serverSocket;
 
         TeraEncryptionSession _serverEncryption;
 
-        readonly byte[] _serverSendBuffer =
-            new byte[PacketHeader.MaxPacketSize];
+        readonly byte[] _serverSendBuffer = new byte[PacketHeader.MaxPacketSize];
 
         volatile bool _disconnected;
 
@@ -46,6 +44,7 @@ namespace Alkahest.Core.Net
             SetOptions();
 
             var args = proxy.ArgsPool.Get();
+
             args.Completed += OnConnect;
             args.RemoteEndPoint = Proxy.Info.RealEndPoint;
 
@@ -317,8 +316,8 @@ namespace Alkahest.Core.Net
 
         void Receive(Direction direction, byte[] headerBuffer, byte[] payloadBuffer)
         {
-            headerBuffer = headerBuffer ?? new byte[PacketHeader.HeaderSize];
-            payloadBuffer = payloadBuffer ?? new byte[PacketHeader.MaxPayloadSize];
+            headerBuffer ??= new byte[PacketHeader.HeaderSize];
+            payloadBuffer ??= new byte[PacketHeader.MaxPayloadSize];
 
             Socket from;
             Socket to;
@@ -424,7 +423,8 @@ namespace Alkahest.Core.Net
 
         static bool IsSocketException(Exception exception)
         {
-            return exception is SocketException || exception is ObjectDisposedException;
+            return exception is SocketException ||
+                exception is ObjectDisposedException;
         }
 
         void HandleException(Exception exception, bool server)

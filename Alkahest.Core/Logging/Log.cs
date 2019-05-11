@@ -61,10 +61,8 @@ namespace Alkahest.Core.Logging
 
         bool ShouldLog(LogLevel level)
         {
-            if (level == LogLevel.Error || level == LogLevel.Warning)
-                return true;
-
-            return level <= Level && !DiscardSources.Contains(Source.Name);
+            return level == LogLevel.Error || level == LogLevel.Warning ? true :
+                level <= Level && !DiscardSources.Contains(Source.Name);
         }
 
         void LogMessage(LogLevel level, string format, params object[] args)
@@ -80,8 +78,7 @@ namespace Alkahest.Core.Logging
 
             var msg = args.Length != 0 ? string.Format(format, args) : format;
             var now = DateTime.Now;
-            var stamp = TimestampFormat != string.Empty ?
-                now.ToString(TimestampFormat) : null;
+            var stamp = TimestampFormat != string.Empty ? now.ToString(TimestampFormat) : null;
 
             lock (_lock)
             {

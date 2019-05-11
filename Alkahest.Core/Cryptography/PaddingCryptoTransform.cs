@@ -9,8 +9,7 @@ namespace Alkahest.Core.Cryptography
 
         public int OutputBlockSize => Transform.OutputBlockSize;
 
-        public bool CanTransformMultipleBlocks =>
-            Transform.CanTransformMultipleBlocks;
+        public bool CanTransformMultipleBlocks => Transform.CanTransformMultipleBlocks;
 
         public bool CanReuseTransform => Transform.CanReuseTransform;
 
@@ -26,15 +25,14 @@ namespace Alkahest.Core.Cryptography
             Transform.Dispose();
         }
 
-        public int TransformBlock(byte[] inputBuffer, int inputOffset,
-            int inputCount, byte[] outputBuffer, int outputOffset)
+        public int TransformBlock(byte[] inputBuffer, int inputOffset, int inputCount,
+            byte[] outputBuffer, int outputOffset)
         {
-            return Transform.TransformBlock(inputBuffer, inputOffset,
-                inputCount, outputBuffer, outputOffset);
+            return Transform.TransformBlock(inputBuffer, inputOffset, inputCount,
+                outputBuffer, outputOffset);
         }
 
-        public byte[] TransformFinalBlock(byte[] inputBuffer, int inputOffset,
-            int inputCount)
+        public byte[] TransformFinalBlock(byte[] inputBuffer, int inputOffset, int inputCount)
         {
             if (inputBuffer == null)
                 throw new ArgumentNullException(nameof(inputBuffer));

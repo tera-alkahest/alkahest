@@ -16,7 +16,7 @@ namespace Alkahest.Extractor.Commands
         public string Name => "decrypt";
 
         public string Syntax =>
-            $"{Name} <data center file> <key file> <iv file>";
+            $"<data center file> <key file> <iv file>";
 
         public string Description =>
             "Decrypt and uncompress a data center file.";
@@ -32,32 +32,25 @@ namespace Alkahest.Extractor.Commands
 
             _log.Basic("Decrypting {0}...", input);
 
-            var aes = new RijndaelManaged
+            using var aes = new RijndaelManaged
             {
                 Mode = CipherMode.CFB,
                 Key = ReadKey(args[1]),
                 IV = ReadKey(args[2]),
-                Padding = PaddingMode.Zeros
+                Padding = PaddingMode.Zeros,
             };
 
-            var decryptor = new PaddingCryptoTransform(aes.CreateDecryptor());
+            using var transform = new PaddingCryptoTransform(aes.CreateDecryptor());
+            var stream = new CryptoStream(File.OpenRead(input), transform, CryptoStreamMode.Read);
+            using var reader = new BinaryReader(stream, TeraBinaryReader.Encoding, true);
 
-            using (var stream = new CryptoStream(
-                File.OpenRead(input), decryptor, CryptoStreamMode.Read))
-            {
-                using (var reader = new BinaryReader(stream,
-                    TeraBinaryReader.Encoding, true))
-                {
-                    reader.ReadUInt32();
-                    reader.ReadUInt16();
-                }
+            reader.ReadUInt32();
+            reader.ReadUInt16();
 
-                using (var stream2 = new DeflateStream(stream,
-                    CompressionMode.Decompress))
-                    using (var stream3 = File.Open(output,
-                        FileMode.Create, FileAccess.Write))
-                        stream2.CopyTo(stream3);
-            }
+            using var stream2 = new DeflateStream(stream, CompressionMode.Decompress);
+            using var stream3 = File.Open(output, FileMode.Create, FileAccess.Write);
+
+            stream2.CopyTo(stream3);
 
             _log.Basic("Decrypted data center to {0}", output);
         }

@@ -51,7 +51,7 @@ namespace Alkahest.Scanner
                     "o|output",
                     "Specify output directory.",
                     o => _output = o
-                }
+                },
             };
 
             args = set.Parse(args).ToArray();
@@ -91,8 +91,7 @@ namespace Alkahest.Scanner
 
             var color = Console.ForegroundColor;
 
-            Log.Loggers.Add(new ConsoleLogger(false,
-                color, color, color, color, color));
+            Log.Loggers.Add(new ConsoleLogger(false, color, color, color, color, color));
 
             if (!Debugger.IsAttached)
                 AppDomain.CurrentDomain.UnhandledException += UnhandledException;
@@ -142,7 +141,7 @@ namespace Alkahest.Scanner
                 File.WriteAllLines(verPath, new[]
                 {
                     chan.Version1.ToString(),
-                    chan.Version2.ToString()
+                    chan.Version2.ToString(),
                 });
 
                 _log.Basic("Wrote client versions to {0}", verPath);
@@ -154,7 +153,7 @@ namespace Alkahest.Scanner
 
                 File.WriteAllLines(keyPath, new[]
                 {
-                    string.Join(" ", chan.DataCenterKey.Select(x => x.ToString("X2")))
+                    string.Join(" ", chan.DataCenterKey.Select(x => x.ToString("X2"))),
                 });
 
                 _log.Basic("Wrote data center key to {0}", keyPath);
@@ -166,7 +165,7 @@ namespace Alkahest.Scanner
 
                 File.WriteAllLines(ivPath, new[]
                 {
-                    string.Join(" ", chan.DataCenterIV.Select(x => x.ToString("X2")))
+                    string.Join(" ", chan.DataCenterIV.Select(x => x.ToString("X2"))),
                 });
 
                 _log.Basic("Wrote data center IV to {0}", ivPath);
@@ -176,8 +175,9 @@ namespace Alkahest.Scanner
             {
                 var opcPath = Path.Combine(_output, "opc.txt");
 
-                File.WriteAllLines(opcPath, chan.GameMessages.Select(
-                    x => $"{x.Item2} = {x.Item1}").ToArray());
+                File.WriteAllLines(opcPath, chan.GameMessages
+                    .Select(x => $"{x.Item2} = {x.Item1}")
+                    .ToArray());
 
                 _log.Basic("Wrote opcodes to {0}", opcPath);
             }
@@ -186,8 +186,9 @@ namespace Alkahest.Scanner
             {
                 var smtPath = Path.Combine(_output, "smt.txt");
 
-                File.WriteAllLines(smtPath, chan.SystemMessages.Select(
-                    x => $"{x.Item2} = {x.Item1}").ToArray());
+                File.WriteAllLines(smtPath, chan.SystemMessages
+                    .Select(x => $"{x.Item2} = {x.Item1}")
+                    .ToArray());
 
                 _log.Basic("Wrote system messages to {0}", smtPath);
             }

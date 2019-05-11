@@ -34,12 +34,5 @@ namespace Alkahest.Plugins.PacketLogger
 
             return col;
         }
-
-        static string[] Split(string value, char separator)
-        {
-            return value.Split(new[] { separator },
-                StringSplitOptions.RemoveEmptyEntries)
-                .Select(x => x.Trim()).ToArray();
-        }
     }
 }

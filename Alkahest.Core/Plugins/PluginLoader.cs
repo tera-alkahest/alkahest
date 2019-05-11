@@ -24,12 +24,13 @@ namespace Alkahest.Core.Plugins
         {
             Directory.CreateDirectory(directory);
 
-            using (var container = new CompositionContainer(
-                new DirectoryCatalog(directory, pattern), true))
-                    _plugins = container.GetExports<IPlugin>()
-                        .Select(x => x.Value)
-                        .Where(x => !exclude.Contains(x.Name))
-                        .ToArray();
+            using var container = new CompositionContainer(
+                new DirectoryCatalog(directory, pattern), true);
+
+            _plugins = container.GetExports<IPlugin>()
+                .Select(x => x.Value)
+                .Where(x => !exclude.Contains(x.Name))
+                .ToArray();
 
             foreach (var plugin in _plugins)
                 EnforceConventions(plugin);

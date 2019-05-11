@@ -20,13 +20,10 @@ namespace Alkahest.Core.Net.Protocol
 
         public bool IsPrimitive { get; }
 
-        protected PacketFieldInfo(PropertyInfo property,
-            PacketFieldAttribute attribute)
+        protected PacketFieldInfo(PropertyInfo property, PacketFieldAttribute attribute)
         {
-            Property = property ??
-                throw new ArgumentNullException(nameof(property));
-            Attribute = attribute ??
-                throw new ArgumentNullException(nameof(attribute));
+            Property = property ?? throw new ArgumentNullException(nameof(property));
+            Attribute = attribute ?? throw new ArgumentNullException(nameof(attribute));
 
             var type = property.PropertyType;
             var isArray = type.IsConstructedGenericType &&

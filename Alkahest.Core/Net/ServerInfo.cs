@@ -13,15 +13,12 @@ namespace Alkahest.Core.Net
 
         public IPEndPoint ProxyEndPoint { get; }
 
-        public ServerInfo(int id, string name, IPEndPoint realEndPoint,
-            IPEndPoint proxyEndPoint)
+        public ServerInfo(int id, string name, IPEndPoint realEndPoint, IPEndPoint proxyEndPoint)
         {
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            RealEndPoint = realEndPoint ??
-                throw new ArgumentNullException(nameof(realEndPoint));
-            ProxyEndPoint = proxyEndPoint ??
-                throw new ArgumentNullException(nameof(proxyEndPoint));
+            RealEndPoint = realEndPoint ?? throw new ArgumentNullException(nameof(realEndPoint));
+            ProxyEndPoint = proxyEndPoint ?? throw new ArgumentNullException(nameof(proxyEndPoint));
         }
     }
 }

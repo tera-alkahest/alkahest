@@ -38,8 +38,7 @@ namespace Alkahest.Core.Net.Protocol
 
         public PacketProcessor(PacketSerializer serializer)
         {
-            Serializer = serializer ??
-                throw new ArgumentNullException(nameof(serializer));
+            Serializer = serializer ?? throw new ArgumentNullException(nameof(serializer));
 
             foreach (var code in serializer.Messages.Game.OpCodeToName.Keys)
             {
@@ -61,8 +60,8 @@ namespace Alkahest.Core.Net.Protocol
 
         static string GetOpCodeName(Type t)
         {
-            var name = t.GetMethod("Create", CreateFlags, null, Type.EmptyTypes,
-                null)?.GetCustomAttribute<PacketAttribute>()?.OpCode;
+            var name = t.GetMethod("Create", CreateFlags, null, Type.EmptyTypes, null)
+                ?.GetCustomAttribute<PacketAttribute>()?.OpCode;
 
             if (name == null)
                 throw new ArgumentException("Invalid packet type.", "handler");
@@ -136,24 +135,20 @@ namespace Alkahest.Core.Net.Protocol
 
         internal static PacketHeader ReadHeader(byte[] buffer)
         {
-            using (var reader = new TeraBinaryReader(buffer))
-            {
-                var length = (ushort)(reader.ReadUInt16() -
-                    PacketHeader.HeaderSize);
-                var opCode = reader.ReadUInt16();
+            using var reader = new TeraBinaryReader(buffer);
 
-                return new PacketHeader(length, opCode);
-            }
+            var length = (ushort)(reader.ReadUInt16() - PacketHeader.HeaderSize);
+            var opCode = reader.ReadUInt16();
+
+            return new PacketHeader(length, opCode);
         }
 
         internal static void WriteHeader(PacketHeader header, byte[] buffer)
         {
-            using (var writer = new TeraBinaryWriter(buffer))
-            {
-                writer.WriteUInt16((ushort)(header.Length +
-                    PacketHeader.HeaderSize));
-                writer.WriteUInt16(header.OpCode);
-            }
+            using var writer = new TeraBinaryWriter(buffer);
+
+            writer.WriteUInt16((ushort)(header.Length + PacketHeader.HeaderSize));
+            writer.WriteUInt16(header.OpCode);
         }
 
         internal bool Process(GameClient client, Direction direction,
@@ -176,7 +171,7 @@ namespace Alkahest.Core.Net.Protocol
             {
                 var packet = new RawPacket(name)
                 {
-                    Payload = payload.Slice(0, header.Length)
+                    Payload = payload.Slice(0, header.Length),
                 };
 
                 foreach (var handler in rawHandlers)
@@ -225,8 +220,7 @@ namespace Alkahest.Core.Net.Protocol
                         try
                         {
                             lock (_invokeLock)
-                                send &= (bool)handler.DynamicInvoke(client,
-                                    direction, packet);
+                                send &= (bool)handler.DynamicInvoke(client, direction, packet);
                         }
                         catch (Exception e) when (!Debugger.IsAttached)
                         {

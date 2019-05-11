@@ -8,6 +8,6 @@ namespace Alkahest.Core.Game
         TakeOff = 5,
         Ascend = 6,
         Descend = 7,
-        Land = 8
+        Land = 8,
     }
 }

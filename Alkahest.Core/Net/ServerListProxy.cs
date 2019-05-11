@@ -19,17 +19,15 @@ namespace Alkahest.Core.Net
 
         public ServerListProxy(ServerListParameters parameters)
         {
-            Parameters = parameters ??
-                throw new ArgumentNullException(nameof(parameters));
+            Parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
 
             var ep = parameters.ProxyServerListEndPoint;
-            var cfg = new HttpSelfHostConfiguration(
-                $"http://{ep.Address}:{ep.Port}")
+            var cfg = new HttpSelfHostConfiguration($"http://{ep.Address}:{ep.Port}")
             {
                 MessageHandlers =
                 {
-                    new ServerListRequestHandler(parameters, out var servers)
-                }
+                    new ServerListRequestHandler(parameters, out var servers),
+                },
             };
 
             Servers = servers;

@@ -11,7 +11,7 @@ namespace Alkahest.Core.Net.Protocol.Logging
 {
     public sealed class PacketLogWriter : IDisposable
     {
-        public bool Compressed { get; }
+        public bool IsCompressed { get; }
 
         public uint Version { get; } = PacketLogEntry.Version;
 
@@ -36,15 +36,14 @@ namespace Alkahest.Core.Net.Protocol.Logging
             if (fileNameFormat == null)
                 throw new ArgumentNullException(nameof(fileNameFormat));
 
-            Compressed = compress;
-            Messages = messages ??
-                throw new ArgumentNullException(nameof(messages));
+            IsCompressed = compress;
+            Messages = messages ?? throw new ArgumentNullException(nameof(messages));
             Servers = servers.ToDictionary(x => x.Id);
 
             Directory.CreateDirectory(directory);
 
-            Stream stream = File.Open(Path.Combine(directory,
-                DateTime.Now.ToString(fileNameFormat) + ".pkt"),
+            Stream stream = File.Open(
+                Path.Combine(directory, DateTime.Now.ToString(fileNameFormat) + ".pkt"),
                 FileMode.Create, FileAccess.Write);
 
             var magic = PacketLogEntry.Magic.ToArray();
@@ -56,6 +55,7 @@ namespace Alkahest.Core.Net.Protocol.Logging
                 stream = new DeflateStream(stream, CompressionLevel.Optimal);
 
             _writer = new TeraBinaryWriter(stream);
+
             _writer.WriteUInt32(Version);
             _writer.WriteByte((byte)messages.Region);
             _writer.WriteUInt32(messages.Game.Version);
@@ -106,8 +106,7 @@ namespace Alkahest.Core.Net.Protocol.Logging
             if (_disposed)
                 throw new ObjectDisposedException(GetType().FullName);
 
-            _writer.WriteInt64(new DateTimeOffset(entry.Timestamp)
-                .ToUnixTimeMilliseconds());
+            _writer.WriteInt64(new DateTimeOffset(entry.Timestamp).ToUnixTimeMilliseconds());
             _writer.WriteInt32(entry.ServerId);
             _writer.WriteByte((byte)entry.Direction);
             _writer.WriteUInt16(entry.OpCode);

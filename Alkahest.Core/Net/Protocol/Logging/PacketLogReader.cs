@@ -11,7 +11,7 @@ namespace Alkahest.Core.Net.Protocol.Logging
 {
     public sealed class PacketLogReader : IDisposable
     {
-        public bool Compressed { get; }
+        public bool IsCompressed { get; }
 
         public uint Version { get; }
 
@@ -35,9 +35,9 @@ namespace Alkahest.Core.Net.Protocol.Logging
             if (!magic.SequenceEqual(PacketLogEntry.Magic))
                 throw new InvalidDataException();
 
-            Compressed = stream.ReadByte() != 0;
+            IsCompressed = stream.ReadByte() != 0;
 
-            if (Compressed)
+            if (IsCompressed)
                 stream = new DeflateStream(stream, CompressionMode.Decompress);
 
             _reader = new TeraBinaryReader(stream);

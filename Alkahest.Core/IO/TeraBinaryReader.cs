@@ -188,15 +188,14 @@ namespace Alkahest.Core.IO
 
         public byte[] ToArray()
         {
-            using (var stream = new MemoryStream(PacketHeader.MaxPayloadSize))
-            {
-                return Seek(0, (r, op) =>
-                {
-                    r.Stream.CopyTo(stream);
+            using var stream = new MemoryStream(PacketHeader.MaxPayloadSize);
 
-                    return stream.ToArray();
-                });
-            }
+            return Seek(0, (r, op) =>
+            {
+                r.Stream.CopyTo(stream);
+
+                return stream.ToArray();
+            });
         }
     }
 }

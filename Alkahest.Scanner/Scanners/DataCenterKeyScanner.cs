@@ -15,7 +15,7 @@ namespace Alkahest.Scanner.Scanners
             0x50, // push eax
             0x8D, 0x45, 0xF4, // lea eax, [ebp - 0xC]
             0x64, 0xA3, 0x00, 0x00, 0x00, 0x00, // mov large fs:0x0, eax
-            0x8B, 0x73, 0x08 // mov esi, [ebx + 0x8]
+            0x8B, 0x73, 0x08, // mov esi, [ebx + 0x8]
         };
 
         public void Run(MemoryReader reader, IpcChannel channel)
@@ -30,25 +30,24 @@ namespace Alkahest.Scanner.Scanners
 
             var off = (int)o + _pattern.Length;
 
-            using (var disasm = new Disassembler(reader.ToAbsolute(off),
+            using var disasm = new Disassembler(reader.ToAbsolute(off),
                 reader.Length - off, ArchitectureMode.x86_32,
-                (ulong)reader.BaseAddress))
+                (ulong)reader.BaseAddress);
+
+            var key = ReadKey(disasm);
+            var iv = ReadKey(disasm);
+
+            if (key == null || iv == null)
             {
-                var key = ReadKey(disasm);
-                var iv = ReadKey(disasm);
-
-                if (key == null || iv == null)
-                {
-                    channel.LogError("Could not find data center key/IV");
-                    return;
-                }
-
-                channel.LogBasic("Found data center key: {0}", StringizeKey(key));
-                channel.LogBasic("Found data center IV: {0}", StringizeKey(iv));
-
-                channel.DataCenterKey = key;
-                channel.DataCenterIV = iv;
+                channel.LogError("Could not find data center key/IV");
+                return;
             }
+
+            channel.LogBasic("Found data center key: {0}", StringizeKey(key));
+            channel.LogBasic("Found data center IV: {0}", StringizeKey(iv));
+
+            channel.DataCenterKey = key;
+            channel.DataCenterIV = iv;
         }
 
         static string StringizeKey(byte[] key)
@@ -59,25 +58,23 @@ namespace Alkahest.Scanner.Scanners
         static byte[] ReadKey(Disassembler disassembler)
         {
             var stream = new MemoryStream(DataCenter.KeySize);
+            using var writer = new BinaryWriter(stream);
 
-            using (var writer = new BinaryWriter(stream))
+            while (stream.Position < stream.Capacity)
             {
-                while (stream.Position < stream.Capacity)
-                {
-                    var insn = disassembler.NextInstruction();
+                var insn = disassembler.NextInstruction();
 
-                    if (insn == null)
-                        return null;
+                if (insn == null || insn.Error)
+                    return null;
 
-                    if (insn.Mnemonic == ud_mnemonic_code.UD_Imov &&
-                        insn.Operands[0].Base == ud_type.UD_R_EBP)
-                        writer.Write(insn.Operands[1].LvalUDWord);
-                }
-
-                writer.Flush();
-
-                return stream.ToArray();
+                if (insn.Mnemonic == ud_mnemonic_code.UD_Imov &&
+                    insn.Operands[0].Base == ud_type.UD_R_EBP)
+                    writer.Write(insn.Operands[1].LvalUDWord);
             }
+
+            writer.Flush();
+
+            return stream.ToArray();
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Alkahest.Core.Net.Protocol.OpCodes
                 { Region.NA, 313623 },
                 { Region.RU, 313623 },
                 { Region.TW, 313623 },
-                { Region.UK, 313623 }
+                { Region.UK, 313623 },
             };
 
         internal OpCodeTable(bool opCodes, uint version)
@@ -39,26 +39,22 @@ namespace Alkahest.Core.Net.Protocol.OpCodes
             var codeToName = new Dictionary<ushort, string>();
             var nameToCode = new Dictionary<string, ushort>();
 
-            using (var stream = asm.GetManifestResourceStream(name))
+            using var reader = new StreamReader(asm.GetManifestResourceStream(name));
+
+            string line;
+
+            while ((line = reader.ReadLine()) != null)
             {
-                using (var reader = new StreamReader(stream))
-                {
-                    string line;
+                var parts = line.Split(' ');
 
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        var parts = line.Split(' ');
+                // This is just a marker value.
+                if (!opCodes && parts[0] == "SMT_MAX")
+                    continue;
 
-                        // This is just a marker value.
-                        if (!opCodes && parts[0] == "SMT_MAX")
-                            continue;
+                var code = ushort.Parse(parts[2]);
 
-                        var code = ushort.Parse(parts[2]);
-
-                        codeToName.Add(code, parts[0]);
-                        nameToCode.Add(parts[0], code);
-                    }
-                }
+                codeToName.Add(code, parts[0]);
+                nameToCode.Add(parts[0], code);
             }
 
             NameToOpCode = nameToCode;

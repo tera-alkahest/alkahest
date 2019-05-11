@@ -22,6 +22,6 @@ namespace Alkahest.Core.Game
         RaidNotice = 25,
         Raid = 32,
         Megaphone = 213,
-        GuildAdvertising = 214
+        GuildAdvertising = 214,
     }
 }

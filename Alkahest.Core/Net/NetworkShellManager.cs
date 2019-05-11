@@ -50,7 +50,7 @@ namespace Alkahest.Core.Net
 
         static void InvokeNetworkShell(string arguments)
         {
-            var proc = new Process()
+            using var proc = new Process()
             {
                 StartInfo =
                 {
@@ -59,15 +59,12 @@ namespace Alkahest.Core.Net
                     RedirectStandardError = true,
                     RedirectStandardInput = true,
                     RedirectStandardOutput = true,
-                    UseShellExecute = false
-                }
+                    UseShellExecute = false,
+                },
             };
 
-            using (proc)
-            {
-                proc.Start();
-                proc.WaitForExit();
-            }
+            proc.Start();
+            proc.WaitForExit();
         }
 
         static void InvokeAddPortProxy(IPEndPoint source, IPEndPoint destination)

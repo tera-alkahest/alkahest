@@ -25,18 +25,17 @@ namespace Alkahest.Core.Net.Protocol
 
         protected PacketSerializer(MessageTables messages)
         {
-            Messages = messages ??
-                throw new ArgumentNullException(nameof(messages));
+            Messages = messages ?? throw new ArgumentNullException(nameof(messages));
 
             var creators = new Dictionary<ushort, Func<Packet>>();
+            using var container = new CompositionContainer(
+                new AssemblyCatalog(Assembly.GetExecutingAssembly()), true);
+            var exports = container.GetExports<Func<Packet>, IPacketMetadata>(
+                PacketAttribute.ThisContractName);
 
-            using (var container = new CompositionContainer(
-                new AssemblyCatalog(Assembly.GetExecutingAssembly()), true))
-                foreach (var lazy in container.GetExports<Func<Packet>,
-                    IPacketMetadata>(PacketAttribute.ThisContractName))
-                    if (messages.Game.NameToOpCode.ContainsKey(lazy.Metadata.OpCode))
-                        creators.Add(messages.Game.NameToOpCode[lazy.Metadata.OpCode],
-                            lazy.Value);
+            foreach (var lazy in
+                exports.Where(x => messages.Game.NameToOpCode.ContainsKey(x.Metadata.OpCode)))
+                creators.Add(messages.Game.NameToOpCode[lazy.Metadata.OpCode], lazy.Value);
 
             _packetCreators = creators;
         }
@@ -91,12 +90,11 @@ namespace Alkahest.Core.Net.Protocol
 
             packet.OnSerialize(this);
 
-            using (var writer = new TeraBinaryWriter())
-            {
-                OnSerialize(writer, packet);
+            using var writer = new TeraBinaryWriter();
 
-                return writer.ToArray();
-            }
+            OnSerialize(writer, packet);
+
+            return writer.ToArray();
         }
 
         protected abstract void OnDeserialize(TeraBinaryReader reader,
@@ -110,8 +108,9 @@ namespace Alkahest.Core.Net.Protocol
             if (packet == null)
                 throw new ArgumentNullException(nameof(packet));
 
-            using (var reader = new TeraBinaryReader(payload))
-                OnDeserialize(reader, packet);
+            using var reader = new TeraBinaryReader(payload);
+
+            OnDeserialize(reader, packet);
 
             packet.OnDeserialize(this);
         }

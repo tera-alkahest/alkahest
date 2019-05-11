@@ -4,6 +4,6 @@ namespace Alkahest.Core.Game
     {
         Red = 0,
         Yellow = 1,
-        Blue = 2
+        Blue = 2,
     }
 }

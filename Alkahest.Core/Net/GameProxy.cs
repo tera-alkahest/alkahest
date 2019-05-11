@@ -27,8 +27,6 @@ namespace Alkahest.Core.Net
 
         readonly ManualResetEventSlim _event = new ManualResetEventSlim();
 
-        readonly object _lock = new object();
-
         readonly Socket _serverSocket;
 
         readonly int _backlog;
@@ -43,14 +41,13 @@ namespace Alkahest.Core.Net
 
             Info = info ?? throw new ArgumentNullException(nameof(info));
             ArgsPool = pool ?? throw new ArgumentNullException(nameof(pool));
-            Processor = processor ??
-                throw new ArgumentNullException(nameof(processor));
+            Processor = processor ?? throw new ArgumentNullException(nameof(processor));
             Timeout = timeout;
             _serverSocket = new Socket(info.ProxyEndPoint.AddressFamily,
                 SocketType.Stream, ProtocolType.Tcp)
             {
                 ExclusiveAddressUse = true,
-                NoDelay = true
+                NoDelay = true,
             };
             _backlog = backlog;
         }

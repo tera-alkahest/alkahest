@@ -14,8 +14,8 @@ namespace Alkahest.Core.Net.Protocol.Serializers
     {
         sealed class CompilerPacketFieldInfo : PacketFieldInfo
         {
-            public CompilerPacketFieldInfo(
-                PropertyInfo property, PacketFieldAttribute attribute)
+            public CompilerPacketFieldInfo(PropertyInfo property,
+                PacketFieldAttribute attribute)
                 : base(property, attribute)
             {
             }
@@ -90,8 +90,7 @@ namespace Alkahest.Core.Net.Protocol.Serializers
             return new CompilerPacketFieldInfo(property, attribute);
         }
 
-        protected override void OnSerialize(TeraBinaryWriter writer,
-            Packet packet)
+        protected override void OnSerialize(TeraBinaryWriter writer, Packet packet)
         {
             _serializers[packet.GetType()](writer, packet);
         }
@@ -105,14 +104,13 @@ namespace Alkahest.Core.Net.Protocol.Serializers
             var source = Expression.Parameter(typeof(object), "source");
             var packet = Expression.Variable(type, "packet2");
 
-            var offsets = new List<(PacketFieldInfo, ParameterExpression)>();
+            var offsets = new List<(PacketFieldInfo info, ParameterExpression offset)>();
 
             BlockExpression CompileByteArray1(PacketFieldInfo info)
             {
                 var prop = info.Property;
 
-                var offset = Expression.Variable(typeof(int),
-                    $"offset{prop.Name}");
+                var offset = Expression.Variable(typeof(int), $"offset{prop.Name}");
 
                 offsets.Add((info, offset));
 
@@ -120,42 +118,35 @@ namespace Alkahest.Core.Net.Protocol.Serializers
 
                 return Expression.Block(
                     offset.Assign(writer.Property(WriterPositionName)),
-                    writer.Call(WriteUInt16Name, null,
-                        new[] { ((ushort)0).Constant() }),
-                    writer.Call(WriteUInt16Name, null, new[] {
-                        property.Property(CountName).Convert(typeof(ushort)) }));
+                    writer.Call(WriteUInt16Name, null, new[] { ((ushort)0).Constant() }),
+                    writer.Call(WriteUInt16Name, null, new[] { property.Property(CountName).Convert(typeof(ushort)) }));
             }
 
             BlockExpression CompileArray1(PacketFieldInfo info)
             {
                 var prop = info.Property;
 
-                var offset = Expression.Variable(typeof(int),
-                    $"offset{prop.Name}");
+                var offset = Expression.Variable(typeof(int), $"offset{prop.Name}");
 
                 offsets.Add((info, offset));
 
                 var property = packet.Property(prop);
 
                 return Expression.Block(
-                    writer.Call(WriteUInt16Name, null, new[] {
-                        property.Property(CountName).Convert(typeof(ushort)) }),
+                    writer.Call(WriteUInt16Name, null, new[] { property.Property(CountName).Convert(typeof(ushort)) }),
                     offset.Assign(writer.Property(WriterPositionName)),
-                    writer.Call(WriteUInt16Name, null,
-                        new[] { ((ushort)0).Constant() }));
+                    writer.Call(WriteUInt16Name, null, new[] { ((ushort)0).Constant() }));
             }
 
             BlockExpression CompileString1(PacketFieldInfo info)
             {
-                var offset = Expression.Variable(typeof(int),
-                    $"offset{info.Property.Name}");
+                var offset = Expression.Variable(typeof(int), $"offset{info.Property.Name}");
 
                 offsets.Add((info, offset));
 
                 return Expression.Block(
                     offset.Assign(writer.Property(WriterPositionName)),
-                    writer.Call(WriteUInt16Name, null,
-                        new[] { ((ushort)0).Constant() }));
+                    writer.Call(WriteUInt16Name, null, new[] { ((ushort)0).Constant() }));
             }
 
             BlockExpression CompilePrimitive(PacketFieldInfo info)
@@ -178,36 +169,25 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                 }
 
                 return Expression.Block(
-                    writer.Call(WriteName + prefix + etype.Name, null,
-                        new[] { property }));
+                    writer.Call(WriteName + prefix + etype.Name, null, new[] { property }));
             }
 
             var exprs = new List<Expression>()
             {
-                packet.Assign(source.Convert(type))
+                packet.Assign(source.Convert(type)),
             };
 
             foreach (var info in GetPacketFields<PacketFieldInfo>(type))
-            {
-                BlockExpression block;
-
-                if (info.IsByteArray)
-                    block = CompileByteArray1(info);
-                else if (info.IsArray)
-                    block = CompileArray1(info);
-                else if (info.IsString)
-                    block = CompileString1(info);
-                else
-                    block = CompilePrimitive(info);
-
-                exprs.Add(block);
-            }
+                exprs.Add(
+                    info.IsByteArray ? CompileByteArray1(info) :
+                    info.IsArray ? CompileArray1(info) :
+                    info.IsString ? CompileString1(info) :
+                    CompilePrimitive(info));
 
             BlockExpression CompileByteArray2(PacketFieldInfo info,
                 ParameterExpression offset)
             {
-                var property = Expression.Variable(info.Property.PropertyType,
-                    "property");
+                var property = Expression.Variable(info.Property.PropertyType, "property");
                 var position = Expression.Variable(typeof(int), "position");
 
                 var write = Expression.Block(new[] { position },
@@ -215,8 +195,7 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                     writer.Property(WriterPositionName).Assign(offset),
                     writer.Call(WriteOffsetName, null, new[] { position }),
                     writer.Property(WriterPositionName).Assign(position),
-                    writer.Call(WriteBytesName, null,
-                        new[] { property.Call(ToArrayName, null, null) }));
+                    writer.Call(WriteBytesName, null, new[] { property.Call(ToArrayName, null, null) }));
 
                 return Expression.Block(new[] { property },
                     property.Assign(packet.Property(info.Property)),
@@ -240,8 +219,7 @@ namespace Alkahest.Core.Net.Protocol.Serializers
 
                 var writeNext = Expression.Block(new[] { position3 },
                     position3.Assign(writer.Property(WriterPositionName)),
-                    writer.Property(WriterPositionName)
-                        .Assign(position2.Add(sizeof(ushort).Constant())),
+                    writer.Property(WriterPositionName).Assign(position2.Add(sizeof(ushort).Constant())),
                     writer.Call(WriteOffsetName, null, new[] { position3 }),
                     writer.Property(WriterPositionName).Assign(position3));
 
@@ -250,11 +228,8 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                     Expression.Block(new[] { position2 },
                         position2.Assign(writer.Property(WriterPositionName)),
                         writer.Call(WriteOffsetName, null, new[] { position2 }),
-                        writer.Call(WriteUInt16Name, null,
-                            new[] { ((ushort)0).Constant() }),
-                        Expression.Invoke(CompileSerializer(elemType)
-                            .Constant(), writer,
-                            property.Property(ItemName, i)),
+                        writer.Call(WriteUInt16Name, null, new[] { ((ushort)0).Constant() }),
+                        CompileSerializer(elemType).Constant().Invoke(writer, property.Property(ItemName, i)),
                         i.NotEqual(count.Subtract(1.Constant()))
                             .IfThen(writeNext)));
 
@@ -268,7 +243,8 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                 return Expression.Block(new[] { property, count },
                     property.Assign(packet.Property(prop)),
                     count.Assign(property.Property(CountName)),
-                    count.NotEqual(0.Constant()).IfThen(write));
+                    count.NotEqual(0.Constant())
+                        .IfThen(write));
             }
 
             BlockExpression CompileString2(PacketFieldInfo info,
@@ -281,27 +257,19 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                     writer.Property(WriterPositionName).Assign(offset),
                     writer.Call(WriteOffsetName, null, new[] { position }),
                     writer.Property(WriterPositionName).Assign(position),
-                    writer.Call(WriteStringName, null,
-                        new[] { packet.Property(info.Property) }));
+                    writer.Call(WriteStringName, null, new[] { packet.Property(info.Property) }));
             }
 
             foreach (var (info, offset) in offsets)
-            {
-                BlockExpression block;
+                exprs.Add(
+                    info.IsByteArray ? CompileByteArray2(info, offset) :
+                    info.IsArray ? CompileArray2(info, offset) :
+                    CompileString2(info, offset));
 
-                if (info.IsByteArray)
-                    block = CompileByteArray2(info, offset);
-                else if (info.IsArray)
-                    block = CompileArray2(info, offset);
-                else
-                    block = CompileString2(info, offset);
-
-                exprs.Add(block);
-            }
+            var vars = new[] { packet }.Concat(offsets.Select(tup => tup.offset));
 
             return Expression.Lambda<Action<TeraBinaryWriter, object>>(
-                Expression.Block(new[] { packet }.Concat(offsets.Select(tup =>
-                    tup.Item2)), exprs), writer, source).Compile();
+                Expression.Block(vars, exprs), writer, source).Compile();
         }
 
         protected override void OnDeserialize(TeraBinaryReader reader,
@@ -325,16 +293,13 @@ namespace Alkahest.Core.Net.Protocol.Serializers
 
                 var offset = Expression.Variable(typeof(int), "offset");
                 var count = Expression.Variable(typeof(ushort), "count");
-                var property = Expression.Variable(prop.PropertyType,
-                    "property");
+                var property = Expression.Variable(prop.PropertyType, "property");
                 var position = Expression.Variable(typeof(int), "position");
 
                 var read = Expression.Block(new[] { position },
                     position.Assign(reader.Property(ReaderPositionName)),
                     reader.Property(ReaderPositionName).Assign(offset),
-                    property.Call(AddRangeName, null,
-                        new[] { reader.Call(ReadBytesName, null,
-                            new[] { count.Convert(typeof(int)) }) }),
+                    property.Call(AddRangeName, null, new[] { reader.Call(ReadBytesName, null, new[] { count.Convert(typeof(int)) }) }),
                     reader.Property(ReaderPositionName).Assign(position));
 
                 return Expression.Block(new[] { offset, count, property },
@@ -342,7 +307,8 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                     count.Assign(reader.Call(ReadUInt16Name, null, null)),
                     property.Assign(packet.Property(prop)),
                     property.Call(ClearName, null, null),
-                    count.NotEqual(((ushort)0).Constant()).IfThen(read));
+                    count.NotEqual(((ushort)0).Constant())
+                        .IfThen(read));
             }
 
             BlockExpression CompileArray(PacketFieldInfo info)
@@ -367,8 +333,7 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                         reader.Call(ReadOffsetName, null, null),
                         next.Assign(reader.Call(ReadOffsetName, null, null)),
                         elem.Assign(elemType.New()),
-                        Expression.Invoke(CompileDeserializer(elemType)
-                            .Constant(), reader, elem),
+                        CompileDeserializer(elemType).Constant().Invoke(reader, elem),
                         property.Call(AddName, null, new[] { elem })));
 
                 var read = Expression.Block(new[] { position, next, elem },
@@ -382,7 +347,8 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                     offset.Assign(reader.Call(ReadOffsetName, null, null)),
                     property.Assign(packet.Property(prop)),
                     property.Call(ClearName, null, null),
-                    count.NotEqual(((ushort)0).Constant()).IfThen(read));
+                    count.NotEqual(((ushort)0).Constant())
+                        .IfThen(read));
             }
 
             BlockExpression CompileString(PacketFieldInfo info)
@@ -394,8 +360,7 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                     offset.Assign(reader.Call(ReadOffsetName, null, null)),
                     position.Assign(reader.Property(ReaderPositionName)),
                     reader.Property(ReaderPositionName).Assign(offset),
-                    packet.Property(info.Property)
-                        .Assign(reader.Call(ReadStringName, null, null)),
+                    packet.Property(info.Property).Assign(reader.Call(ReadStringName, null, null)),
                     reader.Property(ReaderPositionName).Assign(position));
             }
 
@@ -406,8 +371,7 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                 var etype = ftype.IsEnum ? ftype.GetEnumUnderlyingType() : ftype;
                 var prefix = info.Attribute.IsLocalSkill ? LocalName : string.Empty;
 
-                Expression read = reader.Call(ReadName + prefix + etype.Name,
-                    null, null);
+                Expression read = reader.Call(ReadName + prefix + etype.Name, null, null);
 
                 if (ftype.IsEnum)
                     read = read.Convert(ftype);
@@ -417,28 +381,18 @@ namespace Alkahest.Core.Net.Protocol.Serializers
 
             var exprs = new List<Expression>()
             {
-                packet.Assign(target.Convert(type))
+                packet.Assign(target.Convert(type)),
             };
 
             foreach (var info in GetPacketFields<PacketFieldInfo>(type))
-            {
-                BlockExpression expr;
-
-                if (info.IsByteArray)
-                    expr = CompileByteArray(info);
-                else if (info.IsArray)
-                    expr = CompileArray(info);
-                else if (info.IsString)
-                    expr = CompileString(info);
-                else
-                    expr = CompilePrimitive(info);
-
-                exprs.Add(expr);
-            }
+                exprs.Add(
+                    info.IsByteArray ? CompileByteArray(info) :
+                    info.IsArray ? CompileArray(info) :
+                    info.IsString ? CompileString(info) :
+                    CompilePrimitive(info));
 
             return Expression.Lambda<Action<TeraBinaryReader, object>>(
-                Expression.Block(new[] { packet }, exprs), reader,
-                target).Compile();
+                Expression.Block(new[] { packet }, exprs), reader, target).Compile();
         }
     }
 }

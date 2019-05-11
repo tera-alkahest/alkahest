@@ -8,6 +8,6 @@ namespace Alkahest.Core.Game
         Gold = 3,
         Diamond = 4,
         Champion = 5,
-        Undetermined = uint.MaxValue
+        Undetermined = uint.MaxValue,
     }
 }
