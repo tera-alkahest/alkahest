@@ -5,6 +5,7 @@ build_script:
           git submodule update --init --recursive
           FOR /R %%f IN (*.csproj) DO nuget restore "%%f"
           msbuild Alkahest.sln
+          FOR /r %%f IN (*.csproj) DO nuget pack -Symbols "%%f"
 nuget:
     disable_publish_on_pr: true
 image: Visual Studio 2019 Preview
