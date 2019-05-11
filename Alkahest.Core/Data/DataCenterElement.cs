@@ -6,8 +6,7 @@ using System.Linq;
 
 namespace Alkahest.Core.Data
 {
-    public sealed class DataCenterElement : IEnumerable<DataCenterElement>,
-        IDisposable
+    public sealed class DataCenterElement : IEnumerable<DataCenterElement>, IDisposable
     {
         public DataCenterElement Parent { get; private set; }
 
@@ -42,7 +41,7 @@ namespace Alkahest.Core.Data
             {
                 center.Lock.EnterReadLock();
 
-                if (center.Disposed)
+                if (center.IsDisposed)
                     throw new ObjectDisposedException(center.GetType().FullName);
 
                 var reader = center.Elements.GetReader(address);
@@ -76,7 +75,7 @@ namespace Alkahest.Core.Data
                 {
                     center.Lock.EnterReadLock();
 
-                    if (center.Disposed)
+                    if (center.IsDisposed)
                         throw new ObjectDisposedException(center.GetType().FullName);
 
                     for (var i = 0; i < attrCount; i++)
@@ -134,7 +133,7 @@ namespace Alkahest.Core.Data
                     {
                         children.Add(new DataCenterElement(center, addr)
                         {
-                            Parent = this
+                            Parent = this,
                         });
                     }
                     catch (DataCenterPlaceholderException)
@@ -185,9 +184,6 @@ namespace Alkahest.Core.Data
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
-
-            if (_children == null)
-                throw new ObjectDisposedException(GetType().FullName);
 
             return this.Where(x => x.Name == name);
         }

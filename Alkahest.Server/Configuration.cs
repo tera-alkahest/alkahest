@@ -17,7 +17,7 @@ namespace Alkahest.Server
 
         public static string[] Loggers { get; }
 
-        public static bool EnableColors { get; }
+        public static bool ColorsEnabled { get; }
 
         public static ConsoleColor ErrorColor { get; }
 
@@ -41,7 +41,7 @@ namespace Alkahest.Server
 
         public static Region Region { get; }
 
-        public static bool EnableServerList { get; }
+        public static bool ServerListEnabled { get; }
 
         public static TimeSpan ServerListTimeout { get; }
 
@@ -75,7 +75,7 @@ namespace Alkahest.Server
             LogTimestampFormat = cfg["logTimestampFormat"];
             DiscardLogSources = Split(cfg["discardLogSources"], ',');
             Loggers = Split(cfg["loggers"], ',');
-            EnableColors = bool.Parse(cfg["enableColors"]);
+            ColorsEnabled = bool.Parse(cfg["enableColors"]);
             ErrorColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), cfg["errorColor"], true);
             WarningColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), cfg["warningColor"], true);
             BasicColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), cfg["basicColor"], true);
@@ -87,7 +87,7 @@ namespace Alkahest.Server
             PluginPattern = cfg["pluginPattern"];
             DisablePlugins = Split(cfg["disablePlugins"], ',');
             Region = (Region)Enum.Parse(typeof(Region), cfg["region"], true);
-            EnableServerList = bool.Parse(cfg["enableSls"]);
+            ServerListEnabled = bool.Parse(cfg["enableSls"]);
             ServerListAddress = IPAddress.Parse(cfg["slsAddress"]);
             GameAddress = IPAddress.Parse(cfg["gameAddress"]);
             ServerListPort = int.Parse(cfg["slsPort"]);

@@ -102,7 +102,7 @@ namespace Alkahest.Server
 
             if (Configuration.Loggers.Contains(ConsoleLogger.Name))
                 Log.Loggers.Add(new ConsoleLogger(
-                    Configuration.EnableColors, Configuration.ErrorColor,
+                    Configuration.ColorsEnabled, Configuration.ErrorColor,
                     Configuration.WarningColor, Configuration.BasicColor,
                     Configuration.InfoColor, Configuration.DebugColor));
 
@@ -146,7 +146,7 @@ namespace Alkahest.Server
 
                 using var slsProxy = new ServerListProxy(slsParams);
 
-                if (Configuration.EnableServerList)
+                if (Configuration.ServerListEnabled)
                     slsProxy.Start();
 
                 var pool = new ObjectPool<SocketAsyncEventArgs>(

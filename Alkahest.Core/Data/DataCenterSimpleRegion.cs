@@ -22,11 +22,11 @@ namespace Alkahest.Core.Data
 
         public TeraBinaryReader GetReader(uint elementIndex)
         {
-            var reader = _reader ?? (_reader = new TeraBinaryReader(Data));
+            _reader ??= new TeraBinaryReader(Data);
 
-            reader.Position = (int)(elementIndex * ElementSize);
+            _reader.Position = (int)(elementIndex * ElementSize);
 
-            return reader;
+            return _reader;
         }
     }
 }

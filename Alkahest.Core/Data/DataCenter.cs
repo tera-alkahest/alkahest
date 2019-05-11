@@ -32,7 +32,7 @@ namespace Alkahest.Core.Data
 
         internal IReadOnlyList<string> Names { get; private set; }
 
-        internal bool Disposed { get; private set; }
+        internal bool IsDisposed { get; private set; }
 
         internal ReaderWriterLockSlim Lock { get; } = new ReaderWriterLockSlim();
 
@@ -73,7 +73,7 @@ namespace Alkahest.Core.Data
             {
                 Lock.EnterWriteLock();
 
-                Disposed = true;
+                IsDisposed = true;
 
                 Attributes = null;
                 Elements = null;
@@ -89,8 +89,7 @@ namespace Alkahest.Core.Data
 
         internal string GetString(DataCenterAddress address)
         {
-            return _strings.GetOrAdd(address, a =>
-                _stringRegion.GetReader(address).ReadString());
+            return _strings.GetOrAdd(address, a => _stringRegion.GetReader(address).ReadString());
         }
 
         static DataCenterHeader ReadHeader(TeraBinaryReader reader)
@@ -104,8 +103,7 @@ namespace Alkahest.Core.Data
             var unk6 = reader.ReadUInt32();
             var unk7 = reader.ReadUInt32();
 
-            return new DataCenterHeader(unk1, unk2, unk3, version, unk4, unk5,
-                unk6, unk7);
+            return new DataCenterHeader(unk1, unk2, unk3, version, unk4, unk5, unk6, unk7);
         }
 
         static unsafe void ReadRegions(TeraBinaryReader reader,
@@ -126,8 +124,7 @@ namespace Alkahest.Core.Data
 
             nameRegion = ReadSegmentedRegion(reader, sizeof(char));
             ReadSimpleSegmentedRegion(reader, 512, Unknown2Size);
-            nameAddressRegion = ReadSimpleRegion(reader, true,
-                (uint)sizeof(DataCenterAddress));
+            nameAddressRegion = ReadSimpleRegion(reader, true, (uint)sizeof(DataCenterAddress));
         }
 
         static DataCenterFooter ReadFooter(TeraBinaryReader reader)
@@ -137,8 +134,8 @@ namespace Alkahest.Core.Data
             return new DataCenterFooter(unk1);
         }
 
-        static DataCenterSimpleRegion ReadSimpleRegion(TeraBinaryReader reader,
-            bool offByOne, uint elementSize)
+        static DataCenterSimpleRegion ReadSimpleRegion(
+            TeraBinaryReader reader, bool offByOne, uint elementSize)
         {
             var count = reader.ReadUInt32();
 
@@ -161,8 +158,7 @@ namespace Alkahest.Core.Data
             return new DataCenterSimpleSegmentedRegion(elementSize, segments);
         }
 
-        static DataCenterSegment ReadSegment(TeraBinaryReader reader,
-            uint elementSize)
+        static DataCenterSegment ReadSegment(TeraBinaryReader reader, uint elementSize)
         {
             var full = reader.ReadUInt32();
             var used = reader.ReadUInt32();
@@ -191,8 +187,7 @@ namespace Alkahest.Core.Data
             return new DataCenterAddress(segment, element);
         }
 
-        static IEnumerable<DataCenterAddress> ReadAddresses(
-            DataCenterSimpleRegion region)
+        static IEnumerable<DataCenterAddress> ReadAddresses(DataCenterSimpleRegion region)
         {
             var reader = region.GetReader(0);
 
@@ -200,8 +195,7 @@ namespace Alkahest.Core.Data
                 yield return ReadAddress(reader);
         }
 
-        static string ReadString(
-            DataCenterSegmentedRegion region, DataCenterAddress address)
+        static string ReadString(DataCenterSegmentedRegion region, DataCenterAddress address)
         {
             return region.GetReader(address).ReadString();
         }

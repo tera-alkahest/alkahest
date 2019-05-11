@@ -10,11 +10,11 @@ namespace Alkahest.Parser
 
             public List<int> Sizes { get; } = new List<int>();
 
-            public bool Known { get; }
+            public bool IsKnown { get; }
 
             public SummaryEntry(bool known)
             {
-                Known = known;
+                IsKnown = known;
             }
         }
 

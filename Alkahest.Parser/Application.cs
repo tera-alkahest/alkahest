@@ -366,8 +366,8 @@ namespace Alkahest.Parser
                         PrintSummary(kvp);
                 }
 
-                PrintSummaryList("Known packets", x => x.Known);
-                PrintSummaryList("Unknown packets", x => !x.Known);
+                PrintSummaryList("Known packets", x => x.IsKnown);
+                PrintSummaryList("Unknown packets", x => !x.IsKnown);
             }
         }
 

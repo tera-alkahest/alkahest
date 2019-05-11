@@ -2,6 +2,8 @@ namespace Alkahest.Core.Data
 {
     public sealed class DataCenterHeader
     {
+        // Some of these are actually more complex structures, but are zeroed.
+
         public uint Unknown1 { get; }
 
         public uint Unknown2 { get; }

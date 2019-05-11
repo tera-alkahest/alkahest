@@ -105,8 +105,7 @@ namespace Alkahest.Core.Data
                 case DataCenterTypeCode.Int32:
                     return AsInt32;
                 case DataCenterTypeCode.String:
-                    return int.Parse(AsString, Int32Styles,
-                        CultureInfo.InvariantCulture);
+                    return int.Parse(AsString, Int32Styles, CultureInfo.InvariantCulture);
                 case DataCenterTypeCode.None:
                 case DataCenterTypeCode.Single:
                 case DataCenterTypeCode.Boolean:
@@ -123,8 +122,7 @@ namespace Alkahest.Core.Data
                 case DataCenterTypeCode.Single:
                     return AsSingle;
                 case DataCenterTypeCode.String:
-                    return float.Parse(AsString, SingleStyles,
-                        CultureInfo.InvariantCulture);
+                    return float.Parse(AsString, SingleStyles, CultureInfo.InvariantCulture);
                 case DataCenterTypeCode.None:
                 case DataCenterTypeCode.Int32:
                 case DataCenterTypeCode.Boolean:

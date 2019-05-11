@@ -27,8 +27,7 @@ namespace Alkahest.Core.Data
 
         public TeraBinaryReader GetReader(uint elementIndex)
         {
-            var reader = _reader.Value ??
-                (_reader.Value = new TeraBinaryReader(Data));
+            var reader = _reader.Value ??= new TeraBinaryReader(Data);
 
             reader.Position = (int)(elementIndex * ElementSize);
 
