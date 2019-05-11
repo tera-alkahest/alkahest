@@ -5,3 +5,4 @@
 *.sln eol=crlf
 *.vdproj eol=crlf
 *.whl binary
+/appveyor.yml eol=crlf
