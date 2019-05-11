@@ -2,6 +2,7 @@ artifacts:
     - path: '**\*.nupkg'
 build_script:
     - cmd: |
+          git submodule update --init --recursive
           FOR /R %%f IN (*.csproj) DO nuget restore "%%f"
           msbuild Alkahest.sln
 nuget:
