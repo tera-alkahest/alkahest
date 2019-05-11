@@ -23,6 +23,9 @@ namespace Alkahest.Core.Net
         static readonly Uri _ru = new Uri(
             "http://launcher.tera-online.ru:80/launcher/sls/");
 
+        static readonly Uri _th = new Uri(
+            "http://terasls.playwith.in.th/list.xml");
+
         static readonly Uri _tw = new Uri(
             "http://tera.mangot5.com:80/game/tera/serverList.xml");
 
@@ -89,6 +92,8 @@ namespace Alkahest.Core.Net
                     return _na;
                 case Region.RU:
                     return _ru;
+                case Region.TH:
+                    return _th;
                 case Region.TW:
                     return _tw;
                 case Region.UK:

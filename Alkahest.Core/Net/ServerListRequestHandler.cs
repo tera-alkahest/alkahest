@@ -82,8 +82,8 @@ namespace Alkahest.Core.Net
                 var port = int.Parse(portElem.Value);
                 var newPort = _parameters.BasePort + id;
 
-                nameElem.Value += " (Proxy)";
-                rawNameAttr.Value += " (Proxy)";
+                nameElem.Value += " (Alkahest)";
+                rawNameAttr.Value += " (Alkahest)";
                 ipElem.Value = newIP.ToString();
                 portElem.Value = newPort.ToString();
 

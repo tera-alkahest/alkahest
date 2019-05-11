@@ -8,7 +8,8 @@ namespace Alkahest.Core
         KR = 3,
         NA = 4,
         RU = 5,
-        TW = 6,
-        UK = 7,
+        TH = 6,
+        TW = 7,
+        UK = 8,
     }
 }

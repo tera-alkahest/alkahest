@@ -19,11 +19,12 @@ namespace Alkahest.Core.Net.Protocol.OpCodes
             {
                 { Region.DE, 347373 },
                 { Region.FR, 347373 },
-                { Region.JP, 347376 }, // FIXME?
+                { Region.JP, 347374 },
                 { Region.KR, 0 }, // FIXME
                 { Region.NA, 347372 },
                 { Region.RU, 347375 },
-                { Region.TW, 347377 },
+                { Region.TH, 347377 },
+                { Region.TW, 347376 },
                 { Region.UK, 347373 },
             };
 
