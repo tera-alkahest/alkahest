@@ -113,7 +113,7 @@ namespace Alkahest.Core.IO
             return new Vector3(_reader.ReadSingle(), _reader.ReadSingle(), _reader.ReadSingle());
         }
 
-        public GameId ReadEntityId()
+        public GameId ReadGameId()
         {
             return new GameId(_reader.ReadUInt64());
         }
