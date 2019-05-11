@@ -1,10 +1,9 @@
 artifacts:
     - path: **\*.nupkg
-build:
-    project: Alkahest.sln
-    publish_nuget: true
-    publish_nuget_symbols: true
-    verbosity: detailed
+build_script:
+    - cmd: >-
+          nuget restore
+          msbuild Alkahest.sln
 configuration: Debug
 nuget:
     disable_publish_on_pr: true
