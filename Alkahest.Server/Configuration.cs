@@ -104,9 +104,9 @@ namespace Alkahest.Server
 
         static string[] Split(string value, char separator)
         {
-            return value.Split(new[] { separator },
-                StringSplitOptions.RemoveEmptyEntries)
-                .Select(x => x.Trim()).ToArray();
+            return value.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => x.Trim())
+                .ToArray();
         }
     }
 }

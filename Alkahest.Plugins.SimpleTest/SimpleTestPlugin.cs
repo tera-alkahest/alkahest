@@ -31,7 +31,7 @@ namespace Alkahest.Plugins.SimpleTest
             _rawHandlers = new Dictionary<string, RawPacketHandler>
             {
                 { "S_SPAWN_ME", HandleSpawnMe },
-                { "S_INVEN", HandleInventory }
+                { "S_INVEN", HandleInventory },
             };
         }
 
@@ -94,14 +94,13 @@ namespace Alkahest.Plugins.SimpleTest
 
             using (var writer = new TeraBinaryWriter())
             {
-                writer.WriteUInt16((ushort)(PacketHeader.HeaderSize +
-                    sizeof(ushort) * 2));
+                writer.WriteUInt16(PacketHeader.HeaderSize + sizeof(ushort) * 2);
                 writer.WriteUInt16(ChatChannelPassword);
                 writer.WriteString(ChatChannelName);
 
                 client.SendToServer(new RawPacket("C_JOIN_PRIVATE_CHANNEL")
                 {
-                    Payload = writer.ToArray()
+                    Payload = writer.ToArray(),
                 });
             }
 
@@ -112,7 +111,7 @@ namespace Alkahest.Plugins.SimpleTest
 
             client.SendToServer(new CSetVisibleRangePacket
             {
-                Range = VisibilityRange
+                Range = VisibilityRange,
             });
 
             return true;

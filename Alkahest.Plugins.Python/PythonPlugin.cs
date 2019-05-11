@@ -41,7 +41,6 @@ namespace Alkahest.Plugins.Python
 
                 opts.AbsoluteImports = true;
                 opts.AllowWithStatement = true;
-                opts.Optimized = true;
                 opts.PrintFunction = true;
                 opts.TrueDivision = true;
                 opts.UnicodeLiterals = true;

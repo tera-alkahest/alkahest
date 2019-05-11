@@ -41,8 +41,7 @@ namespace Alkahest.Plugins.PacketLogger
             _log.Basic("Packet logger plugin stopped");
         }
 
-        private bool PacketLogHandler(GameClient client, Direction direction,
-            RawPacket packet)
+        bool PacketLogHandler(GameClient client, Direction direction, RawPacket packet)
         {
             _writer.Write(new PacketLogEntry(
                 DateTime.Now, client.Proxy.Info.Id, direction,

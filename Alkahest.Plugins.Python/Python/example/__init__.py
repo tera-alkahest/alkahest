@@ -1,7 +1,7 @@
 from Alkahest.Core.Net.Protocol.Packets import *
 
-# The special function __start__ is invoked on startup. The proxies parameter
-# is an array of Alkahest.Core.Net.GameProxy instances.
+# The special function __start__ is invoked on startup. The proxies parameter is
+# an array of Alkahest.Core.Net.GameProxy instances.
 def __start__(proxies):
     for proc in map(lambda x: x.Processor, proxies):
         proc.AddHandler[CCheckVersionPacket](_handle_check_version)
