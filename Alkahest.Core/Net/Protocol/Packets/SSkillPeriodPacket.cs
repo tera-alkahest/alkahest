@@ -35,6 +35,6 @@ namespace Alkahest.Core.Net.Protocol.Packets
             new List<SkillPeriodInfo>();
 
         [PacketField]
-        public EntityId Target { get; set; }
+        public GameId Target { get; set; }
     }
 }

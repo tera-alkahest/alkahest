@@ -44,7 +44,7 @@ namespace Alkahest.Core.Net.Protocol
 
             return type.IsPrimitive ||
                 type == typeof(Vector3) ||
-                type == typeof(EntityId) ||
+                type == typeof(GameId) ||
                 type == typeof(SkillId) ||
                 type == typeof(Angle) ||
                 type == typeof(TemplateId);

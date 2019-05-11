@@ -47,7 +47,7 @@
     <Compile Include="Game\CrestMessageKind.cs" />
     <Compile Include="Game\DespawnKind.cs" />
     <Compile Include="Game\EntityFlags.cs" />
-    <Compile Include="Game\EntityId.cs" />
+    <Compile Include="Game\GameId.cs" />
     <Compile Include="Game\FlyingMovementKind.cs" />
     <Compile Include="Game\Gender.cs" />
     <Compile Include="Game\LaurelKind.cs" />

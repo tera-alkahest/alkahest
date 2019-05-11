@@ -36,7 +36,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
             public bool IsOnline { get; set; }
 
             [PacketField]
-            public EntityId Member { get; set; }
+            public GameId Member { get; set; }
 
             [PacketField]
             public uint Position { get; set; }

@@ -2,9 +2,9 @@ using System;
 
 namespace Alkahest.Core.Game
 {
-    public struct EntityId : IEquatable<EntityId>
+    public struct GameId : IEquatable<GameId>
     {
-        public static readonly EntityId Zero = new EntityId();
+        public static readonly GameId Zero = new GameId();
 
         public readonly ulong Raw;
 
@@ -14,25 +14,25 @@ namespace Alkahest.Core.Game
 
         public EntityFlags Flags => (EntityFlags)Bits.Extract(Raw, 32, 32);
 
-        public EntityId(ulong raw)
+        public GameId(ulong raw)
         {
             Raw = raw;
         }
 
-        public static EntityId FromValues(uint id, EntityFlags flags)
+        public static GameId FromValues(uint id, EntityFlags flags)
         {
-            return new EntityId(Bits.Compose((id, 0, 32),
+            return new GameId(Bits.Compose((id, 0, 32),
                 ((ulong)flags, 32, 32)));
         }
 
-        public bool Equals(EntityId other)
+        public bool Equals(GameId other)
         {
             return Raw == other.Raw;
         }
 
         public override bool Equals(object obj)
         {
-            return obj is EntityId e ? Equals(e) : false;
+            return obj is GameId e ? Equals(e) : false;
         }
 
         public override int GetHashCode()
@@ -45,12 +45,12 @@ namespace Alkahest.Core.Game
             return $"[Raw: {Raw:X16}, Id: {Id}, Flags: {Flags}]";
         }
 
-        public static bool operator ==(EntityId a, EntityId b)
+        public static bool operator ==(GameId a, GameId b)
         {
             return a.Equals(b);
         }
 
-        public static bool operator !=(EntityId a, EntityId b)
+        public static bool operator !=(GameId a, GameId b)
         {
             return !a.Equals(b);
         }

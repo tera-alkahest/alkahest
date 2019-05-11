@@ -15,7 +15,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         }
 
         [PacketField]
-        public EntityId Leader { get; set; }
+        public GameId Leader { get; set; }
 
         [PacketField]
         public uint Unknown1 { get; set; }

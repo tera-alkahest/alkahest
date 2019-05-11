@@ -34,10 +34,10 @@ namespace Alkahest.Core.Net.Protocol.Packets
             public uint ItemId { get; set; }
 
             [PacketField]
-            public EntityId Item { get; set; }
+            public GameId Item { get; set; }
 
             [PacketField]
-            public EntityId Owner1 { get; set; }
+            public GameId Owner1 { get; set; }
 
             [PacketField]
             public uint Slot { get; set; }
@@ -124,7 +124,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
             public uint Unknown18 { get; set; }
 
             [PacketField]
-            public EntityId Owner2 { get; set; }
+            public GameId Owner2 { get; set; }
 
             [PacketField]
             public bool IsAwakened { get; set; }
@@ -149,7 +149,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public List<ItemInfo> Items { get; } = new List<ItemInfo>();
 
         [PacketField]
-        public EntityId Player { get; set; }
+        public GameId Player { get; set; }
 
         [PacketField]
         public ulong Money { get; set; }

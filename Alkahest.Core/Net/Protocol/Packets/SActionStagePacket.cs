@@ -35,7 +35,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public List<Movement> Movements { get; } = new List<Movement>();
 
         [PacketField]
-        public EntityId Source { get; set; }
+        public GameId Source { get; set; }
 
         [PacketField]
         public Vector3 Position { get; set; }

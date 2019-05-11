@@ -15,6 +15,6 @@ namespace Alkahest.Core.Net.Protocol.Packets
         }
 
         [PacketField]
-        public EntityId Source { get; set; }
+        public GameId Source { get; set; }
     }
 }

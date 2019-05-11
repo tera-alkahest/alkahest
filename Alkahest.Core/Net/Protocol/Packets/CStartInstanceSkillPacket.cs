@@ -22,7 +22,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
             public uint Unknown2 { get; set; }
 
             [PacketField]
-            public EntityId Target { get; set; }
+            public GameId Target { get; set; }
 
             [PacketField]
             public uint Unknown3 { get; set; }

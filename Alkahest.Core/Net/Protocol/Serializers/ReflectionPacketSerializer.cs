@@ -151,9 +151,9 @@ namespace Alkahest.Core.Net.Protocol.Serializers
                     serializer = (w, v) => w.WriteVector3((Vector3)v);
                     deserializer = r => r.ReadVector3();
                 }
-                else if (type == typeof(EntityId))
+                else if (type == typeof(GameId))
                 {
-                    serializer = (w, v) => w.WriteEntityId((EntityId)v);
+                    serializer = (w, v) => w.WriteEntityId((GameId)v);
                     deserializer = r => r.ReadEntityId();
                 }
                 else if (type == typeof(SkillId))

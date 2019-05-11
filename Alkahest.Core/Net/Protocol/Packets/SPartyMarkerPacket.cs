@@ -21,7 +21,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
             public PartyMarkerColor Color { get; set; }
 
             [PacketField]
-            public EntityId Target { get; set; }
+            public GameId Target { get; set; }
         }
 
         [PacketField]

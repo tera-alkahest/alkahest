@@ -113,7 +113,7 @@ namespace Alkahest.Core.IO
             _writer.Write(value.Z);
         }
 
-        public void WriteEntityId(EntityId value)
+        public void WriteEntityId(GameId value)
         {
             _writer.Write(value.Raw);
         }

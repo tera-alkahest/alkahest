@@ -16,7 +16,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         }
 
         [PacketField]
-        public EntityId Target { get; set; }
+        public GameId Target { get; set; }
 
         [PacketField]
         public Vector3 Position { get; set; }

@@ -15,7 +15,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         }
 
         [PacketField]
-        public EntityId Boss { get; set; }
+        public GameId Boss { get; set; }
 
         [PacketField]
         public uint HuntingZoneId { get; set; }
@@ -24,7 +24,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public TemplateId Template { get; set; }
 
         [PacketField]
-        public EntityId Target { get; set; }
+        public GameId Target { get; set; }
 
         [PacketField]
         public uint Unknown1 { get; set; }

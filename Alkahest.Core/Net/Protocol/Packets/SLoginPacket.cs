@@ -28,7 +28,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public TemplateId Template { get; set; }
 
         [PacketField]
-        public EntityId Target { get; set; }
+        public GameId Target { get; set; }
 
         [PacketField]
         public uint ServerId { get; set; }

@@ -35,13 +35,13 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public List<Movement> Movements { get; } = new List<Movement>();
 
         [PacketField]
-        public EntityId Source { get; set; }
+        public GameId Source { get; set; }
 
         [PacketField]
-        public EntityId ProjectileOwner { get; set; }
+        public GameId ProjectileOwner { get; set; }
 
         [PacketField]
-        public EntityId Target { get; set; }
+        public GameId Target { get; set; }
 
         [PacketField]
         public TemplateId Template { get; set; }

@@ -114,9 +114,9 @@ namespace Alkahest.Core.IO
                 _reader.ReadSingle());
         }
 
-        public EntityId ReadEntityId()
+        public GameId ReadEntityId()
         {
-            return new EntityId(_reader.ReadUInt64());
+            return new GameId(_reader.ReadUInt64());
         }
 
         public SkillId ReadSkillId()

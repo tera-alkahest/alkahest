@@ -37,6 +37,6 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public byte Unknown3 { get; set; }
 
         [PacketField]
-        public EntityId Target { get; set; }
+        public GameId Target { get; set; }
     }
 }

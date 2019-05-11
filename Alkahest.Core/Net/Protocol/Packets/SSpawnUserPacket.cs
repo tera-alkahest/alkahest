@@ -59,7 +59,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public uint PlayerId { get; set; }
 
         [PacketField]
-        public EntityId Target { get; set; }
+        public GameId Target { get; set; }
 
         [PacketField]
         public Vector3 Position { get; set; }

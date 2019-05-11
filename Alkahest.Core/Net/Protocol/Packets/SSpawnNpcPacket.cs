@@ -53,10 +53,10 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public string NpcName { get; set; }
 
         [PacketField]
-        public EntityId Npc { get; set; }
+        public GameId Npc { get; set; }
 
         [PacketField]
-        public EntityId Target { get; set; }
+        public GameId Target { get; set; }
 
         [PacketField]
         public Vector3 Position { get; set; }
@@ -110,7 +110,7 @@ namespace Alkahest.Core.Net.Protocol.Packets
         public byte Unknown23 { get; set; }
 
         [PacketField]
-        public EntityId Owner { get; set; }
+        public GameId Owner { get; set; }
 
         [PacketField]
         public uint Unknown24 { get; set; }
