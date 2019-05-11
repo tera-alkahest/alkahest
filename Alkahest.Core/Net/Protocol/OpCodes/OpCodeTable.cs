@@ -17,17 +17,17 @@ namespace Alkahest.Core.Net.Protocol.OpCodes
         public static IReadOnlyDictionary<Region, uint> Versions { get; } =
             new Dictionary<Region, uint>
             {
-                { Region.DE, 313623 },
-                { Region.FR, 313623 },
-                { Region.JP, 313623 },
-                { Region.KR, 313523 },
-                { Region.NA, 313623 },
-                { Region.RU, 313623 },
-                { Region.TW, 313623 },
-                { Region.UK, 313623 },
+                { Region.DE, 347373 },
+                { Region.FR, 347373 },
+                { Region.JP, 347376 }, // FIXME?
+                { Region.KR, 0 }, // FIXME
+                { Region.NA, 347372 },
+                { Region.RU, 347375 },
+                { Region.TW, 347377 },
+                { Region.UK, 347373 },
             };
 
-        internal OpCodeTable(bool opCodes, uint version)
+        private protected OpCodeTable(bool opCodes, uint version)
         {
             if (!Versions.Values.Contains(version))
                 throw new ArgumentOutOfRangeException(nameof(version));
@@ -35,26 +35,27 @@ namespace Alkahest.Core.Net.Protocol.OpCodes
             Version = version;
 
             var asm = Assembly.GetExecutingAssembly();
-            var name = $@"{nameof(Net)}\{nameof(Protocol)}\{nameof(OpCodes)}\{(opCodes ? "opc" : "smt")}_{Version}.txt";
+            var resName = $"{(opCodes ? "protocol" : "sysmsg")}.{Version}.map";
             var codeToName = new Dictionary<ushort, string>();
             var nameToCode = new Dictionary<string, ushort>();
 
-            using var reader = new StreamReader(asm.GetManifestResourceStream(name));
+            using var reader = new StreamReader(asm.GetManifestResourceStream(resName));
 
             string line;
 
             while ((line = reader.ReadLine()) != null)
             {
                 var parts = line.Split(' ');
+                var name = parts[0];
 
                 // This is just a marker value.
-                if (!opCodes && parts[0] == "SMT_MAX")
+                if (!opCodes && name == "SMT_MAX")
                     continue;
 
                 var code = ushort.Parse(parts[2]);
 
-                codeToName.Add(code, parts[0]);
-                nameToCode.Add(parts[0], code);
+                codeToName.Add(code, name);
+                nameToCode.Add(name, code);
             }
 
             NameToOpCode = nameToCode;

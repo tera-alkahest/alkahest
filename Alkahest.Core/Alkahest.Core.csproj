@@ -276,23 +276,29 @@
     <Compile Include="Region.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Net\Protocol\OpCodes\opc_311383.txt">
-      <LogicalName>%(Identity)</LogicalName>
+    <EmbeddedResource Include="..\tera-data\map_base\protocol.347372.map">
+      <Link>Net\Protocol\OpCodes\%(Filename)%(Extension)</Link>
+      <LogicalName>%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Net\Protocol\OpCodes\opc_313523.txt">
-      <LogicalName>%(Identity)</LogicalName>
+    <EmbeddedResource Include="..\tera-data\map_base\protocol.347373.map">
+      <Link>Net\Protocol\OpCodes\%(Filename)%(Extension)</Link>
+      <LogicalName>%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Net\Protocol\OpCodes\opc_313623.txt">
-      <LogicalName>%(Identity)</LogicalName>
+    <EmbeddedResource Include="..\tera-data\map_base\protocol.347374.map">
+      <Link>Net\Protocol\OpCodes\%(Filename)%(Extension)</Link>
+      <LogicalName>%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Net\Protocol\OpCodes\smt_311383.txt">
-      <LogicalName>%(Identity)</LogicalName>
+    <EmbeddedResource Include="..\tera-data\map_base\protocol.347375.map">
+      <Link>Net\Protocol\OpCodes\%(Filename)%(Extension)</Link>
+      <LogicalName>%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Net\Protocol\OpCodes\smt_313523.txt">
-      <LogicalName>%(Identity)</LogicalName>
+    <EmbeddedResource Include="..\tera-data\map_base\protocol.347376.map">
+      <Link>Net\Protocol\OpCodes\%(Filename)%(Extension)</Link>
+      <LogicalName>%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="Net\Protocol\OpCodes\smt_313623.txt">
-      <LogicalName>%(Identity)</LogicalName>
+    <EmbeddedResource Include="..\tera-data\map_base\protocol.347377.map">
+      <Link>Net\Protocol\OpCodes\%(Filename)%(Extension)</Link>
+      <LogicalName>%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
