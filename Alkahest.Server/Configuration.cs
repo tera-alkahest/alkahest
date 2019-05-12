@@ -65,7 +65,7 @@ namespace Alkahest.Server
 
         public static bool AdjustHostsFile { get; }
 
-        public static bool AdjustNetworkShell { get; }
+        public static bool AdjustCertificateStore { get; }
 
         static Configuration()
         {
@@ -99,7 +99,7 @@ namespace Alkahest.Server
             GameTimeout = TimeSpan.FromMinutes(int.Parse(cfg["gameTimeout"]));
             PoolLimit = int.Parse(cfg["poolLimit"]);
             AdjustHostsFile = bool.Parse(cfg["adjustHostsFile"]);
-            AdjustNetworkShell = bool.Parse(cfg["adjustNetworkShell"]);
+            AdjustCertificateStore = bool.Parse(cfg["adjustCertificateStore"]);
         }
 
         static string[] Split(string value, char separator)

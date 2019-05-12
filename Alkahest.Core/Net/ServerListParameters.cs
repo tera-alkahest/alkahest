@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 
 namespace Alkahest.Core.Net
@@ -6,13 +7,13 @@ namespace Alkahest.Core.Net
     public sealed class ServerListParameters
     {
         static readonly Uri _de = new Uri(
-            "http://web-sls.tera.gameforge.com:4566/servers/list.de");
+            "https://serverlist.tera.gameforge.com:443/serverlist/xml/default/de");
 
         static readonly Uri _fr = new Uri(
-            "http://web-sls.tera.gameforge.com:4566/servers/list.fr");
+            "https://serverlist.tera.gameforge.com:443/serverlist/xml/default/fr");
 
         static readonly Uri _jp = new Uri(
-            "http://tera.pmang.jp:80/game_launcher/server_list.xml");
+            "https://tera.pmang.jp:443/game_launcher/server_list.xml");
 
         static readonly Uri _kr = new Uri(
             "http://tera.nexon.com:80/launcher/sls/servers/list.xml");
@@ -30,7 +31,21 @@ namespace Alkahest.Core.Net
             "http://tera.mangot5.com:80/game/tera/serverList.xml");
 
         static readonly Uri _uk = new Uri(
-            "http://web-sls.tera.gameforge.com:4566/servers/list.uk");
+            "https://serverlist.tera.gameforge.com:443/serverlist/xml/default/uk");
+
+        public static IReadOnlyDictionary<Region, Uri> Uris { get; } =
+            new Dictionary<Region, Uri>
+            {
+                { Region.DE, _de },
+                { Region.FR, _fr },
+                { Region.JP, _jp },
+                { Region.KR, _kr },
+                { Region.NA, _na },
+                { Region.RU, _ru },
+                { Region.TH, _th },
+                { Region.TW, _tw },
+                { Region.UK, _uk },
+            };
 
         public IPAddress RealServerListAddress { get; }
 
@@ -49,11 +64,10 @@ namespace Alkahest.Core.Net
         public Uri Uri { get; }
 
         public ServerListParameters(IPAddress realSlsAddress,
-            IPAddress proxySlsAddress, int? proxySlsPort, IPAddress gameAddress,
+            IPAddress proxySlsAddress, int proxySlsPort, IPAddress gameAddress,
             int basePort, Region region, TimeSpan timeout, int retries)
         {
-            if (basePort < IPEndPoint.MinPort ||
-                basePort >= IPEndPoint.MaxPort)
+            if (basePort < IPEndPoint.MinPort || basePort >= IPEndPoint.MaxPort)
                 throw new ArgumentOutOfRangeException(nameof(basePort));
 
             region.CheckValidity(nameof(region));
@@ -61,46 +75,17 @@ namespace Alkahest.Core.Net
             if (retries < 0)
                 throw new ArgumentOutOfRangeException(nameof(retries));
 
-            Uri = GetUri(region);
+            Uri = Uris[region];
             RealServerListAddress = realSlsAddress ??
                 throw new ArgumentNullException(nameof(realSlsAddress));
             ProxyServerListEndPoint = new IPEndPoint(
                 proxySlsAddress ?? throw new ArgumentNullException(nameof(proxySlsAddress)),
-                proxySlsPort ?? Uri.Port);
+                proxySlsPort);
             GameAddress = gameAddress ?? throw new ArgumentNullException(nameof(gameAddress));
             BasePort = basePort;
             Region = region;
             Timeout = timeout;
             Retries = retries;
-        }
-
-        public static Uri GetUri(Region region)
-        {
-            region.CheckValidity(nameof(region));
-
-            switch (region)
-            {
-                case Region.DE:
-                    return _de;
-                case Region.FR:
-                    return _fr;
-                case Region.JP:
-                    return _jp;
-                case Region.KR:
-                    return _kr;
-                case Region.NA:
-                    return _na;
-                case Region.RU:
-                    return _ru;
-                case Region.TH:
-                    return _th;
-                case Region.TW:
-                    return _tw;
-                case Region.UK:
-                    return _uk;
-                default:
-                    throw Assert.Unreachable();
-            }
         }
     }
 }

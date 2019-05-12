@@ -115,76 +115,67 @@ namespace Alkahest.Server
 
             _log.Basic("Starting {0}...", Name);
 
-            var hosts = Configuration.AdjustHostsFile ? new HostsFileManager() : null;
-            var shell = Configuration.AdjustNetworkShell ? new NetworkShellManager() : null;
+            var region = Configuration.Region;
+            var sls = ServerListParameters.Uris[region];
+            var slsPort = Configuration.ServerListPort;
 
-            try
+            if (slsPort == 0)
+                slsPort = sls.Port;
+
+            using var hostsMgr = Configuration.AdjustHostsFile ? new HostsFileManager() : null;
+            using var certMgr = Configuration.AdjustCertificateStore &&
+                sls.Scheme == Uri.UriSchemeHttps ? new CertificateManager(slsPort) : null;
+
+            var slsHost = sls.Host;
+            var slsAddress = Configuration.ServerListAddress;
+
+            hostsMgr?.RemoveEntry(slsHost, slsAddress);
+
+            var real = Dns.GetHostEntry(slsHost).AddressList[0];
+
+            _log.Basic("Resolved official server list address: {0} -> {1}", slsHost, real);
+
+            hostsMgr?.AddEntry(slsHost, slsAddress);
+
+            var slsParams = new ServerListParameters(real,
+                Configuration.ServerListAddress, slsPort,
+                Configuration.GameAddress, Configuration.GameBasePort, region,
+                Configuration.ServerListTimeout, Configuration.ServerListRetries);
+
+            using var slsProxy = new ServerListProxy(slsParams);
+
+            if (Configuration.ServerListEnabled)
+                slsProxy.Start();
+
+            var pool = new ObjectPool<SocketAsyncEventArgs>(
+                () => new SocketAsyncEventArgs(), x => x.Reset(),
+                Configuration.PoolLimit != 0 ? (int?)Configuration.PoolLimit : null);
+            var proc = new PacketProcessor(new CompilerPacketSerializer(
+                new MessageTables(region, OpCodeTable.Versions[region])));
+            var proxies = slsProxy.Servers.Select(x => new GameProxy(
+                x, pool, proc, Configuration.GameBacklog, Configuration.GameTimeout)
             {
-                var region = Configuration.Region;
-                var slsHost = ServerListParameters.GetUri(region).Host;
-                var slsAddress = Configuration.ServerListAddress;
+                MaxClients = Configuration.GameMaxClients,
+            }).ToArray();
 
-                hosts?.RemoveEntry(slsHost, slsAddress);
+            foreach (var proxy in proxies)
+                proxy.Start();
 
-                var real = Dns.GetHostEntry(slsHost).AddressList[0];
+            var loader = new PluginLoader(Configuration.PluginDirectory,
+                Configuration.PluginPattern, Configuration.DisablePlugins);
 
-                hosts?.AddEntry(slsHost, slsAddress);
+            loader.Start(proxies);
 
-                var slsHttps = new IPEndPoint(slsAddress, 443);
-                var realHttps = new IPEndPoint(real, slsHttps.Port);
+            _log.Basic("{0} started", Name);
 
-                shell?.RemovePortProxy(slsHttps, realHttps);
-                shell?.AddPortProxy(slsHttps, realHttps);
+            _runningEvent.Wait();
 
-                var slsPort = Configuration.ServerListPort;
-                var slsParams = new ServerListParameters(real,
-                    Configuration.ServerListAddress,
-                    slsPort != 0 ? (int?)slsPort : null,
-                    Configuration.GameAddress, Configuration.GameBasePort,
-                    region, Configuration.ServerListTimeout,
-                    Configuration.ServerListRetries);
+            _log.Basic("{0} shutting down...", Name);
 
-                using var slsProxy = new ServerListProxy(slsParams);
+            loader.Stop(proxies);
 
-                if (Configuration.ServerListEnabled)
-                    slsProxy.Start();
-
-                var pool = new ObjectPool<SocketAsyncEventArgs>(
-                    () => new SocketAsyncEventArgs(), x => x.Reset(),
-                    Configuration.PoolLimit != 0 ? (int?)Configuration.PoolLimit : null);
-                var proc = new PacketProcessor(new CompilerPacketSerializer(
-                    new MessageTables(region, OpCodeTable.Versions[region])));
-                var proxies = slsProxy.Servers.Select(x => new GameProxy(x,
-                    pool, proc, Configuration.GameBacklog,
-                    Configuration.GameTimeout)
-                {
-                    MaxClients = Configuration.GameMaxClients,
-                }).ToArray();
-
-                foreach (var proxy in proxies)
-                    proxy.Start();
-
-                var loader = new PluginLoader(Configuration.PluginDirectory,
-                    Configuration.PluginPattern, Configuration.DisablePlugins);
-
-                loader.Start(proxies);
-
-                _log.Basic("{0} started", Name);
-
-                _runningEvent.Wait();
-
-                _log.Basic("{0} shutting down...", Name);
-
-                loader.Stop(proxies);
-
-                foreach (var proxy in proxies)
-                    proxy.Dispose();
-            }
-            finally
-            {
-                hosts?.Dispose();
-                shell?.Dispose();
-            }
+            foreach (var proxy in proxies)
+                proxy.Dispose();
 
             _exitEvent.Set();
 

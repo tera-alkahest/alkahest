@@ -44,8 +44,9 @@ namespace Alkahest.Core.Net
 
             while (true)
             {
+                var uri = _parameters.Uri;
                 var req = new HttpRequestMessage(HttpMethod.Get,
-                    GetUri(_parameters.Uri.AbsolutePath, true));
+                    GetUri(uri.Scheme, uri.AbsolutePath, true));
 
                 req.Headers.Host = _parameters.Uri.Authority;
 
@@ -108,9 +109,9 @@ namespace Alkahest.Core.Net
                 exception is HttpRequestException;
         }
 
-        Uri GetUri(string path, bool usn)
+        Uri GetUri(string scheme, string path, bool usn)
         {
-            var uri = $"http://{_parameters.RealServerListAddress}:{_parameters.Uri.Port}{path}";
+            var uri = $"{scheme}://{_parameters.RealServerListAddress}:{_parameters.Uri.Port}{path}";
 
             if (usn && _parameters.Region == Region.JP)
                 uri += "?usn=0";
@@ -150,7 +151,7 @@ namespace Alkahest.Core.Net
                     // We need to make a new request object or we'll get an
                     // exception when attempting to send it below.
                     var req = new HttpRequestMessage(
-                        request.Method, GetUri(path, false))
+                        request.Method, GetUri(uri.Scheme, path, false))
                     {
                         Version = request.Version,
                     };

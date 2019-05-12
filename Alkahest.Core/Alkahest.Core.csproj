@@ -62,7 +62,7 @@
     <Compile Include="Game\UserStatus.cs" />
     <Compile Include="IO\IOExtensions.cs" />
     <Compile Include="Logging\LogEventArgs.cs" />
-    <Compile Include="Net\NetworkShellManager.cs" />
+    <Compile Include="Net\CertificateManager.cs" />
     <Compile Include="Net\Protocol\Logging\PacketLogEntry.cs" />
     <Compile Include="Net\Protocol\Logging\PacketLogReader.cs" />
     <Compile Include="Net\Protocol\Logging\PacketLogWriter.cs" />
@@ -276,6 +276,14 @@
     <Compile Include="Region.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="..\AlkahestCA.pfx">
+      <Link>Cryptography\%(Filename)%(Extension)</Link>
+      <LogicalName>%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Alkahest.pfx">
+      <Link>Cryptography\%(Filename)%(Extension)</Link>
+      <LogicalName>%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
     <EmbeddedResource Include="..\tera-data\map_base\protocol.347372.map">
       <Link>Net\Protocol\OpCodes\%(Filename)%(Extension)</Link>
       <LogicalName>%(Filename)%(Extension)</LogicalName>

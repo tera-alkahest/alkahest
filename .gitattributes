@@ -1,6 +1,7 @@
 * text
 *.csproj eol=crlf
 *.ico binary
+*.pfx binary
 *.proj eol=crlf
 *.sln eol=crlf
 *.vdproj eol=crlf
