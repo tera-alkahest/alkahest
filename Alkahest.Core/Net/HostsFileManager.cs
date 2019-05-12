@@ -27,8 +27,6 @@ namespace Alkahest.Core.Net
 
         static readonly string _hostsPath;
 
-        readonly string _id;
-
         readonly List<string> _entries = new List<string>();
 
         bool _disposed;
@@ -58,11 +56,6 @@ namespace Alkahest.Core.Net
             {
                 _mutex.ReleaseMutex();
             }
-        }
-
-        public HostsFileManager()
-        {
-            _id = $"{nameof(Alkahest)} {Process.GetCurrentProcess().Id}";
         }
 
         ~HostsFileManager()
@@ -100,7 +93,7 @@ namespace Alkahest.Core.Net
             if (destination == null)
                 throw new ArgumentNullException(nameof(destination));
 
-            return $"{destination} {host} # {_id}";
+            return $"{destination} {host} # {nameof(Alkahest)}";
         }
 
         public void AddEntry(string host, IPAddress destination)
