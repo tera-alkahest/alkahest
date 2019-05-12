@@ -36,11 +36,11 @@ namespace Alkahest.Core.Net.Protocol.OpCodes
             Version = version;
 
             var asm = Assembly.GetExecutingAssembly();
-            var resName = $"{(opCodes ? "protocol" : "sysmsg")}.{Version}.map";
             var codeToName = new Dictionary<ushort, string>();
             var nameToCode = new Dictionary<string, ushort>();
 
-            using var reader = new StreamReader(asm.GetManifestResourceStream(resName));
+            using var reader = new StreamReader(asm.GetManifestResourceStream(
+                $"{(opCodes ? "protocol" : "sysmsg")}.{Version}.map"));
 
             string line;
 

@@ -151,8 +151,8 @@ namespace Alkahest.Core.Net.Protocol
             writer.WriteUInt16(header.OpCode);
         }
 
-        internal bool Process(GameClient client, Direction direction,
-            ref PacketHeader header, ref byte[] payload)
+        bool RunHandlers(GameClient client, Direction direction,
+            ref PacketHeader header, ref byte[] payload, string name)
         {
             var rawHandlers = new List<RawPacketHandler>();
 
@@ -164,8 +164,6 @@ namespace Alkahest.Core.Net.Protocol
             }
 
             var send = true;
-            var name = Serializer.Messages.Game.OpCodeToName[header.OpCode];
-            var original = payload;
 
             if (rawHandlers.Count != 0)
             {
@@ -233,6 +231,22 @@ namespace Alkahest.Core.Net.Protocol
                     header = new PacketHeader((ushort)payload.Length, header.OpCode);
                 }
             }
+
+            return send;
+        }
+
+        internal bool Process(GameClient client, Direction direction,
+            ref PacketHeader header, ref byte[] payload)
+        {
+            Serializer.Messages.Game.OpCodeToName.TryGetValue(header.OpCode, out var name);
+
+            var send = true;
+            var original = payload;
+
+            if (name != null)
+                send = RunHandlers(client, direction, ref header, ref payload, name);
+            else
+                name = header.OpCode.ToString();
 
             _log.Debug("{0}: {1} ({2} bytes{3})", direction.ToDirectionString(),
                 name, header.Length, send ? string.Empty : ", discarded");

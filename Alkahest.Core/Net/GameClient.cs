@@ -351,15 +351,6 @@ namespace Alkahest.Core.Net
 
                     var header = PacketProcessor.ReadHeader(headerBuffer);
 
-                    if (!Proxy.Processor.Serializer.Messages.Game.OpCodeToName
-                        .ContainsKey(header.OpCode))
-                    {
-                        DisconnectInternal();
-                        _log.Error("Disconnected client {0} from {1} due to invalid opcode: {2}",
-                            EndPoint, Proxy.Info.Name, header.OpCode);
-                        return false;
-                    }
-
                     if (header.Length > PacketHeader.MaxPayloadSize)
                     {
                         DisconnectInternal();
