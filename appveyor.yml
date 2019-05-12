@@ -9,16 +9,5 @@ build_script:
 nuget:
     disable_publish_on_pr: true
 image: Visual Studio 2019 Preview
-notifications:
-    - body: >-
-          {
-              "content": "[{{projectName}}](https://github.com/{{repositoryName}}) [{{commitId}}](https://github.com/{{repositoryName}}/commit/{{commitId}}) [{{buildVersion}}]({{buildUrl}}) **{{status}}**"
-          }
-      method: POST
-      on_build_success: false
-      on_build_failure: true
-      on_build_status_changed: true
-      provider: Webhook
-      url: https://discordapp.com/api/webhooks/576898916860297226/AK3s4LaQZDhtBaLIORl2pcqqlN2xayVDSdpTN29ksyFc1lQdgHV7QV_VIT5OAf8PGqTx
 pull_requests:
     do_not_increment_build_number: true
