@@ -127,7 +127,7 @@ namespace Alkahest.Server
                 sls.Scheme == Uri.UriSchemeHttps ? new CertificateManager(slsPort) : null;
 
             var slsHost = sls.Host;
-            var slsAddress = Configuration.ServerListAddress;
+            var slsAddress = Configuration.ServerListBaseAddress;
 
             hostsMgr?.RemoveEntry(slsHost, slsAddress);
 
@@ -138,8 +138,8 @@ namespace Alkahest.Server
             hostsMgr?.AddEntry(slsHost, slsAddress);
 
             var slsParams = new ServerListParameters(real,
-                Configuration.ServerListAddress, slsPort,
-                Configuration.GameAddress, Configuration.GameBasePort, region,
+                Configuration.ServerListBaseAddress, slsPort,
+                Configuration.GameBaseAddress, Configuration.GameBasePort, region,
                 Configuration.ServerListTimeout, Configuration.ServerListRetries);
 
             using var slsProxy = new ServerListProxy(slsParams);

@@ -47,9 +47,9 @@ namespace Alkahest.Server
 
         public static int ServerListRetries { get; }
 
-        public static IPAddress ServerListAddress { get; }
+        public static IPAddress ServerListBaseAddress { get; }
 
-        public static IPAddress GameAddress { get; }
+        public static IPAddress GameBaseAddress { get; }
 
         public static int ServerListPort { get; }
 
@@ -88,8 +88,8 @@ namespace Alkahest.Server
             DisablePlugins = Split(cfg["disablePlugins"], ',');
             Region = (Region)Enum.Parse(typeof(Region), cfg["region"], true);
             ServerListEnabled = bool.Parse(cfg["enableSls"]);
-            ServerListAddress = IPAddress.Parse(cfg["slsAddress"]);
-            GameAddress = IPAddress.Parse(cfg["gameAddress"]);
+            ServerListBaseAddress = IPAddress.Parse(cfg["slsBaseAddress"]);
+            GameBaseAddress = IPAddress.Parse(cfg["gameBaseAddress"]);
             ServerListPort = int.Parse(cfg["slsPort"]);
             GameBasePort = int.Parse(cfg["gameBasePort"]);
             ServerListTimeout = TimeSpan.FromSeconds(int.Parse(cfg["slsTimeout"]));

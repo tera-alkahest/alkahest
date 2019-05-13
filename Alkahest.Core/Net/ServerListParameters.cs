@@ -51,9 +51,9 @@ namespace Alkahest.Core.Net
 
         public IPEndPoint ProxyServerListEndPoint { get; }
 
-        public IPAddress GameAddress { get; }
+        public IPAddress GameBaseAddress { get; }
 
-        public int BasePort { get; }
+        public int GamePort { get; }
 
         public Region Region { get; }
 
@@ -64,28 +64,68 @@ namespace Alkahest.Core.Net
         public Uri Uri { get; }
 
         public ServerListParameters(IPAddress realSlsAddress,
-            IPAddress proxySlsAddress, int proxySlsPort, IPAddress gameAddress,
-            int basePort, Region region, TimeSpan timeout, int retries)
+            IPAddress proxySlsBaseAddress, int proxySlsPort, IPAddress gameBaseAddress,
+            int baseGamePort, Region region, TimeSpan timeout, int retries)
         {
-            if (basePort < IPEndPoint.MinPort || basePort >= IPEndPoint.MaxPort)
-                throw new ArgumentOutOfRangeException(nameof(basePort));
+            if (proxySlsBaseAddress == null)
+                throw new ArgumentNullException(nameof(proxySlsBaseAddress));
 
-            region.CheckValidity(nameof(region));
+            // Match tera-proxy's port allocation scheme.
+            var offset = GetRegionOffset(region);
+            var port = baseGamePort + offset;
+
+            if (baseGamePort < IPEndPoint.MinPort || port > IPEndPoint.MaxPort)
+                throw new ArgumentOutOfRangeException(nameof(baseGamePort));
+
+            if (baseGamePort > IPEndPoint.MaxPort)
+                throw new ArgumentOutOfRangeException(nameof(baseGamePort));
 
             if (retries < 0)
                 throw new ArgumentOutOfRangeException(nameof(retries));
 
+            // Match tera-proxy's IP allocation scheme. This obviously won't
+            // work for IPv6...
+            var ipBytes = proxySlsBaseAddress.GetAddressBytes();
+            ipBytes[3] += (byte)offset;
+            proxySlsBaseAddress = new IPAddress(ipBytes);
+
             Uri = Uris[region];
             RealServerListAddress = realSlsAddress ??
                 throw new ArgumentNullException(nameof(realSlsAddress));
-            ProxyServerListEndPoint = new IPEndPoint(
-                proxySlsAddress ?? throw new ArgumentNullException(nameof(proxySlsAddress)),
-                proxySlsPort);
-            GameAddress = gameAddress ?? throw new ArgumentNullException(nameof(gameAddress));
-            BasePort = basePort;
+            ProxyServerListEndPoint = new IPEndPoint(proxySlsBaseAddress, proxySlsPort);
+            GameBaseAddress = gameBaseAddress ??
+                throw new ArgumentNullException(nameof(gameBaseAddress));
+            GamePort = port;
             Region = region;
             Timeout = timeout;
             Retries = retries;
+        }
+
+        public static int GetRegionOffset(Region region)
+        {
+            region.CheckValidity(nameof(region));
+
+            switch (region)
+            {
+                case Region.DE:
+                case Region.FR:
+                case Region.UK:
+                    return 0;
+                case Region.RU:
+                    return 2;
+                case Region.TW:
+                    return 3;
+                case Region.JP:
+                    return 4;
+                case Region.TH:
+                    return 5;
+                case Region.NA:
+                    return 6;
+                case Region.KR:
+                    return 7;
+                default:
+                    throw Assert.Unreachable();
+            }
         }
     }
 }

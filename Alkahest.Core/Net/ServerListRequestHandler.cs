@@ -79,9 +79,14 @@ namespace Alkahest.Core.Net
                 var id = int.Parse(elem.Element("id").Value);
                 var name = rawNameAttr.Value;
                 var ip = IPAddress.Parse(ipElem.Value);
-                var newIP = _parameters.GameAddress;
                 var port = int.Parse(portElem.Value);
-                var newPort = _parameters.BasePort + id;
+                var newPort = _parameters.GamePort;
+
+                // Match tera-proxy's IP allocation scheme. This obviously won't
+                // work for IPv6...
+                var ipBytes = _parameters.GameBaseAddress.GetAddressBytes();
+                ipBytes[3] += (byte)servs.Count;
+                var newIP = new IPAddress(ipBytes);
 
                 nameElem.Value += " (Alkahest)";
                 rawNameAttr.Value += " (Alkahest)";
