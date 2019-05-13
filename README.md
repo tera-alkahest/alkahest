@@ -115,9 +115,10 @@ Note that, by default, Alkahest will adjust your `hosts` file so that the host
 name that the TERA launcher fetches the official server list from will be
 redirected to wherever Alkahest is configured to be listening. This is necessary
 so that Alkahest can give the client a modified server list where all IP
-addresses point to where Alkahest is listening for each server. Modifying the
-`hosts` file requires administrative privileges, so you must run Alkahest as
-administrator.
+addresses point to where Alkahest is listening for each server. Alkahest will
+also install root certificates if the region you're playing on requires HTTPS
+for the server list. Both of these actions require administrative privileges,
+so you must run Alkahest as administrator.
 
 ## Plugins
 
