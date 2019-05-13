@@ -1,14 +1,16 @@
 artifacts:
     - path: '**\*.nupkg'
     - path: '**\*.zip'
-build_script:
+build:
+    publish_nuget: true
+    publish_nuget_symbols: true
+    verbosity: detailed
+before_build:
     - cmd: |
           git submodule update --init --recursive
-          forfiles /m *.csproj /S /C "cmd /C nuget restore @path"
-          forfiles /M packages.config /S /C "cmd /C nuget restore @path"
-          msbuild "Alkahest.sln"
+after_build:
+    - cmd: |
           forfiles /m *.proj /S /C "cmd /C msbuild @path"
-          FOR /R %%f IN (*.nuspec) DO nuget pack -Symbols "%%~pnf.csproj"
 nuget:
     disable_publish_on_pr: true
 image: Visual Studio 2019 Preview
