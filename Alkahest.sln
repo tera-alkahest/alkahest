@@ -30,8 +30,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alkahest.Parser", "Alkahest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alkahest.Plugins.Python", "Alkahest.Plugins.Python\Alkahest.Plugins.Python.csproj", "{92CD0899-A58E-4196-BD8D-4B96CB12A384}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Alkahest.Installer", "Alkahest.Installer\Alkahest.Installer.vdproj", "{D7961923-AA52-4F75-8534-16ABB29E16F0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alkahest.Archive", "Alkahest.Archive\Alkahest.Archive.proj", "{8B4B4367-7056-42FB-9ADF-31CCE0FA9309}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alkahest.Plugins.PacketLogger", "Alkahest.Plugins.PacketLogger\Alkahest.Plugins.PacketLogger.csproj", "{CCB59799-5CB1-4595-B34E-068B12791E46}"
@@ -61,7 +59,6 @@ Global
 		{0238DD2F-47AD-4B4C-8118-DDDA7C33716B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92CD0899-A58E-4196-BD8D-4B96CB12A384}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{92CD0899-A58E-4196-BD8D-4B96CB12A384}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D7961923-AA52-4F75-8534-16ABB29E16F0}.Debug|Any CPU.ActiveCfg = Debug
 		{8B4B4367-7056-42FB-9ADF-31CCE0FA9309}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{CCB59799-5CB1-4595-B34E-068B12791E46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CCB59799-5CB1-4595-B34E-068B12791E46}.Debug|Any CPU.Build.0 = Debug|Any CPU

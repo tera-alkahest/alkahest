@@ -46,7 +46,7 @@ accessing data stored with the game client.
 
 ## Installation
 
-[Installers and archives are available from the releases page.](https://github.com/alexrp/alkahest/releases)
+[Archives with compiled binaries are available from the releases page.](https://github.com/alexrp/alkahest/releases)
 
 Alkahest requires .NET Framework 4.7.2 to run.
 
