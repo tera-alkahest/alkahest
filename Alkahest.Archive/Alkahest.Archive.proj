@@ -18,15 +18,19 @@
   </Target>
   <Target Name="Build">
     <ItemGroup>
+      <ReleaseFiles Include="..\*.md; ..\*.ico; ..\*.crt; ..\*.pfx" />
       <ReleaseFiles Include="..\Build\*.exe*; ..\Build\*.dll; ..\Build\*.pdb" />
       <ReleaseFiles Include="..\Build\Plugins\alkahest-*; ..\Build\Plugins\IronPython.*; ..\Build\Plugins\Microsoft.*" />
       <ReleaseFiles Include="..\Build\Python\**" />
       <ReleaseFiles Include="..\Build\PythonLibs\**" />
     </ItemGroup>
-    <Zip ZipFileName="..\Build\Release\Alkahest.zip" WorkingDirectory="..\Build" Files="@(ReleaseFiles)" />
+    <Assembly TaskAction="GetInfo" NetAssembly="..\Build\Alkahest.Core.dll">
+      <Output TaskParameter="OutputItems" ItemName="AlkahestInfo" />
+    </Assembly>
+    <Zip ZipFileName="..\Build\Alkahest-%(AlkahestInfo.AssemblyInformationalVersion).zip" WorkingDirectory="..\Build" Files="@(ReleaseFiles)" />
   </Target>
   <Target Name="Clean">
-    <Delete Files="..\Build\Release\Alkahest.zip" />
+    <Delete Files="..\Build\Alkahest-*.zip" />
   </Target>
   <Target Name="Rebuild" DependsOnTargets="Clean; Build" />
 </Project>
