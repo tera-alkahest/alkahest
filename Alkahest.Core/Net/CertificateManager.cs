@@ -40,7 +40,7 @@ namespace Alkahest.Core.Net
             static byte[] ReadCertificate(string name)
             {
                 var asm = Assembly.GetExecutingAssembly();
-                using var stream = asm.GetManifestResourceStream($"{name}.pfx");
+                using var stream = asm.GetManifestResourceStream(name);
                 using var memory = new MemoryStream((int)stream.Length);
 
                 stream.CopyTo(memory);
@@ -49,9 +49,9 @@ namespace Alkahest.Core.Net
             }
 
             Signature = new X509Certificate2(
-                ReadCertificate($"{nameof(Alkahest)}CA"), (string)null, StorageFlags);
+                ReadCertificate($"{nameof(Alkahest)}CA.crt"), (string)null, StorageFlags);
             Encryption = new X509Certificate2(
-                ReadCertificate($"{nameof(Alkahest)}"), (string)null, StorageFlags);
+                ReadCertificate($"{nameof(Alkahest)}.pfx"), (string)null, StorageFlags);
 
             _store.Open(OpenFlags.ReadWrite);
             AddKeys();

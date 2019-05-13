@@ -276,7 +276,7 @@
     <Compile Include="Region.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\AlkahestCA.pfx">
+    <EmbeddedResource Include="..\AlkahestCA.crt">
       <Link>Cryptography\%(Filename)%(Extension)</Link>
       <LogicalName>%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
