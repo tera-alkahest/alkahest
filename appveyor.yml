@@ -13,7 +13,6 @@ after_build:
           forfiles /m *.proj /S /C "cmd /C msbuild @path"
 nuget:
     disable_publish_on_pr: true
-    project_feed: true
 image: Visual Studio 2019 Preview
 pull_requests:
     do_not_increment_build_number: true
