@@ -8,6 +8,7 @@ build:
 before_build:
     - cmd: |
           git submodule update --init --recursive
+          nuget restore
 after_build:
     - cmd: |
           forfiles /m *.proj /S /C "cmd /C msbuild @path"
