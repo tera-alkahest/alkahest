@@ -1,3 +1,6 @@
 [submodule "tera-data"]
-    path = tera-data
+    path = tera-toolbox-data
     url = ../../tera-toolbox/tera-data
+[submodule "tera-proxy-data"]
+    path = tera-proxy-data
+    url = ../../tera-proxy/tera-data.git

@@ -277,34 +277,38 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\AlkahestCA.crt">
-      <Link>Cryptography\%(Filename)%(Extension)</Link>
+      <Link>Net\%(Filename)%(Extension)</Link>
       <LogicalName>%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="..\Alkahest.pfx">
-      <Link>Cryptography\%(Filename)%(Extension)</Link>
+      <Link>Net\%(Filename)%(Extension)</Link>
       <LogicalName>%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\tera-data\map_base\protocol.347372.map">
+    <EmbeddedResource Include="..\tera-toolbox-data\map_base\protocol.347372.map">
       <Link>Net\Protocol\OpCodes\%(Filename)%(Extension)</Link>
       <LogicalName>%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\tera-data\map_base\protocol.347373.map">
+    <EmbeddedResource Include="..\tera-toolbox-data\map_base\protocol.347373.map">
       <Link>Net\Protocol\OpCodes\%(Filename)%(Extension)</Link>
       <LogicalName>%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\tera-data\map_base\protocol.347374.map">
+    <EmbeddedResource Include="..\tera-toolbox-data\map_base\protocol.347374.map">
       <Link>Net\Protocol\OpCodes\%(Filename)%(Extension)</Link>
       <LogicalName>%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\tera-data\map_base\protocol.347375.map">
+    <EmbeddedResource Include="..\tera-toolbox-data\map_base\protocol.347375.map">
       <Link>Net\Protocol\OpCodes\%(Filename)%(Extension)</Link>
       <LogicalName>%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\tera-data\map_base\protocol.347376.map">
+    <EmbeddedResource Include="..\tera-toolbox-data\map_base\protocol.347376.map">
       <Link>Net\Protocol\OpCodes\%(Filename)%(Extension)</Link>
       <LogicalName>%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\tera-data\map_base\protocol.347377.map">
+    <EmbeddedResource Include="..\tera-toolbox-data\map_base\protocol.347377.map">
+      <Link>Net\Protocol\OpCodes\%(Filename)%(Extension)</Link>
+      <LogicalName>%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\tera-proxy-data\map\sysmsg.81.map">
       <Link>Net\Protocol\OpCodes\%(Filename)%(Extension)</Link>
       <LogicalName>%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>

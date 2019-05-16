@@ -40,7 +40,7 @@ namespace Alkahest.Core.Net.Protocol.OpCodes
             var nameToCode = new Dictionary<string, ushort>();
 
             using var reader = new StreamReader(asm.GetManifestResourceStream(
-                $"{(opCodes ? "protocol" : "sysmsg")}.{Version}.map"));
+                opCodes ? $"protocol.{Version}.map" : "sysmsg.81.map"));
 
             string line;
 
@@ -53,7 +53,7 @@ namespace Alkahest.Core.Net.Protocol.OpCodes
                 if (!opCodes && name == "SMT_MAX")
                     continue;
 
-                var code = ushort.Parse(parts[2]);
+                var code = ushort.Parse(parts[opCodes ? 2 : 1]);
 
                 codeToName.Add(code, name);
                 nameToCode.Add(name, code);
