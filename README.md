@@ -150,7 +150,7 @@ Please see [ACKNOWLEDGEMENTS.md](ACKNOWLEDGEMENTS.md).
 
 ## Contributing
 
-Please see [.github/CONTRIBUTING.md](CONTRIBUTING.md).
+Please see [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 
 ## License
 
