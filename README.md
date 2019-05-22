@@ -70,7 +70,7 @@ If you want to build the NuGet package, run this command after building:
 nuget pack -Symbols Alkahest.Core
 ```
 
-This will create a file named something like `Alkahest.Core.1.0.0-alpha4`.
+This will create a file named something like `Alkahest.Core.1.0.0-alpha4.nupkg`.
 
 ## Configuration
 
