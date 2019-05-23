@@ -1,3 +1,6 @@
+after_build:
+    - cmd: |
+          forfiles /m *.proj /S /C "cmd /C msbuild @path"
 artifacts:
     - path: 'Build\*.zip'
 build:
@@ -8,11 +11,9 @@ before_build:
     - cmd: |
           git submodule update --init --recursive
           nuget restore
-after_build:
-    - cmd: |
-          forfiles /m *.proj /S /C "cmd /C msbuild @path"
+image: Visual Studio 2019 Preview
 nuget:
     disable_publish_on_pr: true
-image: Visual Studio 2019 Preview
 pull_requests:
     do_not_increment_build_number: true
+skip_tags: true
