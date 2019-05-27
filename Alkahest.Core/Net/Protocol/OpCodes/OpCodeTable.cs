@@ -23,7 +23,7 @@ namespace Alkahest.Core.Net.Protocol.OpCodes
                 { Region.KR, 0 }, // FIXME
                 { Region.NA, 347372 },
                 { Region.RU, 347375 },
-                { Region.TH, 347377 },
+                { Region.TH, 349932 },
                 { Region.TW, 347376 },
                 { Region.UK, 347373 },
             };
@@ -40,7 +40,7 @@ namespace Alkahest.Core.Net.Protocol.OpCodes
             var nameToCode = new Dictionary<string, ushort>();
 
             using var reader = new StreamReader(asm.GetManifestResourceStream(
-                opCodes ? $"protocol.{Version}.map" : "sysmsg.81.map"));
+                opCodes ? $"protocol.{version}.map" : "sysmsg.81.map"));
 
             string line;
 
