@@ -1,7 +1,7 @@
+using Alkahest.Core.IO;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Alkahest.Core.IO;
 
 namespace Alkahest.Core.Data
 {

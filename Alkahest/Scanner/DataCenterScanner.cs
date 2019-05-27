@@ -1,21 +1,21 @@
-using System.IO;
-using System.Linq;
+using Alkahest.Core.Data;
 using SharpDisasm;
 using SharpDisasm.Udis86;
-using Alkahest.Core.Data;
+using System.IO;
+using System.Linq;
 
-namespace Alkahest.Scanner.Scanners
+namespace Alkahest.Scanner
 {
-    sealed class DataCenterKeyScanner : IScanner
+    sealed class DataCenterScanner : IScanner
     {
         static readonly byte?[] _pattern = new byte?[]
         {
-            0x56, // push esi
-            0x57, // push edi
-            0x50, // push eax
-            0x8D, 0x45, 0xF4, // lea eax, [ebp - 0xC]
+            0x56,                               // push esi
+            0x57,                               // push edi
+            0x50,                               // push eax
+            0x8D, 0x45, 0xF4,                   // lea eax, [ebp-0xC]
             0x64, 0xA3, 0x00, 0x00, 0x00, 0x00, // mov large fs:0x0, eax
-            0x8B, 0x73, 0x08, // mov esi, [ebx + 0x8]
+            0x8B, 0x73, 0x08,                   // mov esi, [ebp+0x8]
         };
 
         public void Run(MemoryReader reader, IpcChannel channel)
@@ -32,7 +32,7 @@ namespace Alkahest.Scanner.Scanners
 
             using var disasm = new Disassembler(reader.ToAbsolute(off),
                 reader.Length - off, ArchitectureMode.x86_32,
-                (ulong)reader.BaseAddress);
+                (ulong)reader.Address, true);
 
             var key = ReadKey(disasm);
             var iv = ReadKey(disasm);

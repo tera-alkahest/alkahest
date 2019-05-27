@@ -1,11 +1,11 @@
-using System;
-using System.Linq;
 using Alkahest.Core;
 using Alkahest.Core.Logging;
 using Alkahest.Core.Net;
 using Alkahest.Core.Net.Protocol;
 using Alkahest.Core.Net.Protocol.Logging;
 using Alkahest.Core.Plugins;
+using System;
+using System.Linq;
 
 namespace Alkahest.Plugins.PacketLogger
 {

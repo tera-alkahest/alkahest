@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Alkahest.Parser.Analysis
+namespace Alkahest.Parser
 {
     sealed class PotentialArray
     {

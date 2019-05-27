@@ -1,8 +1,8 @@
+using Alkahest.Core.Game;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Reflection;
-using Alkahest.Core.Game;
 
 namespace Alkahest.Core.Net.Protocol
 {

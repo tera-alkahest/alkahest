@@ -1,5 +1,5 @@
-using System.Threading;
 using Alkahest.Core.IO;
+using System.Threading;
 
 namespace Alkahest.Core.Data
 {

@@ -7,7 +7,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ApplicationIcon>..\Alkahest.ico</ApplicationIcon>
     <ApplicationManifest>Properties\App.manifest</ApplicationManifest>
-    <AssemblyName>alkahest-server</AssemblyName>
+    <AssemblyName>Alkahest</AssemblyName>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>embedded</DebugType>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -16,8 +16,8 @@
     <OutputPath>..\Build\</OutputPath>
     <OutputType>Exe</OutputType>
     <ProjectGuid>{FB4516B0-8850-49F1-B65D-AD5ECE07670C}</ProjectGuid>
-    <RootNamespace>Alkahest.Server</RootNamespace>
-    <StartupObject>Alkahest.Server.Program</StartupObject>
+    <RootNamespace>Alkahest</RootNamespace>
+    <StartupObject>Alkahest.Program</StartupObject>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
@@ -28,10 +28,39 @@
     <Compile Include="..\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
     </Compile>
-    <Compile Include="Application.cs" />
+    <Compile Include="AlkahestCommand.cs" />
+    <Compile Include="Commands\DecryptCommand.cs" />
+    <Compile Include="Commands\DumpJsonCommand.cs" />
+    <Compile Include="Commands\DumpXmlCommand.cs" />
+    <Compile Include="Commands\ParseCommand.cs" />
+    <Compile Include="Commands\ScanCommand.cs" />
+    <Compile Include="Commands\ServeCommand.cs" />
+    <Compile Include="DefaultCommandException.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="ConsoleUtility.cs" />
+    <Compile Include="Parser\AnalysisMode.cs" />
+    <Compile Include="Parser\HexDumpMode.cs" />
+    <Compile Include="Parser\PacketAnalysis.cs" />
+    <Compile Include="Parser\PacketSerializerBackend.cs" />
+    <Compile Include="Parser\PacketStatistics.cs" />
+    <Compile Include="Parser\PotentialArray.cs" />
+    <Compile Include="Parser\PotentialArrayElement.cs" />
+    <Compile Include="Parser\PotentialString.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Scanner\ClientVersionScanner.cs" />
+    <Compile Include="Scanner\DataCenterScanner.cs" />
+    <Compile Include="Scanner\EntryPoint.cs" />
+    <Compile Include="Scanner\GameMessageScanner.cs" />
+    <Compile Include="Scanner\IpcChannel.cs" />
+    <Compile Include="Scanner\IScanner.cs" />
+    <Compile Include="Scanner\MemoryReader.cs" />
+    <Compile Include="Scanner\SystemMessageScanner.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(NuGetPackageRoot)\easyhook\2.7.6789\content\net40\*32*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Visible>false</Visible>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Alkahest.ico">
@@ -49,11 +78,25 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="EasyHook">
+      <Version>2.7.6789</Version>
+    </PackageReference>
     <PackageReference Include="Mono.Options">
       <Version>5.3.0.1</Version>
     </PackageReference>
+    <PackageReference Include="SharpDisasm">
+      <Version>1.1.11</Version>
+    </PackageReference>
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe">
+      <Version>4.5.2</Version>
+    </PackageReference>
+    <PackageReference Include="Vanara.PInvoke.Kernel32">
+      <Version>2.3.9</Version>
+    </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

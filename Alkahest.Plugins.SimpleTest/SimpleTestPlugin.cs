@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using Alkahest.Core;
 using Alkahest.Core.IO;
 using Alkahest.Core.Logging;
@@ -7,6 +5,8 @@ using Alkahest.Core.Net;
 using Alkahest.Core.Net.Protocol;
 using Alkahest.Core.Net.Protocol.Packets;
 using Alkahest.Core.Plugins;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Alkahest.Plugins.SimpleTest
 {

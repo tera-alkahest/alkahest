@@ -1,11 +1,11 @@
+using Alkahest.Core.Cryptography;
+using Alkahest.Core.Logging;
+using Alkahest.Core.Net.Protocol;
 using System;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using Alkahest.Core.Cryptography;
-using Alkahest.Core.Logging;
-using Alkahest.Core.Net.Protocol;
 
 namespace Alkahest.Core.Net
 {

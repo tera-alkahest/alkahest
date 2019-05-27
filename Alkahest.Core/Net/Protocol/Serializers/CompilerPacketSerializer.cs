@@ -1,12 +1,12 @@
+using Alkahest.Core.IO;
+using Alkahest.Core.Logging;
+using Alkahest.Core.Net.Protocol.OpCodes;
+using Mono.Linq.Expressions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using Alkahest.Core.IO;
-using Alkahest.Core.Logging;
-using Alkahest.Core.Net.Protocol.OpCodes;
-using Mono.Linq.Expressions;
 
 namespace Alkahest.Core.Net.Protocol.Serializers
 {

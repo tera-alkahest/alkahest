@@ -1,4 +1,4 @@
-namespace Alkahest.Parser.Analysis
+namespace Alkahest.Parser
 {
     sealed class PotentialArrayElement
     {
@@ -20,7 +20,7 @@ namespace Alkahest.Parser.Analysis
         public override string ToString()
         {
             var delta = Next == 0 ?
-                string.Empty : $" (ƒ¢ = {Next - NextPosition - sizeof(ushort)} bytes)";
+                string.Empty : $" (delta = {Next - NextPosition - sizeof(ushort)} bytes)";
 
             return $"{Here:X4} ... {Next:X4}{delta}";
         }

@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Alkahest.Core;
 using Alkahest.Core.Logging;
 using Alkahest.Core.Net;
@@ -9,6 +5,10 @@ using Alkahest.Core.Plugins;
 using IronPython.Compiler;
 using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Alkahest.Plugins.Python
 {

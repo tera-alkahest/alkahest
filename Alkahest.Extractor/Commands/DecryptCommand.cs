@@ -1,11 +1,11 @@
+using Alkahest.Core.Cryptography;
+using Alkahest.Core.IO;
+using Alkahest.Core.Logging;
 using System;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Security.Cryptography;
-using Alkahest.Core.Cryptography;
-using Alkahest.Core.IO;
-using Alkahest.Core.Logging;
 
 namespace Alkahest.Extractor.Commands
 {

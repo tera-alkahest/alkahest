@@ -1,3 +1,4 @@
+using Alkahest.Core.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,6 @@ using System.ServiceModel.Channels;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Alkahest.Core.Logging;
 
 namespace Alkahest.Core.Net
 {

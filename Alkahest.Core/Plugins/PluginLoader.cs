@@ -1,10 +1,10 @@
+using Alkahest.Core.Logging;
+using Alkahest.Core.Net;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition.Hosting;
 using System.IO;
 using System.Linq;
-using Alkahest.Core.Logging;
-using Alkahest.Core.Net;
 
 namespace Alkahest.Core.Plugins
 {

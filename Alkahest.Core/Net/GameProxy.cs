@@ -1,11 +1,11 @@
+using Alkahest.Core.Logging;
+using Alkahest.Core.Net.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-using Alkahest.Core.Logging;
-using Alkahest.Core.Net.Protocol;
 
 namespace Alkahest.Core.Net
 {

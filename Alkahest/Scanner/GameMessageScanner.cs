@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-namespace Alkahest.Scanner.Scanners
+namespace Alkahest.Scanner
 {
     sealed class GameMessageScanner : IScanner
     {
@@ -13,17 +13,17 @@ namespace Alkahest.Scanner.Scanners
         {
             new byte?[]
             {
-                0x55, // push ebp
-                0x8B, 0xEC, // mov ebp, esp
-                0x8B, 0x45, 0x08, // mov eax, [ebp + 0x8]
-                0x0F, 0xB7, 0xC0, // movzx eax, ax
+                0x55,                         // push ebp
+                0x8B, 0xEC,                   // mov ebp, esp
+                0x8B, 0x45, 0x08,             // mov eax, [ebp+0x8]
+                0x0F, 0xB7, 0xC0,             // movzx eax, ax
                 0x3D, 0x88, 0x13, 0x00, 0x00, // cmp eax, 0x1388
             },
             new byte?[]
             {
-                0x55, // push ebp
-                0x8B, 0xEC, // mov ebp, esp
-                0x0F, 0xB7, 0x45, 0x08, // movzx eax, [ebp + 0x8]
+                0x55,                         // push ebp
+                0x8B, 0xEC,                   // mov ebp, esp
+                0x0F, 0xB7, 0x45, 0x08,       // movzx eax, [ebp+0x8]
                 0x3D, 0x88, 0x13, 0x00, 0x00, // cmp eax, 0x1388
             },
         };

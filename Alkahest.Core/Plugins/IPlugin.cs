@@ -1,5 +1,5 @@
-using System.ComponentModel.Composition;
 using Alkahest.Core.Net;
+using System.ComponentModel.Composition;
 
 namespace Alkahest.Core.Plugins
 {

@@ -75,9 +75,9 @@ This will create a file named something like `Alkahest.Core.1.0.0-alpha4.nupkg`.
 ## Configuration
 
 After you've built Alkahest, you will need to configure it. This is done in the
-`alkahest-server.exe.config` file. You can find that file in the `Build`
-directory if you've built Alkahest from source, or in the directory you
-installed Alkahest to.
+`Alkahest.exe.config` file. You can find that file in the `Build` directory if
+you've built Alkahest from  source, or in the directory you installed Alkahest
+to.
 
 The most important configuration values you'll need to change are:
 
@@ -98,9 +98,9 @@ on your local machine.
 
 ## Usage
 
-Once you've configured Alkahest, run `alkahest-server.exe` to start it. Once
-Alkahest finishes initializing, and if everything went fine, you should be able
-to just start TERA and play.
+Once you've configured Alkahest, run `Alkahest.exe` to start it. Once Alkahest
+finishes initializing, and if everything went fine, you should be able to just
+start TERA and play.
 
 For some regions, you may need to log into TERA first, then start Alkahest just
 before actually launching the game. This is necessary because some regions use

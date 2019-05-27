@@ -1,11 +1,11 @@
+using Alkahest.Core;
+using Alkahest.Core.Logging;
 using System;
 using System.Configuration;
 using System.Linq;
 using System.Net;
-using Alkahest.Core;
-using Alkahest.Core.Logging;
 
-namespace Alkahest.Server
+namespace Alkahest
 {
     static class Configuration
     {
@@ -105,8 +105,7 @@ namespace Alkahest.Server
         static string[] Split(string value, char separator)
         {
             return value.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(x => x.Trim())
-                .ToArray();
+                .Select(x => x.Trim()).ToArray();
         }
     }
 }

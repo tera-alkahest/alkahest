@@ -1,11 +1,11 @@
+using Alkahest.Core.IO;
+using Alkahest.Core.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Alkahest.Core.IO;
-using Alkahest.Core.Logging;
 
 namespace Alkahest.Core.Net.Protocol
 {

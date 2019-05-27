@@ -1,9 +1,9 @@
+using Alkahest.Core.Logging;
+using EasyHook;
 using System;
 using System.Collections.Generic;
-using System.Threading;
-using EasyHook;
-using Alkahest.Core.Logging;
 using System.Runtime.Remoting;
+using System.Threading;
 
 namespace Alkahest.Scanner
 {
@@ -22,6 +22,11 @@ namespace Alkahest.Scanner
         public static IpcChannel Connect(string name)
         {
             return RemoteHooking.IpcConnectClient<IpcChannel>(name);
+        }
+
+        public override object InitializeLifetimeService()
+        {
+            return null;
         }
 
         static readonly Log _log = new Log(typeof(IpcChannel));

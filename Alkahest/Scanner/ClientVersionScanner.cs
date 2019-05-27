@@ -1,18 +1,18 @@
 using System.Linq;
 
-namespace Alkahest.Scanner.Scanners
+namespace Alkahest.Scanner
 {
     sealed class ClientVersionScanner : IScanner
     {
         static readonly byte?[] _pattern1 = new byte?[]
         {
-            0x8B, 0x55, 0xEC, // mov edx, [ebp - 0x14]
+            0x8B, 0x55, 0xEC,                   // mov edx, [ebp-0x14]
             0x8B, 0x35, null, null, null, null, // mov esi, <addr>
         };
 
         static readonly byte?[] _pattern2 = new byte?[]
         {
-            0x66, 0x83, 0x02, 0x0C, // add word ptr [edx], 0xC
+            0x66, 0x83, 0x02, 0x0C,             // add word ptr [edx], 0xC
             0x8B, 0x3D, null, null, null, null, // mov edi, <addr>
         };
 
@@ -46,7 +46,7 @@ namespace Alkahest.Scanner.Scanners
         {
             var off = reader.ReadOffset(offset + pattern.TakeWhile(x => x != null).Count());
 
-            return reader.IsValid(off) ? (uint?)reader.ReadUInt32(off) : null;
+            return reader.IsInRange(off) ? (uint?)reader.Read<uint>(off) : null;
         }
     }
 }

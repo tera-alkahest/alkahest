@@ -1,11 +1,11 @@
+using Alkahest.Core.IO;
+using Alkahest.Core.Net.Protocol.OpCodes;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using System.Reflection;
-using Alkahest.Core.IO;
-using Alkahest.Core.Net.Protocol.OpCodes;
 
 namespace Alkahest.Core.Net.Protocol
 {

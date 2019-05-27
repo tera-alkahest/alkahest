@@ -1,41 +1,55 @@
 using Alkahest.Core.Data;
 using Alkahest.Core.Logging;
+using Mono.Options;
+using System;
 using System.IO;
 using System.Linq;
 using System.Xml;
 
-namespace Alkahest.Extractor.Commands
+namespace Alkahest.Commands
 {
-    sealed class DumpXmlCommand : ICommand
+    sealed class DumpXmlCommand : AlkahestCommand
     {
         static readonly Log _log = new Log(typeof(DumpXmlCommand));
 
-        public string Name => "dump-xml";
+        string _output = "Json";
 
-        public string Syntax =>
-            $"<data center file>";
-
-        public string Description =>
-            "Dump data center contents to a specified directory as XML.";
-
-        public int RequiredArguments => 1;
-
-        public void Run(string output, string[] args)
+        public DumpXmlCommand()
+            : base("XML Dumper", "dump-xml", "Dump a decrypted data center file as XML")
         {
-            if (output == null)
-                output = "Xml";
+            Options = new OptionSet
+            {
+                $"Usage: {Program.Name} {Name} DDCFILE [OPTIONS]",
+                string.Empty,
+                "Available options:",
+                string.Empty,
+                {
+                    "o|output",
+                    $"Specify output directory (defaults to `{_output}`)",
+                    o => _output = o
+                },
+            };
+        }
+
+        protected override int Invoke(string[] args)
+        {
+            if (args.Length != 1)
+            {
+                Console.Error.WriteLine("Expected exactly 1 argument");
+                return 1;
+            }
 
             var input = args[0];
 
             _log.Basic("Dumping {0} as XML...", input);
 
-            Directory.CreateDirectory(output);
+            Directory.CreateDirectory(_output);
 
             using var dc = new DataCenter(input);
 
             foreach (var grp in dc.Root.GroupBy(x => x.Name))
             {
-                var dir = Path.Combine(output, grp.Key);
+                var dir = Path.Combine(_output, grp.Key);
 
                 Directory.CreateDirectory(dir);
 
@@ -60,7 +74,9 @@ namespace Alkahest.Extractor.Commands
                 }
             }
 
-            _log.Basic("Dumped XML files to directory {0}", output);
+            _log.Basic("Dumped XML files to directory {0}", _output);
+
+            return 0;
         }
 
         static void WriteElement(XmlWriter writer, DataCenterElement element)

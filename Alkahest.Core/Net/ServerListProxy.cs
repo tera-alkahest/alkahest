@@ -1,7 +1,7 @@
+using Alkahest.Core.Logging;
 using System;
 using System.Collections.Generic;
 using System.Web.Http.SelfHost;
-using Alkahest.Core.Logging;
 
 namespace Alkahest.Core.Net
 {
@@ -65,8 +65,7 @@ namespace Alkahest.Core.Net
         {
             _server.OpenAsync().Wait();
 
-            _log.Basic("{0} server list proxy listening at {1}",
-                Parameters.Region,
+            _log.Basic("{0} server list proxy listening at {1}", Parameters.Region,
                 ((HttpSelfHostConfiguration)_server.Configuration).BaseAddress);
         }
     }

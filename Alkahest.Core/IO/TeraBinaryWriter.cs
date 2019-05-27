@@ -1,9 +1,9 @@
+using Alkahest.Core.Game;
+using Alkahest.Core.Net.Protocol;
 using System;
 using System.IO;
 using System.Numerics;
 using System.Text;
-using Alkahest.Core.Game;
-using Alkahest.Core.Net.Protocol;
 
 namespace Alkahest.Core.IO
 {

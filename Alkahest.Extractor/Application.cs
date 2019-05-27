@@ -1,3 +1,8 @@
+using Alkahest.Core;
+using Alkahest.Core.Logging;
+using Alkahest.Core.Logging.Loggers;
+using Alkahest.Extractor.Commands;
+using Mono.Options;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -5,11 +10,6 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Security;
-using Mono.Options;
-using Alkahest.Core;
-using Alkahest.Core.Logging;
-using Alkahest.Core.Logging.Loggers;
-using Alkahest.Extractor.Commands;
 
 namespace Alkahest.Extractor
 {

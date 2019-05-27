@@ -38,8 +38,7 @@ namespace Alkahest.Parser
 
         public IReadOnlyDictionary<string, SummaryEntry> Packets => _packets;
 
-        readonly Dictionary<string, SummaryEntry> _packets =
-            new Dictionary<string, SummaryEntry>();
+        readonly Dictionary<string, SummaryEntry> _packets = new Dictionary<string, SummaryEntry>();
 
         public void AddPacket(string opCode, bool known, int length)
         {

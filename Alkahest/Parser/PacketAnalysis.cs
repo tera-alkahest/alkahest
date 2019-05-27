@@ -1,13 +1,13 @@
+using Alkahest.Core.IO;
+using Alkahest.Core.Net.Protocol;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Alkahest.Core.IO;
-using Alkahest.Core.Net.Protocol;
 
-namespace Alkahest.Parser.Analysis
+namespace Alkahest.Parser
 {
     static class PacketAnalysis
     {
@@ -38,8 +38,7 @@ namespace Alkahest.Parser.Analysis
                 {
                     str = reader.ReadString();
 
-                    TeraBinaryReader.Encoding.GetString(
-                        TeraBinaryReader.Encoding.GetBytes(str));
+                    TeraBinaryReader.Encoding.GetString(TeraBinaryReader.Encoding.GetBytes(str));
                 }
                 catch (Exception e) when (IsStringException(e))
                 {

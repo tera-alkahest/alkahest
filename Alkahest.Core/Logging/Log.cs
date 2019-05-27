@@ -9,11 +9,9 @@ namespace Alkahest.Core.Logging
 
         public static string TimestampFormat { get; set; }
 
-        public static ICollection<string> DiscardSources { get; } =
-            new HashSet<string>();
+        public static ICollection<string> DiscardSources { get; } = new HashSet<string>();
 
-        public static ICollection<ILogger> Loggers { get; } =
-            new HashSet<ILogger>();
+        public static ICollection<ILogger> Loggers { get; } = new HashSet<ILogger>();
 
         public static event EventHandler<LogEventArgs> MessageLogged;
 
@@ -61,8 +59,7 @@ namespace Alkahest.Core.Logging
 
         bool ShouldLog(LogLevel level)
         {
-            return level == LogLevel.Error || level == LogLevel.Warning ? true :
-                level <= Level && !DiscardSources.Contains(Source.Name);
+            return level <= LogLevel.Warning || (level <= Level && !DiscardSources.Contains(Source.Name));
         }
 
         void LogMessage(LogLevel level, string format, params object[] args)

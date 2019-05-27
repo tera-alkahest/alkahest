@@ -1,12 +1,11 @@
+using Alkahest.Core.Logging;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
-using Microsoft.Win32;
-using Alkahest.Core.Logging;
 
 namespace Alkahest.Core.Net
 {

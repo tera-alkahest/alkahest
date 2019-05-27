@@ -1,10 +1,10 @@
+using Alkahest.Core.Logging;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
-using Alkahest.Core.Logging;
 
 namespace Alkahest.Core.Net
 {

@@ -1,6 +1,6 @@
+using Alkahest.Core.Game;
 using System.Collections.Generic;
 using System.Numerics;
-using Alkahest.Core.Game;
 
 namespace Alkahest.Core.Net.Protocol.Packets
 {

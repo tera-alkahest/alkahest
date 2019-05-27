@@ -1,41 +1,55 @@
 using Alkahest.Core.Data;
 using Alkahest.Core.Logging;
+using Mono.Options;
 using Newtonsoft.Json;
+using System;
 using System.IO;
 using System.Linq;
 
-namespace Alkahest.Extractor.Commands
+namespace Alkahest.Commands
 {
-    sealed class DumpJsonCommand : ICommand
+    sealed class DumpJsonCommand : AlkahestCommand
     {
         static readonly Log _log = new Log(typeof(DumpJsonCommand));
 
-        public string Name => "dump-json";
+        string _output = "Json";
 
-        public string Syntax =>
-            $"<data center file>";
-
-        public string Description =>
-            "Dump data center contents to a specified directory as JSON.";
-
-        public int RequiredArguments => 1;
-
-        public void Run(string output, string[] args)
+        public DumpJsonCommand()
+            : base("JSON Dumper", "dump-json", "Dump a decrypted data center file as JSON")
         {
-            if (output == null)
-                output = "Json";
+            Options = new OptionSet
+            {
+                $"Usage: {Program.Name} {Name} DDCFILE [OPTIONS]",
+                string.Empty,
+                "Available options:",
+                string.Empty,
+                {
+                    "o|output",
+                    $"Specify output directory (defaults to `{_output}`)",
+                    o => _output = o
+                },
+            };
+        }
+
+        protected override int Invoke(string[] args)
+        {
+            if (args.Length != 1)
+            {
+                Console.Error.WriteLine("Expected exactly 1 argument");
+                return 1;
+            }
 
             var input = args[0];
 
             _log.Basic("Dumping {0} as JSON...", input);
 
-            Directory.CreateDirectory(output);
+            Directory.CreateDirectory(_output);
 
             using var dc = new DataCenter(input);
 
             foreach (var grp in dc.Root.GroupBy(x => x.Name))
             {
-                var dir = Path.Combine(output, grp.Key);
+                var dir = Path.Combine(_output, grp.Key);
 
                 Directory.CreateDirectory(dir);
 
@@ -45,8 +59,8 @@ namespace Alkahest.Extractor.Commands
                 {
                     using (elem)
                     {
-                        using var writer = new JsonTextWriter(
-                            new StreamWriter(Path.Combine(dir, $"{grp.Key}-{i}.json")))
+                        using var writer = new JsonTextWriter(new StreamWriter(
+                            Path.Combine(dir, $"{grp.Key}-{i}.json")))
                         {
                             Formatting = Formatting.Indented,
                         };
@@ -58,7 +72,9 @@ namespace Alkahest.Extractor.Commands
                 }
             }
 
-            _log.Basic("Dumped JSON files to directory {0}", output);
+            _log.Basic("Dumped JSON files to directory {0}", _output);
+
+            return 0;
         }
 
         static void WriteElement(JsonWriter writer, DataCenterElement element)

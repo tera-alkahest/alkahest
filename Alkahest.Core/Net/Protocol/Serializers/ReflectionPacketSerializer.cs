@@ -1,12 +1,12 @@
+using Alkahest.Core.Game;
+using Alkahest.Core.IO;
+using Alkahest.Core.Logging;
+using Alkahest.Core.Net.Protocol.OpCodes;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Reflection;
-using Alkahest.Core.Game;
-using Alkahest.Core.IO;
-using Alkahest.Core.Logging;
-using Alkahest.Core.Net.Protocol.OpCodes;
 
 namespace Alkahest.Core.Net.Protocol.Serializers
 {
