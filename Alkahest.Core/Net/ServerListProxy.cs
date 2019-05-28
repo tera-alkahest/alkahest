@@ -22,8 +22,7 @@ namespace Alkahest.Core.Net
             Parameters = parameters ?? throw new ArgumentNullException(nameof(parameters));
 
             var ep = parameters.ProxyServerListEndPoint;
-            var cfg = new HttpSelfHostConfiguration(
-                $"{parameters.Uri.Scheme}://{ep.Address}:{ep.Port}")
+            var cfg = new HttpSelfHostConfiguration($"{parameters.Uri.Scheme}://{ep.Address}:{ep.Port}")
             {
                 MessageHandlers =
                 {

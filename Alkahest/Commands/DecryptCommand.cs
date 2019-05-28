@@ -60,7 +60,7 @@ namespace Alkahest.Commands
 
             using var transform = new PaddingCryptoTransform(aes.CreateDecryptor());
             var stream = new CryptoStream(File.OpenRead(input), transform, CryptoStreamMode.Read);
-            using var reader = new BinaryReader(stream, TeraBinaryReader.Encoding, true);
+            using var reader = new BinaryReader(stream, GameBinaryReader.Encoding, true);
 
             reader.ReadUInt32();
             reader.ReadUInt16();

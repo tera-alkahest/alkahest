@@ -10,19 +10,18 @@ namespace Alkahest.Core.Data
 
         public byte[] Data { get; }
 
-        TeraBinaryReader _reader;
+        GameBinaryReader _reader;
 
-        public DataCenterSimpleRegion(uint elementSize, uint count,
-            byte[] data)
+        public DataCenterSimpleRegion(uint elementSize, uint count, byte[] data)
         {
             ElementSize = elementSize;
             Count = count;
             Data = data;
         }
 
-        public TeraBinaryReader GetReader(uint elementIndex)
+        public GameBinaryReader GetReader(uint elementIndex)
         {
-            _reader ??= new TeraBinaryReader(Data);
+            _reader ??= new GameBinaryReader(Data);
 
             _reader.Position = (int)(elementIndex * ElementSize);
 

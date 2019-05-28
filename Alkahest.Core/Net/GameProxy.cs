@@ -1,5 +1,5 @@
 using Alkahest.Core.Logging;
-using Alkahest.Core.Net.Protocol;
+using Alkahest.Core.Net.Game;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,8 +43,7 @@ namespace Alkahest.Core.Net
             ArgsPool = pool ?? throw new ArgumentNullException(nameof(pool));
             Processor = processor ?? throw new ArgumentNullException(nameof(processor));
             Timeout = timeout;
-            _serverSocket = new Socket(info.ProxyEndPoint.AddressFamily,
-                SocketType.Stream, ProtocolType.Tcp)
+            _serverSocket = new Socket(info.ProxyEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp)
             {
                 ExclusiveAddressUse = true,
                 NoDelay = true,
@@ -97,6 +96,7 @@ namespace Alkahest.Core.Net
         void Accept()
         {
             var args = ArgsPool.Get();
+
             args.Completed += OnAccept;
 
             Task.Factory.StartNew(() =>
@@ -113,6 +113,7 @@ namespace Alkahest.Core.Net
             var reject = _clients.Count >= MaxClients;
 
             args.Completed -= OnAccept;
+
             ArgsPool.TryPut(args);
 
             if (error != SocketError.Success || reject)
@@ -120,8 +121,7 @@ namespace Alkahest.Core.Net
                 var isAbort = error == SocketError.OperationAborted;
 
                 if (!isAbort)
-                    _log.Info("Rejected connection to {0} from {1}: {2}",
-                        Info.Name, socket.RemoteEndPoint,
+                    _log.Info("Rejected connection to {0} from {1}: {2}", Info.Name, socket.RemoteEndPoint,
                         reject ? "Maximum amount of clients reached" : error.ToErrorString());
 
                 socket.SafeClose();
@@ -137,8 +137,7 @@ namespace Alkahest.Core.Net
             {
                 var client = new GameClient(this, socket);
 
-                _log.Info("Accepted connection to {0} from {1}",
-                    Info.Name, socket.RemoteEndPoint);
+                _log.Info("Accepted connection to {0} from {1}", Info.Name, socket.RemoteEndPoint);
             }
 
             Accept();

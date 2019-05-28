@@ -11,8 +11,7 @@ namespace Alkahest.Core.Data
 
         public IReadOnlyDictionary<ushort, DataCenterSegment> Segments { get; }
 
-        public DataCenterSegmentedRegion(uint elementSize,
-            IReadOnlyList<DataCenterSegment> segments)
+        public DataCenterSegmentedRegion(uint elementSize, IReadOnlyList<DataCenterSegment> segments)
         {
             ElementSize = elementSize;
 
@@ -21,7 +20,7 @@ namespace Alkahest.Core.Data
             Segments = segments.ToDictionary(x => i++);
         }
 
-        public TeraBinaryReader GetReader(DataCenterAddress address)
+        public GameBinaryReader GetReader(DataCenterAddress address)
         {
             if (address.SegmentIndex >= Segments.Count)
                 throw new InvalidDataException();

@@ -49,8 +49,8 @@ namespace Alkahest.Commands
             var fileName = Path.GetFileName(proc.MainModule.FileName);
 
             if (fileName != "TERA.exe")
-                _log.Warning("Process {0} ({1}) has unexpected file name: {2}",
-                    proc.ProcessName, proc.Id, fileName);
+                _log.Warning("Process {0} ({1}) has unexpected file name: {2}", proc.ProcessName,
+                    proc.Id, fileName);
 
             _log.Basic("Injecting process {0} ({1})...", proc.ProcessName, proc.Id);
 

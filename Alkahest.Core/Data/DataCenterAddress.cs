@@ -20,8 +20,7 @@ namespace Alkahest.Core.Data
 
         public bool Equals(DataCenterAddress other)
         {
-            return SegmentIndex == other.SegmentIndex &&
-                ElementIndex == other.ElementIndex;
+            return SegmentIndex == other.SegmentIndex && ElementIndex == other.ElementIndex;
         }
 
         public override bool Equals(object obj)
@@ -31,8 +30,7 @@ namespace Alkahest.Core.Data
 
         public override int GetHashCode()
         {
-            return Bits.Compose(((uint)SegmentIndex, 0, 16),
-                (ElementIndex, 16, 16)).GetHashCode();
+            return Bits.Compose(((uint)SegmentIndex, 0, 16), (ElementIndex, 16, 16)).GetHashCode();
         }
     }
 }

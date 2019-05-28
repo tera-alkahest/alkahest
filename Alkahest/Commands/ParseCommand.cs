@@ -1,8 +1,8 @@
 using Alkahest.Core;
 using Alkahest.Core.Logging;
-using Alkahest.Core.Net.Protocol;
-using Alkahest.Core.Net.Protocol.Logging;
-using Alkahest.Core.Net.Protocol.Serializers;
+using Alkahest.Core.Net.Game;
+using Alkahest.Core.Net.Game.Logging;
+using Alkahest.Core.Net.Game.Serialization;
 using Alkahest.Parser;
 using Mono.Options;
 using System;
@@ -17,9 +17,9 @@ namespace Alkahest.Commands
     {
         const string ParsedExtension = "txt";
 
-        const RegexOptions RegexOptions =
-            System.Text.RegularExpressions.RegexOptions.Compiled |
-            System.Text.RegularExpressions.RegexOptions.Singleline;
+        const RegexOptions FilterRegexOptions =
+            RegexOptions.Compiled |
+            RegexOptions.Singleline;
 
         static readonly Log _log = new Log(typeof(ParseCommand));
 
@@ -66,7 +66,7 @@ namespace Alkahest.Commands
                 {
                     "r|regex=",
                     "Add an opcode regex to filter packets by (uses Perl 5 regex syntax)",
-                    (string r) => _regexes.Add(new Regex(r, RegexOptions))
+                    (string r) => _regexes.Add(new Regex(r, FilterRegexOptions))
                 },
                 {
                     "e|header",
@@ -157,7 +157,7 @@ namespace Alkahest.Commands
                 _output = Path.ChangeExtension(input, ParsedExtension);
 
             if (_regexes.Count == 0)
-                _regexes.Add(new Regex(".*", RegexOptions));
+                _regexes.Add(new Regex(".*", FilterRegexOptions));
 
             _log.Basic("Parsing {0}...", input);
 
@@ -169,11 +169,12 @@ namespace Alkahest.Commands
                 _log.Info(string.Empty);
                 _log.Info("Version: {0}", reader.Version);
                 _log.Info("Compressed: {0}", reader.IsCompressed);
-                _log.Info("Region: {0}", reader.Messages.Region);
+                _log.Info("Region: {0}", reader.Region);
                 _log.Info("Servers:");
 
                 foreach (var srv in reader.Servers.Values)
-                    _log.Info("  {0} ({1}): {2} -> {3}", srv.Name, srv.Id, srv.RealEndPoint, srv.ProxyEndPoint);
+                    _log.Info("  {0} ({1}): {2} -> {3}", srv.Name, srv.Id, srv.RealEndPoint,
+                        srv.ProxyEndPoint);
 
                 _log.Info(string.Empty);
             }
@@ -183,17 +184,18 @@ namespace Alkahest.Commands
             switch (_backend)
             {
                 case PacketSerializerBackend.Reflection:
-                    serializer = new ReflectionPacketSerializer(reader.Messages);
+                    serializer = new ReflectionPacketSerializer(reader.Region, reader.GameMessages,
+                        reader.SystemMessages);
                     break;
                 case PacketSerializerBackend.Compiler:
-                    serializer = new CompilerPacketSerializer(reader.Messages);
+                    serializer = new CompilerPacketSerializer(reader.Region, reader.GameMessages,
+                        reader.SystemMessages);
                     break;
                 default:
                     throw Assert.Unreachable();
             }
 
-            using var result = new StreamWriter(new FileStream(
-                _output, FileMode.Create, FileAccess.Write));
+            using var result = new StreamWriter(new FileStream(_output, FileMode.Create, FileAccess.Write));
 
             foreach (var entry in reader.EnumerateAll())
                 HandleEntry(reader, entry, stats, serializer, result);
@@ -210,7 +212,7 @@ namespace Alkahest.Commands
         {
             stats.TotalPackets++;
 
-            var name = serializer.Messages.Game.OpCodeToName[entry.OpCode];
+            var name = serializer.GameMessages.CodeToName[entry.OpCode];
 
             if (_regexes.All(r => !r.IsMatch(name)))
             {
@@ -354,8 +356,8 @@ namespace Alkahest.Commands
                     _log.Info("  {0}", kvp.Key);
                     _log.Info("    Count: {0}{1}", entry.Count, total != 0 ?
                         $" ({(double)entry.Count / total:P2})" : string.Empty);
-                    _log.Info("    Sizes: Min = {0}, Max = {1}, Avg = {2}",
-                        sizes.Min(), sizes.Max(), (int)sizes.Average());
+                    _log.Info("    Sizes: Min = {0}, Max = {1}, Avg = {2}", sizes.Min(), sizes.Max(),
+                        (int)sizes.Average());
                     _log.Info(string.Empty);
                 }
 

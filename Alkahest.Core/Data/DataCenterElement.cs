@@ -29,8 +29,7 @@ namespace Alkahest.Core.Data
 
         Lazy<IReadOnlyList<DataCenterElement>> _children;
 
-        internal DataCenterElement(DataCenter center,
-            DataCenterAddress address)
+        internal DataCenterElement(DataCenter center, DataCenterAddress address)
         {
             ushort attrCount;
             ushort childCount;
@@ -107,8 +106,7 @@ namespace Alkahest.Core.Data
                             stringValue = center.GetString(strAddr);
                         }
 
-                        attributes.Add(new DataCenterAttribute(
-                            center.Names[attrNameIndex], typeCode,
+                        attributes.Add(new DataCenterAttribute(center.Names[attrNameIndex], typeCode,
                             primitiveValue, stringValue));
                     }
                 }

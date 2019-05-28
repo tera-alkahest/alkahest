@@ -1,5 +1,5 @@
 using Alkahest.Core.IO;
-using Alkahest.Core.Net.Protocol;
+using Alkahest.Core.Net.Game;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -11,10 +11,10 @@ namespace Alkahest.Parser
 {
     static class PacketAnalysis
     {
-        public static IEnumerable<PotentialString> FindStrings(byte[] payload,
-            bool whiteSpace, bool control, int minLength)
+        public static IEnumerable<PotentialString> FindStrings(byte[] payload, bool whiteSpace,
+            bool control, int minLength)
         {
-            using var reader = new TeraBinaryReader(payload);
+            using var reader = new GameBinaryReader(payload);
 
             for (var i = 0; i < reader.Length; i++)
             {
@@ -26,8 +26,7 @@ namespace Alkahest.Parser
                 var offsetPos = reader.Position;
                 var offset = reader.ReadOffset();
 
-                if (offset < 0 || offset < offsetPos + sizeof(ushort) ||
-                    offset > reader.Length - sizeof(char))
+                if (offset < 0 || offset < offsetPos + sizeof(ushort) || offset > reader.Length - sizeof(char))
                     continue;
 
                 reader.Position = offset;
@@ -38,7 +37,7 @@ namespace Alkahest.Parser
                 {
                     str = reader.ReadString();
 
-                    TeraBinaryReader.Encoding.GetString(TeraBinaryReader.Encoding.GetBytes(str));
+                    GameBinaryReader.Encoding.GetString(GameBinaryReader.Encoding.GetBytes(str));
                 }
                 catch (Exception e) when (IsStringException(e))
                 {
@@ -78,7 +77,7 @@ namespace Alkahest.Parser
 
         public static IEnumerable<PotentialArray> FindArrays(byte[] payload)
         {
-            using var reader = new TeraBinaryReader(payload);
+            using var reader = new GameBinaryReader(payload);
 
             for (var i = 0; i < reader.Length; i++)
             {
@@ -92,9 +91,7 @@ namespace Alkahest.Parser
                 var offsetPos = reader.Position;
                 var offset = reader.ReadOffset();
 
-                if (count == 0 ||
-                    (count * (sizeof(ushort) * 2 + sizeof(byte)) +
-                    sizeof(ushort) * 2) > reader.Length)
+                if (count == 0 || (count * (sizeof(ushort) * 2 + sizeof(byte)) + sizeof(ushort) * 2) > reader.Length)
                     continue;
 
                 var positions = new HashSet<int>
@@ -112,8 +109,7 @@ namespace Alkahest.Parser
 
                 while (next != -PacketHeader.HeaderSize)
                 {
-                    if (!(good = next >= 0 && next > last &&
-                        next <= reader.Length - sizeof(ushort) * 2 - sizeof(byte)))
+                    if (!(good = next >= 0 && next > last && next <= reader.Length - sizeof(ushort) * 2 - sizeof(byte)))
                         break;
 
                     last = next + sizeof(ushort) * 2;
@@ -123,20 +119,16 @@ namespace Alkahest.Parser
                     var herePos = reader.Position;
                     var here = reader.ReadOffset();
 
-                    if (!(good = here == herePos && here == next &&
-                        positions.Add(herePos) &&
-                        positions.Add(herePos + sizeof(byte))))
+                    if (!(good = here == herePos && here == next && positions.Add(herePos) && positions.Add(herePos + sizeof(byte))))
                         break;
 
                     var nextPos = reader.Position;
                     next = reader.ReadOffset();
 
-                    if (!(good = positions.Add(nextPos) &&
-                        positions.Add(nextPos + sizeof(byte))))
+                    if (!(good = positions.Add(nextPos) && positions.Add(nextPos + sizeof(byte))))
                         break;
 
-                    elems.Add(new PotentialArrayElement(here, nextPos,
-                        next == -PacketHeader.HeaderSize ? 0 : next));
+                    elems.Add(new PotentialArrayElement(here, nextPos, next == -PacketHeader.HeaderSize ? 0 : next));
                 }
 
                 if (good && elems.Count == count)

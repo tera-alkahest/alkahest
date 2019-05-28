@@ -13,8 +13,7 @@ namespace Alkahest.Scanner
         {
             string name = null;
 
-            RemoteHooking.IpcCreateServer<IpcChannel>(ref name,
-                WellKnownObjectMode.Singleton);
+            RemoteHooking.IpcCreateServer<IpcChannel>(ref name, WellKnownObjectMode.Singleton);
 
             return name;
         }

@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 
 namespace Alkahest.Core.Data
 {
@@ -48,7 +49,7 @@ namespace Alkahest.Core.Data
             }
         }
 
-        public unsafe float AsSingle
+        public float AsSingle
         {
             get
             {
@@ -57,7 +58,7 @@ namespace Alkahest.Core.Data
 
                 var value = _primitiveValue;
 
-                return *(float*)&value;
+                return Unsafe.As<int, float>(ref value);
             }
         }
 
@@ -89,8 +90,8 @@ namespace Alkahest.Core.Data
 
         readonly string _stringValue;
 
-        internal DataCenterAttribute(string name, DataCenterTypeCode typeCode,
-            int primitiveValue, string stringValue)
+        internal DataCenterAttribute(string name, DataCenterTypeCode typeCode, int primitiveValue,
+            string stringValue)
         {
             Name = name;
             TypeCode = typeCode;

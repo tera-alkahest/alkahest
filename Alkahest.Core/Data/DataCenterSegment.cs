@@ -13,11 +13,9 @@ namespace Alkahest.Core.Data
 
         public byte[] Data { get; }
 
-        readonly ThreadLocal<TeraBinaryReader> _reader =
-            new ThreadLocal<TeraBinaryReader>();
+        readonly ThreadLocal<GameBinaryReader> _reader = new ThreadLocal<GameBinaryReader>();
 
-        public DataCenterSegment(uint elementSize, uint fullCount,
-            uint usedCount, byte[] data)
+        public DataCenterSegment(uint elementSize, uint fullCount, uint usedCount, byte[] data)
         {
             ElementSize = elementSize;
             FullCount = fullCount;
@@ -25,9 +23,9 @@ namespace Alkahest.Core.Data
             Data = data;
         }
 
-        public TeraBinaryReader GetReader(uint elementIndex)
+        public GameBinaryReader GetReader(uint elementIndex)
         {
-            var reader = _reader.Value ??= new TeraBinaryReader(Data);
+            var reader = _reader.Value ??= new GameBinaryReader(Data);
 
             reader.Position = (int)(elementIndex * ElementSize);
 

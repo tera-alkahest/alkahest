@@ -20,9 +20,8 @@ namespace Alkahest.Core.Data
 
         public uint Unknown7 { get; }
 
-        internal DataCenterHeader(uint unknown1, uint unknown2, uint unknown3,
-            uint version, uint unknown4, uint unknown5, uint unknown6,
-            uint unknown7)
+        internal DataCenterHeader(uint unknown1, uint unknown2, uint unknown3, uint version,
+            uint unknown4, uint unknown5, uint unknown6, uint unknown7)
         {
             Unknown1 = unknown1;
             Unknown2 = unknown2;

@@ -32,9 +32,9 @@ namespace Alkahest
                 Log.DiscardSources.Add(src);
 
             if (Configuration.Loggers.Contains(ConsoleLogger.Name))
-                Log.Loggers.Add(new ConsoleLogger(
-                    Configuration.ColorsEnabled, Configuration.ErrorColor, Configuration.WarningColor,
-                    Configuration.BasicColor, Configuration.InfoColor, Configuration.DebugColor));
+                Log.Loggers.Add(new ConsoleLogger(Configuration.ColorsEnabled, Configuration.ErrorColor,
+                    Configuration.WarningColor, Configuration.BasicColor, Configuration.InfoColor,
+                    Configuration.DebugColor));
 
             var title = Console.Title;
             var mode = GCSettings.LatencyMode;

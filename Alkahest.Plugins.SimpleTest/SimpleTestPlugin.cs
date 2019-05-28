@@ -2,8 +2,8 @@ using Alkahest.Core;
 using Alkahest.Core.IO;
 using Alkahest.Core.Logging;
 using Alkahest.Core.Net;
-using Alkahest.Core.Net.Protocol;
-using Alkahest.Core.Net.Protocol.Packets;
+using Alkahest.Core.Net.Game;
+using Alkahest.Core.Net.Game.Packets;
 using Alkahest.Core.Plugins;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,8 +63,7 @@ namespace Alkahest.Plugins.SimpleTest
             _log.Basic("Simple test plugin stopped");
         }
 
-        bool HandleCheckVersion(GameClient client, Direction direction,
-            CCheckVersionPacket packet)
+        bool HandleCheckVersion(GameClient client, Direction direction, CCheckVersionPacket packet)
         {
             foreach (var ver in packet.Versions)
                 _log.Info("Client reported version: {0}", ver.Value);
@@ -72,8 +71,7 @@ namespace Alkahest.Plugins.SimpleTest
             return true;
         }
 
-        bool HandleSocial(GameClient client, Direction direction,
-            CSocialPacket packet)
+        bool HandleSocial(GameClient client, Direction direction, CSocialPacket packet)
         {
             // Only allow the dance emote.
 
@@ -89,25 +87,23 @@ namespace Alkahest.Plugins.SimpleTest
         {
             // Automatically join a chat channel when logging in.
 
-            _log.Info("Making client {0} join chat channel {1} with password {2}",
-                client.EndPoint, ChatChannelName, ChatChannelPassword);
+            _log.Info("Making client {0} join chat channel {1} with password {2}", client.EndPoint,
+                ChatChannelName, ChatChannelPassword);
 
-            using (var writer = new TeraBinaryWriter())
+            using var writer = new GameBinaryWriter();
+
+            writer.WriteUInt16(PacketHeader.HeaderSize + sizeof(ushort) * 2);
+            writer.WriteUInt16(ChatChannelPassword);
+            writer.WriteString(ChatChannelName);
+
+            client.SendToServer(new RawPacket("C_JOIN_PRIVATE_CHANNEL")
             {
-                writer.WriteUInt16(PacketHeader.HeaderSize + sizeof(ushort) * 2);
-                writer.WriteUInt16(ChatChannelPassword);
-                writer.WriteString(ChatChannelName);
-
-                client.SendToServer(new RawPacket("C_JOIN_PRIVATE_CHANNEL")
-                {
-                    Payload = writer.ToArray(),
-                });
-            }
+                Payload = writer.ToArray(),
+            });
 
             // Let's request an absurdly low visibility range.
 
-            _log.Info("Setting visibility range for client {0} to {1}",
-                client.EndPoint, VisibilityRange);
+            _log.Info("Setting visibility range for client {0} to {1}", client.EndPoint, VisibilityRange);
 
             client.SendToServer(new CSetVisibleRangePacket
             {

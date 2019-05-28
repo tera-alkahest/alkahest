@@ -17,8 +17,7 @@ namespace Alkahest.Core.Net
 
         const string HostsFileName = "hosts";
 
-        const string MutexName =
-            @"Global\" + nameof(Alkahest) + "-" + nameof(HostsFileManager);
+        const string MutexName = @"Global\" + nameof(Alkahest) + "-" + nameof(HostsFileManager);
 
         static readonly Log _log = new Log(typeof(HostsFileManager));
 

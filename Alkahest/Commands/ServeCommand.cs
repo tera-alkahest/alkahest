@@ -2,9 +2,8 @@ using Alkahest.Core;
 using Alkahest.Core.Logging;
 using Alkahest.Core.Logging.Loggers;
 using Alkahest.Core.Net;
-using Alkahest.Core.Net.Protocol;
-using Alkahest.Core.Net.Protocol.OpCodes;
-using Alkahest.Core.Net.Protocol.Serializers;
+using Alkahest.Core.Net.Game;
+using Alkahest.Core.Net.Game.Serialization;
 using Alkahest.Core.Plugins;
 using System;
 using System.Linq;
@@ -66,18 +65,19 @@ namespace Alkahest.Commands
 
                 hostsMgr?.AddEntry(slsHost, slsAddress);
 
-                using var slsProxy = new ServerListProxy(new ServerListParameters(
-                    real, Configuration.ServerListBaseAddress, slsPort,
-                    Configuration.GameBaseAddress, Configuration.GameBasePort, region,
-                    Configuration.ServerListTimeout, Configuration.ServerListRetries));
+                using var slsProxy = new ServerListProxy(new ServerListParameters(real,
+                    Configuration.ServerListBaseAddress, slsPort, Configuration.GameBaseAddress,
+                    Configuration.GameBasePort, region, Configuration.ServerListTimeout,
+                    Configuration.ServerListRetries));
 
                 if (Configuration.ServerListEnabled)
                     slsProxy.Start();
 
-                var pool = new ObjectPool<SocketAsyncEventArgs>(() => new SocketAsyncEventArgs(), x => x.Reset(),
-                    Configuration.PoolLimit != 0 ? (int?)Configuration.PoolLimit : null);
-                var proc = new PacketProcessor(new CompilerPacketSerializer(
-                    new MessageTables(region, OpCodeTable.Versions[region])));
+                var pool = new ObjectPool<SocketAsyncEventArgs>(() => new SocketAsyncEventArgs(),
+                    x => x.Reset(), Configuration.PoolLimit != 0 ? (int?)Configuration.PoolLimit : null);
+                var version = MessageTable.Versions[region];
+                var proc = new PacketProcessor(new CompilerPacketSerializer(region,
+                    new GameMessageTable(version), new SystemMessageTable(version)));
                 var proxies = slsProxy.Servers.Select(x => new GameProxy(x, pool, proc,
                     Configuration.GameBacklog, Configuration.GameTimeout)
                 {
@@ -87,8 +87,8 @@ namespace Alkahest.Commands
                 foreach (var proxy in proxies)
                     proxy.Start();
 
-                var loader = new PluginLoader(Configuration.PluginDirectory,
-                    Configuration.PluginPattern, Configuration.DisablePlugins);
+                var loader = new PluginLoader(Configuration.PluginDirectory, Configuration.PluginPattern,
+                    Configuration.DisablePlugins);
 
                 loader.Start(proxies);
 

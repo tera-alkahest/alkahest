@@ -30,9 +30,8 @@ namespace Alkahest.Scanner
 
             var off = (int)o + _pattern.Length;
 
-            using var disasm = new Disassembler(reader.ToAbsolute(off),
-                reader.Length - off, ArchitectureMode.x86_32,
-                (ulong)reader.Address, true);
+            using var disasm = new Disassembler(reader.ToAbsolute(off), reader.Length - off,
+                ArchitectureMode.x86_32, (ulong)reader.Address, true);
 
             var key = ReadKey(disasm);
             var iv = ReadKey(disasm);
@@ -67,8 +66,7 @@ namespace Alkahest.Scanner
                 if (insn == null || insn.Error)
                     return null;
 
-                if (insn.Mnemonic == ud_mnemonic_code.UD_Imov &&
-                    insn.Operands[0].Base == ud_type.UD_R_EBP)
+                if (insn.Mnemonic == ud_mnemonic_code.UD_Imov && insn.Operands[0].Base == ud_type.UD_R_EBP)
                     writer.Write(insn.Operands[1].LvalUDWord);
             }
 

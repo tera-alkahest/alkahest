@@ -1,6 +1,6 @@
 using Alkahest.Core.Cryptography;
 using Alkahest.Core.Logging;
-using Alkahest.Core.Net.Protocol;
+using Alkahest.Core.Net.Game;
 using System;
 using System.Linq;
 using System.Net;
@@ -21,13 +21,13 @@ namespace Alkahest.Core.Net
 
         readonly Socket _clientSocket;
 
-        TeraEncryptionSession _clientEncryption;
+        GameEncryptionSession _clientEncryption;
 
         readonly byte[] _clientSendBuffer = new byte[PacketHeader.MaxPacketSize];
 
         readonly Socket _serverSocket;
 
-        TeraEncryptionSession _serverEncryption;
+        GameEncryptionSession _serverEncryption;
 
         readonly byte[] _serverSendBuffer = new byte[PacketHeader.MaxPacketSize];
 
@@ -69,8 +69,8 @@ namespace Alkahest.Core.Net
         {
             DisconnectInternal();
 
-            _log.Info("Disconnected client {0} from {1} ({2})",
-                EndPoint, Proxy.Info.Name, Proxy.Info.RealEndPoint);
+            _log.Info("Disconnected client {0} from {1} ({2})", EndPoint, Proxy.Info.Name,
+                Proxy.Info.RealEndPoint);
         }
 
         void DisconnectInternal()
@@ -85,18 +85,16 @@ namespace Alkahest.Core.Net
 
         public bool SendToClient(RawPacket packet)
         {
-            return SendRawPacketInternal(packet, _clientSendBuffer,
-                _clientSocket, _clientEncryption, false);
+            return SendRawPacketInternal(packet, _clientSendBuffer, _clientSocket, _clientEncryption, false);
         }
 
         public bool SendToServer(RawPacket packet)
         {
-            return SendRawPacketInternal(packet, _serverSendBuffer,
-                _serverSocket, _serverEncryption, true);
+            return SendRawPacketInternal(packet, _serverSendBuffer, _serverSocket, _serverEncryption, true);
         }
 
-        bool SendRawPacketInternal(RawPacket packet, byte[] buffer,
-            Socket socket, TeraEncryptionSession encryption, bool server)
+        bool SendRawPacketInternal(RawPacket packet, byte[] buffer, Socket socket,
+            GameEncryptionSession encryption, bool server)
         {
             if (packet == null)
                 throw new ArgumentNullException(nameof(packet));
@@ -105,18 +103,16 @@ namespace Alkahest.Core.Net
                 throw new ArgumentException("Packet is too big.", nameof(packet));
 
             var header = new PacketHeader((ushort)packet.Payload.Length,
-                Proxy.Processor.Serializer.Messages.Game.NameToOpCode[packet.OpCode]);
+                Proxy.Processor.Serializer.GameMessages.NameToCode[packet.OpCode]);
 
             lock (socket)
             {
                 PacketProcessor.WriteHeader(header, buffer);
-                Buffer.BlockCopy(packet.Payload, 0, buffer,
-                    PacketHeader.HeaderSize, header.Length);
+                Buffer.BlockCopy(packet.Payload, 0, buffer, PacketHeader.HeaderSize, header.Length);
 
                 try
                 {
-                    return SendInternal(buffer, header.FullLength, false,
-                        socket, encryption, server);
+                    return SendInternal(buffer, header.FullLength, false, socket, encryption, server);
                 }
                 catch (SocketDisconnectedException)
                 {
@@ -128,18 +124,16 @@ namespace Alkahest.Core.Net
 
         public bool SendToClient(Packet packet)
         {
-            return SendPacketInternal(packet, _clientSendBuffer,
-                _clientSocket, _clientEncryption, false);
+            return SendPacketInternal(packet, _clientSendBuffer, _clientSocket, _clientEncryption, false);
         }
 
         public bool SendToServer(Packet packet)
         {
-            return SendPacketInternal(packet, _serverSendBuffer,
-                _serverSocket, _serverEncryption, true);
+            return SendPacketInternal(packet, _serverSendBuffer, _serverSocket, _serverEncryption, true);
         }
 
         bool SendPacketInternal(Packet packet, byte[] buffer, Socket socket,
-            TeraEncryptionSession encryption, bool server)
+            GameEncryptionSession encryption, bool server)
         {
             if (packet == null)
                 throw new ArgumentNullException(nameof(packet));
@@ -150,18 +144,16 @@ namespace Alkahest.Core.Net
                 throw new ArgumentException("Packet is too big.", nameof(packet));
 
             var header = new PacketHeader((ushort)data.Length,
-                Proxy.Processor.Serializer.Messages.Game.NameToOpCode[packet.OpCode]);
+                Proxy.Processor.Serializer.GameMessages.NameToCode[packet.OpCode]);
 
             lock (socket)
             {
                 PacketProcessor.WriteHeader(header, buffer);
-                Buffer.BlockCopy(data, 0, buffer, PacketHeader.HeaderSize,
-                    header.Length);
+                Buffer.BlockCopy(data, 0, buffer, PacketHeader.HeaderSize, header.Length);
 
                 try
                 {
-                    return SendInternal(buffer, header.FullLength, false,
-                        socket, encryption, server);
+                    return SendInternal(buffer, header.FullLength, false, socket, encryption, server);
                 }
                 catch (SocketDisconnectedException)
                 {
@@ -173,18 +165,16 @@ namespace Alkahest.Core.Net
 
         bool SendToClientInternal(byte[] data, bool rethrow)
         {
-            return SendInternal(data, data.Length, rethrow,
-                _clientSocket, _clientEncryption, false);
+            return SendInternal(data, data.Length, rethrow, _clientSocket, _clientEncryption, false);
         }
 
         bool SendToServerInternal(byte[] data, bool rethrow)
         {
-            return SendInternal(data, data.Length, rethrow,
-                _serverSocket, _serverEncryption, true);
+            return SendInternal(data, data.Length, rethrow, _serverSocket, _serverEncryption, true);
         }
 
-        bool SendInternal(byte[] data, int length, bool rethrow,
-            Socket socket, TeraEncryptionSession encryption, bool server)
+        bool SendInternal(byte[] data, int length, bool rethrow, Socket socket,
+            GameEncryptionSession encryption, bool server)
         {
             return RunGuarded(rethrow, server, () =>
             {
@@ -201,8 +191,7 @@ namespace Alkahest.Core.Net
         {
             var data = new byte[length];
 
-            ReceiveInternal(data, data.Length, _clientSocket,
-                _clientEncryption, false);
+            ReceiveInternal(data, data.Length, _clientSocket, _clientEncryption, false);
 
             return data;
         }
@@ -211,14 +200,13 @@ namespace Alkahest.Core.Net
         {
             var data = new byte[length];
 
-            ReceiveInternal(data, data.Length, _serverSocket,
-                _serverEncryption, true);
+            ReceiveInternal(data, data.Length, _serverSocket, _serverEncryption, true);
 
             return data;
         }
 
-        void ReceiveInternal(byte[] data, int length, Socket socket,
-            TeraEncryptionSession encryption, bool server)
+        void ReceiveInternal(byte[] data, int length, Socket socket, GameEncryptionSession encryption,
+            bool server)
         {
             RunGuarded(true, server, () =>
             {
@@ -252,13 +240,13 @@ namespace Alkahest.Core.Net
             if (error != SocketError.Success && error != SocketError.OperationAborted)
             {
                 DisconnectInternal();
-                _log.Error("Could not connect to {0} ({1}) for client {2}: {3}",
-                    Proxy.Info.Name, Proxy.Info.RealEndPoint, EndPoint, error);
+                _log.Error("Could not connect to {0} ({1}) for client {2}: {3}", Proxy.Info.Name,
+                    Proxy.Info.RealEndPoint, EndPoint, error);
                 return;
             }
 
-            _log.Info("Connected to {0} ({1}) for client {2}",
-                Proxy.Info.Name, Proxy.Info.RealEndPoint, EndPoint);
+            _log.Info("Connected to {0} ({1}) for client {2}", Proxy.Info.Name,
+                Proxy.Info.RealEndPoint, EndPoint);
 
             byte[] ckey1;
             byte[] ckey2;
@@ -274,21 +262,20 @@ namespace Alkahest.Core.Net
                 {
                     DisconnectInternal();
                     _log.Error("Disconnected client {0} from {1} due to incorrect magic bytes: {2}",
-                        EndPoint, Proxy.Info.Name,
-                        magic.Aggregate("0x", (acc, x) => acc + x.ToString("X2")));
+                        EndPoint, Proxy.Info.Name, magic.Aggregate("0x", (acc, x) => acc + x.ToString("X2")));
                     return;
                 }
 
-                ckey1 = ReceiveFromClientInternal(TeraEncryptionSession.KeySize);
+                ckey1 = ReceiveFromClientInternal(GameEncryptionSession.KeySize);
                 SendToServerInternal(ckey1, true);
 
-                skey1 = ReceiveFromServerInternal(TeraEncryptionSession.KeySize);
+                skey1 = ReceiveFromServerInternal(GameEncryptionSession.KeySize);
                 SendToClientInternal(skey1, true);
 
-                ckey2 = ReceiveFromClientInternal(TeraEncryptionSession.KeySize);
+                ckey2 = ReceiveFromClientInternal(GameEncryptionSession.KeySize);
                 SendToServerInternal(ckey2, true);
 
-                skey2 = ReceiveFromServerInternal(TeraEncryptionSession.KeySize);
+                skey2 = ReceiveFromServerInternal(GameEncryptionSession.KeySize);
                 SendToClientInternal(skey2, true);
             }
             catch (SocketDisconnectedException)
@@ -303,10 +290,8 @@ namespace Alkahest.Core.Net
                 return;
             }
 
-            _clientEncryption = new TeraEncryptionSession(
-                Direction.ClientToServer, ckey1, ckey2, skey1, skey2);
-            _serverEncryption = new TeraEncryptionSession(
-                Direction.ServerToClient, ckey1, ckey2, skey1, skey2);
+            _clientEncryption = new GameEncryptionSession(Direction.ClientToServer, ckey1, ckey2, skey1, skey2);
+            _serverEncryption = new GameEncryptionSession(Direction.ServerToClient, ckey1, ckey2, skey1, skey2);
 
             _log.Info("Established encrypted session for client {0}", EndPoint);
 
@@ -321,8 +306,8 @@ namespace Alkahest.Core.Net
 
             Socket from;
             Socket to;
-            TeraEncryptionSession fromEnc;
-            TeraEncryptionSession toEnc;
+            GameEncryptionSession fromEnc;
+            GameEncryptionSession toEnc;
 
             if (direction == Direction.ClientToServer)
             {
@@ -346,8 +331,7 @@ namespace Alkahest.Core.Net
             {
                 try
                 {
-                    ReceiveInternal(headerBuffer, PacketHeader.HeaderSize,
-                        from, fromEnc, fromServer);
+                    ReceiveInternal(headerBuffer, PacketHeader.HeaderSize, from, fromEnc, fromServer);
 
                     var header = PacketProcessor.ReadHeader(headerBuffer);
 
@@ -359,8 +343,7 @@ namespace Alkahest.Core.Net
                         return false;
                     }
 
-                    ReceiveInternal(payloadBuffer, header.Length,
-                        from, fromEnc, fromServer);
+                    ReceiveInternal(payloadBuffer, header.Length, from, fromEnc, fromServer);
 
                     // Can be set to a new array.
                     var payload = payloadBuffer;
@@ -369,10 +352,8 @@ namespace Alkahest.Core.Net
                     {
                         PacketProcessor.WriteHeader(header, headerBuffer);
 
-                        SendInternal(headerBuffer, headerBuffer.Length,
-                            true, to, toEnc, toServer);
-                        SendInternal(payload, header.Length,
-                            true, to, toEnc, toServer);
+                        SendInternal(headerBuffer, headerBuffer.Length, true, to, toEnc, toServer);
+                        SendInternal(payload, header.Length, true, to, toEnc, toServer);
                     }
                 }
                 catch (SocketDisconnectedException)

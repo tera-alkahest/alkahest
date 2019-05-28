@@ -4,7 +4,7 @@ namespace Alkahest.Core.Game
 {
     public struct TemplateId : IEquatable<TemplateId>
     {
-        public static readonly TemplateId Zero = new TemplateId();
+        public static readonly TemplateId Zero = default;
 
         public readonly uint Raw;
 
@@ -27,8 +27,7 @@ namespace Alkahest.Core.Game
             gender.CheckValidity(nameof(gender));
             @class.CheckValidity(nameof(@class));
 
-            return new TemplateId(10200 + 200 * (uint)race -
-                100 * ((uint)gender - 1) + (uint)@class + 1);
+            return new TemplateId(10200 + 200 * (uint)race - 100 * ((uint)gender - 1) + (uint)@class + 1);
         }
 
         public bool Equals(TemplateId other)
@@ -38,7 +37,7 @@ namespace Alkahest.Core.Game
 
         public override bool Equals(object obj)
         {
-            return obj is TemplateId s ? Equals(s) : false;
+            return obj is TemplateId t ? Equals(t) : false;
         }
 
         public override int GetHashCode()

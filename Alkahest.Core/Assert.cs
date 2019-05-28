@@ -4,8 +4,7 @@ namespace Alkahest.Core
 {
     public static class Assert
     {
-        static readonly Exception _unreachable =
-            new Exception("Unreachable code executed.");
+        static readonly Exception _unreachable = new Exception("Unreachable code executed.");
 
         public static void Check(bool condition, string message)
         {

@@ -18,9 +18,8 @@ namespace Alkahest.Core.Logging.Loggers
 
         readonly ConsoleColor _debugColor;
 
-        public ConsoleLogger(bool colors, ConsoleColor errorColor,
-            ConsoleColor warningColor, ConsoleColor basicColor,
-            ConsoleColor infoColor, ConsoleColor debugColor)
+        public ConsoleLogger(bool colors, ConsoleColor errorColor, ConsoleColor warningColor,
+            ConsoleColor basicColor, ConsoleColor infoColor, ConsoleColor debugColor)
         {
             static void CheckColor(ConsoleColor color, string name)
             {
@@ -42,8 +41,7 @@ namespace Alkahest.Core.Logging.Loggers
             _debugColor = debugColor;
         }
 
-        public void Log(LogLevel level, string timestamp, Type source,
-            string category, string message)
+        public void Log(LogLevel level, string timestamp, Type source, string category, string message)
         {
             level.CheckValidity(nameof(level));
 
@@ -85,8 +83,7 @@ namespace Alkahest.Core.Logging.Loggers
             timestamp = timestamp != null ? $"[{timestamp}] " : string.Empty;
             category = category != null ? $" ({category})" : string.Empty;
 
-            var console = level <= LogLevel.Warning ?
-                Console.Error : Console.Out;
+            var console = level <= LogLevel.Warning ? Console.Error : Console.Out;
 
             if (_colors)
                 Console.ForegroundColor = color;

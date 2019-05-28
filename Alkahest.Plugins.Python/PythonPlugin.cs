@@ -20,8 +20,7 @@ namespace Alkahest.Plugins.Python
 
         static readonly Log _log = new Log(typeof(PythonPlugin));
 
-        readonly Dictionary<string, CompiledCode> _scripts =
-            new Dictionary<string, CompiledCode>();
+        readonly Dictionary<string, CompiledCode> _scripts = new Dictionary<string, CompiledCode>();
 
         public void Start(GameProxy[] proxies)
         {
@@ -57,14 +56,13 @@ namespace Alkahest.Plugins.Python
                 io.SetErrorOutput(Stream.Null, io.ErrorEncoding);
                 io.SetInput(Stream.Null, io.InputEncoding);
 
-                ((dynamic)IronPython.Hosting.Python.GetClrModule(engine))
-                    .AddReference(typeof(Assert).Assembly.FullName);
+                ((dynamic)IronPython.Hosting.Python.GetClrModule(engine)).AddReference(
+                    typeof(Assert).Assembly.FullName);
 
                 ((dynamic)IronPython.Hosting.Python.GetBuiltinModule(engine)).__log__ =
                     new Log(typeof(PythonPlugin), name);
 
-                var src = engine.CreateScriptSourceFromFile(
-                    Path.Combine(dir, PackageFile));
+                var src = engine.CreateScriptSourceFromFile(Path.Combine(dir, PackageFile));
 
                 CompiledCode script;
 
@@ -78,13 +76,12 @@ namespace Alkahest.Plugins.Python
                     if (e is SyntaxErrorException syn)
                     {
                         _log.Error("Syntax error in package {0}:", name);
-                        _log.Error("{0} ({1}, {2}): {3}", syn.SourcePath,
-                            syn.Line, syn.Column, syn.Message);
+                        _log.Error("{0} ({1}, {2}): {3}", syn.SourcePath, syn.Line, syn.Column, syn.Message);
                     }
                     else
                     {
                         _log.Error("Failed to initialize package {0}:", name);
-                        _log.Error(e.ToString());
+                        _log.Error("{0}", e);
                     }
 
                     continue;
@@ -104,7 +101,7 @@ namespace Alkahest.Plugins.Python
                 catch (Exception e)
                 {
                     _log.Error("Failed to start package {0}:", kvp.Key);
-                    _log.Error(e.ToString());
+                    _log.Error("{0}", e);
 
                     continue;
                 }
@@ -130,7 +127,7 @@ namespace Alkahest.Plugins.Python
                 catch (Exception e)
                 {
                     _log.Error("Failed to stop package {0}:", kvp.Key);
-                    _log.Error(e.ToString());
+                    _log.Error("{0}", e);
 
                     continue;
                 }

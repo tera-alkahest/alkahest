@@ -4,35 +4,49 @@ namespace Alkahest.Core.Game
 {
     public struct SkillId : IEquatable<SkillId>
     {
-        public static readonly SkillId Zero = new SkillId();
-
-        const long LocalSkillBase = 0x4000000;
+        public static readonly SkillId Zero = default;
 
         public readonly ulong Raw;
 
         public bool IsZero => this == Zero;
 
-        public ulong Skill => Raw - LocalSkillBase;
+        public bool HasHuntingZoneId => IsNpc && Kind == SkillKind.Action;
 
-        public ulong Group => Skill / 10000;
+        public uint Id => (uint)Bits.Extract(Raw, 0, HasHuntingZoneId ? 16 : 28);
 
-        public ulong Level => Skill / 100 % 100;
+        public uint HuntingZoneId =>
+            HasHuntingZoneId ? (uint)Bits.Extract(Raw, 16, 12) : throw new InvalidOperationException();
 
-        public ulong Type => Skill % 100;
+        public SkillKind Kind => (SkillKind)Bits.Extract(Raw, 28, 4);
+
+        public bool IsNpc => Bits.Extract(Raw, 32, 1) == 1;
+
+        public uint Unknown => (uint)Bits.Extract(Raw, 33, 31);
 
         public SkillId(ulong raw)
         {
             Raw = raw;
         }
 
-        public static SkillId FromSkill(ulong skill)
+        public static SkillId FromValues(uint id, SkillKind kind, bool isNpc, uint unknown)
         {
-            return new SkillId(skill + LocalSkillBase);
+            kind.CheckValidity(nameof(kind));
+
+            return new SkillId(Bits.Compose(
+                (id, 0, 28),
+                ((ulong)kind, 28, 4),
+                (isNpc ? 1UL : 0, 32, 1),
+                (unknown, 33, 31)));
         }
 
-        public static SkillId FromValues(ulong group, ulong level, ulong type)
+        public static SkillId FromValues(uint id, uint huntingZoneId, uint unknown)
         {
-            return FromSkill(group * 10000 + level * 100 + type);
+            return new SkillId(Bits.Compose(
+                (id, 0, 16),
+                (huntingZoneId, 16, 12),
+                ((ulong)SkillKind.None, 28, 4),
+                (0, 32, 1),
+                (unknown, 33, 31)));
         }
 
         public bool Equals(SkillId other)
@@ -52,7 +66,8 @@ namespace Alkahest.Core.Game
 
         public override string ToString()
         {
-            return $"[Raw: {Raw}, Skill: {Skill}, Group: {Group}, Level: {Level}, Type: {Type}]";
+            return $"[Raw: {Raw}, Id: {Id}, HuntingZoneId: {(HasHuntingZoneId ? HuntingZoneId.ToString() : "N/A")}, " +
+                $"Kind: {Kind}, IsNpc: {IsNpc}, Unknown: {Unknown}]";
         }
 
         public static bool operator ==(SkillId a, SkillId b)

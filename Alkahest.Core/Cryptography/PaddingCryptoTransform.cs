@@ -15,21 +15,42 @@ namespace Alkahest.Core.Cryptography
 
         public ICryptoTransform Transform { get; }
 
+        bool _disposed;
+
         public PaddingCryptoTransform(ICryptoTransform transform)
         {
             Transform = transform;
         }
 
+        ~PaddingCryptoTransform()
+        {
+            RealDispose();
+        }
+
         public void Dispose()
         {
-            Transform.Dispose();
+            RealDispose();
+            GC.SuppressFinalize(this);
+        }
+
+        void RealDispose()
+        {
+            if (_disposed)
+                return;
+
+            _disposed = true;
+
+            Transform?.Dispose();
         }
 
         public int TransformBlock(byte[] inputBuffer, int inputOffset, int inputCount,
             byte[] outputBuffer, int outputOffset)
         {
-            return Transform.TransformBlock(inputBuffer, inputOffset, inputCount,
-                outputBuffer, outputOffset);
+            if (_disposed)
+                throw new ObjectDisposedException(GetType().FullName);
+
+            return Transform.TransformBlock(inputBuffer, inputOffset, inputCount, outputBuffer,
+                outputOffset);
         }
 
         public byte[] TransformFinalBlock(byte[] inputBuffer, int inputOffset, int inputCount)
@@ -42,6 +63,9 @@ namespace Alkahest.Core.Cryptography
 
             if (inputCount < 0 || inputCount > inputBuffer.Length - inputOffset)
                 throw new ArgumentException("Count is invalid.", nameof(inputCount));
+
+            if (_disposed)
+                throw new ObjectDisposedException(GetType().FullName);
 
             var blockSize = Transform.InputBlockSize;
             var block = new byte[inputCount / blockSize + blockSize];

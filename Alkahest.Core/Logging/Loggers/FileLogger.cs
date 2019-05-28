@@ -42,8 +42,8 @@ namespace Alkahest.Core.Logging.Loggers
                 _writer.Dispose();
         }
 
-        public void Log(LogLevel level, string timestamp, Type source,
-            string category, string message)
+        public void Log(LogLevel level, string timestamp, Type source, string category,
+            string message)
         {
             level.CheckValidity(nameof(level));
 

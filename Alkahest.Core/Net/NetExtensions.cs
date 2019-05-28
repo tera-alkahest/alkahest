@@ -13,8 +13,7 @@ namespace Alkahest.Core.Net
             return new Win32Exception((int)error).Message;
         }
 
-        public static void SendFull(this Socket socket,
-            byte[] data, int offset, int length)
+        public static void SendFull(this Socket socket, byte[] data, int offset, int length)
         {
             if (socket == null)
                 throw new ArgumentNullException(nameof(socket));
@@ -23,8 +22,7 @@ namespace Alkahest.Core.Net
 
             while (progress < length)
             {
-                var len = socket.Send(data, offset + progress,
-                    length - progress, SocketFlags.None);
+                var len = socket.Send(data, offset + progress, length - progress, SocketFlags.None);
 
                 if (len == 0)
                     throw new SocketDisconnectedException();
@@ -33,8 +31,7 @@ namespace Alkahest.Core.Net
             }
         }
 
-        public static void ReceiveFull(this Socket socket,
-            byte[] data, int offset, int length)
+        public static void ReceiveFull(this Socket socket, byte[] data, int offset, int length)
         {
             if (socket == null)
                 throw new ArgumentNullException(nameof(socket));
@@ -43,8 +40,7 @@ namespace Alkahest.Core.Net
 
             while (progress < length)
             {
-                var len = socket.Receive(data, offset + progress,
-                    length - progress, SocketFlags.None);
+                var len = socket.Receive(data, offset + progress, length - progress, SocketFlags.None);
 
                 if (len == 0)
                     throw new SocketDisconnectedException();

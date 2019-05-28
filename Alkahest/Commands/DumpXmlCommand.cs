@@ -64,8 +64,8 @@ namespace Alkahest.Commands
                             Indent = true,
                         };
 
-                        using var writer = XmlWriter.Create(
-                            Path.Combine(dir, $"{grp.Key}-{i}.xml"), settings);
+                        using var writer = XmlWriter.Create(Path.Combine(dir, $"{grp.Key}-{i}.xml"),
+                            settings);
 
                         WriteElement(writer, elem);
                     }

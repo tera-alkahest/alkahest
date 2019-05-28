@@ -4,9 +4,13 @@ namespace Alkahest.Core.Game
 {
     public struct Angle : IEquatable<Angle>, IComparable<Angle>
     {
+        public static readonly Angle Zero = default;
+
         public readonly short Raw;
 
-        public double Radians => Raw * 2 * Math.PI / (ushort.MaxValue + 1);
+        public bool IsZero => this == Zero;
+
+        public double Radians => Raw * (2.0 * Math.PI / (ushort.MaxValue + 1));
 
         public double Degrees => Raw * 360.0 / (ushort.MaxValue + 1);
 
@@ -17,12 +21,12 @@ namespace Alkahest.Core.Game
 
         public static Angle FromRadians(double value)
         {
-            return new Angle((short)(value / (2 * Math.PI) * (ushort.MaxValue + 1)));
+            return new Angle((short)(value / (2.0 * Math.PI) * (ushort.MaxValue + 1)));
         }
 
         public static Angle FromDegrees(double value)
         {
-            return new Angle((short)(value / 360 * (ushort.MaxValue + 1)));
+            return new Angle((short)(value / 360.0 * (ushort.MaxValue + 1)));
         }
 
         public bool Equals(Angle other)

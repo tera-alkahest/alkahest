@@ -16,8 +16,7 @@ namespace Alkahest.Parser
 
         public IReadOnlyList<PotentialArrayElement> Elements { get; }
 
-        public PotentialArray(int countPosition, int count,
-            int offsetPosition, int offset,
+        public PotentialArray(int countPosition, int count, int offsetPosition, int offset,
             IEnumerable<PotentialArrayElement> elements)
         {
             CountPosition = countPosition;
@@ -31,8 +30,7 @@ namespace Alkahest.Parser
         {
             var sb = new StringBuilder();
 
-            sb.AppendLine($"{CountPosition:X4} => {Count} | " +
-                $"{OffsetPosition:X4} => {Offset:X4}");
+            sb.AppendLine($"{CountPosition:X4} => {Count} | " + $"{OffsetPosition:X4} => {Offset:X4}");
             sb.AppendLine($"{{");
 
             foreach (var elem in Elements)

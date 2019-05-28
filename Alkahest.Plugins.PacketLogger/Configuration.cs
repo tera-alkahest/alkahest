@@ -22,8 +22,7 @@ namespace Alkahest.Plugins.PacketLogger
             CompressLogs = bool.Parse(cfg["compressLogs"]);
         }
 
-        static NameValueCollection ToNameValueCollection(
-            KeyValueConfigurationCollection collection)
+        static NameValueCollection ToNameValueCollection(KeyValueConfigurationCollection collection)
         {
             var col = new NameValueCollection();
 

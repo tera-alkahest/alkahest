@@ -45,8 +45,7 @@ namespace Alkahest.Core.Net
             while (true)
             {
                 var uri = _parameters.Uri;
-                var req = new HttpRequestMessage(HttpMethod.Get,
-                    GetUri(uri.Scheme, uri.AbsolutePath, true));
+                var req = new HttpRequestMessage(HttpMethod.Get, GetUri(uri.Scheme, uri.AbsolutePath, true));
 
                 req.Headers.Host = _parameters.Uri.Authority;
 
@@ -93,12 +92,9 @@ namespace Alkahest.Core.Net
                 ipElem.Value = newIP.ToString();
                 portElem.Value = newPort.ToString();
 
-                servs.Add(new ServerInfo(id, name,
-                    new IPEndPoint(ip, port),
-                    new IPEndPoint(newIP, newPort)));
+                servs.Add(new ServerInfo(id, name, new IPEndPoint(ip, port), new IPEndPoint(newIP, newPort)));
 
-                _log.Info("Redirected {0}: {1}:{2} -> {3}:{4}",
-                    name, ip, port, newIP, newPort);
+                _log.Info("Redirected {0}: {1}:{2} -> {3}:{4}", name, ip, port, newIP, newPort);
             }
 
             servers = servs.OrderBy(x => x.Id).ToArray();
@@ -127,8 +123,7 @@ namespace Alkahest.Core.Net
         protected override Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var p = (RemoteEndpointMessageProperty)
-                request.Properties[RemoteEndPointPropertyName];
+            var p = (RemoteEndpointMessageProperty)request.Properties[RemoteEndPointPropertyName];
             var from = $"{p.Address}:{p.Port}";
             var uri = request.RequestUri;
             var path = uri.PathAndQuery;
@@ -155,8 +150,7 @@ namespace Alkahest.Core.Net
                 {
                     // We need to make a new request object or we'll get an
                     // exception when attempting to send it below.
-                    var req = new HttpRequestMessage(
-                        request.Method, GetUri(uri.Scheme, path, false))
+                    var req = new HttpRequestMessage(request.Method, GetUri(uri.Scheme, path, false))
                     {
                         Version = request.Version,
                     };
@@ -203,8 +197,7 @@ namespace Alkahest.Core.Net
                 if (uri.AbsolutePath == _parameters.Uri.AbsolutePath)
                     resp.Content = new StringContent(_servers);
 
-                _log.Debug("Forwarded HTTP request at {0} from {1}: {2}",
-                    path, from, (int)resp.StatusCode);
+                _log.Debug("Forwarded HTTP request at {0} from {1}: {2}", path, from, (int)resp.StatusCode);
 
                 return resp;
             });

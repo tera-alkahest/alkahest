@@ -24,8 +24,7 @@ namespace Alkahest.Plugins.Python
             DisablePackages = Split(cfg["disablePackages"], ',');
         }
 
-        static NameValueCollection ToNameValueCollection(
-            KeyValueConfigurationCollection collection)
+        static NameValueCollection ToNameValueCollection(KeyValueConfigurationCollection collection)
         {
             var col = new NameValueCollection();
 
@@ -38,8 +37,7 @@ namespace Alkahest.Plugins.Python
         static string[] Split(string value, char separator)
         {
             return value.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(x => x.Trim())
-                .ToArray();
+                .Select(x => x.Trim()).ToArray();
         }
     }
 }

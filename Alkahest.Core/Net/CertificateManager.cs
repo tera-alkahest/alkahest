@@ -48,10 +48,10 @@ namespace Alkahest.Core.Net
                 return memory.ToArray();
             }
 
-            Signature = new X509Certificate2(
-                ReadCertificate($"{nameof(Alkahest)}CA.crt"), (string)null, StorageFlags);
-            Encryption = new X509Certificate2(
-                ReadCertificate($"{nameof(Alkahest)}.pfx"), (string)null, StorageFlags);
+            Signature = new X509Certificate2(ReadCertificate($"{nameof(Alkahest)}CA.crt"),
+                (string)null, StorageFlags);
+            Encryption = new X509Certificate2(ReadCertificate($"{nameof(Alkahest)}.pfx"),
+                (string)null, StorageFlags);
 
             _store.Open(OpenFlags.ReadWrite);
             AddKeys();
@@ -125,7 +125,8 @@ namespace Alkahest.Core.Net
 
             if (check && proc.ExitCode != 0)
                 throw new InvalidOperationException(
-                    $"{_exePath} failed with exit code {proc.ExitCode}:{Environment.NewLine}{proc.StandardError.ReadToEnd()}");
+                    $"{_exePath} failed with exit code {proc.ExitCode}:{Environment.NewLine}" +
+                    proc.StandardError.ReadToEnd());
         }
     }
 }

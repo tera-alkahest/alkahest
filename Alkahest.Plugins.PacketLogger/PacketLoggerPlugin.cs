@@ -1,8 +1,8 @@
 using Alkahest.Core;
 using Alkahest.Core.Logging;
 using Alkahest.Core.Net;
-using Alkahest.Core.Net.Protocol;
-using Alkahest.Core.Net.Protocol.Logging;
+using Alkahest.Core.Net.Game;
+using Alkahest.Core.Net.Game.Logging;
 using Alkahest.Core.Plugins;
 using System;
 using System.Linq;
@@ -19,9 +19,10 @@ namespace Alkahest.Plugins.PacketLogger
 
         public void Start(GameProxy[] proxies)
         {
-            _writer = new PacketLogWriter(
-                proxies.First().Processor.Serializer.Messages,
-                proxies.Select(x => x.Info).ToArray(),
+            var serializer = proxies.First().Processor.Serializer;
+
+            _writer = new PacketLogWriter(serializer.Region, serializer.GameMessages,
+                serializer.SystemMessages, proxies.Select(x => x.Info).ToArray(),
                 Configuration.LogDirectory, Configuration.LogFileNameFormat,
                 Configuration.CompressLogs);
 
@@ -43,10 +44,8 @@ namespace Alkahest.Plugins.PacketLogger
 
         bool PacketLogHandler(GameClient client, Direction direction, RawPacket packet)
         {
-            _writer.Write(new PacketLogEntry(
-                DateTime.Now, client.Proxy.Info.Id, direction,
-                client.Proxy.Processor.Serializer.Messages.Game.NameToOpCode[packet.OpCode],
-                packet.Payload));
+            _writer.Write(new PacketLogEntry(DateTime.Now, client.Proxy.Info.Id, direction,
+                client.Proxy.Processor.Serializer.GameMessages.NameToCode[packet.OpCode], packet.Payload));
 
             return true;
         }

@@ -73,7 +73,7 @@ namespace Alkahest.Core.Logging
             if (!ShouldLog(level))
                 return;
 
-            var msg = args.Length != 0 ? string.Format(format, args) : format;
+            var msg = string.Format(format, args);
             var now = DateTime.Now;
             var stamp = TimestampFormat != string.Empty ? now.ToString(TimestampFormat) : null;
 

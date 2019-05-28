@@ -21,7 +21,8 @@ namespace Alkahest.Core.Game
 
         public static GameId FromValues(uint id, EntityFlags flags)
         {
-            return new GameId(Bits.Compose((id, 0, 32),
+            return new GameId(Bits.Compose(
+                (id, 0, 32),
                 ((ulong)flags, 32, 32)));
         }
 
@@ -32,7 +33,7 @@ namespace Alkahest.Core.Game
 
         public override bool Equals(object obj)
         {
-            return obj is GameId e ? Equals(e) : false;
+            return obj is GameId g ? Equals(g) : false;
         }
 
         public override int GetHashCode()
