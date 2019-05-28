@@ -28,8 +28,8 @@ accessing data stored with the game client.
 * **Client analysis tools:** Data mining tools allow extraction of opcodes,
   system messages, and data center keys, as well as decryption of the client's
   data center files.
-* **Complete region support:** All TERA regions are supported: EU, JP, KR, NA,
-  RU, TH, and TW.
+* **Extensive region support:** Almost all TERA regions are supported: EU, JP,
+  NA, RU, TH, and TW.
 * **Fast packet serialization**: Specialized serialization functions are
   automatically generated and compiled at runtime, making packet serialization
   fast and painless.
@@ -89,8 +89,8 @@ The most important configuration values you'll need to change are:
 * `disablePlugins`: Remove any core plugins from this list that you want to use.
   You can also add plugins here that you want to temporarily disable, such as
   the `packet-logger` plugin which is only useful to developers.
-* `region`: Set this to `eu`, `jp`, `kr`, `na`, `ru`, `th`, or `tw`, or if
-  you're playing in EU, `de`, `fr`, or `uk`.
+* `region`: Set this to `eu`, `jp`, `na`, `ru`, `th`, or `tw`, or if you're
+  playing in EU, `de`, `fr`, or `uk`.
 
 There are many other configuration values that you can play with, but you don't
 need to change them if all you want is to use Alkahest for a single TERA client

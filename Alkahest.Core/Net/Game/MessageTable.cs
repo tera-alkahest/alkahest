@@ -20,7 +20,7 @@ namespace Alkahest.Core.Net.Game
                 { Region.DE, 347373 },
                 { Region.FR, 347373 },
                 { Region.JP, 347374 },
-                { Region.KR, 0 }, // FIXME
+                { Region.KR, 0 },
                 { Region.NA, 347372 },
                 { Region.RU, 347375 },
                 { Region.TH, 349932 },
