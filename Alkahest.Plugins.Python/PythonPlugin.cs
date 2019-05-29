@@ -7,8 +7,10 @@ using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace Alkahest.Plugins.Python
 {
@@ -20,13 +22,38 @@ namespace Alkahest.Plugins.Python
 
         static readonly Log _log = new Log(typeof(PythonPlugin));
 
-        readonly Dictionary<string, CompiledCode> _scripts = new Dictionary<string, CompiledCode>();
+        readonly List<(string, CompiledCode, Log)> _scripts = new List<(string, CompiledCode, Log)>();
 
         public void Start(GameProxy[] proxies)
         {
             var pkg = Configuration.PackageDirectory;
 
             Directory.CreateDirectory(pkg);
+
+            var engine = IronPython.Hosting.Python.CreateEngine();
+            var opts = (PythonCompilerOptions)engine.GetCompilerOptions();
+
+            opts.AbsoluteImports = true;
+            opts.AllowWithStatement = true;
+            opts.PrintFunction = true;
+            opts.TrueDivision = true;
+            opts.UnicodeLiterals = true;
+
+            var paths = engine.GetSearchPaths();
+
+            paths.Add(Configuration.StdLibDirectory);
+            paths.Add(pkg);
+
+            engine.SetSearchPaths(paths);
+
+            var io = engine.Runtime.IO;
+
+            io.SetOutput(Stream.Null, io.OutputEncoding);
+            io.SetErrorOutput(Stream.Null, io.ErrorEncoding);
+            io.SetInput(Stream.Null, io.InputEncoding);
+
+            ((dynamic)IronPython.Hosting.Python.GetClrModule(engine)).AddReference(
+                typeof(Assert).Assembly.FullName);
 
             foreach (var dir in Directory.EnumerateDirectories(pkg))
             {
@@ -35,34 +62,7 @@ namespace Alkahest.Plugins.Python
                 if (Configuration.DisablePackages.Contains(name))
                     continue;
 
-                var engine = IronPython.Hosting.Python.CreateEngine();
-                var opts = (PythonCompilerOptions)engine.GetCompilerOptions();
-
-                opts.AbsoluteImports = true;
-                opts.AllowWithStatement = true;
-                opts.PrintFunction = true;
-                opts.TrueDivision = true;
-                opts.UnicodeLiterals = true;
-
-                var paths = engine.GetSearchPaths();
-
-                paths.Add(Configuration.StdLibDirectory);
-
-                engine.SetSearchPaths(paths);
-
-                var io = engine.Runtime.IO;
-
-                io.SetOutput(Stream.Null, io.OutputEncoding);
-                io.SetErrorOutput(Stream.Null, io.ErrorEncoding);
-                io.SetInput(Stream.Null, io.InputEncoding);
-
-                ((dynamic)IronPython.Hosting.Python.GetClrModule(engine)).AddReference(
-                    typeof(Assert).Assembly.FullName);
-
-                ((dynamic)IronPython.Hosting.Python.GetBuiltinModule(engine)).__log__ =
-                    new Log(typeof(PythonPlugin), name);
-
-                var src = engine.CreateScriptSourceFromFile(Path.Combine(dir, PackageFile));
+                var src = engine.CreateScriptSourceFromFile(Path.Combine(dir, PackageFile), Encoding.UTF8);
 
                 CompiledCode script;
 
@@ -71,7 +71,7 @@ namespace Alkahest.Plugins.Python
                     script = src.Compile();
                     script.Execute();
                 }
-                catch (Exception e)
+                catch (Exception e) when (!Debugger.IsAttached)
                 {
                     if (e is SyntaxErrorException syn)
                     {
@@ -87,26 +87,26 @@ namespace Alkahest.Plugins.Python
                     continue;
                 }
 
-                _scripts.Add(name, script);
+                _scripts.Add((name, script, new Log(typeof(PythonPlugin), name)));
             }
 
             var count = 0;
 
-            foreach (var kvp in _scripts)
+            foreach (var (name, code, log) in _scripts)
             {
                 try
                 {
-                    ((dynamic)kvp.Value.DefaultScope).__start__(proxies.ToArray());
+                    ((dynamic)code.DefaultScope).__start__(proxies.ToArray(), log);
                 }
-                catch (Exception e)
+                catch (Exception e) when (!Debugger.IsAttached)
                 {
-                    _log.Error("Failed to start package {0}:", kvp.Key);
+                    _log.Error("Failed to start package {0}:", name);
                     _log.Error("{0}", e);
 
                     continue;
                 }
 
-                _log.Info("Started package {0}", kvp.Key);
+                _log.Info("Started package {0}", name);
 
                 count++;
             }
@@ -118,21 +118,21 @@ namespace Alkahest.Plugins.Python
         {
             var count = 0;
 
-            foreach (var kvp in _scripts)
+            foreach (var (name, code, log) in _scripts)
             {
                 try
                 {
-                    ((dynamic)kvp.Value.DefaultScope).__stop__(proxies.ToArray());
+                    ((dynamic)code.DefaultScope).__stop__(proxies.ToArray(), log);
                 }
-                catch (Exception e)
+                catch (Exception e) when (!Debugger.IsAttached)
                 {
-                    _log.Error("Failed to stop package {0}:", kvp.Key);
+                    _log.Error("Failed to stop package {0}:", name);
                     _log.Error("{0}", e);
 
                     continue;
                 }
 
-                _log.Info("Stopped package {0}", kvp.Key);
+                _log.Info("Stopped package {0}", name);
 
                 count++;
             }

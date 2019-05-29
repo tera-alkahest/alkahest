@@ -1,25 +1,30 @@
-from Alkahest.Core.Net.Protocol.Packets import *
+from Alkahest.Core.Net.Game.Packets import *
+
+LOG = None
 
 # The special function __start__ is invoked on startup. The proxies parameter is
-# an array of Alkahest.Core.Net.GameProxy instances.
-def __start__(proxies):
+# an array of Alkahest.Core.Net.GameProxy instances. THe log parameter is an
+# Alkahest.Core.Logging.Log instance created specifically for this script
+# package.
+def __start__(proxies, log):
+    global LOG
+    LOG = log
+
     for proc in map(lambda x: x.Processor, proxies):
         proc.AddHandler[CCheckVersionPacket](_handle_check_version)
 
-    # __log__ is a special variable that holds an Alkahest.Core.Logging.Log
-    # instance created specifically for this script package.
-    __log__.Basic("Started example script")
+    LOG.Basic("Started example script")
 
 # The special function __stop__ is invoked on shutdown and receives the same
-# array that __start__ did.
-def __stop__(proxies):
+# parameters that __start__ did.
+def __stop__(proxies, log):
     for proc in map(lambda x: x.Processor, proxies):
         proc.RemoveHandler[CCheckVersionPacket](_handle_check_version)
 
-    __log__.Basic("Stopped example script")
+    LOG.Basic("Stopped example script")
 
 def _handle_check_version(client, direction, packet):
     for ver in packet.Versions:
-        __log__.Info("Client reported version: {0}", ver.Value)
+        LOG.Info("Client reported version: {0}", ver.Value)
 
     return True
