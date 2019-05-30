@@ -49,11 +49,11 @@ namespace Alkahest.Core.Net.Game
                 var parts = line.Split(' ');
                 var name = parts[0];
 
-                // This is just a marker value.
-                if (!opCodes && name == "SMT_MAX")
+                // These are just marker values.
+                if (!opCodes && (name == "SMT_MAX" || name == "SMT_UNDEFINED"))
                     continue;
 
-                var code = ushort.Parse(parts[opCodes ? 2 : 1]);
+                var code = ushort.Parse(parts[parts[1] == "=" ? 2 : 1]);
 
                 codeToName.Add(code, name);
                 nameToCode.Add(name, code);
