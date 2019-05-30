@@ -3,16 +3,57 @@ using Alkahest.Core.Logging;
 using Alkahest.Core.Net;
 using Alkahest.Core.Plugins;
 using IronPython.Compiler;
+using Microsoft.CSharp.RuntimeBinder;
+using Microsoft.JScript;
 using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
+using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Registration;
+using System.ComponentModel.DataAnnotations;
+using System.Configuration.Install;
+using System.Data;
+using System.Data.EntityClient;
+using System.Data.Linq;
+using System.Data.Services;
+using System.Data.Services.Client;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Management;
+using System.Management.Instrumentation;
+using System.Messaging;
+using System.Net;
+using System.Net.Http;
 using System.Numerics;
+using System.Printing;
+using System.Runtime.Caching;
 using System.Runtime.CompilerServices;
+using System.Runtime.DurableInstancing;
+using System.Runtime.Remoting.Services;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Soap;
+using System.Security.Cryptography;
+using System.ServiceModel;
+using System.ServiceModel.Activation;
+using System.ServiceModel.Discovery;
+using System.ServiceModel.Routing;
+using System.ServiceProcess;
+using System.Speech.Synthesis;
 using System.Text;
+using System.Transactions;
+using System.Windows;
+using System.Windows.Controls.Ribbon;
+using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
+using System.Windows.Xps.Packaging;
+using System.Xaml;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace Alkahest.Plugins.Python
 {
@@ -56,9 +97,68 @@ namespace Alkahest.Plugins.Python
 
             var clr = (dynamic)IronPython.Hosting.Python.GetClrModule(engine);
 
-            clr.AddReference(typeof(Assert).Assembly.FullName);
-            clr.AddReference(typeof(Vector3).Assembly.FullName);
-            clr.AddReference(typeof(Unsafe).Assembly.FullName);
+            // Reference all the important .NET Framework assemblies.
+            var types = new[]
+            {
+                typeof(Assert),                 // Alkahest.Core.dll
+                typeof(RuntimeBinderException), // Microsoft.CSharp.dll
+                typeof(JSObject),               // Microsoft.JScript.dll
+                typeof(TriState),               // Microsoft.VisualBasic.dll
+                typeof(object),                 // mscorlib.dll
+                typeof(UIElement),              // PresentationCore.dll
+                typeof(Window),                 // PresentationFramework.dll
+                typeof(XpsDocument),            // ReachFramework.dll
+                typeof(Uri),                    // System.dll
+                typeof(Configuration),          // System.Configuration.dll
+                typeof(Installer),              // System.Configuration.Install.dll
+                typeof(ExportAttribute),        // System.ComponentModel.Composition.dll
+                typeof(ExportBuilder),          // System.ComponentModel.Composition.Registration.dll
+                typeof(Validator),              // System.ComponentModel.DataAnnotations.dll
+                typeof(Enumerable),             // System.Core.dll
+                typeof(DataSet),                // System.Data.dll
+                typeof(DataTableExtensions),    // System.Data.DataSetExtensions.dll
+                typeof(EntityConnection),       // System.Data.Entity.dll
+                typeof(DataContext),            // System.Data.Linq.dll
+                typeof(DataServiceHost),        // System.Data.Services.dll
+                typeof(DataServiceContext),     // System.Data.Services.Client.dll
+                typeof(Bitmap),                 // System.Drawing.dll
+                typeof(ZipArchive),             // System.IO.Compression.dll
+                typeof(ZipFile),                // System.IO.Compression.FileSystem.dll
+                typeof(ManagementObject),       // System.Management.dll
+                typeof(InstrumentationManager), // System.Management.Instrumentation.dll
+                typeof(MessageQueue),           // System.Messaging.dll
+                typeof(IPEndPointCollection),   // System.Net.dll
+                typeof(HttpClient),             // System.Net.Http.dll
+                typeof(WebRequestHandler),      // System.Net.Http.WebRequest.dll
+                typeof(BigInteger),             // System.Numerics.dll
+                typeof(PrintQueue),             // System.Printing.dll
+                typeof(MemoryCache),            // System.Runtime.Caching.dll
+                typeof(Unsafe),                 // System.Runtime.CompilerServices.Unsafe.dll
+                typeof(InstanceHandle),         // System.Runtime.DurableInstancing.dll
+                typeof(RemotingService),        // System.Runtime.Remoting.dll
+                typeof(DataContractAttribute),  // System.Runtime.Serialization.dll
+                typeof(SoapFormatter),          // System.Runtime.Serialization.Formatters.Soap.dll
+                typeof(ProtectedData),          // System.Security.dll
+                typeof(ChannelFactory),         // System.ServiceModel.dll
+                typeof(ServiceHostFactory),     // System.ServiceModel.Activation.dll
+                typeof(UdpBinding),             // System.ServiceModel.Channels.dll
+                typeof(DiscoveryClient),        // System.ServiceModel.Discovery.dll
+                typeof(RoutingService),         // System.ServiceModel.Routing.dll
+                typeof(WebHttpBinding),         // System.ServiceModel.Web.dll
+                typeof(ServiceBase),            // System.ServiceProcess.dll
+                typeof(SpeechSynthesizer),      // System.Speech.dll
+                typeof(Transaction),            // System.Transactions.dll
+                typeof(RibbonControl),          // System.Windows.Controls.Ribbon
+                typeof(Form),                   // System.Windows.Forms.dll
+                typeof(DataPoint),              // System.Windows.Forms.DataVisualization.dll
+                typeof(XamlType),               // System.Xaml.dll
+                typeof(XmlNode),                // System.Xml.dll
+                typeof(XNode),                  // System.Xml.Linq.dll
+                typeof(Rect),                   // WindowsBase.dll
+            };
+
+            foreach (var type in types)
+                clr.AddReference(type.Assembly.FullName);
 
             foreach (var dir in Directory.EnumerateDirectories(pkg))
             {
@@ -76,7 +176,7 @@ namespace Alkahest.Plugins.Python
                     script = src.Compile();
                     script.Execute();
                 }
-                catch (SyntaxErrorException syn)
+                catch (Microsoft.Scripting.SyntaxErrorException syn)
                 {
                     _log.Error("Syntax error in package {0}:", name);
                     _log.Error("{0}({1},{2}): {3}", syn.SourcePath, syn.Line, syn.Column, syn.Message);
