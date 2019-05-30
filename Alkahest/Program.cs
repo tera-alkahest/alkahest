@@ -2,6 +2,7 @@ using Alkahest.Commands;
 using Alkahest.Core.Logging;
 using Mono.Options;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
@@ -69,7 +70,7 @@ namespace Alkahest
                 Console.Error.WriteLine(ex.Message);
                 return 1;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (!Debugger.IsAttached)
             {
                 _log.Error("{0}", ex);
                 return 1;

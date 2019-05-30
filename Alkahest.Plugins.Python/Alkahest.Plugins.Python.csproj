@@ -40,7 +40,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Alkahest.Core\Alkahest.Core.csproj">
       <Name>Alkahest.Core</Name>
-      <Project>{4cb2d190-fc09-4d4d-9598-d0cfc0c725db}</Project>
+      <Project>{4CB2D190-FC09-4D4D-9598-D0CFC0C725DB}</Project>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
@@ -48,6 +48,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
+    <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="IronPython">

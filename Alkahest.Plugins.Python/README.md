@@ -19,9 +19,9 @@ You shouldn't need to change anything by default, but you can change the
 ## Usage
 
 The unit of encapsulation is a script package. Each directory under `Python` is
-considered a package and will be individually by the same IronPython execution
-engine. This means that packages can `import` from each other. Within a package,
-you can have as many Python modules as you need.
+considered a package and will be loaded individually by the same IronPython
+execution engine. This means that packages can `import` from each other. Within
+a package, you can have as many Python modules as you need.
 
 A package must at least have a file called `__init__.py`. This file must have
 the special `__start__` and `__stop__` functions. These are invoked on startup

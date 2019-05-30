@@ -39,8 +39,9 @@ accessing data stored with the game client.
   analysis.
 * **Packet parser:** An offline packet parsing tool can generate text dumps of
   packet logs and analyze raw packet structures to find arrays and strings.
-* **Python scripting:** One of the default plugins implements Python scripting
-  support using IronPython.
+* **Python and C# scripting:** Default plugins enable scripting with either
+  Python (using IronPython) or C# (using Roslyn) as an alternative to compiled
+  plugins.
 * **Reusable core library:** The Alkahest server is only a wrapper around the
   `Alkahest.Core` library which can be embedded in any .NET application.
 

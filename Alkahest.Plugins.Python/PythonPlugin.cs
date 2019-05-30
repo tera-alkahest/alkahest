@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Alkahest.Plugins.Python
@@ -52,8 +54,11 @@ namespace Alkahest.Plugins.Python
             io.SetErrorOutput(Stream.Null, io.ErrorEncoding);
             io.SetInput(Stream.Null, io.InputEncoding);
 
-            ((dynamic)IronPython.Hosting.Python.GetClrModule(engine)).AddReference(
-                typeof(Assert).Assembly.FullName);
+            var clr = (dynamic)IronPython.Hosting.Python.GetClrModule(engine);
+
+            clr.AddReference(typeof(Assert).Assembly.FullName);
+            clr.AddReference(typeof(Vector3).Assembly.FullName);
+            clr.AddReference(typeof(Unsafe).Assembly.FullName);
 
             foreach (var dir in Directory.EnumerateDirectories(pkg))
             {
@@ -71,18 +76,17 @@ namespace Alkahest.Plugins.Python
                     script = src.Compile();
                     script.Execute();
                 }
+                catch (SyntaxErrorException syn)
+                {
+                    _log.Error("Syntax error in package {0}:", name);
+                    _log.Error("{0}({1},{2}): {3}", syn.SourcePath, syn.Line, syn.Column, syn.Message);
+
+                    continue;
+                }
                 catch (Exception e) when (!Debugger.IsAttached)
                 {
-                    if (e is SyntaxErrorException syn)
-                    {
-                        _log.Error("Syntax error in package {0}:", name);
-                        _log.Error("{0} ({1}, {2}): {3}", syn.SourcePath, syn.Line, syn.Column, syn.Message);
-                    }
-                    else
-                    {
-                        _log.Error("Failed to initialize package {0}:", name);
-                        _log.Error("{0}", e);
-                    }
+                    _log.Error("Failed to initialize package {0}:", name);
+                    _log.Error("{0}", e);
 
                     continue;
                 }
