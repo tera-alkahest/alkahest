@@ -19,7 +19,7 @@ namespace Alkahest.Core.Net.Game
             {
                 { Region.DE, 350022 },
                 { Region.FR, 350022 },
-                { Region.JP, 347374 },
+                { Region.JP, 350023 },
                 { Region.KR, 0 },
                 { Region.NA, 347372 },
                 { Region.RU, 347375 },
