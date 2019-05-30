@@ -20,7 +20,7 @@
     <ItemGroup>
       <ReleaseFiles Include="..\*.md; ..\*.ico; ..\*.crt; ..\*.pfx" />
       <ReleaseFiles Include="..\Build\*.exe*; ..\Build\*.dll; ..\Build\*.pdb" />
-      <ReleaseFiles Include="..\Build\Plugins\alkahest-*; ..\Build\Plugins\IronPython.*; ..\Build\Plugins\Microsoft.*" />
+      <ReleaseFiles Include="..\Build\Plugins\alkahest-*; ..\Build\Plugins\IronPython.*; ..\Build\Plugins\Microsoft.*; ..\Build\Plugins\System.*" Exclude="..\Build\Plugins\System.Net.Http.Formatting.dll; ..\Build\Plugins\System.Runtime.CompilerServices.Unsafe.dll; ..\Build\Plugins\System.Web.Http.dll; ..\Build\Plugins\System.Web.Http.SelfHost.dll" />
       <ReleaseFiles Include="..\Build\CSharp\**" />
       <ReleaseFiles Include="..\Build\Python\**" />
       <ReleaseFiles Include="..\Build\PythonLibs\**" />
