@@ -1,10 +1,9 @@
-using Alkahest.Core.Net.Game.Serialization;
 using System.Collections;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace Alkahest.Core.Net.Game
+namespace Alkahest.Core.Net.Game.Serialization
 {
     public abstract class Packet
     {

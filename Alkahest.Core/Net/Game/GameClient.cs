@@ -1,13 +1,13 @@
 using Alkahest.Core.Cryptography;
 using Alkahest.Core.Logging;
-using Alkahest.Core.Net.Game;
+using Alkahest.Core.Net.Game.Serialization;
 using System;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
-namespace Alkahest.Core.Net
+namespace Alkahest.Core.Net.Game
 {
     public sealed class GameClient
     {
@@ -374,23 +374,19 @@ namespace Alkahest.Core.Net
             // If we don't expect a large number of clients, just use dedicated
             // tasks to receive data instead of spawning a new one per receive.
             if (Proxy.MaxClients <= Environment.ProcessorCount)
-            {
                 Task.Factory.StartNew(() =>
                 {
                     while (DoReceive())
                     {
                     }
                 }, TaskCreationOptions.LongRunning);
-            }
             else
-            {
                 Task.Run(() =>
                 {
                     DoReceive();
 
                     Receive(direction, headerBuffer, payloadBuffer);
                 });
-            }
         }
 
         static bool IsSocketException(Exception exception)

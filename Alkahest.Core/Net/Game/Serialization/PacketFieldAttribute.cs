@@ -1,6 +1,6 @@
 using System;
 
-namespace Alkahest.Core.Net.Game
+namespace Alkahest.Core.Net.Game.Serialization
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public sealed class PacketFieldAttribute : Attribute

@@ -1,5 +1,5 @@
 using Alkahest.Core.Logging;
-using Alkahest.Core.Net;
+using Alkahest.Core.Net.Game;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition.Hosting;

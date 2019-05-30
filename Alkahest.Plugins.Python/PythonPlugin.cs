@@ -1,11 +1,10 @@
 using Alkahest.Core;
 using Alkahest.Core.Logging;
-using Alkahest.Core.Net;
+using Alkahest.Core.Net.Game;
 using Alkahest.Core.Plugins;
 using IronPython.Compiler;
 using Microsoft.CSharp.RuntimeBinder;
 using Microsoft.JScript;
-using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
 using Microsoft.VisualBasic;
 using System;

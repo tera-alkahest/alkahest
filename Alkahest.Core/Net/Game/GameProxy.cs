@@ -1,5 +1,4 @@
 using Alkahest.Core.Logging;
-using Alkahest.Core.Net.Game;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +6,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Alkahest.Core.Net
+namespace Alkahest.Core.Net.Game
 {
     public sealed class GameProxy : IDisposable
     {

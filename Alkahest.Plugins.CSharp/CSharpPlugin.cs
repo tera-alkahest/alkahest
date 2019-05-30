@@ -1,6 +1,6 @@
 using Alkahest.Core;
 using Alkahest.Core.Logging;
-using Alkahest.Core.Net;
+using Alkahest.Core.Net.Game;
 using Alkahest.Core.Plugins;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;

@@ -1,6 +1,5 @@
 using Alkahest.Core;
 using Alkahest.Core.Logging;
-using Alkahest.Core.Net;
 using Alkahest.Core.Net.Game;
 using Alkahest.Core.Net.Game.Logging;
 using Alkahest.Core.Plugins;

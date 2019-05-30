@@ -1,3 +1,4 @@
+using Alkahest.Core.Net.Game.Serialization;
 using System.Collections.Generic;
 
 namespace Alkahest.Core.Net.Game.Packets

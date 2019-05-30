@@ -3,8 +3,8 @@ from Alkahest.Core.Net.Game.Packets import *
 LOG = None
 
 # The special function __start__ is invoked on startup. The proxies parameter is
-# an array of Alkahest.Core.Net.GameProxy instances. The log parameter is an
-# Alkahest.Core.Logging.Log instance created specifically for this script
+# an array of Alkahest.Core.Net.Game.GameProxy instances. The log parameter is
+# an Alkahest.Core.Logging.Log instance created specifically for this script
 # package.
 def __start__(proxies, log):
     global LOG

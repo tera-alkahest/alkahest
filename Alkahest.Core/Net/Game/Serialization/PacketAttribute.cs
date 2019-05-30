@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.Composition;
 
-namespace Alkahest.Core.Net.Game
+namespace Alkahest.Core.Net.Game.Serialization
 {
     [MetadataAttribute]
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]

@@ -1,4 +1,5 @@
 using Alkahest.Core.Game;
+using Alkahest.Core.Net.Game.Serialization;
 using System.Collections.Generic;
 using System.Numerics;
 
