@@ -165,8 +165,9 @@ namespace Alkahest.Plugins.CSharp
 
                 foreach (var file in Directory.EnumerateFiles(dir, "*.cs", SearchOption.AllDirectories))
                 {
-                    var tree = SyntaxFactory.ParseSyntaxTree(SourceText.From(
-                        File.OpenRead(file), Encoding.UTF8), options, file);
+                    using var src = File.OpenRead(file);
+                    var tree = SyntaxFactory.ParseSyntaxTree(SourceText.From(src, Encoding.UTF8),
+                        options, file);
 
                     compiler = compiler.AddSyntaxTrees(tree);
 
@@ -191,7 +192,7 @@ namespace Alkahest.Plugins.CSharp
             using var stream = new MemoryStream();
 
             var result = compiler.Emit(stream, options: new EmitOptions().WithDebugInformationFormat(
-                DebugInformationFormat.PortablePdb));
+                DebugInformationFormat.Embedded));
 
             if (!result.Success)
             {
