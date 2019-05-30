@@ -17,15 +17,15 @@ namespace Alkahest.Core.Net.Game
         public static IReadOnlyDictionary<Region, uint> Versions { get; } =
             new Dictionary<Region, uint>
             {
-                { Region.DE, 347373 },
-                { Region.FR, 347373 },
+                { Region.DE, 350022 },
+                { Region.FR, 350022 },
                 { Region.JP, 347374 },
                 { Region.KR, 0 },
                 { Region.NA, 347372 },
                 { Region.RU, 347375 },
                 { Region.TH, 349932 },
                 { Region.TW, 347376 },
-                { Region.UK, 347373 },
+                { Region.UK, 350022 },
             };
 
         private protected MessageTable(bool opCodes, uint version)
@@ -40,7 +40,7 @@ namespace Alkahest.Core.Net.Game
             var nameToCode = new Dictionary<string, ushort>();
 
             using var reader = new StreamReader(asm.GetManifestResourceStream(
-                opCodes ? $"protocol.{version}.map" : "sysmsg.81.map"));
+                opCodes ? $"protocol.{version}.map" : $"sysmsg.{(version >= 349932 ? 82 : 81)}.map"));
 
             string line;
 
