@@ -2,9 +2,10 @@ using Alkahest.Core;
 using Alkahest.Core.Logging;
 using Alkahest.Core.Net.Game;
 using Alkahest.Core.Plugins;
-using IronPython.Compiler;
+using IronPython;
 using Microsoft.CSharp.RuntimeBinder;
 using Microsoft.JScript;
+using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
 using Microsoft.VisualBasic;
 using System;
@@ -72,14 +73,14 @@ namespace Alkahest.Plugins.Python
 
             Directory.CreateDirectory(pkg);
 
-            var engine = IronPython.Hosting.Python.CreateEngine();
-            var opts = (PythonCompilerOptions)engine.GetCompilerOptions();
-
-            opts.AbsoluteImports = true;
-            opts.AllowWithStatement = true;
-            opts.PrintFunction = true;
-            opts.TrueDivision = true;
-            opts.UnicodeLiterals = true;
+            var engine = IronPython.Hosting.Python.CreateEngine(new Dictionary<string, object>
+            {
+                ["Debug"] = true,
+                ["DivisionOptions"] = PythonDivisionOptions.New,
+                ["IndentationInconsistencySeverity"] = Severity.Warning,
+                ["PythonVersion"] = new Version(3, 0),
+                ["WarnPy3k"] = true,
+            });
 
             var paths = engine.GetSearchPaths();
 
