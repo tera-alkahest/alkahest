@@ -8,9 +8,7 @@ namespace Alkahest.Core.Net
     {
         public static string ToErrorString(this SocketError error)
         {
-            error.CheckValidity(nameof(error));
-
-            return new Win32Exception((int)error).Message;
+            return new Win32Exception((int)error.CheckValidity(nameof(error))).Message;
         }
 
         public static void SendFull(this Socket socket, byte[] data, int offset, int length)

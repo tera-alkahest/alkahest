@@ -10,7 +10,7 @@ namespace Alkahest.Core.Net.Game.Logging
 {
     public sealed class PacketLogReader : IDisposable
     {
-        public bool IsCompressed { get; }
+        public byte CompressionLevel { get; }
 
         public uint Version { get; }
 
@@ -38,9 +38,12 @@ namespace Alkahest.Core.Net.Game.Logging
             if (!magic.SequenceEqual(PacketLogEntry.Magic))
                 throw new InvalidDataException();
 
-            IsCompressed = stream.ReadByte() != 0;
+            var level = stream.ReadByte();
 
-            if (IsCompressed)
+            if (level == -1)
+                throw new EndOfStreamException();
+
+            if ((CompressionLevel = (byte)level) != 0)
                 stream = new DeflateStream(stream, CompressionMode.Decompress);
 
             _reader = new GameBinaryReader(stream);

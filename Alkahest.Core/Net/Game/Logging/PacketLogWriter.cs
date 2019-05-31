@@ -29,8 +29,6 @@ namespace Alkahest.Core.Net.Game.Logging
         public PacketLogWriter(Region region, GameMessageTable gameMessages, SystemMessageTable systemMessages,
             ServerInfo[] servers, string directory, string fileNameFormat, bool compress)
         {
-            region.CheckValidity(nameof(region));
-
             if (servers == null)
                 throw new ArgumentNullException(nameof(servers));
 
@@ -41,7 +39,7 @@ namespace Alkahest.Core.Net.Game.Logging
                 throw new ArgumentNullException(nameof(fileNameFormat));
 
             IsCompressed = compress;
-            Region = region;
+            Region = region.CheckValidity(nameof(region));
             GameMessages = gameMessages ?? throw new ArgumentNullException(nameof(gameMessages));
             SystemMessages = systemMessages ?? throw new ArgumentNullException(nameof(systemMessages));
             Servers = servers.ToDictionary(x => x.Id);

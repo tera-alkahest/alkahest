@@ -5,6 +5,8 @@ using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Alkahest.Commands
 {
@@ -13,6 +15,8 @@ namespace Alkahest.Commands
         static readonly Log _log = new Log(typeof(DumpJsonCommand));
 
         string _output = "Json";
+
+        bool _parallel;
 
         public DumpJsonCommand()
             : base("JSON Dumper", "dump-json", "Dump a decrypted data center file as JSON")
@@ -24,9 +28,14 @@ namespace Alkahest.Commands
                 "Available options:",
                 string.Empty,
                 {
-                    "o|output",
+                    "o|output=",
                     $"Specify output directory (defaults to `{_output}`)",
                     o => _output = o
+                },
+                {
+                    "p|parallel",
+                    $"Parallelize the operation based on number of cores (defaults to `{_parallel}`)",
+                    p => _parallel = p != null
                 },
             };
         }
@@ -45,13 +54,21 @@ namespace Alkahest.Commands
 
             Directory.CreateDirectory(_output);
 
-            using var dc = new DataCenter(input);
+            var directories = 0;
+            var files = 0;
 
-            foreach (var grp in dc.Root.GroupBy(x => x.Name))
+            using var dc = new DataCenter(input);
+            var options = new ParallelOptions
+            {
+                MaxDegreeOfParallelism = _parallel ? Environment.ProcessorCount : 1,
+            };
+
+            Parallel.ForEach(dc.Root.GroupBy(x => x.Name), options, grp =>
             {
                 var dir = Path.Combine(_output, grp.Key);
 
                 Directory.CreateDirectory(dir);
+                Interlocked.Increment(ref directories);
 
                 var i = 0;
 
@@ -66,13 +83,15 @@ namespace Alkahest.Commands
                         };
 
                         WriteElement(writer, elem);
+                        Interlocked.Increment(ref files);
                     }
 
                     i++;
                 }
-            }
+            });
 
-            _log.Basic("Dumped JSON files to directory {0}", _output);
+            _log.Basic("Dumped JSON files to directory {0} ({1} directories, {2} files)", _output,
+                directories, files);
 
             return 0;
         }

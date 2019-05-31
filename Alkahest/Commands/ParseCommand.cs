@@ -59,7 +59,7 @@ namespace Alkahest.Commands
                 "Available options:",
                 string.Empty,
                 {
-                    "o|output",
+                    "o|output=",
                     $"Specify output file (defaults to input file name with extension changed to `{ParsedExtension}`)",
                     o => _output = o
                 },
@@ -168,7 +168,7 @@ namespace Alkahest.Commands
             {
                 _log.Info(string.Empty);
                 _log.Info("Version: {0}", reader.Version);
-                _log.Info("Compressed: {0}", reader.IsCompressed);
+                _log.Info("Compression: {0}", reader.CompressionLevel);
                 _log.Info("Region: {0}", reader.Region);
                 _log.Info("Servers:");
 

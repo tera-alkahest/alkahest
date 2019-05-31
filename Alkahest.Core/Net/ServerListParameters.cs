@@ -101,9 +101,7 @@ namespace Alkahest.Core.Net
 
         public static int GetRegionOffset(Region region)
         {
-            region.CheckValidity(nameof(region));
-
-            switch (region)
+            switch (region.CheckValidity(nameof(region)))
             {
                 case Region.DE:
                 case Region.FR:

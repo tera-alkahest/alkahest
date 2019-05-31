@@ -23,11 +23,10 @@ namespace Alkahest.Core.Game
 
         public static TemplateId FromValues(Race race, Gender gender, Class @class)
         {
-            race.CheckValidity(nameof(race));
-            gender.CheckValidity(nameof(gender));
-            @class.CheckValidity(nameof(@class));
-
-            return new TemplateId(10200 + 200 * (uint)race - 100 * ((uint)gender - 1) + (uint)@class + 1);
+            return new TemplateId(10200 +
+                200 * (uint)race.CheckValidity(nameof(race)) -
+                100 * ((uint)gender.CheckValidity(nameof(gender)) - 1) +
+                (uint)@class.CheckValidity(nameof(@class)) + 1);
         }
 
         public bool Equals(TemplateId other)

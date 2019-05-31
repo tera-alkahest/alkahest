@@ -50,13 +50,12 @@ namespace Alkahest.Core.Cryptography
         public GameEncryptionSession(Direction direction, byte[] clientKey1, byte[] clientKey2,
             byte[] serverKey1, byte[] serverKey2)
         {
-            direction.CheckValidity(nameof(direction));
             CheckKey(clientKey1, nameof(clientKey1));
             CheckKey(clientKey2, nameof(clientKey2));
             CheckKey(serverKey1, nameof(serverKey1));
             CheckKey(serverKey2, nameof(serverKey2));
 
-            Direction = direction;
+            Direction = direction.CheckValidity(nameof(direction));
 
             _clientKey1 = clientKey1.ToArray();
             _clientKey2 = clientKey2.ToArray();

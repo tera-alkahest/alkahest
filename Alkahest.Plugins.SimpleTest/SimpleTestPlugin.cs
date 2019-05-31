@@ -23,14 +23,14 @@ namespace Alkahest.Plugins.SimpleTest
 
         static readonly Log _log = new Log(typeof(SimpleTestPlugin));
 
-        readonly Dictionary<string, RawPacketHandler> _rawHandlers;
+        readonly List<(string, RawPacketHandler)> _rawHandlers;
 
         public SimpleTestPlugin()
         {
-            _rawHandlers = new Dictionary<string, RawPacketHandler>
+            _rawHandlers = new List<(string, RawPacketHandler)>
             {
-                { "S_SPAWN_ME", HandleSpawnMe },
-                { "S_INVEN", HandleInventory },
+                ("S_SPAWN_ME", HandleSpawnMe),
+                ("S_INVEN", HandleInventory),
             };
         }
 
@@ -38,8 +38,8 @@ namespace Alkahest.Plugins.SimpleTest
         {
             foreach (var proc in proxies.Select(x => x.Processor))
             {
-                foreach (var pair in _rawHandlers)
-                    proc.AddRawHandler(pair.Key, pair.Value);
+                foreach (var (name, handler) in _rawHandlers)
+                    proc.AddRawHandler(name, handler);
 
                 proc.AddHandler<CCheckVersionPacket>(HandleCheckVersion);
                 proc.AddHandler<CSocialPacket>(HandleSocial);
@@ -52,8 +52,8 @@ namespace Alkahest.Plugins.SimpleTest
         {
             foreach (var proc in proxies.Select(x => x.Processor))
             {
-                foreach (var pair in _rawHandlers)
-                    proc.RemoveRawHandler(pair.Key, pair.Value);
+                foreach (var (name, handler) in _rawHandlers)
+                    proc.RemoveRawHandler(name, handler);
 
                 proc.RemoveHandler<CCheckVersionPacket>(HandleCheckVersion);
                 proc.RemoveHandler<CSocialPacket>(HandleSocial);

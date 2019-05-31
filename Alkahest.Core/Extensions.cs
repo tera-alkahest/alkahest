@@ -4,12 +4,15 @@ namespace Alkahest.Core
 {
     public static class Extensions
     {
-        internal static void CheckValidity(this Enum value, string name)
+        internal static T CheckValidity<T>(this T value, string name)
+            where T : Enum
         {
-            var t = value.GetType();
+            var t = typeof(T);
 
             if (!Enum.IsDefined(t, value))
                 throw new ArgumentException($"Invalid {t.Name} value.", name);
+
+            return value;
         }
 
         public static T[] Slice<T>(this T[] array, int start, int length)
@@ -26,9 +29,7 @@ namespace Alkahest.Core
 
         public static string ToDirectionString(this Direction direction)
         {
-            direction.CheckValidity(nameof(direction));
-
-            switch (direction)
+            switch (direction.CheckValidity(nameof(direction)))
             {
                 case Direction.ClientToServer:
                     return "C -> S";

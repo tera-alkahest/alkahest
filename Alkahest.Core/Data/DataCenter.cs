@@ -12,6 +12,20 @@ namespace Alkahest.Core.Data
     {
         public const int KeySize = 16;
 
+        public static IReadOnlyDictionary<Region, string> FileNames { get; } =
+            new Dictionary<Region, string>
+            {
+                { Region.DE, "DataCenter_Final_GER.dat" },
+                { Region.FR, "DataCenter_Final_FRA.dat" },
+                { Region.JP, "DataCenter_Final_JPN.dat" },
+                { Region.KR, "DataCenter_Final.dat" },
+                { Region.NA, "DataCenter_Final_USA.dat" },
+                { Region.RU, "DataCenter_Final_RUS.dat" },
+                { Region.TH, "DataCenter_Final_THA.dat" },
+                { Region.TW, "DataCenter_Final_TW.dat" },
+                { Region.UK, "DataCenter_Final_EUR.dat" },
+            };
+
         const int Unknown1Size = 8;
 
         const int AttributeSize = 8;
@@ -41,22 +55,26 @@ namespace Alkahest.Core.Data
 
         DataCenterSegmentedRegion _stringRegion;
 
-        public DataCenter(string fileName)
+        public unsafe DataCenter(string fileName)
         {
-            DataCenterSegmentedRegion attributeRegion;
-            DataCenterSegmentedRegion elementRegion;
-            DataCenterSegmentedRegion nameRegion;
-            DataCenterSimpleRegion nameAddressRegion;
+            using var reader = new GameBinaryReader(File.OpenRead(fileName));
 
-            using (var reader = new GameBinaryReader(File.OpenRead(fileName)))
-            {
-                Header = ReadHeader(reader);
+            Header = ReadHeader(reader);
 
-                ReadRegions(reader, out attributeRegion, out elementRegion, out _stringRegion,
-                    out nameRegion, out nameAddressRegion);
+            ReadSimpleRegion(reader, false, Unknown1Size);
 
-                Footer = ReadFooter(reader);
-            }
+            var attributeRegion = ReadSegmentedRegion(reader, AttributeSize);
+            var elementRegion = ReadSegmentedRegion(reader, ElementSize);
+            var stringRegion = ReadSegmentedRegion(reader, sizeof(char));
+
+            ReadSimpleSegmentedRegion(reader, 1024, Unknown2Size);
+            ReadSimpleRegion(reader, true, (uint)sizeof(DataCenterAddress));
+
+            var nameRegion = ReadSegmentedRegion(reader, sizeof(char));
+            ReadSimpleSegmentedRegion(reader, 512, Unknown2Size);
+            var nameAddressRegion = ReadSimpleRegion(reader, true, (uint)sizeof(DataCenterAddress));
+
+            Footer = ReadFooter(reader);
 
             Attributes = attributeRegion;
             Elements = elementRegion;
@@ -104,24 +122,6 @@ namespace Alkahest.Core.Data
             return new DataCenterHeader(unk1, unk2, unk3, version, unk4, unk5, unk6, unk7);
         }
 
-        static unsafe void ReadRegions(GameBinaryReader reader, out DataCenterSegmentedRegion attributeRegion,
-            out DataCenterSegmentedRegion elementRegion, out DataCenterSegmentedRegion stringRegion,
-            out DataCenterSegmentedRegion nameRegion, out DataCenterSimpleRegion nameAddressRegion)
-        {
-            ReadSimpleRegion(reader, false, Unknown1Size);
-
-            attributeRegion = ReadSegmentedRegion(reader, AttributeSize);
-            elementRegion = ReadSegmentedRegion(reader, ElementSize);
-
-            stringRegion = ReadSegmentedRegion(reader, sizeof(char));
-            ReadSimpleSegmentedRegion(reader, 1024, Unknown2Size);
-            ReadSimpleRegion(reader, true, (uint)sizeof(DataCenterAddress));
-
-            nameRegion = ReadSegmentedRegion(reader, sizeof(char));
-            ReadSimpleSegmentedRegion(reader, 512, Unknown2Size);
-            nameAddressRegion = ReadSimpleRegion(reader, true, (uint)sizeof(DataCenterAddress));
-        }
-
         static DataCenterFooter ReadFooter(GameBinaryReader reader)
         {
             var unk1 = reader.ReadUInt32();
@@ -164,8 +164,8 @@ namespace Alkahest.Core.Data
 
         static DataCenterSegmentedRegion ReadSegmentedRegion(GameBinaryReader reader, uint elementSize)
         {
-            var segments = new List<DataCenterSegment>();
             var count = reader.ReadUInt32();
+            var segments = new List<DataCenterSegment>((int)count);
 
             for (var i = 0; i < count; i++)
                 segments.Add(ReadSegment(reader, elementSize));

@@ -29,9 +29,7 @@ namespace Alkahest.Core.Net.Game.Serialization
         protected PacketSerializer(Region region, GameMessageTable gameMessages,
             SystemMessageTable systemMessages)
         {
-            region.CheckValidity(nameof(region));
-
-            Region = region;
+            Region = region.CheckValidity(nameof(region));
             GameMessages = gameMessages ?? throw new ArgumentNullException(nameof(gameMessages));
             SystemMessages = systemMessages ?? throw new ArgumentNullException(nameof(systemMessages));
 

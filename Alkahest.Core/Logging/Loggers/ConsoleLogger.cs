@@ -43,8 +43,6 @@ namespace Alkahest.Core.Logging.Loggers
 
         public void Log(LogLevel level, string timestamp, Type source, string category, string message)
         {
-            level.CheckValidity(nameof(level));
-
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
@@ -54,7 +52,7 @@ namespace Alkahest.Core.Logging.Loggers
             ConsoleColor color;
             string lvl;
 
-            switch (level)
+            switch (level.CheckValidity(nameof(level)))
             {
                 case LogLevel.Error:
                     color = _errorColor;

@@ -1,7 +1,6 @@
 using Alkahest.Core.IO;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace Alkahest.Core.Data
 {
@@ -9,15 +8,12 @@ namespace Alkahest.Core.Data
     {
         public uint ElementSize { get; }
 
-        public IReadOnlyDictionary<ushort, DataCenterSegment> Segments { get; }
+        public IReadOnlyList<DataCenterSegment> Segments { get; }
 
         public DataCenterSegmentedRegion(uint elementSize, IReadOnlyList<DataCenterSegment> segments)
         {
             ElementSize = elementSize;
-
-            ushort i = 0;
-
-            Segments = segments.ToDictionary(x => i++);
+            Segments = segments;
         }
 
         public GameBinaryReader GetReader(DataCenterAddress address)

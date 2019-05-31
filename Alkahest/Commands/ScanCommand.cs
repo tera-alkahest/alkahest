@@ -25,7 +25,7 @@ namespace Alkahest.Commands
                 "Available options:",
                 string.Empty,
                 {
-                    "o|output",
+                    "o|output=",
                     $"Specify output directory (defaults to `{_output}`)",
                     o => _output = o
                 },

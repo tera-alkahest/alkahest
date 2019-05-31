@@ -30,11 +30,9 @@ namespace Alkahest.Core.Game
 
         public static SkillId FromValues(uint id, SkillKind kind, bool isNpc, uint unknown)
         {
-            kind.CheckValidity(nameof(kind));
-
             return new SkillId(Bits.Compose(
                 (id, 0, 28),
-                ((ulong)kind, 28, 4),
+                ((ulong)kind.CheckValidity(nameof(kind)), 28, 4),
                 (isNpc ? 1UL : 0, 32, 1),
                 (unknown, 33, 31)));
         }

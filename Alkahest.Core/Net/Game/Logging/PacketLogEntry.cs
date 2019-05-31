@@ -24,11 +24,9 @@ namespace Alkahest.Core.Net.Game.Logging
         public PacketLogEntry(DateTime timestamp, int serverId, Direction direction, ushort opCode,
             byte[] payload)
         {
-            direction.CheckValidity(nameof(direction));
-
             Timestamp = timestamp;
             ServerId = serverId;
-            Direction = direction;
+            Direction = direction.CheckValidity(nameof(direction));
             OpCode = opCode;
             Payload = (payload ?? throw new ArgumentNullException(nameof(payload))).ToArray();
         }

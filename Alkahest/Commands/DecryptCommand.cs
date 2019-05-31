@@ -28,7 +28,7 @@ namespace Alkahest.Commands
                 "Available options:",
                 string.Empty,
                 {
-                    "o|output",
+                    "o|output=",
                     $"Specify output file (defaults to input file name with extension changed to `{DecryptedExtension}`)",
                     o => _output = o
                 },
