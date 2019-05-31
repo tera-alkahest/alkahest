@@ -21,6 +21,7 @@ namespace Alkahest.Core.Data
                 { Region.KR, "DataCenter_Final.dat" },
                 { Region.NA, "DataCenter_Final_USA.dat" },
                 { Region.RU, "DataCenter_Final_RUS.dat" },
+                { Region.SE, "DataCenter_Final_SE.dat" },
                 { Region.TH, "DataCenter_Final_THA.dat" },
                 { Region.TW, "DataCenter_Final_TW.dat" },
                 { Region.UK, "DataCenter_Final_EUR.dat" },

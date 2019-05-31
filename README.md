@@ -90,8 +90,7 @@ The most important configuration values you'll need to change are:
 * `disablePlugins`: Remove any core plugins from this list that you want to use.
   You can also add plugins here that you want to temporarily disable, such as
   the `packet-logger` plugin which is only useful to developers.
-* `region`: Set this to `eu`, `jp`, `na`, `ru`, `th`, or `tw`, or if you're
-  playing in EU, `de`, `fr`, or `uk`.
+* `region`: Set this to `de`, `fr`, `jp`, `na`, `ru`, `se`, `th`, `tw`, or `uk`.
 
 There are many other configuration values that you can play with, but you don't
 need to change them if all you want is to use Alkahest for a single TERA client
@@ -106,8 +105,7 @@ start TERA and play.
 For some regions, you may need to log into TERA first, then start Alkahest just
 before actually launching the game. This is necessary because some regions use
 the same host name for logging in and for retrieving the server list, the
-latter of which gets redirected by Alkahest. For KR specifically, you need to
-start Alkahest right after launching the game, during the splash screen.
+latter of which gets redirected by Alkahest.
 
 Note that, by default, Alkahest will adjust your `hosts` file so that the host
 name that the TERA launcher fetches the official server list from will be
