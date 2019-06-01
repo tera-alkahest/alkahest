@@ -1,6 +1,6 @@
 namespace Alkahest.Parser
 {
-    public enum AnalysisMode
+    enum AnalysisMode
     {
         None,
         Unknown,

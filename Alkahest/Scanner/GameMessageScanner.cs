@@ -39,17 +39,10 @@ namespace Alkahest.Scanner
             }
 
             var func = reader.GetDelegate<GetMessageNameFunc>((int)o);
-            var list = new List<Tuple<ushort, string>>();
+            var list = Enumerable.Range(0, ushort.MaxValue).Select(x => Tuple.Create((ushort)x,
+                Marshal.PtrToStringAnsi(func(x)))).Where(x => x.Item2 != string.Empty).ToArray();
 
-            for (ushort i = 0; i < ushort.MaxValue; i++)
-            {
-                string s;
-
-                if ((s = Marshal.PtrToStringAnsi(func(i))) != string.Empty)
-                    list.Add(Tuple.Create(i, s));
-            }
-
-            channel.LogBasic("Found {0} opcodes", list.Count);
+            channel.LogBasic("Found {0} opcodes", list.Length);
 
             channel.GameMessages = list;
         }

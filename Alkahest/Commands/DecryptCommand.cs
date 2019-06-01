@@ -19,7 +19,7 @@ namespace Alkahest.Commands
         string _output;
 
         public DecryptCommand()
-            : base("Decryptor", "decrypt", "Decrypt a data center file")
+            : base("Extractor", "decrypt", "Decrypt a data center file")
         {
             Options = new OptionSet
             {

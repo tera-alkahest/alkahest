@@ -39,6 +39,16 @@ namespace Alkahest
 
         public static string[] DisablePlugins { get; }
 
+        public static Uri PackageRegistryUri { get; }
+
+        public static string CSharpPackageDirectory { get; }
+
+        public static string PythonPackageDirectory { get; }
+
+        public static Uri AssetManifestUri { get; }
+
+        public static string AssetDirectory { get; }
+
         public static Region Region { get; }
 
         public static bool ServerListEnabled { get; }
@@ -86,6 +96,11 @@ namespace Alkahest
             PluginDirectory = cfg["pluginDirectory"];
             PluginPattern = cfg["pluginPattern"];
             DisablePlugins = Split(cfg["disablePlugins"], ',');
+            PackageRegistryUri = new Uri(cfg["packageRegistryUri"]);
+            CSharpPackageDirectory = cfg["csharpPackageDirectory"];
+            PythonPackageDirectory = cfg["pythonPackageDirectory"];
+            AssetManifestUri = new Uri(cfg["assetManifestUri"]);
+            AssetDirectory = cfg["assetDirectory"];
             Region = (Region)Enum.Parse(typeof(Region), cfg["region"], true);
             ServerListEnabled = bool.Parse(cfg["enableSls"]);
             ServerListBaseAddress = IPAddress.Parse(cfg["slsBaseAddress"]);

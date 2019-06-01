@@ -1,3 +1,4 @@
+using Alkahest.Core.Collections;
 using Alkahest.Core.Net.Game.Serialization;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,8 +48,8 @@ namespace Alkahest.Core.Net.Game.Packets
 
             sb.Append($"@{serializer.SystemMessages.NameToCode[MessageName]}");
 
-            foreach (var kvp in MessageArguments)
-                sb.Append($"\v{kvp.Key}\v{kvp.Value}");
+            foreach (var (name, value) in MessageArguments.Tuples())
+                sb.Append($"\v{name}\v{value}");
 
             Message = sb.ToString();
         }

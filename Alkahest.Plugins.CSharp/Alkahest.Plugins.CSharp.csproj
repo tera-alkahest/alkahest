@@ -34,7 +34,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="CSharp\example\Main.cs" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
@@ -102,10 +101,4 @@
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="AfterBuild">
-    <ItemGroup>
-      <CSharpFiles Include="CSharp\**" />
-    </ItemGroup>
-    <Copy SourceFiles="@(CSharpFiles)" DestinationFiles="@(CSharpFiles->'$(OutputPath)\..\CSharp\%(RecursiveDir)%(Filename)%(Extension)')" />
-  </Target>
 </Project>

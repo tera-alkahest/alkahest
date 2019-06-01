@@ -1,3 +1,4 @@
+using Alkahest.Core.Collections;
 using System;
 using System.Text;
 
@@ -18,9 +19,9 @@ namespace Alkahest.Core.Net.Game
         {
             var hex = new StringBuilder();
 
-            for (var i = 0; i < Payload.Length; i++)
+            foreach (var (i, x) in Payload.WithIndex())
             {
-                hex.Append($"{Payload[i]:X2}");
+                hex.Append($"{x:X2}");
 
                 if (i != Payload.Length - 1)
                 {
@@ -33,9 +34,9 @@ namespace Alkahest.Core.Net.Game
 
             var text = new StringBuilder();
 
-            for (var i = 0; i < Payload.Length; i++)
+            foreach (var (i, x) in Payload.WithIndex())
             {
-                var ch = (char)Payload[i];
+                var ch = (char)x;
 
                 text.Append(!char.IsControl(ch) && !char.IsWhiteSpace(ch) ? ch : '.');
 
@@ -51,10 +52,10 @@ namespace Alkahest.Core.Net.Game
 
             var final = new StringBuilder();
 
-            for (var i = 0; i < hexLines.Length; i++)
+            foreach (var (i, line) in hexLines.WithIndex())
             {
                 final.Append($"{i * 16:X4}:  ");
-                final.AppendFormat($"{hexLines[i],-47}  ");
+                final.AppendFormat($"{line,-47}  ");
                 final.Append(textLines[i]);
 
                 if (i != hexLines.Length - 1)

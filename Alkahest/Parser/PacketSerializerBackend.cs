@@ -1,6 +1,6 @@
 namespace Alkahest.Parser
 {
-    public enum PacketSerializerBackend
+    enum PacketSerializerBackend
     {
         Reflection,
         Compiler,

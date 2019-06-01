@@ -40,5 +40,6 @@ effect.
 A reference to the `Alkahest.Core` assembly is added automatically, so you can
 readily access anything from it, e.g. via `using` directives.
 
-See the [example](CSharp/example) package to get an idea of how a C# script
-should look.
+See the
+[csharp-example](https://github.com/tera-alkahest/alkahest-csharp-example)
+package to get an idea of how a C# script package should look.

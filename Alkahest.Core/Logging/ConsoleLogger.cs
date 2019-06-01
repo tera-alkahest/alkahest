@@ -1,6 +1,6 @@
 using System;
 
-namespace Alkahest.Core.Logging.Loggers
+namespace Alkahest.Core.Logging
 {
     public sealed class ConsoleLogger : ILogger
     {

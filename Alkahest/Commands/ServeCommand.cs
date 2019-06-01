@@ -1,10 +1,10 @@
 using Alkahest.Core;
 using Alkahest.Core.Logging;
-using Alkahest.Core.Logging.Loggers;
 using Alkahest.Core.Net;
 using Alkahest.Core.Net.Game;
 using Alkahest.Core.Net.Game.Serialization;
 using Alkahest.Core.Plugins;
+using Mono.Options;
 using System;
 using System.Linq;
 using System.Net;
@@ -21,6 +21,8 @@ namespace Alkahest.Commands
 
         public override GCLatencyMode LatencyMode => GCLatencyMode.SustainedLowLatency;
 
+        bool _cleanup;
+
         readonly ManualResetEventSlim _running = new ManualResetEventSlim();
 
         readonly ManualResetEventSlim _exited = new ManualResetEventSlim();
@@ -28,10 +30,35 @@ namespace Alkahest.Commands
         public ServeCommand()
             : base("Server", "serve", "Run the proxy server (default command)")
         {
+            Options = new OptionSet
+            {
+                $"Usage: {Program.Name} {Name} [OPTIONS]",
+                string.Empty,
+                "Available options:",
+                string.Empty,
+                {
+                    "c|cleanup",
+                    $"Enable/disable only doing cleanup (defaults to `{_cleanup}`)",
+                    c => _cleanup = c != null
+                },
+            };
         }
 
         protected override int Invoke(string[] args)
         {
+            if (_cleanup)
+            {
+                var sls = ServerListParameters.Uris[Configuration.Region];
+
+                using var hostsMgr = Configuration.AdjustHostsFile ? new HostsFileManager() : null;
+                using var certMgr = Configuration.AdjustCertificateStore && sls.Scheme == Uri.UriSchemeHttps ?
+                    new CertificateManager(Configuration.ServerListPort) : null;
+
+                hostsMgr?.RemoveEntry(sls.Host, Configuration.ServerListBaseAddress);
+
+                return 0;
+            }
+
             if (Configuration.Loggers.Contains(FileLogger.Name))
                 Log.Loggers.Add(new FileLogger(Configuration.LogDirectory, Configuration.LogFileNameFormat));
 

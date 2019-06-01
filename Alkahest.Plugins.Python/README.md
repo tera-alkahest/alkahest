@@ -39,5 +39,6 @@ readily `import` anything from it.
 Note that scripts are evaluated before the `__start__` function is invoked. This
 lets you do any initialization you need at the module level.
 
-See the [example](Python/example) package to get an idea of how a Python script
-should look.
+See the
+[python-example](https://github.com/tera-alkahest/alkahest-python-example)
+package to get an idea of how a Python script package should look.

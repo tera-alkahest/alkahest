@@ -1,5 +1,7 @@
+using Alkahest.Core.Collections;
 using Alkahest.Core.Data;
 using Alkahest.Core.Logging;
+using Alkahest.Parser;
 using Mono.Options;
 using Newtonsoft.Json;
 using System;
@@ -7,19 +9,22 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Alkahest.Commands
 {
-    sealed class DumpJsonCommand : AlkahestCommand
+    sealed class DumpCommand : AlkahestCommand
     {
-        static readonly Log _log = new Log(typeof(DumpJsonCommand));
+        static readonly Log _log = new Log(typeof(DumpCommand));
 
-        string _output = "Json";
+        DumpFormat _format = DumpFormat.Xml;
+
+        string _output = "Dump";
 
         bool _parallel;
 
-        public DumpJsonCommand()
-            : base("JSON Dumper", "dump-json", "Dump a decrypted data center file as JSON")
+        public DumpCommand()
+            : base("Extractor", "dump", "Dump a decrypted data center file as XML/JSON")
         {
             Options = new OptionSet
             {
@@ -33,10 +38,20 @@ namespace Alkahest.Commands
                     o => _output = o
                 },
                 {
+                    "f|format=",
+                    $"Specify dump format (defaults to `{_format}`)",
+                    (DumpFormat m) => _format = m
+                },
+                {
                     "p|parallel",
-                    $"Parallelize the operation based on number of cores (defaults to `{_parallel}`)",
+                    $"Enable/disable parallelizing the operation based on number of cores (defaults to `{_parallel}`)",
                     p => _parallel = p != null
                 },
+                string.Empty,
+                "Dump formats:",
+                string.Empty,
+                $"  {DumpFormat.Xml}: Dump data as XML (default)",
+                $"  {DumpFormat.Json}: Dump data as JSON",
             };
         }
 
@@ -50,7 +65,7 @@ namespace Alkahest.Commands
 
             var input = args[0];
 
-            _log.Basic("Dumping {0} as JSON...", input);
+            _log.Basic("Dumping {0} as {1} to directory {2}...", input, _format, _output);
 
             Directory.CreateDirectory(_output);
 
@@ -62,6 +77,10 @@ namespace Alkahest.Commands
             {
                 MaxDegreeOfParallelism = _parallel ? Environment.ProcessorCount : 1,
             };
+            var settings = new XmlWriterSettings
+            {
+                Indent = true,
+            };
 
             Parallel.ForEach(dc.Root.GroupBy(x => x.Name), options, grp =>
             {
@@ -70,30 +89,54 @@ namespace Alkahest.Commands
                 Directory.CreateDirectory(dir);
                 Interlocked.Increment(ref directories);
 
-                var i = 0;
-
-                foreach (var elem in grp)
+                foreach (var (i, elem) in grp.WithIndex())
                 {
                     using (elem)
                     {
-                        using var writer = new JsonTextWriter(new StreamWriter(
-                            Path.Combine(dir, $"{grp.Key}-{i}.json")))
+                        switch (_format)
                         {
-                            Formatting = Formatting.Indented,
-                        };
+                            case DumpFormat.Xml:
+                            {
+                                using var writer = XmlWriter.Create(Path.Combine(
+                                    dir, $"{grp.Key}-{i}.xml"), settings);
 
-                        WriteElement(writer, elem);
-                        Interlocked.Increment(ref files);
+                                WriteElement(writer, elem);
+                                break;
+                            }
+                            case DumpFormat.Json:
+                            {
+                                using var writer = new JsonTextWriter(new StreamWriter(
+                                    Path.Combine(dir, $"{grp.Key}-{i}.json")))
+                                {
+                                    Formatting = Newtonsoft.Json.Formatting.Indented,
+                                };
+
+                                WriteElement(writer, elem);
+                                break;
+                            }
+                        }
                     }
 
-                    i++;
-                }
+                    Interlocked.Increment(ref files);
+                };
             });
 
-            _log.Basic("Dumped JSON files to directory {0} ({1} directories, {2} files)", _output,
-                directories, files);
+            _log.Basic("Dumped {0} directories and {1} files", directories, files);
 
             return 0;
+        }
+
+        static void WriteElement(XmlWriter writer, DataCenterElement element)
+        {
+            writer.WriteStartElement(element.Name);
+
+            foreach (var attr in element.Attributes)
+                writer.WriteAttributeString(attr.Name, attr.Value.ToString());
+
+            foreach (var elem in element)
+                WriteElement(writer, elem);
+
+            writer.WriteEndElement();
         }
 
         static void WriteElement(JsonWriter writer, DataCenterElement element)

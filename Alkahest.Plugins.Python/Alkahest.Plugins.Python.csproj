@@ -34,7 +34,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Python\example\__init__.py" />
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
@@ -108,10 +107,8 @@
   <Target Name="AfterBuild">
     <ItemGroup>
       <LibFiles Include="$(OutputPath)\Lib\**" />
-      <PythonFiles Include="Python\**" />
     </ItemGroup>
-    <Copy SourceFiles="@(LibFiles)" DestinationFiles="@(LibFiles->'$(OutputPath)\PythonLibs\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(LibFiles)" DestinationFiles="@(LibFiles->'$(OutputPath)\..\PythonLibs\%(RecursiveDir)%(Filename)%(Extension)')" />
     <RemoveDir Directories="$(OutputPath)\Lib" />
-    <Copy SourceFiles="@(PythonFiles)" DestinationFiles="@(PythonFiles->'$(OutputPath)\..\Python\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 </Project>

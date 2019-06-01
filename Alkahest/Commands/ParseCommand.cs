@@ -54,7 +54,7 @@ namespace Alkahest.Commands
         {
             Options = new OptionSet
             {
-                $"Usage: {Program.Name} {Name} [OPTIONS]",
+                $"Usage: {Program.Name} {Name} PKTFILE [OPTIONS]",
                 string.Empty,
                 "Available options:",
                 string.Empty,
@@ -70,17 +70,17 @@ namespace Alkahest.Commands
                 },
                 {
                     "e|header",
-                    $"Output packet log header information before parsing (defaults to `{_header}`)",
+                    $"Enable/disable printing the packet log header before parsing (defaults to `{_header}`)",
                     e => _header = e != null
                 },
                 {
                     "s|stats",
-                    $"Output parsing and analysis statistics before exiting (defaults to `{_stats}`)",
+                    $"Enable/disable printing parsing and analysis statistics before exiting (defaults to `{_stats}`)",
                     s => _stats = s != null
                 },
                 {
                     "u|summary",
-                    $"Output a summary of known and unknown packets before exiting (defaults to `{_summary}`)",
+                    $"Enable/disable printing a summary of known and unknown packets before exiting (defaults to `{_summary}`)",
                     u => _summary = u != null
                 },
                 {
@@ -115,12 +115,12 @@ namespace Alkahest.Commands
                 },
                 {
                     "w|allow-white-space",
-                    $"Enable/disable showing strings consisting only of white space (defaults to `{_whiteSpace}`)",
+                    $"Enable/disable showing potential strings consisting only of white space (defaults to `{_whiteSpace}`)",
                     w => _whiteSpace = w != null
                 },
                 {
                     "c|allow-control-chars",
-                    $"Enable/disable showing strings containing control characters (defaults to `{_control}`)",
+                    $"Enable/disable showing potential strings containing control characters (defaults to `{_control}`)",
                     c => _control = c != null
                 },
                 string.Empty,

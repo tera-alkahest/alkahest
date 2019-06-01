@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 
@@ -31,12 +30,10 @@ namespace Alkahest.Scanner
 
             var count = reader.Read<uint>((int)o + _pattern.TakeWhile(x => x != null).Count());
             var func = reader.GetDelegate<GetMessageNameFunc>((int)o);
-            var list = new List<Tuple<ushort, string>>();
+            var list = Enumerable.Range(0, (int)count).Cast<uint>().Select(
+                x => Tuple.Create((ushort)x, Marshal.PtrToStringUni(func(x)))).ToArray();
 
-            for (ushort i = 0; i < count; i++)
-                list.Add(Tuple.Create(i, Marshal.PtrToStringUni(func(i))));
-
-            channel.LogBasic("Found {0} system messages", list.Count);
+            channel.LogBasic("Found {0} system messages", list.Length);
 
             channel.SystemMessages = list;
         }

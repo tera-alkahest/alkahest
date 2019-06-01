@@ -30,14 +30,27 @@
     </Compile>
     <Compile Include="AlkahestCommand.cs" />
     <Compile Include="Commands\DecryptCommand.cs" />
-    <Compile Include="Commands\DumpJsonCommand.cs" />
-    <Compile Include="Commands\DumpXmlCommand.cs" />
+    <Compile Include="Commands\DumpCommand.cs" />
+    <Compile Include="Commands\InfoCommand.cs" />
+    <Compile Include="Commands\InstallCommand.cs" />
     <Compile Include="Commands\ParseCommand.cs" />
+    <Compile Include="Commands\PurgeCommand.cs" />
     <Compile Include="Commands\ScanCommand.cs" />
+    <Compile Include="Commands\SearchCommand.cs" />
     <Compile Include="Commands\ServeCommand.cs" />
+    <Compile Include="Commands\UninstallCommand.cs" />
+    <Compile Include="Commands\UpdateCommand.cs" />
     <Compile Include="DefaultCommandException.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="ConsoleUtility.cs" />
+    <Compile Include="Extractor\DumpFormat.cs" />
+    <Compile Include="Packager\DataCenterAsset.cs" />
+    <Compile Include="Packager\AssetManager.cs" />
+    <Compile Include="Packager\GitHub.cs" />
+    <Compile Include="Packager\LocalPackage.cs" />
+    <Compile Include="Packager\Package.cs" />
+    <Compile Include="Packager\PackageKind.cs" />
+    <Compile Include="Packager\PackageManager.cs" />
     <Compile Include="Parser\AnalysisMode.cs" />
     <Compile Include="Parser\HexDumpMode.cs" />
     <Compile Include="Parser\PacketAnalysis.cs" />
@@ -86,6 +99,9 @@
     </PackageReference>
     <PackageReference Include="Mono.Options">
       <Version>5.3.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Octokit">
+      <Version>0.32.0</Version>
     </PackageReference>
     <PackageReference Include="SharpDisasm">
       <Version>1.1.11</Version>

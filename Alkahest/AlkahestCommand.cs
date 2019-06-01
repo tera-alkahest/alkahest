@@ -1,10 +1,10 @@
 using Alkahest.Core.Logging;
-using Alkahest.Core.Logging.Loggers;
 using Mono.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime;
+using Theraot.Collections;
 
 namespace Alkahest
 {
@@ -27,9 +27,7 @@ namespace Alkahest
         {
             Log.Level = Configuration.LogLevel;
             Log.TimestampFormat = Configuration.LogTimestampFormat;
-
-            foreach (var src in Configuration.DiscardLogSources)
-                Log.DiscardSources.Add(src);
+            Log.DiscardSources.AddRange(Configuration.DiscardLogSources);
 
             if (Configuration.Loggers.Contains(ConsoleLogger.Name))
                 Log.Loggers.Add(new ConsoleLogger(Configuration.ColorsEnabled, Configuration.ErrorColor,

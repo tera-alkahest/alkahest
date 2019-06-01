@@ -1,3 +1,4 @@
+using Alkahest.Core.Collections;
 using Alkahest.Core.Logging;
 using System;
 using System.Collections.Generic;
@@ -157,8 +158,8 @@ namespace Alkahest.Core.Net
 
                     req.Headers.Clear();
 
-                    foreach (var hdr in request.Headers)
-                        req.Headers.Add(hdr.Key, hdr.Value);
+                    foreach (var (name, values) in request.Headers.Tuples())
+                        req.Headers.Add(name, values);
 
                     req.Headers.Host = _parameters.Uri.Authority;
 

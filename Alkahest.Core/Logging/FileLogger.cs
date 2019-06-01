@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace Alkahest.Core.Logging.Loggers
+namespace Alkahest.Core.Logging
 {
     public sealed class FileLogger : IDisposable, ILogger
     {

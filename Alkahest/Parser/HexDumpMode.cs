@@ -1,6 +1,6 @@
 namespace Alkahest.Parser
 {
-    public enum HexDumpMode
+    enum HexDumpMode
     {
         None,
         Unknown,
