@@ -49,10 +49,14 @@ namespace Alkahest.Commands
             if (_cleanup)
             {
                 var sls = ServerListParameters.Uris[Configuration.Region];
+                var slsPort = Configuration.ServerListPort;
+
+                if (slsPort == 0)
+                    slsPort = sls.Port;
 
                 using var hostsMgr = Configuration.AdjustHostsFile ? new HostsFileManager() : null;
                 using var certMgr = Configuration.AdjustCertificateStore && sls.Scheme == Uri.UriSchemeHttps ?
-                    new CertificateManager(Configuration.ServerListPort) : null;
+                    new CertificateManager(slsPort) : null;
 
                 hostsMgr?.RemoveEntry(sls.Host, Configuration.ServerListBaseAddress);
 

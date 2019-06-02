@@ -126,7 +126,7 @@ namespace Alkahest.Core.Net
             if (check && proc.ExitCode != 0)
                 throw new InvalidOperationException(
                     $"{_exePath} failed with exit code {proc.ExitCode}:{Environment.NewLine}" +
-                    proc.StandardError.ReadToEnd());
+                    proc.StandardOutput.ReadToEnd().Trim());
         }
     }
 }
