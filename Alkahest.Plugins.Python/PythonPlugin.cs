@@ -160,7 +160,7 @@ namespace Alkahest.Plugins.Python
             };
 
             foreach (var type in types)
-                clr.AddReference(type.Assembly.FullName);
+                clr.AddReferenceToFileAndPath(type.Assembly.Location);
 
             foreach (var dir in Directory.EnumerateDirectories(pkg))
             {
