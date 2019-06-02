@@ -102,6 +102,7 @@ namespace Alkahest.Plugins.Python
             var types = new[]
             {
                 typeof(Assert),                 // Alkahest.Core.dll
+                typeof(PythonPlugin),           // alkahest-python
                 typeof(RuntimeBinderException), // Microsoft.CSharp.dll
                 typeof(JSObject),               // Microsoft.JScript.dll
                 typeof(TriState),               // Microsoft.VisualBasic.dll

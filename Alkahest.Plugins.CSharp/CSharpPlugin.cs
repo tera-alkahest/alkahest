@@ -95,6 +95,7 @@ namespace Alkahest.Plugins.CSharp
             var types = new[]
             {
                 typeof(Assert),                 // Alkahest.Core.dll
+                typeof(CSharpPlugin),           // alkahest-csharp
                 typeof(RuntimeBinderException), // Microsoft.CSharp.dll
                 typeof(JSObject),               // Microsoft.JScript.dll
                 typeof(TriState),               // Microsoft.VisualBasic.dll
