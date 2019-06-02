@@ -65,9 +65,10 @@ namespace Alkahest.Plugins.Python
 
         static readonly Log _log = new Log(typeof(PythonPlugin));
 
-        readonly List<(string, CompiledCode, Log)> _scripts = new List<(string, CompiledCode, Log)>();
+        readonly List<(string, CompiledCode, PythonScriptContext)> _scripts =
+            new List<(string, CompiledCode, PythonScriptContext)>();
 
-        public void Start(GameProxy[] proxies)
+        public void Start(PluginContext context, GameProxy[] proxies)
         {
             var pkg = Configuration.PackageDirectory;
 
@@ -191,16 +192,17 @@ namespace Alkahest.Plugins.Python
                     continue;
                 }
 
-                _scripts.Add((name, script, new Log(typeof(PythonPlugin), name)));
+                _scripts.Add((name, script, new PythonScriptContext(context.Data,
+                    new Log(typeof(PythonPlugin), name))));
             }
 
             var count = 0;
 
-            foreach (var (name, code, log) in _scripts)
+            foreach (var (name, code, ctx) in _scripts)
             {
                 try
                 {
-                    ((dynamic)code.DefaultScope).__start__(proxies.ToArray(), log);
+                    ((dynamic)code.DefaultScope).__start__(ctx, proxies.ToArray());
                 }
                 catch (Exception e) when (!Debugger.IsAttached)
                 {
@@ -218,15 +220,15 @@ namespace Alkahest.Plugins.Python
             _log.Basic("Started {0} packages", count);
         }
 
-        public void Stop(GameProxy[] proxies)
+        public void Stop(PluginContext context, GameProxy[] proxies)
         {
             var count = 0;
 
-            foreach (var (name, code, log) in _scripts)
+            foreach (var (name, code, ctx) in _scripts)
             {
                 try
                 {
-                    ((dynamic)code.DefaultScope).__stop__(proxies.ToArray(), log);
+                    ((dynamic)code.DefaultScope).__stop__(ctx, proxies.ToArray());
                 }
                 catch (Exception e) when (!Debugger.IsAttached)
                 {

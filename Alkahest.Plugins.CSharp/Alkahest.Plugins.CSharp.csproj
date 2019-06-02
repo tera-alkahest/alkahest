@@ -27,6 +27,7 @@
     </Compile>
     <Compile Include="Configuration.cs" />
     <Compile Include="CSharpPlugin.cs" />
+    <Compile Include="CSharpScriptContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="alkahest-csharp.dll.config">

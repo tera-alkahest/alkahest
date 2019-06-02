@@ -1,4 +1,5 @@
 using Alkahest.Core;
+using Alkahest.Core.Data;
 using Alkahest.Core.Logging;
 using Alkahest.Core.Net;
 using Alkahest.Core.Net.Game;
@@ -6,6 +7,7 @@ using Alkahest.Core.Net.Game.Serialization;
 using Alkahest.Core.Plugins;
 using Mono.Options;
 using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -118,8 +120,11 @@ namespace Alkahest.Commands
                 foreach (var proxy in proxies)
                     proxy.Start();
 
-                var loader = new PluginLoader(Configuration.PluginDirectory, Configuration.PluginPattern,
-                    Configuration.DisablePlugins);
+                var path = Path.ChangeExtension(Path.Combine(Configuration.AssetDirectory,
+                    DataCenter.FileNames[region]), ".dec");
+                var loader = new PluginLoader(new PluginContext(File.Exists(path) ?
+                    new DataCenter(path) : new DataCenter()), Configuration.PluginDirectory,
+                    Configuration.PluginPattern, Configuration.DisablePlugins);
 
                 loader.Start(proxies);
 

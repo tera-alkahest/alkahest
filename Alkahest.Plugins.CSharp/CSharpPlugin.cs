@@ -79,9 +79,10 @@ namespace Alkahest.Plugins.CSharp
 
         static readonly Log _log = new Log(typeof(CSharpPlugin));
 
-        readonly List<(string, Type, Log)> _scripts = new List<(string, Type, Log)>();
+        readonly List<(string, Type, CSharpScriptContext)> _scripts =
+            new List<(string, Type, CSharpScriptContext)>();
 
-        public void Start(GameProxy[] proxies)
+        public void Start(PluginContext context, GameProxy[] proxies)
         {
             var pkg = Configuration.PackageDirectory;
 
@@ -207,16 +208,17 @@ namespace Alkahest.Plugins.CSharp
             var asm = Assembly.Load(stream.ToArray());
 
             foreach (var (name, typeName) in typeNames)
-                _scripts.Add((name, asm.GetType(typeName), new Log(typeof(CSharpPlugin), name)));
+                _scripts.Add((name, asm.GetType(typeName), new CSharpScriptContext(context.Data,
+                    new Log(typeof(CSharpPlugin), name))));
 
             var count = 0;
 
-            foreach (var (name, type, log) in _scripts)
+            foreach (var (name, type, ctx) in _scripts)
             {
                 try
                 {
                     type.GetMethod(StartName, MethodFlags).Invoke(null,
-                        new object[] { proxies.ToArray(), log });
+                        new object[] { ctx, proxies.ToArray() });
                 }
                 catch (Exception e) when (!Debugger.IsAttached)
                 {
@@ -234,16 +236,16 @@ namespace Alkahest.Plugins.CSharp
             _log.Basic("Started {0} packages", count);
         }
 
-        public void Stop(GameProxy[] proxies)
+        public void Stop(PluginContext context, GameProxy[] proxies)
         {
             var count = 0;
 
-            foreach (var (name, type, log) in _scripts)
+            foreach (var (name, type, ctx) in _scripts)
             {
                 try
                 {
                     type.GetMethod(StopName, MethodFlags).Invoke(null,
-                        new object[] { proxies.ToArray(), log });
+                        new object[] { ctx, proxies.ToArray() });
                 }
                 catch (Exception e) when (!Debugger.IsAttached)
                 {

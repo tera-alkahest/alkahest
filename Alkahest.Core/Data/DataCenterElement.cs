@@ -3,16 +3,26 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace Alkahest.Core.Data
 {
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public sealed class DataCenterElement : IEnumerable<DataCenterElement>, IDisposable
     {
-        public DataCenterElement Parent { get; private set; }
+        object _parent;
 
         public string Name { get; }
 
-        public IReadOnlyList<DataCenterAttribute> Attributes
+        Lazy<IReadOnlyDictionary<string, DataCenterValue>> _attributes;
+
+        Lazy<IReadOnlyList<DataCenterElement>> _children;
+
+        public DataCenter Center => _parent is DataCenter dc ? dc : ((DataCenterElement)_parent).Center;
+
+        public DataCenterElement Parent => _parent is DataCenter ? null : (DataCenterElement)_parent;
+
+        public IReadOnlyDictionary<string, DataCenterValue> Attributes
         {
             get
             {
@@ -23,14 +33,22 @@ namespace Alkahest.Core.Data
             }
         }
 
-        public DataCenterAttribute this[string name] => Attribute(name);
-
-        Lazy<IReadOnlyList<DataCenterAttribute>> _attributes;
-
-        Lazy<IReadOnlyList<DataCenterElement>> _children;
+        public DataCenterValue this[string name] => Attribute(name);
 
         internal DataCenterElement(DataCenter center, DataCenterAddress address)
         {
+            // Are we creating a dummy root element?
+            if (center.Names == null)
+            {
+                Name = "__root__";
+                _attributes = new Lazy<IReadOnlyDictionary<string, DataCenterValue>>(
+                    () => new Dictionary<string, DataCenterValue>());
+                _children = new Lazy<IReadOnlyList<DataCenterElement>>(
+                    () => new List<DataCenterElement>());
+
+                return;
+            }
+
             ushort attrCount;
             ushort childCount;
             DataCenterAddress attrAddr;
@@ -66,9 +84,9 @@ namespace Alkahest.Core.Data
                 center.Lock.ExitReadLock();
             }
 
-            _attributes = new Lazy<IReadOnlyList<DataCenterAttribute>>(() =>
+            _attributes = new Lazy<IReadOnlyDictionary<string, DataCenterValue>>(() =>
             {
-                var attributes = new List<DataCenterAttribute>();
+                var attributes = new Dictionary<string, DataCenterValue>();
 
                 try
                 {
@@ -89,10 +107,16 @@ namespace Alkahest.Core.Data
 
                         var typeCode = (DataCenterTypeCode)attrReader.ReadUInt16();
 
-                        if (typeCode != DataCenterTypeCode.Int32 &&
-                            typeCode != DataCenterTypeCode.Single &&
-                            typeCode != DataCenterTypeCode.Boolean)
-                            typeCode = DataCenterTypeCode.String;
+                        switch (typeCode)
+                        {
+                            case DataCenterTypeCode.Int32:
+                            case DataCenterTypeCode.Single:
+                            case DataCenterTypeCode.Boolean:
+                                break;
+                            default:
+                                typeCode = DataCenterTypeCode.String;
+                                break;
+                        }
 
                         var primitiveValue = attrReader.ReadInt32();
                         string stringValue = null;
@@ -106,7 +130,7 @@ namespace Alkahest.Core.Data
                             stringValue = center.GetString(strAddr);
                         }
 
-                        attributes.Add(new DataCenterAttribute(center.Names[attrNameIndex], typeCode,
+                        attributes.Add(center.Names[attrNameIndex], new DataCenterValue(typeCode,
                             primitiveValue, stringValue));
                     }
                 }
@@ -131,7 +155,7 @@ namespace Alkahest.Core.Data
                     {
                         children.Add(new DataCenterElement(center, addr)
                         {
-                            Parent = this,
+                            _parent = this,
                         });
                     }
                     catch (DataCenterPlaceholderException)
@@ -145,6 +169,9 @@ namespace Alkahest.Core.Data
 
         public void Dispose()
         {
+            if (Center.IsFrozen)
+                throw new InvalidOperationException("Data center is frozen.");
+
             _attributes = null;
             _children = null;
         }
@@ -162,12 +189,12 @@ namespace Alkahest.Core.Data
             return GetEnumerator();
         }
 
-        public DataCenterAttribute Attribute(string name)
+        public DataCenterValue Attribute(string name)
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
 
-            return Attributes.SingleOrDefault(x => x.Name == name);
+            return Attributes.GetValueOrDefault(name);
         }
 
         public DataCenterElement Child(string name)

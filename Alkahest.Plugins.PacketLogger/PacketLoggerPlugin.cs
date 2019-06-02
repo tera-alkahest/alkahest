@@ -16,7 +16,7 @@ namespace Alkahest.Plugins.PacketLogger
 
         PacketLogWriter _writer;
 
-        public void Start(GameProxy[] proxies)
+        public void Start(PluginContext context, GameProxy[] proxies)
         {
             var serializer = proxies.First().Processor.Serializer;
 
@@ -31,7 +31,7 @@ namespace Alkahest.Plugins.PacketLogger
             _log.Basic("Packet logger plugin started");
         }
 
-        public void Stop(GameProxy[] proxies)
+        public void Stop(PluginContext context, GameProxy[] proxies)
         {
             foreach (var proxy in proxies)
                 proxy.Processor.RemoveRawHandler(PacketLogHandler);

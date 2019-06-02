@@ -27,10 +27,12 @@ extension) as needed. All script packages are compiled together into the same
 
 A package must have at least a file called `Main.cs`. This file must contain a
 class exposing the special `__Start__` and `__Stop__` methods. These are invoked
-on startup and shutdown, respectively, and receive an array of
-`Alkahest.Core.Net.Game.GameProxy` objects as well as an
-`Alkahest.Core.Logging.Log` object created specifically for the current package.
-All logging should go through the log object passed to these functions, rather
+on startup and shutdown, respectively, and receive an
+`Alkahest.Plugins.CSharp.CSharpScriptContext` object as well as an array of
+`Alkahest.Core.Net.Game.GameProxy` objects. The context object exposes a `Data`
+property, which is an `Alkahest.Core.Data.DataCenter` object, as well as a `Log`
+property, which is an `Alkahest.Core.Logging.Log` object created specifically
+for this script package. All logging should go through this log object rather
 than normal console I/O.
 
 A reference to the `Alkahest.Core` assembly is added automatically, so you can

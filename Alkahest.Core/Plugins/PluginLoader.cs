@@ -16,16 +16,23 @@ namespace Alkahest.Core.Plugins
 
         static readonly Log _log = new Log(typeof(PluginLoader));
 
+        public PluginContext Context { get; }
+
         public IReadOnlyCollection<IPlugin> Plugins => _plugins;
 
         readonly IPlugin[] _plugins;
 
-        public PluginLoader(string directory, string pattern, string[] exclude)
+        public PluginLoader(PluginContext context, string directory, string pattern, string[] exclude)
         {
+            Context = context ?? throw new ArgumentNullException(nameof(context));
+
             Directory.CreateDirectory(directory);
 
             using var container = new CompositionContainer(
                 new DirectoryCatalog(directory, pattern), true);
+
+            if (exclude == null)
+                exclude = Array.Empty<string>();
 
             _plugins = container.GetExports<IPlugin>().Select(x => x.Value)
                 .Where(x => !exclude.Contains(x.Name)).ToArray();
@@ -74,9 +81,11 @@ namespace Alkahest.Core.Plugins
         {
             CheckProxies(proxies);
 
+            Context.Data.Freeze();
+
             foreach (var p in _plugins)
             {
-                p.Start(proxies.ToArray());
+                p.Start(Context, proxies.ToArray());
 
                 _log.Info("Started plugin {0}", p.Name);
             }
@@ -90,10 +99,12 @@ namespace Alkahest.Core.Plugins
 
             foreach (var p in _plugins)
             {
-                p.Stop(proxies.ToArray());
+                p.Stop(Context, proxies.ToArray());
 
                 _log.Info("Stopped plugin {0}", p.Name);
             }
+
+            Context.Data.Thaw();
         }
     }
 }

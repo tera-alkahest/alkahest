@@ -8,8 +8,8 @@ namespace Alkahest.Core.Plugins
     {
         string Name { get; }
 
-        void Start(GameProxy[] proxies);
+        void Start(PluginContext context, GameProxy[] proxies);
 
-        void Stop(GameProxy[] proxies);
+        void Stop(PluginContext context, GameProxy[] proxies);
     }
 }

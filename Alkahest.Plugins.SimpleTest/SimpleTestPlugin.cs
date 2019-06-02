@@ -34,7 +34,7 @@ namespace Alkahest.Plugins.SimpleTest
             };
         }
 
-        public void Start(GameProxy[] proxies)
+        public void Start(PluginContext context, GameProxy[] proxies)
         {
             foreach (var proc in proxies.Select(x => x.Processor))
             {
@@ -48,7 +48,7 @@ namespace Alkahest.Plugins.SimpleTest
             _log.Basic("Simple test plugin started");
         }
 
-        public void Stop(GameProxy[] proxies)
+        public void Stop(PluginContext context, GameProxy[] proxies)
         {
             foreach (var proc in proxies.Select(x => x.Processor))
             {

@@ -31,7 +31,7 @@
     <Compile Include="Cryptography\PaddingCryptoTransform.cs" />
     <Compile Include="Data\DataCenter.cs" />
     <Compile Include="Data\DataCenterAddress.cs" />
-    <Compile Include="Data\DataCenterAttribute.cs" />
+    <Compile Include="Data\DataCenterValue.cs" />
     <Compile Include="Data\DataCenterElement.cs" />
     <Compile Include="Data\DataCenterFooter.cs" />
     <Compile Include="Data\DataCenterHeader.cs" />
@@ -250,6 +250,7 @@
     <Compile Include="Net\ServerListRequestHandler.cs" />
     <Compile Include="Net\SocketDisconnectedException.cs" />
     <Compile Include="Plugins\IPlugin.cs" />
+    <Compile Include="Plugins\PluginContext.cs" />
     <Compile Include="Plugins\PluginException.cs" />
     <Compile Include="Plugins\PluginLoader.cs" />
     <Compile Include="Cryptography\GameSHA1.cs" />
@@ -339,6 +340,9 @@
     </PackageReference>
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe">
       <Version>4.5.2</Version>
+    </PackageReference>
+    <PackageReference Include="Theraot.Core">
+      <Version>3.0.2</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -39,13 +39,15 @@ namespace Alkahest.Core.Data
 
         public DataCenterFooter Footer { get; }
 
-        public DataCenterElement Root { get; }
+        public DataCenterElement Root { get; private set; }
 
         internal DataCenterSegmentedRegion Attributes { get; private set; }
 
         internal DataCenterSegmentedRegion Elements { get; private set; }
 
         internal IReadOnlyList<string> Names { get; private set; }
+
+        internal bool IsFrozen { get; private set; }
 
         internal bool IsDisposed { get; private set; }
 
@@ -55,6 +57,13 @@ namespace Alkahest.Core.Data
             new ConcurrentDictionary<DataCenterAddress, string>();
 
         DataCenterSegmentedRegion _stringRegion;
+
+        public DataCenter()
+        {
+            Header = new DataCenterHeader(0, 0, 0, 0, 0, 0, 0, 0);
+            Footer = new DataCenterFooter(0);
+            Root = new DataCenterElement(this, DataCenterAddress.Zero);
+        }
 
         public unsafe DataCenter(string fileName)
         {
@@ -76,22 +85,25 @@ namespace Alkahest.Core.Data
             var nameAddressRegion = ReadSimpleRegion(reader, true, (uint)sizeof(DataCenterAddress));
 
             Footer = ReadFooter(reader);
-
             Attributes = attributeRegion;
             Elements = elementRegion;
             Names = ReadAddresses(nameAddressRegion).Select(x => ReadString(nameRegion, x)).ToArray();
 
-            Root = new DataCenterElement(this, DataCenterAddress.Zero);
+            Reset();
         }
 
         public void Dispose()
         {
+            if (IsFrozen)
+                throw new InvalidOperationException("Data center is frozen.");
+
             try
             {
                 Lock.EnterWriteLock();
 
                 IsDisposed = true;
 
+                Root = null;
                 Attributes = null;
                 Elements = null;
                 Names = null;
@@ -102,6 +114,27 @@ namespace Alkahest.Core.Data
             {
                 Lock.ExitWriteLock();
             }
+        }
+
+        internal void Freeze()
+        {
+            IsFrozen = true;
+        }
+
+        internal void Thaw()
+        {
+            IsFrozen = false;
+        }
+
+        public void Reset()
+        {
+            if (IsDisposed)
+                throw new ObjectDisposedException(GetType().FullName);
+
+            if (IsFrozen)
+                throw new InvalidOperationException("Data center is frozen.");
+
+            Root = new DataCenterElement(this, DataCenterAddress.Zero);
         }
 
         internal string GetString(DataCenterAddress address)

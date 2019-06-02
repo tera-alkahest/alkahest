@@ -130,8 +130,8 @@ namespace Alkahest.Commands
         {
             writer.WriteStartElement(element.Name);
 
-            foreach (var attr in element.Attributes)
-                writer.WriteAttributeString(attr.Name, attr.Value.ToString());
+            foreach (var (name, attr) in element.Attributes.Tuples())
+                writer.WriteAttributeString(name, attr.Value.ToString());
 
             foreach (var elem in element)
                 WriteElement(writer, elem);
@@ -143,9 +143,9 @@ namespace Alkahest.Commands
         {
             writer.WriteStartObject();
 
-            foreach (var attr in element.Attributes)
+            foreach (var (name, attr) in element.Attributes.Tuples())
             {
-                writer.WritePropertyName(attr.Name);
+                writer.WritePropertyName(name);
 
                 switch (attr.TypeCode)
                 {
