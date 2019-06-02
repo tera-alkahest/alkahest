@@ -44,6 +44,7 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="ConsoleUtility.cs" />
     <Compile Include="Extractor\DumpFormat.cs" />
+    <Compile Include="Packager\AssetKind.cs" />
     <Compile Include="Packager\DataCenterAsset.cs" />
     <Compile Include="Packager\AssetManager.cs" />
     <Compile Include="Packager\GitHub.cs" />

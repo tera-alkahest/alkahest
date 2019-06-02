@@ -33,9 +33,7 @@ namespace Alkahest.Commands
 
         protected override int Invoke(string[] args)
         {
-            var assets = new AssetManager();
-
-            assets.Update();
+            new AssetManager().UpdateAll();
 
             var mgr = new PackageManager();
             var pkgs = new HashSet<LocalPackage>();

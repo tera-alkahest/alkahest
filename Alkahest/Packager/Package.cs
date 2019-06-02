@@ -84,6 +84,18 @@ namespace Alkahest.Packager
             }
         }
 
+        IReadOnlyList<AssetKind> _assets;
+
+        public IReadOnlyList<AssetKind> Assets
+        {
+            get
+            {
+                PopulateDetails();
+
+                return _assets;
+            }
+        }
+
         public Package(JObject obj)
         {
             Kind = (PackageKind)Enum.Parse(typeof(PackageKind), (string)obj["kind"], true);
@@ -116,6 +128,8 @@ namespace Alkahest.Packager
             _files = details["files"].Select(x => (string)x).ToList();
             _dependencies = (details["dependencies"] ?? new JArray()).Select(x => (string)x).ToList();
             _conflicts = (details["conflicts"] ?? new JArray()).Select(x => (string)x).ToList();
+            _assets = (details["assets"] ?? new JArray()).Select(
+                x => (AssetKind)Enum.Parse(typeof(AssetKind), (string)x)).ToList();
         }
 
         public static string GetPath(PackageKind kind, string name)

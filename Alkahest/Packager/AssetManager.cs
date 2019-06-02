@@ -29,7 +29,7 @@ namespace Alkahest.Packager
                 _dc = new DataCenterAsset(assets, (JObject)obj);
         }
 
-        void UpdateDataCenter()
+        public void UpdateDataCenter()
         {
             if (_dc == null)
                 return;
@@ -46,10 +46,8 @@ namespace Alkahest.Packager
                 _log.Info("Asset {0} is up to date", _dc.File);
         }
 
-        public void Update()
+        public void UpdateAll()
         {
-            _log.Basic("Checking for asset updates...");
-
             UpdateDataCenter();
         }
     }
