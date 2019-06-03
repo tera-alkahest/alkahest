@@ -220,15 +220,21 @@ namespace Alkahest.Core.Data
 
         public override bool Equals(object obj)
         {
-            return obj switch
+            switch (obj)
             {
-                DataCenterValue o => this == o,
-                int i => this == i,
-                float f => this == f,
-                string s => this == s,
-                bool b => this == b,
-                _ => false,
-            };
+                case DataCenterValue v:
+                    return this == v;
+                case int i:
+                    return this == i;
+                case float f:
+                    return this == f;
+                case string s:
+                    return this == s;
+                case bool b:
+                    return this == b;
+                default:
+                    return false;
+            }
         }
 
         public override string ToString()
@@ -272,15 +278,24 @@ namespace Alkahest.Core.Data
 
         public static bool operator ==(DataCenterValue left, DataCenterValue right)
         {
-            return left.TypeCode == right.TypeCode && left.TypeCode switch
+            if (left.TypeCode != right.TypeCode)
+                return false;
+
+            switch (left.TypeCode)
             {
-                DataCenterTypeCode.None => true,
-                DataCenterTypeCode.Int32 => left.AsInt32 == right.AsInt32,
-                DataCenterTypeCode.Single => left.AsSingle == right.AsSingle,
-                DataCenterTypeCode.String => left.AsString == right.AsString,
-                DataCenterTypeCode.Boolean => left.AsBoolean == right.AsBoolean,
-                _ => throw Assert.Unreachable(),
-            };
+                case DataCenterTypeCode.None:
+                    return true;
+                case DataCenterTypeCode.Int32:
+                    return left.AsInt32 == right.AsInt32;
+                case DataCenterTypeCode.Single:
+                    return left.AsSingle == right.AsSingle;
+                case DataCenterTypeCode.String:
+                    return left.AsString == right.AsString;
+                case DataCenterTypeCode.Boolean:
+                    return left.AsBoolean == right.AsBoolean;
+                default:
+                    throw Assert.Unreachable();
+            }
         }
 
         public static bool operator !=(DataCenterValue left, DataCenterValue right)
