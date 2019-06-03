@@ -8,13 +8,18 @@ using System.Reflection;
 
 namespace Alkahest
 {
-    static class Program
+    sealed class Program : MarshalByRefObject
     {
         static readonly Log _log = new Log(typeof(Program));
 
         public static string Name { get; } = Assembly.GetExecutingAssembly().GetName().Name;
 
-        static int Main(string[] args)
+        public override object InitializeLifetimeService()
+        {
+            return null;
+        }
+
+        int RealMain(string[] args)
         {
             static string Default(string str)
             {
@@ -80,6 +85,20 @@ namespace Alkahest
                 _log.Error("{0}", ex);
                 return 1;
             }
+        }
+
+        static int Main(string[] args)
+        {
+            var domain = AppDomain.CreateDomain(nameof(Alkahest), null, new AppDomainSetup
+            {
+                ApplicationBase = AppDomain.CurrentDomain.BaseDirectory,
+                PrivateBinPath = Configuration.PluginDirectory,
+            });
+
+            var program = (Program)domain.CreateInstanceAndUnwrap(
+                Assembly.GetExecutingAssembly().FullName, typeof(Program).FullName);
+
+            return program.RealMain(args);
         }
     }
 }
