@@ -91,7 +91,6 @@ namespace Alkahest
         {
             var domain = AppDomain.CreateDomain(nameof(Alkahest), null, new AppDomainSetup
             {
-                ApplicationBase = AppDomain.CurrentDomain.BaseDirectory,
                 PrivateBinPath = Configuration.PluginDirectory,
             });
 
