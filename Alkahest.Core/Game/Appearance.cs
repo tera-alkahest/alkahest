@@ -66,14 +66,14 @@ namespace Alkahest.Core.Game
                 $"HairStyle: {HairStyle}, HairColor: {HairColor}, Voice: {Voice}, Tattoos: {Tattoos}]";
         }
 
-        public static bool operator ==(Appearance a, Appearance b)
+        public static bool operator ==(Appearance left, Appearance right)
         {
-            return a.Equals(b);
+            return left.Equals(right);
         }
 
-        public static bool operator !=(Appearance a, Appearance b)
+        public static bool operator !=(Appearance left, Appearance right)
         {
-            return !a.Equals(b);
+            return !left.Equals(right);
         }
     }
 }

@@ -46,14 +46,14 @@ namespace Alkahest.Core.Game
             return $"[Raw: {Raw:X16}, Id: {Id}, Flags: {Flags}]";
         }
 
-        public static bool operator ==(GameId a, GameId b)
+        public static bool operator ==(GameId left, GameId right)
         {
-            return a.Equals(b);
+            return left.Equals(right);
         }
 
-        public static bool operator !=(GameId a, GameId b)
+        public static bool operator !=(GameId left, GameId right)
         {
-            return !a.Equals(b);
+            return !left.Equals(right);
         }
     }
 }

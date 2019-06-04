@@ -106,27 +106,44 @@ namespace Alkahest.Core.Data
 
         public bool Equals(DataCenterValue other)
         {
-            return this == other;
+            if (TypeCode != other.TypeCode)
+                return false;
+
+            switch (TypeCode)
+            {
+                case DataCenterTypeCode.None:
+                    return true;
+                case DataCenterTypeCode.Int32:
+                    return AsInt32 == other.AsInt32;
+                case DataCenterTypeCode.Single:
+                    return AsSingle == other.AsSingle;
+                case DataCenterTypeCode.String:
+                    return AsString == other.AsString;
+                case DataCenterTypeCode.Boolean:
+                    return AsBoolean == other.AsBoolean;
+                default:
+                    throw Assert.Unreachable();
+            }
         }
 
         public bool Equals(int other)
         {
-            return this == other;
+            return TypeCode == DataCenterTypeCode.Int32 && AsInt32 == other;
         }
 
         public bool Equals(float other)
         {
-            return this == other;
+            return TypeCode == DataCenterTypeCode.Single && AsSingle == other;
         }
 
         public bool Equals(string other)
         {
-            return this == other;
+            return TypeCode == DataCenterTypeCode.String && AsString == other;
         }
 
         public bool Equals(bool other)
         {
-            return this == other;
+            return TypeCode == DataCenterTypeCode.Boolean && AsBoolean == other;
         }
 
         public int ToInt32()
@@ -223,15 +240,15 @@ namespace Alkahest.Core.Data
             switch (obj)
             {
                 case DataCenterValue v:
-                    return this == v;
+                    return Equals(v);
                 case int i:
-                    return this == i;
+                    return Equals(i);
                 case float f:
-                    return this == f;
+                    return Equals(f);
                 case string s:
-                    return this == s;
+                    return Equals(s);
                 case bool b:
-                    return this == b;
+                    return Equals(b);
                 default:
                     return false;
             }
@@ -278,69 +295,52 @@ namespace Alkahest.Core.Data
 
         public static bool operator ==(DataCenterValue left, DataCenterValue right)
         {
-            if (left.TypeCode != right.TypeCode)
-                return false;
-
-            switch (left.TypeCode)
-            {
-                case DataCenterTypeCode.None:
-                    return true;
-                case DataCenterTypeCode.Int32:
-                    return left.AsInt32 == right.AsInt32;
-                case DataCenterTypeCode.Single:
-                    return left.AsSingle == right.AsSingle;
-                case DataCenterTypeCode.String:
-                    return left.AsString == right.AsString;
-                case DataCenterTypeCode.Boolean:
-                    return left.AsBoolean == right.AsBoolean;
-                default:
-                    throw Assert.Unreachable();
-            }
+            return left.Equals(right);
         }
 
         public static bool operator !=(DataCenterValue left, DataCenterValue right)
         {
-            return !(left == right);
+            return !left.Equals(right);
         }
 
         public static bool operator ==(DataCenterValue left, int right)
         {
-            return left.TypeCode == DataCenterTypeCode.Int32 && left.AsInt32 == right;
+            return left.Equals(right);
         }
 
         public static bool operator !=(DataCenterValue left, int right)
         {
-            return !(left == right);
+            return !left.Equals(right);
         }
 
         public static bool operator ==(DataCenterValue left, float right)
         {
-            return left.TypeCode == DataCenterTypeCode.Single && left.AsSingle == right;
+            return left.Equals(right);
         }
 
         public static bool operator !=(DataCenterValue left, float right)
         {
-            return !(left == right);
+            return !left.Equals(right);
         }
 
         public static bool operator ==(DataCenterValue left, string right)
         {
-            return left.TypeCode == DataCenterTypeCode.String && left.AsString == right;
+            return left.Equals(right);
         }
 
         public static bool operator !=(DataCenterValue left, string right)
         {
-            return !(left == right);
+            return !left.Equals(right);
         }
 
         public static bool operator ==(DataCenterValue left, bool right)
         {
-            return left.TypeCode == DataCenterTypeCode.Boolean && left.AsBoolean == right;
+            return left.Equals(right);
         }
 
         public static bool operator !=(DataCenterValue left, bool right)
         {
-            return !(left == right);
+            return !left.Equals(right);
         }
     }
 }

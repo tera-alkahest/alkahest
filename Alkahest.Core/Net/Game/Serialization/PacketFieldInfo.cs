@@ -46,7 +46,8 @@ namespace Alkahest.Core.Net.Game.Serialization
                 type == typeof(GameId) ||
                 type == typeof(SkillId) ||
                 type == typeof(Angle) ||
-                type == typeof(TemplateId);
+                type == typeof(TemplateId) ||
+                type == typeof(Appearance);
         }
     }
 }

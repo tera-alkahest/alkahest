@@ -30,7 +30,19 @@ namespace Alkahest.Core.Data
 
         public override int GetHashCode()
         {
-            return Bits.Compose(((uint)SegmentIndex, 0, 16), (ElementIndex, 16, 16)).GetHashCode();
+            return Bits.Compose(
+                ((uint)SegmentIndex, 0, 16),
+                (ElementIndex, 16, 16)).GetHashCode();
+        }
+
+        public static bool operator ==(DataCenterAddress a, DataCenterAddress b)
+        {
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(DataCenterAddress a, DataCenterAddress b)
+        {
+            return !a.Equals(b);
         }
     }
 }

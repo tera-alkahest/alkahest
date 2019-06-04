@@ -68,14 +68,14 @@ namespace Alkahest.Core.Game
                 $"Kind: {Kind}, IsNpc: {IsNpc}, Unknown: {Unknown}]";
         }
 
-        public static bool operator ==(SkillId a, SkillId b)
+        public static bool operator ==(SkillId left, SkillId right)
         {
-            return a.Equals(b);
+            return left.Equals(right);
         }
 
-        public static bool operator !=(SkillId a, SkillId b)
+        public static bool operator !=(SkillId left, SkillId right)
         {
-            return !a.Equals(b);
+            return !left.Equals(right);
         }
     }
 }

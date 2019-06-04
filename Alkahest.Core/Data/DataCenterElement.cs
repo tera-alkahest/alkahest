@@ -18,7 +18,7 @@ namespace Alkahest.Core.Data
 
         Lazy<IReadOnlyList<DataCenterElement>> _children;
 
-        public DataCenter Center => _parent is DataCenter dc ? dc : ((DataCenterElement)_parent).Center;
+        public DataCenter Center => _parent is DataCenterElement e ? e.Center : (DataCenter)_parent;
 
         public DataCenterElement Parent => _parent is DataCenter ? null : (DataCenterElement)_parent;
 
@@ -37,16 +37,21 @@ namespace Alkahest.Core.Data
 
         internal DataCenterElement(DataCenter center, DataCenterAddress address)
         {
-            // Are we creating a dummy root element?
-            if (center.Names == null)
+            if (address == DataCenterAddress.Zero)
             {
-                Name = "__root__";
-                _attributes = new Lazy<IReadOnlyDictionary<string, DataCenterValue>>(
-                    () => new Dictionary<string, DataCenterValue>());
-                _children = new Lazy<IReadOnlyList<DataCenterElement>>(
-                    () => new List<DataCenterElement>());
+                // Are we creating a dummy root element?
+                if (center.Names == null)
+                {
+                    Name = "__root__";
+                    _attributes = new Lazy<IReadOnlyDictionary<string, DataCenterValue>>(
+                        () => new Dictionary<string, DataCenterValue>());
+                    _children = new Lazy<IReadOnlyList<DataCenterElement>>(
+                        () => new List<DataCenterElement>());
 
-                return;
+                    return;
+                }
+
+                _parent = center;
             }
 
             ushort attrCount;

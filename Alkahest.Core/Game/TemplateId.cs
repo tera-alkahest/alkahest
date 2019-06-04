@@ -49,14 +49,14 @@ namespace Alkahest.Core.Game
             return $"[Raw: {Raw}, Race: {Race}, Gender: {Gender}, Class: {Class}]";
         }
 
-        public static bool operator ==(TemplateId a, TemplateId b)
+        public static bool operator ==(TemplateId left, TemplateId right)
         {
-            return a.Equals(b);
+            return left.Equals(right);
         }
 
-        public static bool operator !=(TemplateId a, TemplateId b)
+        public static bool operator !=(TemplateId left, TemplateId right)
         {
-            return !a.Equals(b);
+            return !left.Equals(right);
         }
     }
 }

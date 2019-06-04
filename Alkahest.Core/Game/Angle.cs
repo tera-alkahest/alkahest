@@ -54,34 +54,34 @@ namespace Alkahest.Core.Game
             return $"[Raw: {Raw}, Radians: {Radians}, Degrees: {Degrees}]";
         }
 
-        public static bool operator ==(Angle a, Angle b)
+        public static bool operator ==(Angle left, Angle right)
         {
-            return a.Equals(b);
+            return left.Equals(right);
         }
 
-        public static bool operator !=(Angle a, Angle b)
+        public static bool operator !=(Angle left, Angle right)
         {
-            return !a.Equals(b);
+            return !left.Equals(right);
         }
 
-        public static bool operator >(Angle a, Angle b)
+        public static bool operator >(Angle left, Angle right)
         {
-            return a.CompareTo(b) > 0;
+            return left.CompareTo(right) > 0;
         }
 
-        public static bool operator <(Angle a, Angle b)
+        public static bool operator <(Angle left, Angle right)
         {
-            return a.CompareTo(b) < 0;
+            return left.CompareTo(right) < 0;
         }
 
-        public static bool operator >=(Angle a, Angle b)
+        public static bool operator >=(Angle left, Angle right)
         {
-            return a.CompareTo(b) >= 0;
+            return left.CompareTo(right) >= 0;
         }
 
-        public static bool operator <=(Angle a, Angle b)
+        public static bool operator <=(Angle left, Angle right)
         {
-            return a.CompareTo(b) <= 0;
+            return left.CompareTo(right) <= 0;
         }
     }
 }

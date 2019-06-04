@@ -75,13 +75,16 @@ namespace Alkahest.Core.Data
 
             var attributeRegion = ReadSegmentedRegion(reader, AttributeSize);
             var elementRegion = ReadSegmentedRegion(reader, ElementSize);
-            var stringRegion = ReadSegmentedRegion(reader, sizeof(char));
+
+            _stringRegion = ReadSegmentedRegion(reader, sizeof(char));
 
             ReadSimpleSegmentedRegion(reader, 1024, Unknown2Size);
             ReadSimpleRegion(reader, true, (uint)sizeof(DataCenterAddress));
 
             var nameRegion = ReadSegmentedRegion(reader, sizeof(char));
+
             ReadSimpleSegmentedRegion(reader, 512, Unknown2Size);
+
             var nameAddressRegion = ReadSimpleRegion(reader, true, (uint)sizeof(DataCenterAddress));
 
             Footer = ReadFooter(reader);
