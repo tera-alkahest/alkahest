@@ -111,7 +111,6 @@
     <Compile Include="Net\Game\Packets\CNotifyLocationInDashPacket.cs" />
     <Compile Include="Net\Game\Packets\CNoTimelineSkillPacket.cs" />
     <Compile Include="Net\Game\Packets\CPartyMarkerPacket.cs" />
-    <Compile Include="Net\Game\Packets\CPCBangInventoryUseSlotPacket.cs" />
     <Compile Include="Net\Game\Packets\CPlayerFlyingLocationPacket.cs" />
     <Compile Include="Net\Game\Packets\CPlayerLocationPacket.cs" />
     <Compile Include="Net\Game\Packets\CPongPacket.cs" />
