@@ -2,6 +2,8 @@ using Alkahest.Core.Logging;
 using EasyHook;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Runtime.Remoting;
 using System.Threading;
 
@@ -23,26 +25,33 @@ namespace Alkahest.Scanner
             return RemoteHooking.IpcConnectClient<IpcChannel>(name);
         }
 
+        static readonly Log _log = new Log(typeof(IpcChannel));
+
+        readonly AutoResetEvent _event = new AutoResetEvent(false);
+
+        string _output;
+
         public override object InitializeLifetimeService()
         {
             return null;
         }
 
-        static readonly Log _log = new Log(typeof(IpcChannel));
+        public void SetOutputDirectory(string directory)
+        {
+            Directory.CreateDirectory(directory);
 
-        readonly ManualResetEventSlim _event = new ManualResetEventSlim();
+            _output = directory;
+        }
 
-        public uint? Version1 { get; set; }
+        public void Wait()
+        {
+            _event.WaitOne();
+        }
 
-        public uint? Version2 { get; set; }
-
-        public IReadOnlyList<byte> DataCenterKey { get; set; }
-
-        public IReadOnlyList<byte> DataCenterIV { get; set; }
-
-        public IReadOnlyList<Tuple<ushort, string>> GameMessages { get; set; }
-
-        public IReadOnlyList<Tuple<ushort, string>> SystemMessages { get; set; }
+        public void Signal()
+        {
+            _event.Set();
+        }
 
         public void LogBasic(string format, params object[] args)
         {
@@ -54,14 +63,59 @@ namespace Alkahest.Scanner
             _log.Error(format, args);
         }
 
-        public void Done()
+        public void WriteVersions(uint version1, uint version2)
         {
-            _event.Set();
+            var verPath = Path.Combine(_output, "Versions.txt");
+
+            File.WriteAllLines(verPath, new[]
+            {
+                version1.ToString(),
+                version2.ToString(),
+            });
+
+            _log.Basic("Wrote client versions to {0}", verPath);
         }
 
-        public void Wait()
+        public void WriteDataCenterKey(IReadOnlyList<byte> key)
         {
-            _event.Wait();
+            var keyPath = Path.Combine(_output, "DataCenterKey.txt");
+
+            File.WriteAllLines(keyPath, new[]
+            {
+                string.Join(" ", key.Select(x => x.ToString("X2"))),
+            });
+
+            _log.Basic("Wrote data center key to {0}", keyPath);
+        }
+
+        public void WriteDataCenterIV(IReadOnlyList<byte> iv)
+        {
+            var ivPath = Path.Combine(_output, "DataCenterIV.txt");
+
+            File.WriteAllLines(ivPath, new[]
+            {
+                string.Join(" ", iv.Select(x => x.ToString("X2"))),
+            });
+
+            _log.Basic("Wrote data center IV to {0}", ivPath);
+        }
+
+        public void WriteGameMessages(IReadOnlyList<Tuple<ushort, string>> messages)
+        {
+            var gmtPath = Path.Combine(_output, "GameMessageTable.txt");
+
+            File.WriteAllLines(gmtPath, messages.Select(x => $"{x.Item2} = {x.Item1}"));
+
+            _log.Basic("Wrote game messages to {0}", gmtPath);
+        }
+
+        public void WriteSystemMessages(IReadOnlyList<Tuple<ushort, string>> messages)
+        {
+            var smtPath = Path.Combine(_output, "SystemMessageTable.txt");
+
+            File.WriteAllLines(smtPath, messages.Select(x => $"{x.Item2} = {x.Item1}"));
+
+            _log.Basic("Wrote system messages to {0}", smtPath);
         }
     }
 }

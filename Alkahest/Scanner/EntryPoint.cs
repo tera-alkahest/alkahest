@@ -42,7 +42,7 @@ namespace Alkahest.Scanner
                     scanner.Run(reader, _channel);
                 }
 
-                _channel.Done();
+                _channel.Signal();
             }
             catch (Exception ex)
             {

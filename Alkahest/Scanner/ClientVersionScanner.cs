@@ -38,8 +38,7 @@ namespace Alkahest.Scanner
 
             channel.LogBasic("Found client versions: {0}, {1}", ver1, ver2);
 
-            channel.Version1 = ver1;
-            channel.Version2 = ver2;
+            channel.WriteVersions((uint)ver1, (uint)ver2);
         }
 
         static uint? ReadVersion(MemoryReader reader, byte?[] pattern, int offset)

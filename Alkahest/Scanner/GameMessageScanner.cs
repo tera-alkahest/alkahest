@@ -38,12 +38,12 @@ namespace Alkahest.Scanner
             }
 
             var func = reader.GetDelegate<GetMessageNameFunc>((int)o);
-            var list = Enumerable.Range(0, ushort.MaxValue).Select(x => Tuple.Create((ushort)x,
+            var arr = Enumerable.Range(0, ushort.MaxValue).Select(x => Tuple.Create((ushort)x,
                 Marshal.PtrToStringAnsi(func(x)))).Where(x => x.Item2 != string.Empty).ToArray();
 
-            channel.LogBasic("Found {0} opcodes", list.Length);
+            channel.LogBasic("Found {0} opcodes", arr.Length);
 
-            channel.GameMessages = list;
+            channel.WriteGameMessages(arr);
         }
     }
 }

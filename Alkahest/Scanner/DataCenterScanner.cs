@@ -34,19 +34,26 @@ namespace Alkahest.Scanner
                 ArchitectureMode.x86_32, (ulong)reader.Address, true);
 
             var key = ReadKey(disasm);
+
+            if (key != null)
+            {
+                channel.LogBasic("Found data center key: {0}", StringizeKey(key));
+
+                channel.WriteDataCenterKey(key);
+            }
+            else
+                channel.LogError("Could not find data center key");
+
             var iv = ReadKey(disasm);
 
-            if (key == null || iv == null)
+            if (iv != null)
             {
-                channel.LogError("Could not find data center key/IV");
-                return;
+                channel.LogBasic("Found data center IV: {0}", StringizeKey(iv));
+
+                channel.WriteDataCenterIV(iv);
             }
-
-            channel.LogBasic("Found data center key: {0}", StringizeKey(key));
-            channel.LogBasic("Found data center IV: {0}", StringizeKey(iv));
-
-            channel.DataCenterKey = key;
-            channel.DataCenterIV = iv;
+            else
+                channel.LogError("Could not find data center IV");
         }
 
         static string StringizeKey(byte[] key)

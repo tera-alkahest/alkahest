@@ -30,12 +30,12 @@ namespace Alkahest.Scanner
 
             var count = reader.Read<uint>((int)o + _pattern.TakeWhile(x => x != null).Count());
             var func = reader.GetDelegate<GetMessageNameFunc>((int)o);
-            var list = Enumerable.Range(0, (int)count).Cast<uint>().Select(
-                x => Tuple.Create((ushort)x, Marshal.PtrToStringUni(func(x)))).ToArray();
+            var arr = Enumerable.Range(0, (int)count).Select(x => (ushort)x).Select(
+                x => Tuple.Create(x, Marshal.PtrToStringUni(func(x)))).ToArray();
 
-            channel.LogBasic("Found {0} system messages", list.Length);
+            channel.LogBasic("Found {0} system messages", arr.Length);
 
-            channel.SystemMessages = list;
+            channel.WriteSystemMessages(arr);
         }
     }
 }
