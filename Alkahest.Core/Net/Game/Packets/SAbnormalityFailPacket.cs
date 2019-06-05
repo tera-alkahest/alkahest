@@ -10,10 +10,8 @@ namespace Alkahest.Core.Net.Game.Packets
 
         public uint AbnormalityId { get; set; }
 
-        public byte Unknown1 { get; set; }
+        public AbnormalityFailureReason Reason { get; set; }
 
-        public byte Unknown2 { get; set; }
-
-        public byte Unknown3 { get; set; }
+        public bool IsBuff { get; set; }
     }
 }
