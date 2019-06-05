@@ -170,6 +170,7 @@ namespace Alkahest.Commands
                 _log.Info("Version: {0}", reader.Version);
                 _log.Info("Compression: {0}", reader.CompressionLevel);
                 _log.Info("Region: {0}", reader.Region);
+                _log.Info("Client Version: {0}", reader.GameMessages.Version);
                 _log.Info("Servers:");
 
                 foreach (var srv in reader.Servers.Values)
