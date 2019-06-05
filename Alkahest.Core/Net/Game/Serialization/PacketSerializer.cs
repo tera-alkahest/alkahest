@@ -1,4 +1,5 @@
 using Alkahest.Core.IO;
+using Alkahest.Core.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -14,6 +15,8 @@ namespace Alkahest.Core.Net.Game.Serialization
             BindingFlags.DeclaredOnly |
             BindingFlags.Instance |
             BindingFlags.Public;
+
+        static readonly Log _log = new Log(typeof(PacketSerializer));
 
         public Region Region { get; }
 
@@ -39,8 +42,15 @@ namespace Alkahest.Core.Net.Game.Serialization
             var exports = container.GetExports<Func<Packet>, IPacketMetadata>(
                 PacketAttribute.ThisContractName);
 
-            foreach (var lazy in exports.Where(x => gameMessages.NameToCode.ContainsKey(x.Metadata.OpCode)))
-                creators.Add(gameMessages.NameToCode[lazy.Metadata.OpCode], lazy.Value);
+            foreach (var lazy in exports)
+            {
+                var name = lazy.Metadata.OpCode;
+
+                if (gameMessages.NameToCode.TryGetValue(name, out var code))
+                    creators.Add(code, lazy.Value);
+                else
+                    _log.Warning("Could not map {0} to a code; ignoring definition", name);
+            }
 
             _packetCreators = creators;
         }
