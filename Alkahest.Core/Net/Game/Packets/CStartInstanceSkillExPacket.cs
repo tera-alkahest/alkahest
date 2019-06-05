@@ -13,7 +13,7 @@ namespace Alkahest.Core.Net.Game.Packets
         [Packet(Name)]
         internal static Packet Create()
         {
-            return new CNoTimelinePacket();
+            return new CNoTimelineSkillPacket();
         }
 
         [PacketField]

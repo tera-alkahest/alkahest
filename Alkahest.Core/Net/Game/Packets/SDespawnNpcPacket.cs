@@ -26,6 +26,6 @@ namespace Alkahest.Core.Net.Game.Packets
         public DespawnKind Kind { get; set; }
 
         [PacketField]
-        public uint Unknown1 { get; set; }
+        public int Unknown1 { get; set; }
     }
 }

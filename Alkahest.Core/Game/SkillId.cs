@@ -28,6 +28,15 @@ namespace Alkahest.Core.Game
             Raw = raw;
         }
 
+        public static SkillId FromValues(uint id)
+        {
+            return new SkillId(Bits.Compose(
+                (id, 0, 28),
+                ((ulong)SkillKind.None, 28, 4),
+                (0, 32, 1),
+                (0, 33, 31)));
+        }
+
         public static SkillId FromValues(uint id, SkillKind kind, bool isNpc, uint unknown)
         {
             return new SkillId(Bits.Compose(

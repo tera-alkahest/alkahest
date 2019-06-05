@@ -25,10 +25,10 @@ namespace Alkahest.Core.Net.Game.Packets
             public uint Time { get; set; }
 
             [PacketField]
-            public uint Unknown3 { get; set; }
+            public int Unknown1 { get; set; }
 
             [PacketField]
-            public uint Unknown4 { get; set; }
+            public int Unknown2 { get; set; }
         }
 
         [PacketField]

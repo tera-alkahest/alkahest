@@ -32,7 +32,7 @@ namespace Alkahest.Core.Net.Game.Packets
         public SkillId Skill { get; set; }
 
         [PacketField]
-        public uint Type { get; set; }
+        public ActionEndKind Kind { get; set; }
 
         [PacketField]
         public uint CorrelationId { get; set; }

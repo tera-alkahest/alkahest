@@ -29,15 +29,15 @@ namespace Alkahest.Core.Net.Game.Packets
         public Vector3 Destination { get; set; }
 
         [PacketField]
-        public Vector3 Controls { get; set; }
+        public Vector3 ControlDirection { get; set; }
 
         [PacketField]
-        public Vector3 Direction { get; set; }
+        public Vector3 DestinationDirection { get; set; }
 
         [PacketField]
-        public SkillId Unknown1 { get; set; }
+        public float Speed { get; set; }
 
         [PacketField]
-        public SkillId Unknown2 { get; set; }
+        public float RotationSpeed { get; set; }
     }
 }

@@ -15,18 +15,15 @@ namespace Alkahest.Core.Net.Game.Packets
         }
 
         [PacketField]
-        public uint Unknown1 { get; set; }
+        public uint Index { get; set; }
 
         [PacketField]
         public uint AbnormalityId { get; set; }
 
         [PacketField]
-        public uint Duration { get; set; }
+        public ulong Duration { get; set; }
 
         [PacketField]
-        public uint Unknown2 { get; set; }
-
-        [PacketField]
-        public uint Unknown3 { get; set; }
+        public uint Stacks { get; set; }
     }
 }

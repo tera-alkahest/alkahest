@@ -19,12 +19,12 @@ namespace Alkahest.Core.Net.Game.Packets
         public GameId Source { get; set; }
 
         [PacketField]
-        public uint Unknown1 { get; set; }
+        public uint VehicleId { get; set; }
 
-        [PacketField]
+        [PacketField(IsSimpleSkill = true)]
         public SkillId Skill { get; set; }
 
         [PacketField]
-        public byte Unknown2 { get; set; }
+        public byte Unknown1 { get; set; }
     }
 }

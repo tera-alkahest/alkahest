@@ -15,7 +15,7 @@ namespace Alkahest.Core.Net.Game.Packets
         }
 
         [PacketField]
-        public uint Emote { get; set; }
+        public uint SocialId { get; set; }
 
         [PacketField]
         public byte Unknown1 { get; set; }

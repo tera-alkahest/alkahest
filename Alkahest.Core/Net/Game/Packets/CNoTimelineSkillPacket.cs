@@ -3,7 +3,7 @@ using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
-    public sealed class CNoTimelinePacket : Packet
+    public sealed class CNoTimelineSkillPacket : Packet
     {
         const string Name = "C_NOTIMELINE_SKILL";
 
@@ -12,7 +12,7 @@ namespace Alkahest.Core.Net.Game.Packets
         [Packet(Name)]
         internal static Packet Create()
         {
-            return new CNoTimelinePacket();
+            return new CNoTimelineSkillPacket();
         }
 
         [PacketField]

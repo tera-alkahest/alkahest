@@ -15,6 +15,6 @@ namespace Alkahest.Core.Net.Game.Packets
         }
 
         [PacketField]
-        public byte Unknown1 { get; set; }
+        public bool EnableCustom { get; set; }
     }
 }

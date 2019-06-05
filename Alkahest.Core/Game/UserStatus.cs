@@ -1,9 +1,11 @@
 namespace Alkahest.Core.Game
 {
-    public enum UserStatus : uint
+    public enum UserStatus : ushort
     {
         Normal = 0,
-        InCombat = 1,
+        Combat = 1,
         Resting = 2,
+        Pegasus = 3,
+        Unknown1 = 4,
     }
 }

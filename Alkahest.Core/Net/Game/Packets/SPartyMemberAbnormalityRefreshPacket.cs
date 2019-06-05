@@ -27,7 +27,7 @@ namespace Alkahest.Core.Net.Game.Packets
         public uint Duration { get; set; }
 
         [PacketField]
-        public uint Unknown1 { get; set; }
+        public int Unknown1 { get; set; }
 
         [PacketField]
         public uint Stacks { get; set; }

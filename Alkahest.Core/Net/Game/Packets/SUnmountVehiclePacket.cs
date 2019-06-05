@@ -18,7 +18,7 @@ namespace Alkahest.Core.Net.Game.Packets
         [PacketField]
         public GameId Source { get; set; }
 
-        [PacketField]
+        [PacketField(IsSimpleSkill = true)]
         public SkillId Skill { get; set; }
     }
 }

@@ -17,23 +17,23 @@ namespace Alkahest.Core.Net.Game.Packets
             return new SEachSkillResultPacket();
         }
 
-        public sealed class Movement
+        public sealed class AnimationSequenceInfo
         {
             [PacketField]
             public uint Duration { get; set; }
 
             [PacketField]
-            public float Speed { get; set; }
+            public float XYSpeed { get; set; }
 
             [PacketField]
-            public float Unknown1 { get; set; }
+            public float ZSpeed { get; set; }
 
             [PacketField]
             public float Distance { get; set; }
         }
 
         [PacketField]
-        public List<Movement> Movements { get; } = new List<Movement>();
+        public List<AnimationSequenceInfo> AnimationSequences { get; } = new List<AnimationSequenceInfo>();
 
         [PacketField]
         public GameId Source { get; set; }
@@ -51,58 +51,52 @@ namespace Alkahest.Core.Net.Game.Packets
         public SkillId Skill { get; set; }
 
         [PacketField]
-        public uint Stage { get; set; }
+        public uint TargetingListIndex { get; set; }
 
         [PacketField]
-        public uint Unknown2 { get; set; }
+        public uint AreaListIndex { get; set; }
 
         [PacketField]
         public uint CorrelationId { get; set; }
 
         [PacketField]
-        public uint Unknown3 { get; set; }
+        public uint TargetingTime { get; set; }
 
         [PacketField]
-        public uint Damage { get; set; }
+        public ulong Damage { get; set; }
 
         [PacketField]
-        public ushort Unknown4 { get; set; }
+        public SkillResultKind Kind { get; set; }
 
         [PacketField]
-        public ushort Unknown5 { get; set; }
+        public ushort NocteniumEffectType { get; set; }
 
         [PacketField]
         public bool IsCritical { get; set; }
 
         [PacketField]
-        public byte Unknown6 { get; set; }
+        public bool ConsumeStacks { get; set; }
 
         [PacketField]
-        public bool IsBlocked { get; set; }
+        public bool IsSuperArmor { get; set; }
 
         [PacketField]
-        public byte Unknown7 { get; set; }
+        public uint SuperArmorEffectId { get; set; }
 
         [PacketField]
-        public byte Unknown8 { get; set; }
+        public uint HitCylinderListIndex { get; set; }
 
         [PacketField]
-        public byte Unknown9 { get; set; }
+        public bool IsReaction { get; set; }
 
         [PacketField]
-        public byte Unknown10 { get; set; }
+        public bool IsPushback { get; set; }
 
         [PacketField]
-        public bool SetTargetAction { get; set; }
+        public byte IsKnockUp { get; set; }
 
         [PacketField]
-        public byte Unknown11 { get; set; }
-
-        [PacketField]
-        public byte Unknown12 { get; set; }
-
-        [PacketField]
-        public byte Unknown13 { get; set; }
+        public byte IsKnockUpChain { get; set; }
 
         [PacketField]
         public Vector3 TargetPosition { get; set; }

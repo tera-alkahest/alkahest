@@ -1,3 +1,4 @@
+using Alkahest.Core.Game;
 using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
@@ -15,16 +16,16 @@ namespace Alkahest.Core.Net.Game.Packets
         }
 
         [PacketField]
-        public uint CurrentHP { get; set; }
+        public ulong CurrentHP { get; set; }
 
         [PacketField]
         public uint CurrentMP { get; set; }
 
         [PacketField]
-        public uint Unknown1 { get; set; }
+        public long Unknown1 { get; set; }
 
         [PacketField]
-        public uint MaxHP { get; set; }
+        public ulong MaxHP { get; set; }
 
         [PacketField]
         public uint MaxMP { get; set; }
@@ -42,10 +43,10 @@ namespace Alkahest.Core.Net.Game.Packets
         public uint BaseBalanceFactor { get; set; }
 
         [PacketField]
-        public ushort BaseMovementSpeed { get; set; }
+        public ushort BaseWalkSpeed { get; set; }
 
         [PacketField]
-        public ushort Unknown2 { get; set; }
+        public ushort BaseRunSpeed { get; set; }
 
         [PacketField]
         public ushort BaseAttackSpeed { get; set; }
@@ -60,10 +61,10 @@ namespace Alkahest.Core.Net.Game.Packets
         public float BaseCritPower { get; set; }
 
         [PacketField]
-        public uint BaseAttack1 { get; set; }
+        public uint MinBaseAttack { get; set; }
 
         [PacketField]
-        public uint BaseAttack2 { get; set; }
+        public uint MaxBaseAttack { get; set; }
 
         [PacketField]
         public uint BaseDefense { get; set; }
@@ -96,10 +97,10 @@ namespace Alkahest.Core.Net.Game.Packets
         public uint BonusBalanceFactor { get; set; }
 
         [PacketField]
-        public ushort BonusMovementSpeed { get; set; }
+        public ushort BonusWalkSpeed { get; set; }
 
         [PacketField]
-        public ushort Unknown3 { get; set; }
+        public ushort BonusRunSpeed { get; set; }
 
         [PacketField]
         public ushort BonusAttackSpeed { get; set; }
@@ -114,10 +115,10 @@ namespace Alkahest.Core.Net.Game.Packets
         public float BonusCritPower { get; set; }
 
         [PacketField]
-        public uint BonusAttack1 { get; set; }
+        public uint BonusMinAttack { get; set; }
 
         [PacketField]
-        public uint BonusAttack2 { get; set; }
+        public uint BonusMaxAttack { get; set; }
 
         [PacketField]
         public uint BonusDefense { get; set; }
@@ -138,13 +139,16 @@ namespace Alkahest.Core.Net.Game.Packets
         public float BonusStunResistFactor { get; set; }
 
         [PacketField]
-        public ushort Level1 { get; set; }
+        public ushort Level { get; set; }
 
         [PacketField]
-        public byte Unknown4 { get; set; }
+        public UserStatus Status { get; set; }
 
         [PacketField]
-        public uint Unknown5 { get; set; }
+        public ushort StaminaLevel { get; set; }
+
+        [PacketField]
+        public bool IsAlive { get; set; }
 
         [PacketField]
         public uint StaminaBonusHP { get; set; }
@@ -168,7 +172,7 @@ namespace Alkahest.Core.Net.Game.Packets
         public uint BonusResource { get; set; }
 
         [PacketField]
-        public uint Unknown7 { get; set; }
+        public int Unknown2 { get; set; }
 
         [PacketField]
         public uint InventoryItemLevel { get; set; }
@@ -180,27 +184,39 @@ namespace Alkahest.Core.Net.Game.Packets
         public uint EdgeStacks { get; set; }
 
         [PacketField]
-        public ushort Unknown8 { get; set; }
+        public float Unknown3 { get; set; }
 
         [PacketField]
-        public ushort Unknown9 { get; set; }
+        public uint EdgeTimeRemaining { get; set; }
 
         [PacketField]
-        public uint Unknown10 { get; set; }
+        public int Unknown4 { get; set; }
 
         [PacketField]
-        public uint Unknown11 { get; set; }
-
-        [PacketField]
-        public uint Level2 { get; set; }
+        public uint RealLevel { get; set; }
 
         [PacketField]
         public float FlightEnergy { get; set; }
 
         [PacketField]
-        public uint Unknown13 { get; set; }
+        public int Unknown5 { get; set; }
 
         [PacketField]
-        public float Unknown14 { get; set; }
+        public float Unknown6 { get; set; }
+
+        [PacketField]
+        public uint FireStacks { get; set; }
+
+        [PacketField]
+        public uint IceStacks { get; set; }
+
+        [PacketField]
+        public uint ArcaneStacks { get; set; }
+
+        [PacketField]
+        public uint AdventureCoins { get; set; }
+
+        [PacketField]
+        public uint MaxAdventureCoins { get; set; }
     }
 }

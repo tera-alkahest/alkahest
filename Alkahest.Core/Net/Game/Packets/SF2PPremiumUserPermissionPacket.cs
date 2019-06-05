@@ -15,31 +15,31 @@ namespace Alkahest.Core.Net.Game.Packets
             return new SF2PPremiumUserPermissionPacket();
         }
 
-        public sealed class Permission
+        public sealed class PermissionInfo
         {
             [PacketField]
-            public ushort Unknown1 { get; set; }
+            public short Unknown1 { get; set; }
 
             [PacketField]
-            public ushort Unknown2 { get; set; }
+            public short Unknown2 { get; set; }
         }
 
         [PacketField]
-        public List<Permission> Permissions { get; } = new List<Permission>();
+        public List<PermissionInfo> Permissions { get; } = new List<PermissionInfo>();
 
         [PacketField]
-        public uint Unknown3 { get; set; }
+        public int Unknown3 { get; set; }
 
         [PacketField]
-        public ushort Unknown4 { get; set; }
+        public short Unknown4 { get; set; }
 
         [PacketField]
-        public ushort Unknown5 { get; set; }
+        public short Unknown5 { get; set; }
 
         [PacketField]
-        public ushort Unknown6 { get; set; }
+        public short Unknown6 { get; set; }
 
         [PacketField]
-        public ushort Unknown7 { get; set; }
+        public short Unknown7 { get; set; }
     }
 }

@@ -19,24 +19,24 @@ namespace Alkahest.Core.Net.Game.Packets
         public GameId Target { get; set; }
 
         [PacketField]
-        public float CurrentHP { get; set; }
+        public ulong CurrentHP { get; set; }
 
         [PacketField]
-        public float MaxHP { get; set; }
+        public ulong MaxHP { get; set; }
 
         [PacketField]
         public bool IsEnemy { get; set; }
 
         [PacketField]
-        public uint Unknown1 { get; set; }
+        public int Unknown1 { get; set; }
 
         [PacketField]
-        public uint Unknown2 { get; set; }
+        public int Unknown2 { get; set; }
 
         [PacketField]
-        public uint Unknown3 { get; set; }
+        public int Unknown3 { get; set; }
 
         [PacketField]
-        public uint Unknown4 { get; set; }
+        public int Unknown4 { get; set; }
     }
 }

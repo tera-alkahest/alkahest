@@ -17,38 +17,53 @@ namespace Alkahest.Core.Net.Game.Packets
             return new SSpawnNpcPacket();
         }
 
-        public sealed class Unknown8Info
+        public sealed class SeatInfo
         {
             [PacketField]
-            public uint Unknown1 { get; set; }
+            public uint SeatId { get; set; }
 
             [PacketField]
-            public ulong Unknown2 { get; set; }
+            public GameId Passenger { get; set; }
 
             [PacketField]
-            public float Unknown3 { get; set; }
+            public Angle Pitch { get; set; }
 
             [PacketField]
-            public uint Unknown4 { get; set; }
+            public Angle Yaw { get; set; }
 
             [PacketField]
-            public uint Unknown5 { get; set; }
+            public ulong MaxHP { get; set; }
 
             [PacketField]
-            public uint Unknown6 { get; set; }
+            public uint MaxMP { get; set; }
 
             [PacketField]
-            public uint Unknown7 { get; set; }
+            public ulong CurrentHP { get; set; }
+
+            [PacketField]
+            public uint CurrentMP { get; set; }
         }
 
         [PacketField]
-        public List<Unknown8Info> Unknown8 { get; } = new List<Unknown8Info>();
+        public List<SeatInfo> Seats { get; set; } = new List<SeatInfo>();
 
-        [PacketField(IsUnknownArray = true)]
-        public ushort Unknown9Count { get; set; }
+        public sealed class PartInfo
+        {
+            [PacketField]
+            public uint PartId { get; set; }
 
-        [PacketField(IsUnknownArray = true)]
-        public ushort Unknown9Offset { get; set; }
+            [PacketField]
+            public uint CurrentBreakStageId { get; set; }
+
+            [PacketField]
+            public bool IsActive { get; set; }
+
+            [PacketField]
+            public uint LastBreakStageId { get; set; }
+        }
+
+        [PacketField]
+        public List<PartInfo> Parts { get; set; } = new List<PartInfo>();
 
         [PacketField]
         public string NpcName { get; set; }
@@ -66,69 +81,90 @@ namespace Alkahest.Core.Net.Game.Packets
         public Angle Direction { get; set; }
 
         [PacketField]
-        public uint Unknown10 { get; set; }
+        public int Unknown1 { get; set; }
 
         [PacketField]
         public TemplateId Template { get; set; }
 
         [PacketField]
-        public uint HuntingZoneId { get; set; }
+        public ushort HuntingZoneId { get; set; }
 
         [PacketField]
-        public ushort Unknown12 { get; set; }
+        public int Unknown2 { get; set; }
 
         [PacketField]
-        public ushort Unknown13 { get; set; }
+        public ushort WalkSpeed { get; set; }
 
         [PacketField]
-        public ushort Unknown14 { get; set; }
+        public ushort RunSpeed { get; set; }
 
         [PacketField]
-        public uint Unknown15 { get; set; }
+        public NpcStatus Status { get; set; }
 
         [PacketField]
-        public byte Unknown16 { get; set; }
+        public bool IsEnraged { get; set; }
 
         [PacketField]
-        public byte Unknown17 { get; set; }
+        public byte Unknown3 { get; set; }
 
         [PacketField]
-        public uint Unknown18 { get; set; }
+        public uint EnrageTimeRemaining { get; set; }
 
         [PacketField]
-        public ulong Unknown19 { get; set; }
+        public HPLevel HPLevel { get; set; }
 
         [PacketField]
-        public ushort Unknown20 { get; set; }
+        public short Unknown4 { get; set; }
 
         [PacketField]
-        public ushort Unknown21 { get; set; }
+        public bool IsVisible { get; set; }
 
         [PacketField]
-        public uint Unknown22 { get; set; }
+        public bool IsVillager { get; set; }
 
         [PacketField]
-        public byte Unknown23 { get; set; }
+        public int Unknown5 { get; set; }
+
+        [PacketField]
+        public GameId Replaced { get; set; }
+
+        [PacketField]
+        public uint SpawnScriptId { get; set; }
+
+        [PacketField]
+        public uint ReplaceScriptId { get; set; }
+
+        [PacketField]
+        public bool IsAggressive { get; set; }
 
         [PacketField]
         public GameId Owner { get; set; }
 
         [PacketField]
-        public uint Unknown24 { get; set; }
+        public GameId Unknown6 { get; set; }
 
         [PacketField]
-        public uint Unknown25 { get; set; }
+        public GameId Unknown7 { get; set; }
 
         [PacketField]
-        public ulong Unknown26 { get; set; }
+        public byte Unknown8 { get; set; }
 
         [PacketField]
-        public byte Unknown27 { get; set; }
+        public byte Unknown9 { get; set; }
 
         [PacketField]
-        public uint Unknown28 { get; set; }
+        public short Unknown10 { get; set; }
 
         [PacketField]
-        public uint Unknown29 { get; set; }
+        public uint HitCylinderListIndex { get; set; }
+
+        [PacketField]
+        public byte Unknown11 { get; set; }
+
+        [PacketField]
+        public int Unknown12 { get; set; }
+
+        [PacketField]
+        public byte Unknown13 { get; set; }
     }
 }

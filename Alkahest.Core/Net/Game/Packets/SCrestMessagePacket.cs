@@ -21,7 +21,7 @@ namespace Alkahest.Core.Net.Game.Packets
         [PacketField]
         public CrestMessageKind Kind { get; set; }
 
-        [PacketField]
+        [PacketField(IsSimpleSkill = true)]
         public SkillId Skill { get; set; }
     }
 }

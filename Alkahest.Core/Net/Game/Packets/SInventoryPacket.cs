@@ -18,17 +18,47 @@ namespace Alkahest.Core.Net.Game.Packets
 
         public sealed class ItemInfo
         {
-            public sealed class PassivityInfo
+            public sealed class PassivitySetInfo
+            {
+                public sealed class PassivityInfo
+                {
+                    [PacketField]
+                    public uint PassivityId { get; set; }
+                }
+
+                [PacketField]
+                public List<PassivityInfo> Passivities { get; } = new List<PassivityInfo>();
+
+                [PacketField]
+                public uint Index { get; set; }
+
+                [PacketField]
+                public uint MasterworkBonus { get; set; }
+
+                [PacketField]
+                public uint ItemLevel { get; set; }
+
+                [PacketField]
+                public uint MinItemLevel { get; set; }
+
+                [PacketField]
+                public uint MaxItemLevel { get; set; }
+            }
+
+            [PacketField]
+            public List<PassivitySetInfo> PassivitySets { get; } = new List<PassivitySetInfo>();
+
+            public sealed class MergedPassivityInfo
             {
                 [PacketField]
                 public uint PassivityId { get; set; }
             }
 
             [PacketField]
-            public List<PassivityInfo> Passivities { get; } = new List<PassivityInfo>();
+            public List<MergedPassivityInfo> MergedPassivities { get; } = new List<MergedPassivityInfo>();
 
             [PacketField]
-            public string Unknown1 { get; set; }
+            public string CustomString { get; set; }
 
             [PacketField]
             public uint ItemId { get; set; }
@@ -37,13 +67,13 @@ namespace Alkahest.Core.Net.Game.Packets
             public GameId Item { get; set; }
 
             [PacketField]
-            public GameId Owner1 { get; set; }
+            public GameId Holder { get; set; }
 
             [PacketField]
             public uint Slot { get; set; }
 
             [PacketField]
-            public uint Unknown2 { get; set; }
+            public int Unknown1 { get; set; }
 
             [PacketField]
             public uint Amount { get; set; }
@@ -52,10 +82,10 @@ namespace Alkahest.Core.Net.Game.Packets
             public uint EnchantmentLevel { get; set; }
 
             [PacketField]
-            public uint Unknown3 { get; set; }
+            public uint Durability { get; set; }
 
             [PacketField]
-            public byte Unknown4 { get; set; }
+            public bool IsSoulbound { get; set; }
 
             [PacketField]
             public uint Crystal1ItemId { get; set; }
@@ -70,79 +100,73 @@ namespace Alkahest.Core.Net.Game.Packets
             public uint Crystal4ItemId { get; set; }
 
             [PacketField]
-            public uint Unknown5 { get; set; }
+            public int Unknown2 { get; set; }
 
             [PacketField]
-            public uint Unknown6 { get; set; }
+            public uint PassivityInfoSetCount { get; set; }
 
             [PacketField]
-            public uint Unknown7 { get; set; }
+            public uint ExtraPassivityInfoSetCount { get; set; }
 
             [PacketField]
-            public int Unknown8 { get; set; }
+            public int Unknown3 { get; set; }
 
             [PacketField]
-            public uint Unknown9 { get; set; }
+            public int Unknown4 { get; set; }
 
             [PacketField]
-            public uint Unknown10 { get; set; }
+            public int Unknown5 { get; set; }
 
             [PacketField]
-            public uint Unknown11 { get; set; }
+            public long Unknown6 { get; set; }
 
             [PacketField]
-            public uint Unknown12 { get; set; }
+            public long Unknown7 { get; set; }
 
             [PacketField]
             public bool IsMasterworked { get; set; }
 
             [PacketField]
-            public uint Unknown13 { get; set; }
+            public int Unknown8 { get; set; }
 
             [PacketField]
-            public uint Unknown14 { get; set; }
+            public uint TimesBrokered { get; set; }
 
             [PacketField]
-            public uint ItemLevel { get; set; }
+            public uint EnchantmentAdvantage { get; set; }
 
             [PacketField]
-            public uint MinItemLevel { get; set; }
+            public uint EnchantmentBonus { get; set; }
 
             [PacketField]
-            public uint MaxItemLevel { get; set; }
+            public int Unknown9 { get; set; }
 
             [PacketField]
-            public uint Unknown15 { get; set; }
-
-            [PacketField]
-            public uint Unknown16 { get; set; }
-
-            [PacketField]
-            public uint Unknown17 { get; set; }
-
-            [PacketField]
-            public uint Unknown18 { get; set; }
-
-            [PacketField]
-            public GameId Owner2 { get; set; }
+            public GameId Owner { get; set; }
 
             [PacketField]
             public bool IsAwakened { get; set; }
 
             [PacketField]
-            public uint Unknown19 { get; set; }
+            public int Unknown10 { get; set; }
 
             [PacketField]
-            public int Feedstock { get; set; }
+            public int Unknown11 { get; set; }
 
             [PacketField]
-            public uint Unknown20 { get; set; }
+            public int Unknown12 { get; set; }
 
             [PacketField]
-            public bool IsEquipped { get; set; }
+            public bool HasEtching { get; set; }
 
             [PacketField]
-            public byte Unknown21 { get; set; }
+            public byte Unknown13 { get; set; }
+
+            [PacketField]
+            public ulong ItemExperience { get; set; }
+
+            [PacketField]
+            public bool IsDamaged { get; set; }
         }
 
         [PacketField]
@@ -158,10 +182,10 @@ namespace Alkahest.Core.Net.Game.Packets
         public byte Unknown25 { get; set; }
 
         [PacketField]
-        public byte Unknown26 { get; set; }
+        public bool IsFirst { get; set; }
 
         [PacketField]
-        public byte IsIncomplete { get; set; }
+        public bool IsIncomplete { get; set; }
 
         [PacketField]
         public uint InventorySize { get; set; }
@@ -173,18 +197,12 @@ namespace Alkahest.Core.Net.Game.Packets
         public uint CharacterItemLevel { get; set; }
 
         [PacketField]
-        public uint Unknown28 { get; set; }
+        public long Unknown28 { get; set; }
 
         [PacketField]
-        public uint Unknown29 { get; set; }
+        public int Unknown30 { get; set; }
 
         [PacketField]
-        public uint Unknown30 { get; set; }
-
-        [PacketField]
-        public uint Unknown31 { get; set; }
-
-        [PacketField]
-        public uint Unknown32 { get; set; }
+        public long Unknown31 { get; set; }
     }
 }

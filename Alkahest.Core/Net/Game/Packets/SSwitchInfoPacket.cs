@@ -22,6 +22,6 @@ namespace Alkahest.Core.Net.Game.Packets
         public SkillId OffSkill { get; set; }
 
         [PacketField]
-        public bool Enabled { get; set; }
+        public bool IsEnabled { get; set; }
     }
 }

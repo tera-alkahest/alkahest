@@ -25,7 +25,7 @@ namespace Alkahest.Core.Net.Game.Packets
         public int MPDifference { get; set; }
 
         [PacketField]
-        public uint Type { get; set; }
+        public int Unknown1 { get; set; }
 
         [PacketField]
         public GameId Target { get; set; }

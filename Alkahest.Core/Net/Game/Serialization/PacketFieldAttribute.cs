@@ -9,6 +9,8 @@ namespace Alkahest.Core.Net.Game.Serialization
 
         public bool IsUnknownArray { get; set; }
 
+        public bool IsSimpleSkill { get; set; }
+
         internal PacketFieldAttribute(params Region[] regions)
         {
             Regions = regions;

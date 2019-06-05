@@ -20,5 +20,8 @@ namespace Alkahest.Core.Net.Game.Packets
 
         [PacketField]
         public uint Damage { get; set; }
+
+        [PacketField]
+        public int Unknown1 { get; set; }
     }
 }

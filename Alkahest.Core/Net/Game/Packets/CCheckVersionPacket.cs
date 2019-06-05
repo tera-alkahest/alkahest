@@ -15,7 +15,7 @@ namespace Alkahest.Core.Net.Game.Packets
             return new CCheckVersionPacket();
         }
 
-        public sealed class Version
+        public sealed class VersionInfo
         {
             [PacketField]
             public uint Index { get; set; }
@@ -25,6 +25,6 @@ namespace Alkahest.Core.Net.Game.Packets
         }
 
         [PacketField]
-        public List<Version> Versions { get; } = new List<Version>();
+        public List<VersionInfo> Versions { get; } = new List<VersionInfo>();
     }
 }

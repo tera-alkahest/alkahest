@@ -40,13 +40,16 @@ namespace Alkahest.Core.Net.Game.Packets
             public GameId Member { get; set; }
 
             [PacketField]
-            public uint Position { get; set; }
+            public uint Order { get; set; }
 
             [PacketField]
             public byte Unknown1 { get; set; }
 
             [PacketField]
             public LaurelKind Laurel { get; set; }
+
+            [PacketField]
+            public uint ApexLevel { get; set; }
         }
 
         [PacketField]
@@ -59,16 +62,16 @@ namespace Alkahest.Core.Net.Game.Packets
         public bool IsRaid { get; set; }
 
         [PacketField]
-        public uint Unknown3 { get; set; }
+        public int Unknown2 { get; set; }
 
         [PacketField]
-        public uint Unknown4 { get; set; }
+        public int Unknown3 { get; set; }
 
         [PacketField]
-        public ushort Unknown5 { get; set; }
+        public short Unknown4 { get; set; }
 
         [PacketField]
-        public ushort Unknown6 { get; set; }
+        public short Unknown5 { get; set; }
 
         [PacketField]
         public uint LeaderServerId { get; set; }
@@ -77,22 +80,25 @@ namespace Alkahest.Core.Net.Game.Packets
         public uint LeaderPlayerId { get; set; }
 
         [PacketField]
-        public uint Unknown7 { get; set; }
+        public int Unknown6 { get; set; }
 
         [PacketField]
-        public uint Unknown8 { get; set; }
+        public int Unknown7 { get; set; }
 
         [PacketField]
-        public byte Unknown9 { get; set; }
+        public byte Unknown8 { get; set; }
 
         [PacketField]
-        public uint Unknown10 { get; set; }
+        public int Unknown9 { get; set; }
 
         [PacketField]
-        public byte Unknown11 { get; set; }
+        public byte Unknown10 { get; set; }
 
         [PacketField]
-        public uint Unknown12 { get; set; }
+        public int Unknown11 { get; set; }
+
+        [PacketField]
+        public byte Unknown12 { get; set; }
 
         [PacketField]
         public byte Unknown13 { get; set; }

@@ -16,16 +16,16 @@ namespace Alkahest.Core.Net.Game.Packets
         }
 
         [PacketField]
-        public uint CurrentHP { get; set; }
+        public ulong CurrentHP { get; set; }
 
         [PacketField]
-        public uint MaxHP { get; set; }
+        public ulong MaxHP { get; set; }
 
         [PacketField]
-        public int HPDifference { get; set; }
+        public long HPDifference { get; set; }
 
         [PacketField]
-        public uint Type { get; set; }
+        public int Unknown1 { get; set; }
 
         [PacketField]
         public GameId Target { get; set; }
@@ -34,9 +34,9 @@ namespace Alkahest.Core.Net.Game.Packets
         public GameId Source { get; set; }
 
         [PacketField]
-        public byte Unknown1 { get; set; }
+        public byte Unknown2 { get; set; }
 
         [PacketField]
-        public uint Unknown2 { get; set; }
+        public uint AbnormalityId { get; set; }
     }
 }

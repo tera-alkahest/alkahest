@@ -26,6 +26,9 @@ namespace Alkahest.Core.Net.Game.Packets
         public bool IsAlive { get; set; }
 
         [PacketField]
+        public bool IsInShuttle { get; set; }
+
+        [PacketField]
         public byte Unknown1 { get; set; }
 
         [PacketField]

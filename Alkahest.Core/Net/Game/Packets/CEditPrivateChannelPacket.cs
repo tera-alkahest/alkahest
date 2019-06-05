@@ -15,14 +15,14 @@ namespace Alkahest.Core.Net.Game.Packets
             return new CEditPrivateChannelPacket();
         }
 
-        public sealed class Member
+        public sealed class MemberInfo
         {
             [PacketField]
             public uint PlayerId { get; set; }
         }
 
         [PacketField]
-        public List<Member> Members { get; } = new List<Member>();
+        public List<MemberInfo> Members { get; } = new List<MemberInfo>();
 
         [PacketField]
         public string ChannelName { get; set; }

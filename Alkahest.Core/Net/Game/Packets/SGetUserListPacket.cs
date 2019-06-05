@@ -1,6 +1,7 @@
 using Alkahest.Core.Game;
 using Alkahest.Core.Net.Game.Serialization;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
@@ -18,20 +19,26 @@ namespace Alkahest.Core.Net.Game.Packets
 
         public sealed class CharacterInfo
         {
-            [PacketField(IsUnknownArray = true)]
-            public ushort Unknown1Count { get; set; }
+            public sealed class CustomStringInfo
+            {
+                [PacketField]
+                public uint Index { get; set; }
 
-            [PacketField(IsUnknownArray = true)]
-            public ushort Unknown1Offset { get; set; }
+                [PacketField]
+                public string CustomString { get; set; }
+            }
+
+            [PacketField]
+            public List<CustomStringInfo> CustomStrings { get; } = new List<CustomStringInfo>();
 
             [PacketField]
             public string UserName { get; set; }
 
             [PacketField]
-            public List<byte> Details1 { get; } = new List<byte>();
+            public List<byte> Details { get; } = new List<byte>();
 
             [PacketField]
-            public List<byte> Details2 { get; } = new List<byte>();
+            public List<byte> Shape { get; } = new List<byte>();
 
             [PacketField]
             public string GuildName { get; set; }
@@ -52,34 +59,31 @@ namespace Alkahest.Core.Net.Game.Packets
             public uint Level { get; set; }
 
             [PacketField]
-            public uint Unknown2 { get; set; }
+            public ulong MaxHP { get; set; }
 
             [PacketField]
-            public uint Unknown3 { get; set; }
+            public uint MaxMP { get; set; }
 
             [PacketField]
-            public uint WorldMapWorldId { get; set; }
+            public uint WorldId { get; set; }
 
             [PacketField]
-            public uint WorldMapGuardId { get; set; }
+            public uint GuardId { get; set; }
 
             [PacketField]
-            public uint AreaNameId { get; set; }
+            public uint SectionId { get; set; }
 
             [PacketField]
             public ulong LastOnlineTime { get; set; }
 
             [PacketField]
-            public byte Unknown4 { get; set; }
+            public bool IsDeleting { get; set; }
 
             [PacketField]
-            public uint Unknown5 { get; set; }
+            public long Unknown2 { get; set; }
 
             [PacketField]
-            public uint Unknown6 { get; set; }
-
-            [PacketField]
-            public uint Unknown7 { get; set; }
+            public int Unknown3 { get; set; }
 
             [PacketField]
             public uint WeaponItemId { get; set; }
@@ -100,7 +104,7 @@ namespace Alkahest.Core.Net.Game.Packets
             public uint FootwearItemId { get; set; }
 
             [PacketField]
-            public uint Unknown8 { get; set; }
+            public int Unknown4 { get; set; }
 
             [PacketField]
             public uint Ring1ItemId { get; set; }
@@ -121,91 +125,91 @@ namespace Alkahest.Core.Net.Game.Packets
             public Appearance Appearance { get; set; }
 
             [PacketField]
-            public uint Unknown9 { get; set; }
+            public bool IsSecondCharacter { get; set; }
 
             [PacketField]
-            public uint Unknown10 { get; set; }
+            public uint AdministratorLevel { get; set; }
 
             [PacketField]
-            public uint Unknown11 { get; set; }
+            public bool IsBanned { get; set; }
 
             [PacketField]
-            public ushort Unknown12 { get; set; }
+            public long Unknown5 { get; set; }
 
             [PacketField]
-            public uint Unknown13 { get; set; }
+            public int Unknown6 { get; set; }
 
             [PacketField]
-            public uint Unknown14 { get; set; }
+            public int Unknown7 { get; set; }
 
             [PacketField]
-            public uint Unknown15 { get; set; }
+            public int Unknown8 { get; set; }
 
             [PacketField]
-            public uint Unknown16 { get; set; }
+            public int Unknown9 { get; set; }
 
             [PacketField]
-            public uint Unknown17 { get; set; }
+            public int Unknown10 { get; set; }
 
             [PacketField]
-            public uint Unknown18 { get; set; }
+            public int Unknown11 { get; set; }
 
             [PacketField]
-            public uint Unknown19 { get; set; }
+            public int Unknown12 { get; set; }
 
             [PacketField]
-            public uint Unknown20 { get; set; }
+            public int Unknown13 { get; set; }
 
             [PacketField]
-            public uint Unknown21 { get; set; }
+            public int Unknown14 { get; set; }
 
             [PacketField]
-            public uint Unknown22 { get; set; }
+            public int Unknown15 { get; set; }
 
             [PacketField]
-            public uint Unknown23 { get; set; }
+            public int Unknown16 { get; set; }
 
             [PacketField]
-            public uint Unknown24 { get; set; }
+            public int Unknown17 { get; set; }
 
             [PacketField]
-            public uint Unknown25 { get; set; }
+            public int Unknown18 { get; set; }
 
             [PacketField]
-            public uint Unknown26 { get; set; }
+            public int Unknown19 { get; set; }
 
             [PacketField]
-            public uint Unknown27 { get; set; }
+            public int Unknown20 { get; set; }
 
             [PacketField]
-            public uint Unknown28 { get; set; }
+            public int Unknown21 { get; set; }
 
             [PacketField]
-            public uint Unknown29 { get; set; }
+            public int Unknown22 { get; set; }
 
             [PacketField]
-            public uint Unknown30 { get; set; }
+            public int Unknown23 { get; set; }
 
             [PacketField]
-            public uint Unknown31 { get; set; }
+            public int Unknown24 { get; set; }
 
             [PacketField]
-            public uint Unknown32 { get; set; }
+            public int Unknown25 { get; set; }
 
             [PacketField]
-            public uint Unknown33 { get; set; }
+            public int Unknown26 { get; set; }
 
             [PacketField]
-            public uint Unknown34 { get; set; }
+            public int Unknown27 { get; set; }
 
             [PacketField]
-            public uint Unknown35 { get; set; }
+            public int Unknown28 { get; set; }
 
             [PacketField]
-            public uint Unknown36 { get; set; }
+            public int Unknown29 { get; set; }
 
             [PacketField]
-            public uint Unknown37 { get; set; }
+            public int Unknown30 { get; set; }
 
             [PacketField]
             public uint HairCostumeItemId { get; set; }
@@ -223,7 +227,10 @@ namespace Alkahest.Core.Net.Game.Packets
             public uint BodyCostumeItemId { get; set; }
 
             [PacketField]
-            public uint Unknown38 { get; set; }
+            public uint FootprintItemId { get; set; }
+
+            [PacketField]
+            public int Unknown31 { get; set; }
 
             [PacketField]
             public uint WeaponEnchantmentLevel { get; set; }
@@ -235,55 +242,103 @@ namespace Alkahest.Core.Net.Game.Packets
             public uint MaxRestedExperience { get; set; }
 
             [PacketField]
-            public ushort Unknown40 { get; set; }
+            public byte Unknown32 { get; set; }
 
             [PacketField]
-            public uint Unknown41 { get; set; }
+            public float HairCostumeScale { get; set; }
 
             [PacketField]
-            public byte Unknown42 { get; set; }
+            public Vector3 HairCostumeRotation { get; set; }
 
             [PacketField]
-            public uint Unknown43 { get; set; }
+            public Vector3 HairCostumeTranslation { get; set; }
 
             [PacketField]
-            public uint Unknown44 { get; set; }
+            public Vector3 HairCostumeTranslationDebug { get; set; }
+
+            [PacketField]
+            public float FaceCostumeScale { get; set; }
+
+            [PacketField]
+            public Vector3 FaceCostumeRotation { get; set; }
+
+            [PacketField]
+            public Vector3 FaceCostumeTranslation { get; set; }
+
+            [PacketField]
+            public Vector3 FaceCostumeTranslationDebug { get; set; }
+
+            [PacketField]
+            public float BackCostumeScale { get; set; }
+
+            [PacketField]
+            public Vector3 BackCostumeRotation { get; set; }
+
+            [PacketField]
+            public Vector3 BackCostumeTranslation { get; set; }
+
+            [PacketField]
+            public Vector3 BackCostumeTranslationDebug { get; set; }
+
+            [PacketField]
+            public byte Unknown33 { get; set; }
+
+            [PacketField]
+            public bool IsNewCharacter { get; set; }
+
+            [PacketField]
+            public int Unknown34 { get; set; }
+
+            [PacketField]
+            public byte Unknown35 { get; set; }
+
+            [PacketField]
+            public int Unknown36 { get; set; }
+
+            [PacketField]
+            public int Unknown37 { get; set; }
 
             [PacketField]
             public LaurelKind Laurel { get; set; }
 
             [PacketField]
-            public uint Position { get; set; }
+            public uint Order { get; set; }
 
             [PacketField]
-            public uint GuildId { get; set; }
+            public uint GuildLogoId { get; set; }
+
+            [PacketField]
+            public uint ApexLevel { get; set; }
         }
 
         [PacketField]
         public List<CharacterInfo> Characters { get; } = new List<CharacterInfo>();
 
         [PacketField]
-        public byte Unknown47 { get; set; }
+        public bool IsVeteran { get; set; }
 
         [PacketField]
-        public uint Unknown48 { get; set; }
+        public int Unknown38 { get; set; }
 
         [PacketField]
         public uint MaxCharacters { get; set; }
 
         [PacketField]
-        public ushort Unknown49 { get; set; }
+        public bool IsFirst { get; set; }
 
         [PacketField]
-        public uint Unknown50 { get; set; }
+        public bool IsIncomplete { get; set; }
 
         [PacketField]
-        public uint Unknown51 { get; set; }
+        public int Unknown39 { get; set; }
 
         [PacketField]
-        public uint Unknown52 { get; set; }
+        public int Unknown40 { get; set; }
 
         [PacketField]
-        public uint Unknown53 { get; set; }
+        public int Unknown41 { get; set; }
+
+        [PacketField]
+        public int Unknown42 { get; set; }
     }
 }

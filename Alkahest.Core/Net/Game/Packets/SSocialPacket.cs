@@ -19,10 +19,10 @@ namespace Alkahest.Core.Net.Game.Packets
         public GameId Source { get; set; }
 
         [PacketField]
-        public uint Emote { get; set; }
+        public uint SocialId { get; set; }
 
         [PacketField]
-        public uint Unknown1 { get; set; }
+        public int Unknown1 { get; set; }
 
         [PacketField]
         public byte Unknown2 { get; set; }

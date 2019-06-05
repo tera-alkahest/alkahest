@@ -20,13 +20,10 @@ namespace Alkahest.Core.Net.Game.Packets
         public GameId Source { get; set; }
 
         [PacketField]
-        public uint Unknown1 { get; set; }
+        public GameId Target { get; set; }
 
         [PacketField]
-        public uint Unknown2 { get; set; }
-
-        [PacketField]
-        public uint Unknown3 { get; set; }
+        public int Unknown1 { get; set; }
 
         [PacketField]
         public Vector3 Destination { get; set; }

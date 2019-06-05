@@ -15,6 +15,6 @@ namespace Alkahest.Core.Net.Game.Packets
         }
 
         [PacketField]
-        public uint DailyQuestId { get; set; }
+        public uint QuestId { get; set; }
     }
 }

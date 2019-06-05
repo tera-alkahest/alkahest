@@ -21,10 +21,7 @@ namespace Alkahest.Core.Net.Game.Packets
             public uint PackageId { get; set; }
 
             [PacketField]
-            public int TimeRemaining { get; set; }
-
-            [PacketField]
-            public uint Unknown1 { get; set; }
+            public ulong ExpirationTime { get; set; }
         }
 
         [PacketField]

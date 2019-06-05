@@ -23,7 +23,7 @@ namespace Alkahest.Core.Net.Game.Packets
         public Angle Direction { get; set; }
 
         [PacketField]
-        public ushort Unknown1 { get; set; }
+        public Angle LookDirection { get; set; }
 
         [PacketField]
         public Vector3 Destination { get; set; }
@@ -32,12 +32,12 @@ namespace Alkahest.Core.Net.Game.Packets
         public MovementKind Kind { get; set; }
 
         [PacketField]
-        public ushort Speed { get; set; }
+        public ushort JumpDistance { get; set; }
 
         [PacketField]
-        public byte Unknown2 { get; set; }
+        public bool IsInShuttle { get; set; }
 
         [PacketField]
-        public uint Timestamp { get; set; }
+        public uint OperatingSystemUpTime { get; set; }
     }
 }

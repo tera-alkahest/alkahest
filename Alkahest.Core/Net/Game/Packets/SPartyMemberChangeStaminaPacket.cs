@@ -27,6 +27,6 @@ namespace Alkahest.Core.Net.Game.Packets
         public uint MaxResource { get; set; }
 
         [PacketField]
-        public uint Unknown1 { get; set; }
+        public int Unknown1 { get; set; }
     }
 }

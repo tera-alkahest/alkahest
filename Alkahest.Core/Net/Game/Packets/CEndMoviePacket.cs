@@ -15,7 +15,7 @@ namespace Alkahest.Core.Net.Game.Packets
         }
 
         [PacketField]
-        public uint MovieId { get; set; }
+        public uint MovieGroupId { get; set; }
 
         [PacketField]
         public byte Unknown1 { get; set; }

@@ -55,6 +55,8 @@ namespace Alkahest.Core.Net.Game.Serialization
 
         const string ItemName = "Item";
 
+        const string SimpleName = "Simple";
+
         static readonly Log _log = new Log(typeof(CompilerPacketSerializer));
 
         readonly Dictionary<Type, Action<GameBinaryReader, object>> _deserializers =
@@ -151,6 +153,7 @@ namespace Alkahest.Core.Net.Game.Serialization
                 var prop = info.Property;
                 var ftype = prop.PropertyType;
                 var etype = ftype.IsEnum ? ftype.GetEnumUnderlyingType() : ftype;
+                var prefix = info.Attribute.IsSimpleSkill ? SimpleName : string.Empty;
 
                 Expression property;
 
@@ -165,7 +168,7 @@ namespace Alkahest.Core.Net.Game.Serialization
                 }
 
                 return Expression.Block(
-                    writer.Call(WriteName + etype.Name, null, new[] { property }));
+                    writer.Call(WriteName + prefix + etype.Name, null, new[] { property }));
             }
 
             var exprs = new List<Expression>()
@@ -361,8 +364,9 @@ namespace Alkahest.Core.Net.Game.Serialization
                 var prop = info.Property;
                 var ftype = prop.PropertyType;
                 var etype = ftype.IsEnum ? ftype.GetEnumUnderlyingType() : ftype;
+                var prefix = info.Attribute.IsSimpleSkill ? SimpleName : string.Empty;
 
-                Expression read = reader.Call(ReadName + etype.Name, null, null);
+                Expression read = reader.Call(ReadName + prefix + etype.Name, null, null);
 
                 if (ftype.IsEnum)
                     read = read.Convert(ftype);

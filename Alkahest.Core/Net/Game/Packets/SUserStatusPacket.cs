@@ -22,6 +22,9 @@ namespace Alkahest.Core.Net.Game.Packets
         public UserStatus Status { get; set; }
 
         [PacketField]
-        public byte Unknown1 { get; set; }
+        public short Unknown1 { get; set; }
+
+        [PacketField]
+        public byte Unknown2 { get; set; }
     }
 }

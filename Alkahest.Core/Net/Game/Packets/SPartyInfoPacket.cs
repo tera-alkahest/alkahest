@@ -19,13 +19,13 @@ namespace Alkahest.Core.Net.Game.Packets
         public GameId Leader { get; set; }
 
         [PacketField]
-        public uint Unknown1 { get; set; }
+        public int Unknown1 { get; set; }
 
         [PacketField]
-        public ushort Unknown2 { get; set; }
+        public short Unknown2 { get; set; }
 
         [PacketField]
-        public ushort Unknown3 { get; set; }
+        public short Unknown3 { get; set; }
 
         [PacketField]
         public byte Unknown4 { get; set; }

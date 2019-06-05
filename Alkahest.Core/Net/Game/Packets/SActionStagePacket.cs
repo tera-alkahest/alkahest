@@ -17,23 +17,23 @@ namespace Alkahest.Core.Net.Game.Packets
             return new SActionStagePacket();
         }
 
-        public sealed class Movement
+        public sealed class AnimationSequenceInfo
         {
             [PacketField]
             public uint Duration { get; set; }
 
             [PacketField]
-            public float Speed { get; set; }
+            public float XYSpeed { get; set; }
 
             [PacketField]
-            public float Unknown5 { get; set; }
+            public float ZSpeed { get; set; }
 
             [PacketField]
             public float Distance { get; set; }
         }
 
         [PacketField]
-        public List<Movement> Movements { get; } = new List<Movement>();
+        public List<AnimationSequenceInfo> AnimationSequences { get; } = new List<AnimationSequenceInfo>();
 
         [PacketField]
         public GameId Source { get; set; }
@@ -57,21 +57,21 @@ namespace Alkahest.Core.Net.Game.Packets
         public float Speed { get; set; }
 
         [PacketField]
+        public float ProjectileSpeed { get; set; }
+
+        [PacketField]
         public uint CorrelationId { get; set; }
 
         [PacketField]
-        public float Unknown1 { get; set; }
+        public float EffectScale { get; set; }
 
         [PacketField]
-        public byte Unknown2 { get; set; }
+        public bool IsMoving { get; set; }
 
         [PacketField]
         public Vector3 Destination { get; set; }
 
         [PacketField]
-        public uint Unknown3 { get; set; }
-
-        [PacketField]
-        public uint Unknown4 { get; set; }
+        public GameId Target { get; set; }
     }
 }

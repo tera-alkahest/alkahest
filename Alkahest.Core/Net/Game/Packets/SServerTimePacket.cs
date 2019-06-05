@@ -15,6 +15,6 @@ namespace Alkahest.Core.Net.Game.Packets
         }
 
         [PacketField]
-        public ulong Time { get; set; }
+        public ulong ServerTime { get; set; }
     }
 }

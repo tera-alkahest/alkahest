@@ -2,6 +2,7 @@ namespace Alkahest.Core.Game
 {
     public enum FlyingMovementKind : uint
     {
+        Hover = 0,
         Forward = 2,
         Backward = 3,
         BoostForward = 4,

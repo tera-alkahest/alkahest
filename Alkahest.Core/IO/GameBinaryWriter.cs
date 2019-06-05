@@ -130,6 +130,11 @@ namespace Alkahest.Core.IO
             _writer.Write(value.Raw);
         }
 
+        public void WriteSimpleSkillId(SkillId value)
+        {
+            _writer.Write(value.Id);
+        }
+
         public void WriteAngle(Angle value)
         {
             _writer.Write(value.Raw);

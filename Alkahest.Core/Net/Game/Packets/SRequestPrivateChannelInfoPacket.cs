@@ -16,7 +16,7 @@ namespace Alkahest.Core.Net.Game.Packets
             return new SRequestPrivateChannelInfoPacket();
         }
 
-        public sealed class Friend
+        public sealed class FriendInfo
         {
             [PacketField]
             public string FriendName { get; set; }
@@ -35,16 +35,16 @@ namespace Alkahest.Core.Net.Game.Packets
         }
 
         [PacketField]
-        public List<Friend> Friends { get; } = new List<Friend>();
+        public List<FriendInfo> Friends { get; } = new List<FriendInfo>();
 
-        public sealed class Member
+        public sealed class MemberInfo
         {
             [PacketField]
             public string MemberName { get; set; }
         }
 
         [PacketField]
-        public List<Member> Members { get; } = new List<Member>();
+        public List<MemberInfo> Members { get; } = new List<MemberInfo>();
 
         [PacketField]
         public bool IsOwner { get; set; }

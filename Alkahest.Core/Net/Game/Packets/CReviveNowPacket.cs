@@ -1,3 +1,4 @@
+using Alkahest.Core.Game;
 using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
@@ -15,9 +16,9 @@ namespace Alkahest.Core.Net.Game.Packets
         }
 
         [PacketField]
-        public uint Type { get; set; }
+        public RevivalKind Type { get; set; }
 
         [PacketField]
-        public uint Unknown1 { get; set; }
+        public int Unknown1 { get; set; }
     }
 }

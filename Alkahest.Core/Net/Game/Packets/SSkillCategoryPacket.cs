@@ -15,9 +15,9 @@ namespace Alkahest.Core.Net.Game.Packets
         }
 
         [PacketField]
-        public uint Category { get; set; }
+        public uint CategoryId { get; set; }
 
         [PacketField]
-        public byte Unknown2 { get; set; }
+        public bool IsEnabled { get; set; }
     }
 }

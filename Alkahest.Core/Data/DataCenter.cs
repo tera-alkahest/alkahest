@@ -147,21 +147,21 @@ namespace Alkahest.Core.Data
 
         static DataCenterHeader ReadHeader(GameBinaryReader reader)
         {
-            var unk1 = reader.ReadUInt32();
-            var unk2 = reader.ReadUInt32();
-            var unk3 = reader.ReadUInt32();
+            var unk1 = reader.ReadInt32();
+            var unk2 = reader.ReadInt32();
+            var unk3 = reader.ReadInt32();
             var version = reader.ReadUInt32();
-            var unk4 = reader.ReadUInt32();
-            var unk5 = reader.ReadUInt32();
-            var unk6 = reader.ReadUInt32();
-            var unk7 = reader.ReadUInt32();
+            var unk4 = reader.ReadInt32();
+            var unk5 = reader.ReadInt32();
+            var unk6 = reader.ReadInt32();
+            var unk7 = reader.ReadInt32();
 
             return new DataCenterHeader(unk1, unk2, unk3, version, unk4, unk5, unk6, unk7);
         }
 
         static DataCenterFooter ReadFooter(GameBinaryReader reader)
         {
-            var unk1 = reader.ReadUInt32();
+            var unk1 = reader.ReadInt32();
 
             return new DataCenterFooter(unk1);
         }

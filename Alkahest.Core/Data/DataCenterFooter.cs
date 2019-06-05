@@ -2,9 +2,9 @@ namespace Alkahest.Core.Data
 {
     public sealed class DataCenterFooter
     {
-        public uint Unknown1 { get; }
+        public int Unknown1 { get; }
 
-        internal DataCenterFooter(uint unknown1)
+        internal DataCenterFooter(int unknown1)
         {
             Unknown1 = unknown1;
         }

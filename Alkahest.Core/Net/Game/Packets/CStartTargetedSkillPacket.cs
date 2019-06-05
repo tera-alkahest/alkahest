@@ -17,14 +17,17 @@ namespace Alkahest.Core.Net.Game.Packets
             return new CStartTargetedSkillPacket();
         }
 
-        public sealed class Unknown2Info
+        public sealed class TargetInfo
         {
             [PacketField]
-            public Vector3 Unknown1 { get; set; }
+            public GameId Target { get; set; }
+
+            [PacketField]
+            public int Unknown1 { get; set; }
         }
 
         [PacketField]
-        public List<Unknown2Info> Unknown2 { get; } = new List<Unknown2Info>();
+        public List<TargetInfo> Targets { get; } = new List<TargetInfo>();
 
         [PacketField]
         public SkillId Skill { get; set; }

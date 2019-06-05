@@ -6,8 +6,10 @@ namespace Alkahest.Core.Game
         Walk = 1,
         Fall = 2,
         Jump = 5,
-        JumpSteep = 6,
+        JumpCollide = 6,
         Stop = 7,
-        HeavyFall = 10,
+        StartSwim = 8,
+        StopSwim = 9,
+        JumpFall = 10,
     }
 }

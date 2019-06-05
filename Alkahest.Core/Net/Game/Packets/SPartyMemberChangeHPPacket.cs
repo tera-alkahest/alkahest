@@ -21,9 +21,9 @@ namespace Alkahest.Core.Net.Game.Packets
         public uint PlayerId { get; set; }
 
         [PacketField]
-        public uint CurrentHP { get; set; }
+        public ulong CurrentHP { get; set; }
 
         [PacketField]
-        public uint MaxHP { get; set; }
+        public ulong MaxHP { get; set; }
     }
 }

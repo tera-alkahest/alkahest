@@ -28,12 +28,12 @@ namespace Alkahest.Core.Net.Game.Packets
         public GameId Source { get; set; }
 
         [PacketField]
-        public byte Unknown1 { get; set; }
+        public bool IsWorldEventTarget { get; set; }
 
         [PacketField]
         public bool IsGameMaster { get; set; }
 
         [PacketField]
-        public byte Unknown2 { get; set; }
+        public bool IsFounder { get; set; }
     }
 }

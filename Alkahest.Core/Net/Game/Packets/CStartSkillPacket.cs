@@ -23,21 +23,24 @@ namespace Alkahest.Core.Net.Game.Packets
         public Angle Direction { get; set; }
 
         [PacketField]
-        public Vector3 Position1 { get; set; }
+        public Vector3 Position { get; set; }
 
         [PacketField]
-        public Vector3 Position2 { get; set; }
+        public Vector3 Destination { get; set; }
 
         [PacketField]
         public byte Unknown1 { get; set; }
 
         [PacketField]
-        public byte Unknown2 { get; set; }
+        public bool IsMoving { get; set; }
 
         [PacketField]
-        public byte Unknown3 { get; set; }
+        public bool IsContinuation { get; set; }
 
         [PacketField]
         public GameId Target { get; set; }
+
+        [PacketField]
+        public byte Unknown2 { get; set; }
     }
 }

@@ -27,7 +27,7 @@ namespace Alkahest.Core.Net.Game.Packets
         public uint SystemMemory { get; set; }
 
         [PacketField]
-        public uint Unknown2 { get; set; }
+        public uint VideoMemory { get; set; }
 
         [PacketField]
         public uint ResolutionWidth { get; set; }
@@ -36,27 +36,27 @@ namespace Alkahest.Core.Net.Game.Packets
         public uint ResolutionHeight { get; set; }
 
         [PacketField]
-        public uint Unknown3 { get; set; }
+        public bool IsFullScreen { get; set; }
 
         [PacketField]
-        public uint Unknown4 { get; set; }
+        public uint DisplayResolutionWidth { get; set; }
 
         [PacketField]
-        public uint Unknown5 { get; set; }
+        public uint DisplayResolutionHeight { get; set; }
 
         [PacketField]
-        public uint Unknown6 { get; set; }
+        public uint DisplayCount { get; set; }
 
         [PacketField]
-        public uint Unknown7 { get; set; }
+        public uint SystemResolutionWidth { get; set; }
 
         [PacketField]
-        public uint Unknown8 { get; set; }
+        public uint SystemResolutionHeight { get; set; }
 
         [PacketField]
-        public uint Unknown9 { get; set; }
+        public uint PhysicalCores { get; set; }
 
         [PacketField]
-        public byte Unknown10 { get; set; }
+        public uint LogicalCores { get; set; }
     }
 }

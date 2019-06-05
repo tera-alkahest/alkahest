@@ -22,7 +22,7 @@ namespace Alkahest.Core.Net.Game.Packets
         public SkillId BlockedSkill { get; set; }
 
         [PacketField]
-        public uint Unknown4 { get; set; }
+        public int Unknown1 { get; set; }
 
         [PacketField]
         public bool IsPerfectBlock { get; set; }

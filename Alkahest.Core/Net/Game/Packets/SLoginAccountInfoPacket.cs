@@ -18,9 +18,6 @@ namespace Alkahest.Core.Net.Game.Packets
         public string ServerName { get; set; }
 
         [PacketField]
-        public uint Unknown1 { get; set; }
-
-        [PacketField]
-        public uint Unknown2 { get; set; }
+        public ulong AccountId { get; set; }
     }
 }

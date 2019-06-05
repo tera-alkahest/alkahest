@@ -157,8 +157,16 @@ namespace Alkahest.Core.Net.Game.Serialization
                 }
                 else if (type == typeof(SkillId))
                 {
-                    serializer = (w, v) => w.WriteSkillId((SkillId)v);
-                    deserializer = r => r.ReadSkillId();
+                    if (attribute.IsSimpleSkill)
+                    {
+                        serializer = (w, v) => w.WriteSimpleSkillId((SkillId)v);
+                        deserializer = r => r.ReadSimpleSkillId();
+                    }
+                    else
+                    {
+                        serializer = (w, v) => w.WriteSkillId((SkillId)v);
+                        deserializer = r => r.ReadSkillId();
+                    }
                 }
                 else if (type == typeof(Angle))
                 {

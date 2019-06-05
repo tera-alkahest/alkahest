@@ -26,12 +26,12 @@ namespace Alkahest.Core.Net.Game.Packets
         public Vector3 Destination { get; set; }
 
         [PacketField]
-        public uint Timestamp { get; set; }
+        public uint OperatingSystemUpTime { get; set; }
 
         [PacketField]
-        public Vector3 Controls { get; set; }
+        public Vector3 ControlDirection { get; set; }
 
         [PacketField]
-        public Vector3 Direction { get; set; }
+        public Vector3 DestinationDirection { get; set; }
     }
 }

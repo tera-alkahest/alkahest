@@ -1,3 +1,4 @@
+using Alkahest.Core.Game;
 using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
@@ -15,27 +16,27 @@ namespace Alkahest.Core.Net.Game.Packets
         }
 
         [PacketField]
-        public ushort Unknown1 { get; set; }
+        public bool IsSuccessful { get; set; }
 
         [PacketField]
-        public ushort Unknown2 { get; set; }
+        public bool IsInQueue { get; set; }
 
         [PacketField]
-        public uint Unknown3 { get; set; }
+        public uint Status { get; set; }
 
         [PacketField]
-        public ushort Unknown4 { get; set; }
+        public int Unknown1 { get; set; }
 
         [PacketField]
-        public uint Unknown5 { get; set; }
+        public ClientRegion Region { get; set; }
 
         [PacketField]
-        public ushort Unknown6 { get; set; }
+        public bool DisablePlayerVersusPlayer { get; set; }
 
         [PacketField]
-        public ushort Unknown7 { get; set; }
+        public short Unknown2 { get; set; }
 
         [PacketField]
-        public byte Unknown8 { get; set; }
+        public short Unknown3 { get; set; }
     }
 }

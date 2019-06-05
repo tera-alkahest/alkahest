@@ -1,3 +1,4 @@
+using Alkahest.Core.Game;
 using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
@@ -15,9 +16,9 @@ namespace Alkahest.Core.Net.Game.Packets
         }
 
         [PacketField]
-        public ulong Unknown1 { get; set; }
+        public GameId Target { get; set; }
 
         [PacketField]
-        public uint Unknown2 { get; set; }
+        public uint Stage { get; set; }
     }
 }

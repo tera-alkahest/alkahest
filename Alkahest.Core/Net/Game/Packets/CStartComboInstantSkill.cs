@@ -20,26 +20,26 @@ namespace Alkahest.Core.Net.Game.Packets
         public sealed class TargetInfo
         {
             [PacketField]
-            public uint Unknown1 { get; set; }
+            public uint ProjectileId { get; set; }
 
             [PacketField]
             public GameId Target { get; set; }
 
             [PacketField]
-            public uint Unknown2 { get; set; }
+            public uint HitCylinderListIndex { get; set; }
         }
 
         [PacketField]
         public List<TargetInfo> Targets { get; } = new List<TargetInfo>();
 
-        public sealed class TargetLocation
+        public sealed class EndPointInfo
         {
             [PacketField]
-            public Vector3 Location { get; set; }
+            public Vector3 Position { get; set; }
         }
 
         [PacketField]
-        public List<TargetLocation> Locations { get; } = new List<TargetLocation>();
+        public List<EndPointInfo> EndPoints { get; } = new List<EndPointInfo>();
 
         [PacketField]
         public SkillId Skill { get; set; }

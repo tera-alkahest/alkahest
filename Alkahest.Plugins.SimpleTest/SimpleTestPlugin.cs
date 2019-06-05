@@ -15,7 +15,7 @@ namespace Alkahest.Plugins.SimpleTest
 
         const ushort ChatChannelPassword = 4321;
 
-        const uint DanceEmote = 21;
+        const uint DanceId = 21;
 
         const uint VisibilityRange = 100;
 
@@ -75,9 +75,9 @@ namespace Alkahest.Plugins.SimpleTest
             // Only allow the dance emote.
 
             _log.Info("Client {0} requested emote {1}; sending {2}",
-                client.EndPoint, packet.Emote, DanceEmote);
+                client.EndPoint, packet.SocialId, DanceId);
 
-            packet.Emote = DanceEmote;
+            packet.SocialId = DanceId;
 
             return true;
         }

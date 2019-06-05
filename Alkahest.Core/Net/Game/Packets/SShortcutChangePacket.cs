@@ -15,12 +15,12 @@ namespace Alkahest.Core.Net.Game.Packets
         }
 
         [PacketField]
-        public uint Unknown1 { get; set; }
+        public uint HuntingZoneId { get; set; }
 
         [PacketField]
-        public uint Unknown2 { get; set; }
+        public uint ShortcutSetId { get; set; }
 
         [PacketField]
-        public bool Unknown3 { get; set; }
+        public bool IsEnabled { get; set; }
     }
 }

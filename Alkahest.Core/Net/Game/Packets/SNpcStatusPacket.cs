@@ -22,12 +22,21 @@ namespace Alkahest.Core.Net.Game.Packets
         public bool IsEnraged { get; set; }
 
         [PacketField]
-        public uint Unknown1 { get; set; }
+        public uint EnrageTimeRemaining { get; set; }
+
+        [PacketField]
+        public HPLevel HPLevel { get; set; }
+
+        [PacketField]
+        public short Unknown1 { get; set; }
 
         [PacketField]
         public GameId Target { get; set; }
 
         [PacketField]
-        public uint Unknown2 { get; set; }
+        public NpcStatus Status { get; set; }
+
+        [PacketField]
+        public short Unknown2 { get; set; }
     }
 }

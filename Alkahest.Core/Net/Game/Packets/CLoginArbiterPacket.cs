@@ -1,3 +1,4 @@
+using Alkahest.Core.Game;
 using Alkahest.Core.Net.Game.Serialization;
 using System.Collections.Generic;
 
@@ -22,13 +23,13 @@ namespace Alkahest.Core.Net.Game.Packets
         public List<byte> Ticket { get; } = new List<byte>();
 
         [PacketField]
-        public uint Unknown1 { get; set; }
+        public int Unknown1 { get; set; }
 
         [PacketField]
         public byte Unknown2 { get; set; }
 
         [PacketField]
-        public uint Unknown3 { get; set; }
+        public ClientRegion Region { get; set; }
 
         [PacketField]
         public uint PatchVersion { get; set; }

@@ -4,24 +4,24 @@ namespace Alkahest.Core.Data
     {
         // Some of these are actually more complex structures, but are zeroed.
 
-        public uint Unknown1 { get; }
+        public int Unknown1 { get; }
 
-        public uint Unknown2 { get; }
+        public int Unknown2 { get; }
 
-        public uint Unknown3 { get; }
+        public int Unknown3 { get; }
 
         public uint Version { get; }
 
-        public uint Unknown4 { get; }
+        public int Unknown4 { get; }
 
-        public uint Unknown5 { get; }
+        public int Unknown5 { get; }
 
-        public uint Unknown6 { get; }
+        public int Unknown6 { get; }
 
-        public uint Unknown7 { get; }
+        public int Unknown7 { get; }
 
-        internal DataCenterHeader(uint unknown1, uint unknown2, uint unknown3, uint version,
-            uint unknown4, uint unknown5, uint unknown6, uint unknown7)
+        internal DataCenterHeader(int unknown1, int unknown2, int unknown3, uint version,
+            int unknown4, int unknown5, int unknown6, int unknown7)
         {
             Unknown1 = unknown1;
             Unknown2 = unknown2;
