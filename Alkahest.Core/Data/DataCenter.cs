@@ -27,6 +27,21 @@ namespace Alkahest.Core.Data
                 { Region.UK, "DataCenter_Final_EUR.dat" },
             };
 
+        public static IReadOnlyDictionary<Region, uint> Versions { get; } =
+            new Dictionary<Region, uint>
+            {
+                { Region.DE, 350022 },
+                { Region.FR, 350022 },
+                { Region.JP, 350023 },
+                { Region.KR, 0 },
+                { Region.NA, 347372 },
+                { Region.RU, 347375 },
+                { Region.SE, 349932 },
+                { Region.TH, 349932 },
+                { Region.TW, 350025 },
+                { Region.UK, 350022 },
+            };
+
         const int Unknown1Size = 8;
 
         const int AttributeSize = 8;
@@ -56,17 +71,21 @@ namespace Alkahest.Core.Data
         ConcurrentDictionary<DataCenterAddress, string> _strings =
             new ConcurrentDictionary<DataCenterAddress, string>();
 
+        readonly bool _intern;
+
         DataCenterSegmentedRegion _stringRegion;
 
-        public DataCenter()
+        public DataCenter(uint version)
         {
-            Header = new DataCenterHeader(0, 0, 0, 0, 0, 0, 0, 0);
+            Header = new DataCenterHeader(0, 0, 0, version, 0, 0, 0, 0);
             Footer = new DataCenterFooter(0);
             Root = new DataCenterElement(this, DataCenterAddress.Zero);
         }
 
-        public unsafe DataCenter(string fileName)
+        public unsafe DataCenter(string fileName, bool intern)
         {
+            _intern = intern;
+
             using var reader = new GameBinaryReader(File.OpenRead(fileName));
 
             Header = ReadHeader(reader);
@@ -142,7 +161,12 @@ namespace Alkahest.Core.Data
 
         internal string GetString(DataCenterAddress address)
         {
-            return _strings.GetOrAdd(address, a => _stringRegion.GetReader(address).ReadString());
+            return _strings.GetOrAdd(address, a =>
+            {
+                var str = _stringRegion.GetReader(address).ReadString();
+
+                return _intern ? string.Intern(str) : str;
+            });
         }
 
         static DataCenterHeader ReadHeader(GameBinaryReader reader)

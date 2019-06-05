@@ -108,7 +108,7 @@ namespace Alkahest.Commands
 
                 var pool = new ObjectPool<SocketAsyncEventArgs>(() => new SocketAsyncEventArgs(),
                     x => x.Reset(), Configuration.PoolLimit != 0 ? (int?)Configuration.PoolLimit : null);
-                var version = MessageTable.Versions[region];
+                var version = DataCenter.Versions[region];
                 var proc = new PacketProcessor(new CompilerPacketSerializer(region,
                     new GameMessageTable(version), new SystemMessageTable(version)));
                 var proxies = slsProxy.Servers.Select(x => new GameProxy(x, pool, proc,
@@ -123,7 +123,8 @@ namespace Alkahest.Commands
                 var path = Path.ChangeExtension(Path.Combine(Configuration.AssetDirectory,
                     DataCenter.FileNames[region]), ".dec");
                 var loader = new PluginLoader(new PluginContext(File.Exists(path) ?
-                    new DataCenter(path) : new DataCenter()), Configuration.PluginDirectory,
+                    new DataCenter(path, Configuration.DataCenterInterning) :
+                    new DataCenter(version)), Configuration.PluginDirectory,
                     Configuration.PluginPattern, Configuration.DisablePlugins);
 
                 loader.Start(proxies);

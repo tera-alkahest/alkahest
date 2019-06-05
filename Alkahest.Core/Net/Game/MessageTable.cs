@@ -1,3 +1,4 @@
+using Alkahest.Core.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,24 +15,9 @@ namespace Alkahest.Core.Net.Game
 
         public IReadOnlyDictionary<string, ushort> NameToCode { get; }
 
-        public static IReadOnlyDictionary<Region, uint> Versions { get; } =
-            new Dictionary<Region, uint>
-            {
-                { Region.DE, 350022 },
-                { Region.FR, 350022 },
-                { Region.JP, 350023 },
-                { Region.KR, 0 },
-                { Region.NA, 347372 },
-                { Region.RU, 347375 },
-                { Region.SE, 349932 },
-                { Region.TH, 349932 },
-                { Region.TW, 350025 },
-                { Region.UK, 350022 },
-            };
-
         private protected MessageTable(bool opCodes, uint version)
         {
-            if (!Versions.Values.Contains(version))
+            if (!DataCenter.Versions.Values.Contains(version))
                 throw new ArgumentOutOfRangeException(nameof(version));
 
             Version = version;
