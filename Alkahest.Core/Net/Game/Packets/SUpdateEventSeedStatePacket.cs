@@ -19,6 +19,6 @@ namespace Alkahest.Core.Net.Game.Packets
         public GameId Target { get; set; }
 
         [PacketField]
-        public uint Stage { get; set; }
+        public int Unknown1 { get; set; }
     }
 }

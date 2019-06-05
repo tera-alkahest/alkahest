@@ -20,7 +20,7 @@ namespace Alkahest.Core.Net.Game.Packets
         public SkillId Skill { get; set; }
 
         [PacketField]
-        public uint Stage { get; set; }
+        public uint StageListIndex { get; set; }
 
         [PacketField]
         public Vector3 Position { get; set; }

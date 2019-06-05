@@ -108,7 +108,7 @@ namespace Alkahest.Core.Net.Game.Packets
         public SkillId TargetSkill { get; set; }
 
         [PacketField]
-        public uint TargetStage { get; set; }
+        public uint TargetStageListIndex { get; set; }
 
         [PacketField]
         public uint TargetCorrelationId { get; set; }
