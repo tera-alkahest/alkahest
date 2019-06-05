@@ -2,16 +2,8 @@ using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
-    public sealed class CGuildApplyListPacket : Packet
+    [Packet("C_GUILD_APPLY_LIST")]
+    public sealed class CGuildApplyListPacket : SerializablePacket
     {
-        const string Name = "C_GUILD_APPLY_LIST";
-
-        public override string OpCode => Name;
-
-        [Packet(Name)]
-        internal static Packet Create()
-        {
-            return new CGuildApplyListPacket();
-        }
     }
 }

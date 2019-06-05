@@ -4,6 +4,7 @@ using Alkahest.Core.Logging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Reflection;
 
@@ -25,7 +26,8 @@ namespace Alkahest.Core.Net.Game.Serialization
 
             public Func<object> ElementConstructor { get; }
 
-            public ReflectionPacketFieldInfo(PropertyInfo property, PacketFieldAttribute attribute)
+            public ReflectionPacketFieldInfo(PropertyInfo property,
+                PacketFieldOptionsAttribute attribute)
                 : base(property, attribute)
             {
                 var type = property.PropertyType;
@@ -55,7 +57,7 @@ namespace Alkahest.Core.Net.Game.Serialization
                 }
             }
 
-            static void GetFunctions(PropertyInfo property, PacketFieldAttribute attribute,
+            static void GetFunctions(PropertyInfo property, PacketFieldOptionsAttribute attribute,
                 out Action<GameBinaryWriter, object> serializer, out Func<GameBinaryReader, object> deserializer)
             {
                 var dtype = property.DeclaringType;
@@ -90,7 +92,7 @@ namespace Alkahest.Core.Net.Game.Serialization
                 }
                 else if (type == typeof(ushort))
                 {
-                    if (attribute.IsUnknownArray)
+                    if (attribute?.IsUnknownArray ?? false)
                     {
                         serializer = (w, v) => w.WriteUInt16(0);
                         deserializer = r =>
@@ -157,7 +159,7 @@ namespace Alkahest.Core.Net.Game.Serialization
                 }
                 else if (type == typeof(SkillId))
                 {
-                    if (attribute.IsSimpleSkill)
+                    if (attribute?.IsSimpleSkill ?? false)
                     {
                         serializer = (w, v) => w.WriteSimpleSkillId((SkillId)v);
                         deserializer = r => r.ReadSimpleSkillId();
@@ -194,23 +196,28 @@ namespace Alkahest.Core.Net.Game.Serialization
         {
         }
 
+        protected override SerializablePacket OnCreate(PacketInfo info)
+        {
+            return (SerializablePacket)Activator.CreateInstance(info.Type);
+        }
+
         protected override PacketFieldInfo CreateFieldInfo(PropertyInfo property,
-            PacketFieldAttribute attribute)
+            PacketFieldOptionsAttribute attribute)
         {
             return new ReflectionPacketFieldInfo(property, attribute);
         }
 
-        protected override void OnSerialize(GameBinaryWriter writer, Packet packet)
+        protected override void OnSerialize(GameBinaryWriter writer, PacketInfo info,
+            SerializablePacket packet)
         {
             SerializeObject(writer, packet);
         }
 
         void SerializeObject(GameBinaryWriter writer, object source)
         {
-            var fields = GetPacketFields<ReflectionPacketFieldInfo>(source.GetType());
             var offsets = new List<(ReflectionPacketFieldInfo, int)>();
 
-            foreach (var info in fields)
+            foreach (var info in GetPacketInfo(source.GetType()).Fields.Cast<ReflectionPacketFieldInfo>())
             {
                 if (info.IsByteArray)
                 {
@@ -275,14 +282,15 @@ namespace Alkahest.Core.Net.Game.Serialization
             }
         }
 
-        protected override void OnDeserialize(GameBinaryReader reader, Packet packet)
+        protected override void OnDeserialize(GameBinaryReader reader, PacketInfo info,
+            SerializablePacket packet)
         {
             DeserializeObject(reader, packet);
         }
 
         void DeserializeObject(GameBinaryReader reader, object target)
         {
-            foreach (var info in GetPacketFields<ReflectionPacketFieldInfo>(target.GetType()))
+            foreach (var info in GetPacketInfo(target.GetType()).Fields.Cast<ReflectionPacketFieldInfo>())
             {
                 if (info.IsByteArray)
                 {

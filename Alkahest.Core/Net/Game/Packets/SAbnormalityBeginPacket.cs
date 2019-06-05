@@ -3,40 +3,23 @@ using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
-    public sealed class SAbnormalityBeginPacket : Packet
+    [Packet("S_ABNORMALITY_BEGIN")]
+    public sealed class SAbnormalityBeginPacket : SerializablePacket
     {
-        const string Name = "S_ABNORMALITY_BEGIN";
-
-        public override string OpCode => Name;
-
-        [Packet(Name)]
-        internal static Packet Create()
-        {
-            return new SAbnormalityBeginPacket();
-        }
-
-        [PacketField]
         public GameId Target { get; set; }
 
-        [PacketField]
         public GameId Source { get; set; }
 
-        [PacketField]
         public uint AbnormalityId { get; set; }
 
-        [PacketField]
         public uint Duration { get; set; }
 
-        [PacketField]
         public int Unknown1 { get; set; }
 
-        [PacketField]
         public uint Stacks { get; set; }
 
-        [PacketField]
         public int Unknown2 { get; set; }
 
-        [PacketField]
         public int Unknown3 { get; set; }
     }
 }

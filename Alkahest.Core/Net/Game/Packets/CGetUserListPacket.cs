@@ -2,16 +2,8 @@ using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
-    public sealed class CGetUserListPacket : Packet
+    [Packet("C_GET_USER_LIST")]
+    public sealed class CGetUserListPacket : SerializablePacket
     {
-        const string Name = "C_GET_USER_LIST";
-
-        public override string OpCode => Name;
-
-        [Packet(Name)]
-        internal static Packet Create()
-        {
-            return new CGetUserListPacket();
-        }
     }
 }

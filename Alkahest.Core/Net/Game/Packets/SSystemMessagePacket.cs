@@ -6,23 +6,15 @@ using System.Text;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
-    public sealed class SSystemMessagePacket : Packet
+    [Packet("S_SYSTEM_MESSAGE")]
+    public sealed class SSystemMessagePacket : SerializablePacket
     {
-        const string Name = "S_SYSTEM_MESSAGE";
-
-        public override string OpCode => Name;
-
-        [Packet(Name)]
-        internal static Packet Create()
-        {
-            return new SSystemMessagePacket();
-        }
-
-        [PacketField]
         public string Message { get; set; }
 
+        [PacketFieldOptions(Skip = true)]
         public string MessageName { get; set; }
 
+        [PacketFieldOptions(Skip = true)]
         public Dictionary<string, string> MessageArguments { get; } = new Dictionary<string, string>();
 
         internal override void OnDeserialize(PacketSerializer serializer)

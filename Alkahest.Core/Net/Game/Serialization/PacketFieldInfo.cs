@@ -10,7 +10,7 @@ namespace Alkahest.Core.Net.Game.Serialization
     {
         public PropertyInfo Property { get; }
 
-        public PacketFieldAttribute Attribute { get; }
+        public PacketFieldOptionsAttribute Attribute { get; }
 
         public bool IsArray { get; }
 
@@ -20,10 +20,10 @@ namespace Alkahest.Core.Net.Game.Serialization
 
         public bool IsPrimitive { get; }
 
-        protected PacketFieldInfo(PropertyInfo property, PacketFieldAttribute attribute)
+        protected PacketFieldInfo(PropertyInfo property, PacketFieldOptionsAttribute attribute)
         {
             Property = property ?? throw new ArgumentNullException(nameof(property));
-            Attribute = attribute ?? throw new ArgumentNullException(nameof(attribute));
+            Attribute = attribute;
 
             var type = property.PropertyType;
             var isArray = type.IsConstructedGenericType && type.GetGenericTypeDefinition() == typeof(List<>);
@@ -36,7 +36,7 @@ namespace Alkahest.Core.Net.Game.Serialization
             IsPrimitive = IsPrimitiveType(type);
         }
 
-        static bool IsPrimitiveType(Type type)
+        internal static bool IsPrimitiveType(Type type)
         {
             if (type.IsEnum)
                 type = type.GetEnumUnderlyingType();

@@ -1,9 +1,7 @@
 using Alkahest.Core.IO;
 using Alkahest.Core.Logging;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using System.Reflection;
 
@@ -24,10 +22,11 @@ namespace Alkahest.Core.Net.Game.Serialization
 
         public SystemMessageTable SystemMessages { get; }
 
-        readonly ConcurrentDictionary<Type, IReadOnlyList<PacketFieldInfo>> _info =
-            new ConcurrentDictionary<Type, IReadOnlyList<PacketFieldInfo>>();
+        readonly IReadOnlyDictionary<Type, PacketInfo> _byType;
 
-        readonly IReadOnlyDictionary<ushort, Func<Packet>> _packetCreators;
+        readonly IReadOnlyDictionary<string, PacketInfo> _byName;
+
+        readonly IReadOnlyDictionary<ushort, PacketInfo> _byCode;
 
         protected PacketSerializer(Region region, GameMessageTable gameMessages,
             SystemMessageTable systemMessages)
@@ -36,68 +35,97 @@ namespace Alkahest.Core.Net.Game.Serialization
             GameMessages = gameMessages ?? throw new ArgumentNullException(nameof(gameMessages));
             SystemMessages = systemMessages ?? throw new ArgumentNullException(nameof(systemMessages));
 
-            var creators = new Dictionary<ushort, Func<Packet>>();
-            using var container = new CompositionContainer(new AssemblyCatalog(
-                Assembly.GetExecutingAssembly()), true);
-            var exports = container.GetExports<Func<Packet>, IPacketMetadata>(
-                PacketAttribute.ThisContractName);
+            var byType = new Dictionary<Type, PacketInfo>();
+            var byName = new Dictionary<string, PacketInfo>();
+            var byCode = new Dictionary<ushort, PacketInfo>();
 
-            foreach (var lazy in exports)
+            void RegisterType(Type type, PacketAttribute attribute, ushort? code)
             {
-                var name = lazy.Metadata.OpCode;
+                var info = new PacketInfo(type, attribute,
+                    (from prop in type.GetProperties()
+                     let opts = prop.GetCustomAttribute<PacketFieldOptionsAttribute>()
+                     where opts == null || (!opts.Skip && (opts.Regions.Length == 0 || opts.Regions.Contains(region)))
+                     orderby prop.MetadataToken
+                     select CreateFieldInfo(prop, opts)).ToArray());
 
-                if (gameMessages.NameToCode.TryGetValue(name, out var code))
-                    creators.Add(code, lazy.Value);
-                else
-                    _log.Warning("Could not map {0} to a code; ignoring definition", name);
+                byType.Add(type, info);
+
+                if (code is ushort c)
+                {
+                    byName.Add(attribute.Name, info);
+                    byCode.Add(c, info);
+                }
+
+                foreach (var field in info.Fields.Where(x => x.IsArray))
+                    RegisterType(field.Property.PropertyType.GetGenericArguments()[0], null, null);
             }
 
-            _packetCreators = creators;
+            foreach (var type in Assembly.GetExecutingAssembly().DefinedTypes)
+            {
+                var attr = type.GetCustomAttribute<PacketAttribute>();
+
+                if (attr == null)
+                    continue;
+
+                if (!gameMessages.NameToCode.TryGetValue(attr.Name, out var code))
+                {
+                    _log.Warning("Game message {0} not mapped to a code; ignoring definition", attr.Name);
+                    continue;
+                }
+
+                RegisterType(type, attr, code);
+            }
+
+            _byType = byType;
+            _byName = byName;
+            _byCode = byCode;
         }
 
-        public bool IsKnown(ushort opCode)
+        public PacketInfo GetPacketInfo(Type type)
         {
-            return _packetCreators.ContainsKey(opCode);
+            return _byType.GetValueOrDefault(type);
         }
 
-        public Type GetType(ushort opCode)
+        public PacketInfo GetPacketInfo(string name)
         {
-            _packetCreators.TryGetValue(opCode, out var creator);
-
-            return creator?.Method.DeclaringType;
+            return _byName.GetValueOrDefault(name);
         }
 
-        public Packet Create(ushort opCode)
+        public PacketInfo GetPacketInfo(ushort code)
         {
-            _packetCreators.TryGetValue(opCode, out var creator);
-
-            return creator?.Invoke();
+            return _byCode.GetValueOrDefault(code);
         }
+
+        public SerializablePacket Create(Type type)
+        {
+            var info = _byType.GetValueOrDefault(type);
+
+            return info != null ? OnCreate(info) : null;
+        }
+
+        public SerializablePacket Create(string name)
+        {
+            var info = _byName.GetValueOrDefault(name);
+
+            return info != null ? OnCreate(info) : null;
+        }
+
+        public SerializablePacket Create(ushort code)
+        {
+            var info = _byCode.GetValueOrDefault(code);
+
+            return info != null ? OnCreate(info) : null;
+        }
+
+        protected abstract SerializablePacket OnCreate(PacketInfo info);
 
         protected abstract PacketFieldInfo CreateFieldInfo(PropertyInfo property,
-            PacketFieldAttribute attribute);
+            PacketFieldOptionsAttribute attribute);
 
-        protected IReadOnlyList<T> GetPacketFields<T>(Type type)
-            where T : PacketFieldInfo
-        {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+        protected abstract void OnSerialize(GameBinaryWriter writer, PacketInfo info,
+            SerializablePacket packet);
 
-            return _info.GetOrAdd(type, t =>
-            {
-                return (from prop in t.GetProperties(FieldFlags)
-                        let attr = prop.GetCustomAttribute<PacketFieldAttribute>()
-                        where attr != null
-                        where attr.Regions.Length == 0 ||
-                            attr.Regions.Contains(Region)
-                        orderby prop.MetadataToken
-                        select CreateFieldInfo(prop, attr)).ToArray();
-            }).Cast<T>().ToArray();
-        }
-
-        protected abstract void OnSerialize(GameBinaryWriter writer, Packet packet);
-
-        public byte[] Serialize(Packet packet)
+        public byte[] Serialize(SerializablePacket packet)
         {
             if (packet == null)
                 throw new ArgumentNullException(nameof(packet));
@@ -106,14 +134,15 @@ namespace Alkahest.Core.Net.Game.Serialization
 
             using var writer = new GameBinaryWriter();
 
-            OnSerialize(writer, packet);
+            OnSerialize(writer, _byType[packet.GetType()], packet);
 
             return writer.ToArray();
         }
 
-        protected abstract void OnDeserialize(GameBinaryReader reader, Packet packet);
+        protected abstract void OnDeserialize(GameBinaryReader reader, PacketInfo info,
+            SerializablePacket packet);
 
-        public void Deserialize(byte[] payload, Packet packet)
+        public void Deserialize(byte[] payload, SerializablePacket packet)
         {
             if (payload == null)
                 throw new ArgumentNullException(nameof(payload));
@@ -123,7 +152,7 @@ namespace Alkahest.Core.Net.Game.Serialization
 
             using var reader = new GameBinaryReader(payload);
 
-            OnDeserialize(reader, packet);
+            OnDeserialize(reader, _byType[packet.GetType()], packet);
 
             packet.OnDeserialize(this);
         }

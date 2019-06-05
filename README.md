@@ -41,9 +41,9 @@ accessing data stored with the game client.
   projects.
 * **Reusable core library:** The Alkahest server is merely a wrapper around the
   `Alkahest.Core` library which can be embedded in any .NET application.
-* **Client analysis tools:** Data mining tools allow extraction of opcodes,
-  system messages, and data center keys, as well as decryption of the client's
-  data center files.
+* **Client analysis tools:** Data mining tools allow extraction of game
+  messages, system messages, and data center keys, as well as decryption of the
+  client's data center files.
 * **Packet logging:** Compressed packet logs can be saved for later parsing and
   analysis.
 * **Packet parser:** An offline packet parsing tool can generate text dumps of

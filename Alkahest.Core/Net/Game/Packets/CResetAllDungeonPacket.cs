@@ -2,16 +2,8 @@ using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
-    public sealed class CResetAllDungeonPacket : Packet
+    [Packet("C_RESET_ALL_DUNGEON")]
+    public sealed class CResetAllDungeonPacket : SerializablePacket
     {
-        const string Name = "C_RESET_ALL_DUNGEON";
-
-        public override string OpCode => Name;
-
-        [Packet(Name)]
-        internal static Packet Create()
-        {
-            return new CResetAllDungeonPacket();
-        }
     }
 }

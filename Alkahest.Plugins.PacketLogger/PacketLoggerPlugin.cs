@@ -44,7 +44,7 @@ namespace Alkahest.Plugins.PacketLogger
         bool PacketLogHandler(GameClient client, Direction direction, RawPacket packet)
         {
             _writer.Write(new PacketLogEntry(DateTime.Now, client.Proxy.Info.Id, direction,
-                client.Proxy.Processor.Serializer.GameMessages.NameToCode[packet.OpCode], packet.Payload));
+                client.Proxy.Processor.Serializer.GameMessages.NameToCode[packet.Name], packet.Payload));
 
             return true;
         }

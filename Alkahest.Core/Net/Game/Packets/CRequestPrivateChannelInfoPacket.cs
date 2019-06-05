@@ -2,19 +2,9 @@ using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
-    public sealed class CRequestPrivateChannelInfoPacket : Packet
+    [Packet("C_REQUEST_PRIVATE_CHANNEL_INFO")]
+    public sealed class CRequestPrivateChannelInfoPacket : SerializablePacket
     {
-        const string Name = "C_REQUEST_PRIVATE_CHANNEL_INFO";
-
-        public override string OpCode => Name;
-
-        [Packet(Name)]
-        internal static Packet Create()
-        {
-            return new CRequestPrivateChannelInfoPacket();
-        }
-
-        [PacketField]
         public uint ChannelId { get; set; }
     }
 }

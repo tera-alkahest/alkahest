@@ -1,16 +1,23 @@
+using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 
 namespace Alkahest.Core.Net.Game.Serialization
 {
-    public abstract class Packet
+    public abstract class SerializablePacket
     {
-        public abstract string OpCode { get; }
+        static readonly ConcurrentDictionary<Type, string> _names =
+            new ConcurrentDictionary<Type, string>();
 
-        internal Packet()
+        [PacketFieldOptions(Skip = true)]
+        public string Name { get; }
+
+        internal SerializablePacket()
         {
+            Name = _names.GetOrAdd(GetType(), t => t.GetCustomAttribute<PacketAttribute>().Name);
         }
 
         internal virtual void OnSerialize(PacketSerializer serializer)
@@ -41,9 +48,13 @@ namespace Alkahest.Core.Net.Game.Serialization
             builder.AppendLine($"{indent}{{");
 
             foreach (var prop in type.GetProperties(PacketSerializer.FieldFlags)
-                .Where(p => p.GetCustomAttribute<PacketFieldAttribute>() != null)
                 .OrderBy(p => p.MetadataToken))
             {
+                var opts = prop.GetCustomAttribute<PacketFieldOptionsAttribute>();
+
+                if (opts != null && opts.Skip)
+                    continue;
+
                 var propType = prop.PropertyType;
                 var name = prop.Name;
                 var value = prop.GetValue(source);

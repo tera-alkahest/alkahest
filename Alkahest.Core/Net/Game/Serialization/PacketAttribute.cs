@@ -1,20 +1,15 @@
 using System;
-using System.ComponentModel.Composition;
 
 namespace Alkahest.Core.Net.Game.Serialization
 {
-    [MetadataAttribute]
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public sealed class PacketAttribute : ExportAttribute
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    public sealed class PacketAttribute : Attribute
     {
-        internal const string ThisContractName = "Alkahest.Core.Net.Protocol.Packet";
+        public string Name { get; }
 
-        public string OpCode { get; }
-
-        internal PacketAttribute(string opCode)
-            : base(ThisContractName)
+        internal PacketAttribute(string name)
         {
-            OpCode = opCode;
+            Name = name;
         }
     }
 }

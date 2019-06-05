@@ -6,13 +6,13 @@ namespace Alkahest.Core.Net.Game
 {
     public sealed class RawPacket
     {
-        public string OpCode { get; }
+        public string Name { get; }
 
         public byte[] Payload { get; set; }
 
-        public RawPacket(string opCode)
+        public RawPacket(string name)
         {
-            OpCode = opCode ?? throw new ArgumentNullException(nameof(opCode));
+            Name = name ?? throw new ArgumentNullException(nameof(name));
         }
 
         public override string ToString()

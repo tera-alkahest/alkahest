@@ -3,22 +3,11 @@ using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
-    public sealed class CReviveNowPacket : Packet
+    [Packet("C_REVIVE_NOW")]
+    public sealed class CReviveNowPacket : SerializablePacket
     {
-        const string Name = "C_REVIVE_NOW";
-
-        public override string OpCode => Name;
-
-        [Packet(Name)]
-        internal static Packet Create()
-        {
-            return new CReviveNowPacket();
-        }
-
-        [PacketField]
         public RevivalKind Type { get; set; }
 
-        [PacketField]
         public int Unknown1 { get; set; }
     }
 }

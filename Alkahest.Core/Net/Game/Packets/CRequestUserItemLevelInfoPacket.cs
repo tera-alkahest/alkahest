@@ -2,17 +2,9 @@ using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
-    public sealed class CRequestUserItemLevelInfoPacket : Packet
+    [Packet("C_REQUEST_USER_ITEMLEVEL_INFO")]
+    public sealed class CRequestUserItemLevelInfoPacket : SerializablePacket
     {
-        const string Name = "C_REQUEST_USER_ITEMLEVEL_INFO";
-
-        public override string OpCode => Name;
-
-        [Packet(Name)]
-        internal static Packet Create()
-        {
-            return new CRequestUserItemLevelInfoPacket();
-        }
     }
 }
 

@@ -4,34 +4,19 @@ using System.Numerics;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
-    public sealed class CStartInstanceSkillExPacket : Packet
+    [Packet("C_START_INSTANCE_SKILL_EX")]
+    public sealed class CStartInstanceSkillExPacket : SerializablePacket
     {
-        const string Name = "C_START_INSTANCE_SKILL_EX";
-
-        public override string OpCode => Name;
-
-        [Packet(Name)]
-        internal static Packet Create()
-        {
-            return new CNoTimelineSkillPacket();
-        }
-
-        [PacketField]
         public SkillId Skill { get; set; }
 
-        [PacketField]
         public GameId Target { get; set; }
 
-        [PacketField]
         public Vector3 Position { get; set; }
 
-        [PacketField]
         public Vector3 Destination { get; set; }
 
-        [PacketField]
         public Angle Direction { get; set; }
 
-        [PacketField]
         public byte Unknown1 { get; set; }
     }
 }

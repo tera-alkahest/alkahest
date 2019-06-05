@@ -2,19 +2,9 @@ using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
-    public sealed class STradeBrokerHighestItemLevelPacket : Packet
+    [Packet("S_TRADE_BROKER_HIGHEST_ITEM_LEVEL")]
+    public sealed class STradeBrokerHighestItemLevelPacket : SerializablePacket
     {
-        const string Name = "S_TRADE_BROKER_HIGHEST_ITEM_LEVEL";
-
-        public override string OpCode => Name;
-
-        [Packet(Name)]
-        internal static Packet Create()
-        {
-            return new STradeBrokerHighestItemLevelPacket();
-        }
-
-        [PacketField]
         public uint ItemLevel { get; set; }
     }
 }

@@ -3,25 +3,13 @@ using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
-    public sealed class SSuccessCounterPacket : Packet
+    [Packet("S_SUCCESS_COUNTER")]
+    public sealed class SSuccessCounterPacket : SerializablePacket
     {
-        const string Name = "S_SUCCESS_COUNTER";
-
-        public override string OpCode => Name;
-
-        [Packet(Name)]
-        internal static Packet Create()
-        {
-            return new SSuccessCounterPacket();
-        }
-
-        [PacketField]
         public GameId Source { get; set; }
 
-        [PacketField]
         public GameId Target { get; set; }
 
-        [PacketField]
         public SkillId DodgeSkill { get; set; }
     }
 }

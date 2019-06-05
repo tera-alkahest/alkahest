@@ -40,7 +40,7 @@ namespace Alkahest.Parser
 
         readonly Dictionary<string, SummaryEntry> _packets = new Dictionary<string, SummaryEntry>();
 
-        public void AddPacket(string opCode, bool known, int length)
+        public void AddPacket(string name, bool known, int length)
         {
             RelevantPackets++;
 
@@ -52,8 +52,8 @@ namespace Alkahest.Parser
             else
                 UnknownPackets++;
 
-            if (!_packets.TryGetValue(opCode, out var entry))
-                _packets.Add(opCode, entry = new SummaryEntry(known));
+            if (!_packets.TryGetValue(name, out var entry))
+                _packets.Add(name, entry = new SummaryEntry(known));
 
             entry.Count++;
             entry.Sizes.Add(length);

@@ -15,7 +15,7 @@ namespace Alkahest.Core.Net.Game
 
         public IReadOnlyDictionary<string, ushort> NameToCode { get; }
 
-        private protected MessageTable(bool opCodes, uint version)
+        internal MessageTable(bool game, uint version)
         {
             if (!DataCenter.Versions.Values.Contains(version))
                 throw new ArgumentOutOfRangeException(nameof(version));
@@ -27,7 +27,7 @@ namespace Alkahest.Core.Net.Game
             var nameToCode = new Dictionary<string, ushort>();
 
             using var reader = new StreamReader(asm.GetManifestResourceStream(
-                opCodes ? $"protocol.{version}.map" : $"sysmsg.{(version >= 349932 ? 82 : 81)}.map"));
+                game ? $"protocol.{version}.map" : $"sysmsg.{(version >= 349932 ? 82 : 81)}.map"));
 
             string line;
 
@@ -37,7 +37,7 @@ namespace Alkahest.Core.Net.Game
                 var name = parts[0];
 
                 // These are just marker values.
-                if (!opCodes && (name == "SMT_MAX" || name == "SMT_UNDEFINED"))
+                if (!game && (name == "SMT_MAX" || name == "SMT_UNDEFINED"))
                     continue;
 
                 var code = ushort.Parse(parts[parts[1] == "=" ? 2 : 1]);

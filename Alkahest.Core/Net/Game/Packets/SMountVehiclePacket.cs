@@ -3,28 +3,16 @@ using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
-    public sealed class SMountVehiclePacket : Packet
+    [Packet("S_MOUNT_VEHICLE")]
+    public sealed class SMountVehiclePacket : SerializablePacket
     {
-        const string Name = "S_MOUNT_VEHICLE";
-
-        public override string OpCode => Name;
-
-        [Packet(Name)]
-        internal static Packet Create()
-        {
-            return new SMountVehiclePacket();
-        }
-
-        [PacketField]
         public GameId Source { get; set; }
 
-        [PacketField]
         public uint VehicleId { get; set; }
 
-        [PacketField(IsSimpleSkill = true)]
+        [PacketFieldOptions(IsSimpleSkill = true)]
         public SkillId Skill { get; set; }
 
-        [PacketField]
         public byte Unknown1 { get; set; }
     }
 }

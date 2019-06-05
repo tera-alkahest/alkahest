@@ -2,22 +2,11 @@ using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
-    public sealed class CAcceptContractPacket : Packet
+    [Packet("C_ACCEPT_CONTRACT")]
+    public sealed class CAcceptContractPacket : SerializablePacket
     {
-        const string Name = "C_ACCEPT_CONTRACT";
-
-        public override string OpCode => Name;
-
-        [Packet(Name)]
-        internal static Packet Create()
-        {
-            return new CAcceptContractPacket();
-        }
-
-        [PacketField]
         public int Unknown1 { get; set; }
 
-        [PacketField]
         public uint QuestId { get; set; }
     }
 }

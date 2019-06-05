@@ -3,22 +3,11 @@ using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
-    public sealed class SStartClientCustomSkillPacket : Packet
+    [Packet("S_START_CLIENT_CUSTOM_SKILL")]
+    public sealed class SStartClientCustomSkillPacket : SerializablePacket
     {
-        const string Name = "S_START_CLIENT_CUSTOM_SKILL";
-
-        public override string OpCode => Name;
-
-        [Packet(Name)]
-        internal static Packet Create()
-        {
-            return new SStartClientCustomSkillPacket();
-        }
-
-        [PacketField]
         public GameId Source { get; set; }
 
-        [PacketField]
         public SkillId Skill { get; set; }
     }
 }

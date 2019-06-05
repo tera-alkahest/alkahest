@@ -3,22 +3,11 @@ using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
-    public sealed class SDespawnUserPacket : Packet
+    [Packet("S_DESPAWN_USER")]
+    public sealed class SDespawnUserPacket : SerializablePacket
     {
-        const string Name = "S_DESPAWN_USER";
-
-        public override string OpCode => Name;
-
-        [Packet(Name)]
-        internal static Packet Create()
-        {
-            return new SDespawnUserPacket();
-        }
-
-        [PacketField]
         public GameId Target { get; set; }
 
-        [PacketField]
         public DespawnKind Kind { get; set; }
     }
 }

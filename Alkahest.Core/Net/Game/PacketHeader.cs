@@ -10,14 +10,14 @@ namespace Alkahest.Core.Net.Game
 
         public readonly ushort Length;
 
-        public readonly ushort OpCode;
+        public readonly ushort Code;
 
         public ushort FullLength => (ushort)(Length + HeaderSize);
 
-        public PacketHeader(ushort length, ushort opCode)
+        public PacketHeader(ushort length, ushort code)
         {
             Length = length;
-            OpCode = opCode;
+            Code = code;
         }
     }
 }

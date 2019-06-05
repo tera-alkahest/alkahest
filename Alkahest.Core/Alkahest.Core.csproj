@@ -77,8 +77,9 @@
     <Compile Include="Net\Game\Logging\PacketLogWriter.cs" />
     <Compile Include="Net\Game\GameMessageTable.cs" />
     <Compile Include="Net\Game\MessageTable.cs" />
+    <Compile Include="Net\Game\Serialization\PacketInfo.cs" />
     <Compile Include="Net\Game\SystemMessageTable.cs" />
-    <Compile Include="Net\Game\Serialization\PacketFieldAttribute.cs" />
+    <Compile Include="Net\Game\Serialization\PacketFieldOptionsAttribute.cs" />
     <Compile Include="Net\Game\Serialization\PacketFieldInfo.cs" />
     <Compile Include="Net\Game\Serialization\PacketSerializer.cs" />
     <Compile Include="Net\Game\Packets\CAcceptContractPacket.cs" />
@@ -130,9 +131,8 @@
     <Compile Include="Net\Game\Packets\CSetVisibleRangePacket.cs" />
     <Compile Include="Net\Game\Packets\CShowInventoryPacket.cs" />
     <Compile Include="Net\Game\Packets\CSocialPacket.cs" />
-    <Compile Include="Net\Game\Serialization\Packet.cs" />
+    <Compile Include="Net\Game\Serialization\SerializablePacket.cs" />
     <Compile Include="Net\Game\Serialization\PacketAttribute.cs" />
-    <Compile Include="Net\Game\Serialization\IPacketMetadata.cs" />
     <Compile Include="Net\Game\PacketHandler.cs" />
     <Compile Include="Net\Game\Packets\CChatPacket.cs" />
     <Compile Include="Net\Game\Packets\CStartComboInstantSkill.cs" />

@@ -2,16 +2,8 @@ using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
-    public sealed class SReturnToLobbyPacket : Packet
+    [Packet("S_RETURN_TO_LOBBY")]
+    public sealed class SReturnToLobbyPacket : SerializablePacket
     {
-        const string Name = "S_RETURN_TO_LOBBY";
-
-        public override string OpCode => Name;
-
-        [Packet(Name)]
-        internal static Packet Create()
-        {
-            return new SReturnToLobbyPacket();
-        }
     }
 }

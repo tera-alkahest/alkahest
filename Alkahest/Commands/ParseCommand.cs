@@ -65,7 +65,7 @@ namespace Alkahest.Commands
                 },
                 {
                     "r|regex=",
-                    "Add an opcode regex to filter packets by (uses Perl 5 regex syntax)",
+                    "Add a game message name regex to filter packets by (uses Perl 5 regex syntax)",
                     (string r) => _regexes.Add(new Regex(r, FilterRegexOptions))
                 },
                 {
@@ -213,7 +213,7 @@ namespace Alkahest.Commands
         {
             stats.TotalPackets++;
 
-            var name = serializer.GameMessages.CodeToName[entry.OpCode];
+            var name = serializer.GameMessages.CodeToName[entry.MessageCode];
 
             if (_regexes.All(r => !r.IsMatch(name)))
             {
@@ -225,7 +225,7 @@ namespace Alkahest.Commands
                 entry.Timestamp.ToLocalTime(), reader.Servers[entry.ServerId].Name,
                 entry.Direction.ToDirectionString(), name, entry.Payload.Count);
 
-            var parsed = serializer.Create(entry.OpCode);
+            var parsed = serializer.Create(entry.MessageCode);
             var payload = entry.Payload.ToArray();
 
             if (payload.Length != 0)

@@ -3,28 +3,15 @@ using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
-    public sealed class SSocialPacket : Packet
+    [Packet("S_SOCIAL")]
+    public sealed class SSocialPacket : SerializablePacket
     {
-        const string Name = "S_SOCIAL";
-
-        public override string OpCode => Name;
-
-        [Packet(Name)]
-        internal static Packet Create()
-        {
-            return new SSocialPacket();
-        }
-
-        [PacketField]
         public GameId Source { get; set; }
 
-        [PacketField]
         public uint SocialId { get; set; }
 
-        [PacketField]
         public int Unknown1 { get; set; }
 
-        [PacketField]
         public byte Unknown2 { get; set; }
     }
 }

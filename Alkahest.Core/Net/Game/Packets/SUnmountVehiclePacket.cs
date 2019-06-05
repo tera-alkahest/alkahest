@@ -3,22 +3,12 @@ using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
-    public sealed class SUnmountVehiclePacket : Packet
+    [Packet("S_UNMOUNT_VEHICLE")]
+    public sealed class SUnmountVehiclePacket : SerializablePacket
     {
-        const string Name = "S_UNMOUNT_VEHICLE";
-
-        public override string OpCode => Name;
-
-        [Packet(Name)]
-        internal static Packet Create()
-        {
-            return new SUnmountVehiclePacket();
-        }
-
-        [PacketField]
         public GameId Source { get; set; }
 
-        [PacketField(IsSimpleSkill = true)]
+        [PacketFieldOptions(IsSimpleSkill = true)]
         public SkillId Skill { get; set; }
     }
 }

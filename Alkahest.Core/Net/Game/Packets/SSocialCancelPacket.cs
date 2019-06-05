@@ -3,19 +3,9 @@ using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
-    public sealed class SSocialCancelPacket : Packet
+    [Packet("S_SOCIAL_CANCEL")]
+    public sealed class SSocialCancelPacket : SerializablePacket
     {
-        const string Name = "S_SOCIAL_CANCEL";
-
-        public override string OpCode => Name;
-
-        [Packet(Name)]
-        internal static Packet Create()
-        {
-            return new SSocialCancelPacket();
-        }
-
-        [PacketField]
         public GameId Source { get; set; }
     }
 }

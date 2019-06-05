@@ -2,16 +2,8 @@ using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
-    public sealed class CDungeonCoolTimeListPacket : Packet
+    [Packet("C_DUNGEON_COOL_TIME_LIST")]
+    public sealed class CDungeonCoolTimeListPacket : SerializablePacket
     {
-        const string Name = "C_DUNGEON_COOL_TIME_LIST";
-
-        public override string OpCode => Name;
-
-        [Packet(Name)]
-        internal static Packet Create()
-        {
-            return new CDungeonCoolTimeListPacket();
-        }
     }
 }

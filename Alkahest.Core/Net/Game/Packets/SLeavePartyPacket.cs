@@ -2,16 +2,8 @@ using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
-    public sealed class SLeavePartyPacket : Packet
+    [Packet("S_LEAVE_PARTY")]
+    public sealed class SLeavePartyPacket : SerializablePacket
     {
-        const string Name = "S_LEAVE_PARTY";
-
-        public override string OpCode => Name;
-
-        [Packet(Name)]
-        internal static Packet Create()
-        {
-            return new SLeavePartyPacket();
-        }
     }
 }

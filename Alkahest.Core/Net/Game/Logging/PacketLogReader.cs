@@ -153,15 +153,15 @@ namespace Alkahest.Core.Net.Game.Logging
                 if (!Enum.IsDefined(typeof(Direction), direction))
                     throw new InvalidDataException();
 
-                var opCode = _reader.ReadUInt16();
+                var code = _reader.ReadUInt16();
 
-                if (!GameMessages.CodeToName.ContainsKey(opCode))
+                if (!GameMessages.CodeToName.ContainsKey(code))
                     throw new InvalidDataException();
 
                 var length = _reader.ReadUInt16();
                 var payload = _reader.ReadBytes(length);
 
-                return new PacketLogEntry(stamp, id, direction, opCode, payload);
+                return new PacketLogEntry(stamp, id, direction, code, payload);
             }
             catch (EndOfStreamException)
             {

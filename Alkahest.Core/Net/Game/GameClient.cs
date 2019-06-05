@@ -103,7 +103,7 @@ namespace Alkahest.Core.Net.Game
                 throw new ArgumentException("Packet is too big.", nameof(packet));
 
             var header = new PacketHeader((ushort)packet.Payload.Length,
-                Proxy.Processor.Serializer.GameMessages.NameToCode[packet.OpCode]);
+                Proxy.Processor.Serializer.GameMessages.NameToCode[packet.Name]);
 
             lock (socket)
             {
@@ -122,17 +122,17 @@ namespace Alkahest.Core.Net.Game
             }
         }
 
-        public bool SendToClient(Packet packet)
+        public bool SendToClient(SerializablePacket packet)
         {
             return SendPacketInternal(packet, _clientSendBuffer, _clientSocket, _clientEncryption, false);
         }
 
-        public bool SendToServer(Packet packet)
+        public bool SendToServer(SerializablePacket packet)
         {
             return SendPacketInternal(packet, _serverSendBuffer, _serverSocket, _serverEncryption, true);
         }
 
-        bool SendPacketInternal(Packet packet, byte[] buffer, Socket socket,
+        bool SendPacketInternal(SerializablePacket packet, byte[] buffer, Socket socket,
             GameEncryptionSession encryption, bool server)
         {
             if (packet == null)
@@ -144,7 +144,7 @@ namespace Alkahest.Core.Net.Game
                 throw new ArgumentException("Packet is too big.", nameof(packet));
 
             var header = new PacketHeader((ushort)data.Length,
-                Proxy.Processor.Serializer.GameMessages.NameToCode[packet.OpCode]);
+                Proxy.Processor.Serializer.GameMessages.NameToCode[packet.Name]);
 
             lock (socket)
             {

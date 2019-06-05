@@ -3,28 +3,15 @@ using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
-    public sealed class SDefendSuccessPacket : Packet
+    [Packet("S_DEFEND_SUCCESS")]
+    public sealed class SDefendSuccessPacket : SerializablePacket
     {
-        const string Name = "S_DEFEND_SUCCESS";
-
-        public override string OpCode => Name;
-
-        [Packet(Name)]
-        internal static Packet Create()
-        {
-            return new SDefendSuccessPacket();
-        }
-
-        [PacketField]
         public GameId Source { get; set; }
 
-        [PacketField]
         public SkillId BlockedSkill { get; set; }
 
-        [PacketField]
         public int Unknown1 { get; set; }
 
-        [PacketField]
         public bool IsPerfectBlock { get; set; }
     }
 }

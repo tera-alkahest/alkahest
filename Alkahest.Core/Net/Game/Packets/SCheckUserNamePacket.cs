@@ -2,19 +2,9 @@ using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
-    public sealed class SCheckUserNamePacket : Packet
+    [Packet("S_CHECK_USERNAME")]
+    public sealed class SCheckUserNamePacket : SerializablePacket
     {
-        const string Name = "S_CHECK_USERNAME";
-
-        public override string OpCode => Name;
-
-        [Packet(Name)]
-        internal static Packet Create()
-        {
-            return new SCheckUserNamePacket();
-        }
-
-        [PacketField]
         public bool IsAvailable { get; set; }
     }
 }

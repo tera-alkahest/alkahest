@@ -12,11 +12,6 @@ namespace Alkahest.Core.Net.Game
 {
     public sealed class PacketProcessor
     {
-        const BindingFlags CreateFlags =
-            BindingFlags.DeclaredOnly |
-            BindingFlags.NonPublic |
-            BindingFlags.Static;
-
         static readonly Log _log = new Log(typeof(PacketProcessor));
 
         public PacketSerializer Serializer { get; }
@@ -48,26 +43,20 @@ namespace Alkahest.Core.Net.Game
             }
         }
 
-        ushort GetOpCode(string name)
+        ushort GetCode(string name)
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
 
             if (!Serializer.GameMessages.NameToCode.TryGetValue(name, out var op))
-                throw new ArgumentException("Invalid opcode name.", nameof(name));
+                throw new InvalidOperationException($"Game message {name} is not mapped to a code.");
 
             return op;
         }
 
-        static string GetOpCodeName(Type t)
+        static string GetName(Type type)
         {
-            var name = t.GetMethod("Create", CreateFlags, null, Type.EmptyTypes, null)
-                ?.GetCustomAttribute<PacketAttribute>()?.OpCode;
-
-            if (name == null)
-                throw new ArgumentException("Invalid packet type.", "handler");
-
-            return name;
+            return type.GetCustomAttribute<PacketAttribute>().Name;
         }
 
         public void AddRawHandler(RawPacketHandler handler)
@@ -93,10 +82,10 @@ namespace Alkahest.Core.Net.Game
             if (handler == null)
                 throw new ArgumentNullException(nameof(handler));
 
-            var opCode = GetOpCode(name);
+            var code = GetCode(name);
 
             lock (_listLock)
-                _rawHandlers[opCode].Add(handler);
+                _rawHandlers[code].Add(handler);
         }
 
         public void RemoveRawHandler(string name, RawPacketHandler handler)
@@ -104,34 +93,34 @@ namespace Alkahest.Core.Net.Game
             if (handler == null)
                 throw new ArgumentNullException(nameof(handler));
 
-            var opCode = GetOpCode(name);
+            var code = GetCode(name);
 
             lock (_listLock)
-                _rawHandlers[opCode].Remove(handler);
+                _rawHandlers[code].Remove(handler);
         }
 
         public void AddHandler<T>(PacketHandler<T> handler)
-            where T : Packet
+            where T : SerializablePacket
         {
             if (handler == null)
                 throw new ArgumentNullException(nameof(handler));
 
-            var opCode = GetOpCode(GetOpCodeName(typeof(T)));
+            var code = GetCode(GetName(typeof(T)));
 
             lock (_listLock)
-                _handlers[opCode].Add(handler);
+                _handlers[code].Add(handler);
         }
 
         public void RemoveHandler<T>(PacketHandler<T> handler)
-            where T : Packet
+            where T : SerializablePacket
         {
             if (handler == null)
                 throw new ArgumentNullException(nameof(handler));
 
-            var opCode = GetOpCode(GetOpCodeName(typeof(T)));
+            var code = GetCode(GetName(typeof(T)));
 
             lock (_listLock)
-                _handlers[opCode].Remove(handler);
+                _handlers[code].Remove(handler);
         }
 
         internal static PacketHeader ReadHeader(byte[] buffer)
@@ -139,9 +128,9 @@ namespace Alkahest.Core.Net.Game
             using var reader = new GameBinaryReader(buffer);
 
             var length = (ushort)(reader.ReadUInt16() - PacketHeader.HeaderSize);
-            var opCode = reader.ReadUInt16();
+            var code = reader.ReadUInt16();
 
-            return new PacketHeader(length, opCode);
+            return new PacketHeader(length, code);
         }
 
         internal static void WriteHeader(PacketHeader header, byte[] buffer)
@@ -149,7 +138,7 @@ namespace Alkahest.Core.Net.Game
             using var writer = new GameBinaryWriter(buffer);
 
             writer.WriteUInt16((ushort)(header.Length + PacketHeader.HeaderSize));
-            writer.WriteUInt16(header.OpCode);
+            writer.WriteUInt16(header.Code);
         }
 
         bool RunHandlers(GameClient client, Direction direction, ref PacketHeader header,
@@ -160,7 +149,7 @@ namespace Alkahest.Core.Net.Game
             // Make a copy so we don't have to lock while iterating.
             lock (_listLock)
             {
-                var registered = _rawHandlers[header.OpCode];
+                var registered = _rawHandlers[header.Code];
 
                 if (_wildcardRawHandlers.Count != 0 || registered.Count != 0)
                 {
@@ -199,17 +188,17 @@ namespace Alkahest.Core.Net.Game
                 }
 
                 payload = packet.Payload;
-                header = new PacketHeader((ushort)packet.Payload.Length, header.OpCode);
+                header = new PacketHeader((ushort)packet.Payload.Length, header.Code);
             }
 
-            IReadOnlyCollection<Delegate> handlers = _handlers[header.OpCode];
+            IReadOnlyCollection<Delegate> handlers = _handlers[header.Code];
 
             lock (_listLock)
                 handlers = handlers.Count != 0 ? handlers.ToArray() : _emptyHandlers;
 
             if (handlers.Count != 0)
             {
-                var packet = Serializer.Create(header.OpCode);
+                var packet = Serializer.Create(header.Code);
                 var good = true;
 
                 try
@@ -240,7 +229,7 @@ namespace Alkahest.Core.Net.Game
                     }
 
                     payload = Serializer.Serialize(packet);
-                    header = new PacketHeader((ushort)payload.Length, header.OpCode);
+                    header = new PacketHeader((ushort)payload.Length, header.Code);
                 }
             }
 
@@ -250,7 +239,7 @@ namespace Alkahest.Core.Net.Game
         internal bool Process(GameClient client, Direction direction, ref PacketHeader header,
             ref byte[] payload)
         {
-            Serializer.GameMessages.CodeToName.TryGetValue(header.OpCode, out var name);
+            Serializer.GameMessages.CodeToName.TryGetValue(header.Code, out var name);
 
             var send = true;
             var original = payload;
@@ -258,7 +247,7 @@ namespace Alkahest.Core.Net.Game
             if (name != null)
                 send = RunHandlers(client, direction, ref header, ref payload, name);
             else
-                name = header.OpCode.ToString();
+                name = header.Code.ToString();
 
             _log.Debug("{0}: {1} ({2} bytes{3})", direction.ToDirectionString(), name, header.Length,
                 send ? string.Empty : ", discarded");
@@ -269,7 +258,7 @@ namespace Alkahest.Core.Net.Game
                     direction.ToDirectionString(), name, payload.Length);
 
                 payload = original;
-                header = new PacketHeader((ushort)payload.Length, header.OpCode);
+                header = new PacketHeader((ushort)payload.Length, header.Code);
             }
 
             return send;

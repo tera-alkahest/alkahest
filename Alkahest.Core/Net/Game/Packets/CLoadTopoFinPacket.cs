@@ -2,16 +2,8 @@ using Alkahest.Core.Net.Game.Serialization;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
-    public sealed class CLoadTopoFinPacket : Packet
+    [Packet("C_LOAD_TOPO_FIN")]
+    public sealed class CLoadTopoFinPacket : SerializablePacket
     {
-        const string Name = "C_LOAD_TOPO_FIN";
-
-        public override string OpCode => Name;
-
-        [Packet(Name)]
-        internal static Packet Create()
-        {
-            return new CLoadTopoFinPacket();
-        }
     }
 }

@@ -13,7 +13,8 @@ namespace Alkahest.Core.Net.Game.Serialization
     {
         sealed class CompilerPacketFieldInfo : PacketFieldInfo
         {
-            public CompilerPacketFieldInfo(PropertyInfo property, PacketFieldAttribute attribute)
+            public CompilerPacketFieldInfo(PropertyInfo property,
+                PacketFieldOptionsAttribute attribute)
                 : base(property, attribute)
             {
             }
@@ -59,57 +60,73 @@ namespace Alkahest.Core.Net.Game.Serialization
 
         static readonly Log _log = new Log(typeof(CompilerPacketSerializer));
 
-        readonly Dictionary<Type, Action<GameBinaryReader, object>> _deserializers =
-            new Dictionary<Type, Action<GameBinaryReader, object>>();
+        readonly Dictionary<PacketInfo, Func<SerializablePacket>> _creators =
+            new Dictionary<PacketInfo, Func<SerializablePacket>>();
 
-        readonly Dictionary<Type, Action<GameBinaryWriter, object>> _serializers =
-            new Dictionary<Type, Action<GameBinaryWriter, object>>();
+        readonly Dictionary<PacketInfo, Action<GameBinaryReader, object>> _deserializers =
+            new Dictionary<PacketInfo, Action<GameBinaryReader, object>>();
+
+        readonly Dictionary<PacketInfo, Action<GameBinaryWriter, object>> _serializers =
+            new Dictionary<PacketInfo, Action<GameBinaryWriter, object>>();
 
         public CompilerPacketSerializer(Region region, GameMessageTable gameMessages,
             SystemMessageTable systemMessages)
             : base(region, gameMessages, systemMessages)
         {
-            foreach (var opCode in gameMessages.CodeToName.Keys)
+            foreach (var code in gameMessages.CodeToName.Keys)
             {
-                var type = GetType(opCode);
+                var info = GetPacketInfo(code);
 
-                if (type == null)
+                if (info == null)
                     continue;
 
-                _serializers.Add(type, CompileSerializer(type));
-                _deserializers.Add(type, CompileDeserializer(type));
+                _creators.Add(info, CompileCreator(info));
+                _serializers.Add(info, CompileSerializer(info));
+                _deserializers.Add(info, CompileDeserializer(info));
             }
 
             _log.Basic("Compiled {0} packet serializers", _serializers.Count);
         }
 
         protected override PacketFieldInfo CreateFieldInfo(PropertyInfo property,
-            PacketFieldAttribute attribute)
+            PacketFieldOptionsAttribute attribute)
         {
             return new CompilerPacketFieldInfo(property, attribute);
         }
 
-        protected override void OnSerialize(GameBinaryWriter writer, Packet packet)
+        protected override SerializablePacket OnCreate(PacketInfo info)
         {
-            _serializers[packet.GetType()](writer, packet);
+            return _creators[info]();
         }
 
-        Action<GameBinaryWriter, object> CompileSerializer(Type type)
+        Func<SerializablePacket> CompileCreator(PacketInfo info)
         {
-            if (_serializers.TryGetValue(type, out var s))
+            return _creators.TryGetValue(info, out var c) ? c :
+                Expression.Lambda<Func<SerializablePacket>>(info.Type.New()).Compile();
+        }
+
+        protected override void OnSerialize(GameBinaryWriter writer, PacketInfo info,
+            SerializablePacket packet)
+        {
+            _serializers[info](writer, packet);
+        }
+
+        Action<GameBinaryWriter, object> CompileSerializer(PacketInfo info)
+        {
+            if (_serializers.TryGetValue(info, out var s))
                 return s;
 
-            var writer = Expression.Parameter(typeof(GameBinaryWriter), "writer");
-            var source = Expression.Parameter(typeof(object), "source");
-            var packet = Expression.Variable(type, "packet2");
+            var writer = typeof(GameBinaryWriter).Parameter("writer");
+            var source = typeof(object).Parameter("source");
+            var packet = info.Type.Variable("packet2");
 
-            var offsets = new List<(PacketFieldInfo info, ParameterExpression offset)>();
+            var offsets = new List<(CompilerPacketFieldInfo, ParameterExpression)>();
 
-            BlockExpression CompileByteArray1(PacketFieldInfo info)
+            BlockExpression CompileByteArray1(CompilerPacketFieldInfo info)
             {
                 var prop = info.Property;
 
-                var offset = Expression.Variable(typeof(int), $"offset{prop.Name}");
+                var offset = typeof(int).Variable($"offset{prop.Name}");
 
                 offsets.Add((info, offset));
 
@@ -121,11 +138,11 @@ namespace Alkahest.Core.Net.Game.Serialization
                     writer.Call(WriteUInt16Name, null, new[] { property.Property(CountName).Convert(typeof(ushort)) }));
             }
 
-            BlockExpression CompileArray1(PacketFieldInfo info)
+            BlockExpression CompileArray1(CompilerPacketFieldInfo info)
             {
                 var prop = info.Property;
 
-                var offset = Expression.Variable(typeof(int), $"offset{prop.Name}");
+                var offset = typeof(int).Variable($"offset{prop.Name}");
 
                 offsets.Add((info, offset));
 
@@ -137,9 +154,9 @@ namespace Alkahest.Core.Net.Game.Serialization
                     writer.Call(WriteUInt16Name, null, new[] { ((ushort)0).Constant() }));
             }
 
-            BlockExpression CompileString1(PacketFieldInfo info)
+            BlockExpression CompileString1(CompilerPacketFieldInfo info)
             {
-                var offset = Expression.Variable(typeof(int), $"offset{info.Property.Name}");
+                var offset = typeof(int).Variable($"offset{info.Property.Name}");
 
                 offsets.Add((info, offset));
 
@@ -148,16 +165,16 @@ namespace Alkahest.Core.Net.Game.Serialization
                     writer.Call(WriteUInt16Name, null, new[] { ((ushort)0).Constant() }));
             }
 
-            BlockExpression CompilePrimitive(PacketFieldInfo info)
+            BlockExpression CompilePrimitive(CompilerPacketFieldInfo info)
             {
                 var prop = info.Property;
                 var ftype = prop.PropertyType;
                 var etype = ftype.IsEnum ? ftype.GetEnumUnderlyingType() : ftype;
-                var prefix = info.Attribute.IsSimpleSkill ? SimpleName : string.Empty;
+                var prefix = (info.Attribute?.IsSimpleSkill ?? false) ? SimpleName : string.Empty;
 
                 Expression property;
 
-                if (ftype == typeof(ushort) && info.Attribute.IsUnknownArray)
+                if (ftype == typeof(ushort) && (info.Attribute?.IsUnknownArray ?? false))
                     property = ((ushort)0).Constant();
                 else
                 {
@@ -173,20 +190,20 @@ namespace Alkahest.Core.Net.Game.Serialization
 
             var exprs = new List<Expression>()
             {
-                packet.Assign(source.Convert(type)),
+                packet.Assign(source.Convert(info.Type)),
             };
 
-            foreach (var info in GetPacketFields<PacketFieldInfo>(type))
+            foreach (var field in info.Fields.Cast<CompilerPacketFieldInfo>())
                 exprs.Add(
-                    info.IsByteArray ? CompileByteArray1(info) :
-                    info.IsArray ? CompileArray1(info) :
-                    info.IsString ? CompileString1(info) :
-                    CompilePrimitive(info));
+                    field.IsByteArray ? CompileByteArray1(field) :
+                    field.IsArray ? CompileArray1(field) :
+                    field.IsString ? CompileString1(field) :
+                    CompilePrimitive(field));
 
-            BlockExpression CompileByteArray2(PacketFieldInfo info, ParameterExpression offset)
+            BlockExpression CompileByteArray2(CompilerPacketFieldInfo info, ParameterExpression offset)
             {
-                var property = Expression.Variable(info.Property.PropertyType, "property");
-                var position = Expression.Variable(typeof(int), "position");
+                var property = info.Property.PropertyType.Variable("property");
+                var position = typeof(int).Variable("position");
 
                 var write = Expression.Block(new[] { position },
                     position.Assign(writer.Property(WriterPositionName)),
@@ -201,18 +218,18 @@ namespace Alkahest.Core.Net.Game.Serialization
                         .IfThen(write));
             }
 
-            BlockExpression CompileArray2(PacketFieldInfo info, ParameterExpression offset)
+            BlockExpression CompileArray2(CompilerPacketFieldInfo info, ParameterExpression offset)
             {
                 var prop = info.Property;
                 var ftype = prop.PropertyType;
-                var elemType = ftype.GetGenericArguments()[0];
+                var elemInfo = GetPacketInfo(ftype.GetGenericArguments()[0]);
 
-                var property = Expression.Variable(ftype, "property");
-                var count = Expression.Variable(typeof(int), "count");
-                var position = Expression.Variable(typeof(int), "position");
-                var i = Expression.Variable(typeof(int), "i");
-                var position2 = Expression.Variable(typeof(int), "position2");
-                var position3 = Expression.Variable(typeof(int), "position3");
+                var property = ftype.Variable("property");
+                var count = typeof(int).Variable("count");
+                var position = typeof(int).Variable("position");
+                var i = typeof(int).Variable("i");
+                var position2 = typeof(int).Variable("position2");
+                var position3 = typeof(int).Variable("position3");
 
                 var writeNext = Expression.Block(new[] { position3 },
                     position3.Assign(writer.Property(WriterPositionName)),
@@ -226,7 +243,7 @@ namespace Alkahest.Core.Net.Game.Serialization
                         position2.Assign(writer.Property(WriterPositionName)),
                         writer.Call(WriteOffsetName, null, new[] { position2 }),
                         writer.Call(WriteUInt16Name, null, new[] { ((ushort)0).Constant() }),
-                        CompileSerializer(elemType).Constant().Invoke(writer, property.Property(ItemName, i)),
+                        CompileSerializer(elemInfo).Constant().Invoke(writer, property.Property(ItemName, i)),
                         i.NotEqual(count.Subtract(1.Constant()))
                             .IfThen(writeNext)));
 
@@ -244,9 +261,9 @@ namespace Alkahest.Core.Net.Game.Serialization
                         .IfThen(write));
             }
 
-            BlockExpression CompileString2(PacketFieldInfo info, ParameterExpression offset)
+            BlockExpression CompileString2(CompilerPacketFieldInfo info, ParameterExpression offset)
             {
-                var position = Expression.Variable(typeof(int), "position");
+                var position = typeof(int).Variable("position");
 
                 return Expression.Block(new[] { position },
                     position.Assign(writer.Property(WriterPositionName)),
@@ -256,40 +273,41 @@ namespace Alkahest.Core.Net.Game.Serialization
                     writer.Call(WriteStringName, null, new[] { packet.Property(info.Property) }));
             }
 
-            foreach (var (info, offset) in offsets)
+            foreach (var (field, offset) in offsets)
                 exprs.Add(
-                    info.IsByteArray ? CompileByteArray2(info, offset) :
-                    info.IsArray ? CompileArray2(info, offset) :
-                    CompileString2(info, offset));
+                    field.IsByteArray ? CompileByteArray2(field, offset) :
+                    field.IsArray ? CompileArray2(field, offset) :
+                    CompileString2(field, offset));
 
-            var vars = new[] { packet }.Concat(offsets.Select(tup => tup.offset));
+            var vars = new[] { packet }.Concat(offsets.Select(tup => tup.Item2));
 
             return Expression.Lambda<Action<GameBinaryWriter, object>>(
                 Expression.Block(vars, exprs), writer, source).Compile();
         }
 
-        protected override void OnDeserialize(GameBinaryReader reader, Packet packet)
+        protected override void OnDeserialize(GameBinaryReader reader, PacketInfo info,
+            SerializablePacket packet)
         {
-            _deserializers[packet.GetType()](reader, packet);
+            _deserializers[info](reader, packet);
         }
 
-        Action<GameBinaryReader, object> CompileDeserializer(Type type)
+        Action<GameBinaryReader, object> CompileDeserializer(PacketInfo info)
         {
-            if (_deserializers.TryGetValue(type, out var d))
+            if (_deserializers.TryGetValue(info, out var d))
                 return d;
 
-            var reader = Expression.Parameter(typeof(GameBinaryReader), "reader");
-            var target = Expression.Parameter(typeof(object), "target");
-            var packet = Expression.Variable(type, "packet");
+            var reader = typeof(GameBinaryReader).Parameter("reader");
+            var target = typeof(object).Parameter("target");
+            var packet = info.Type.Variable("packet");
 
-            BlockExpression CompileByteArray(PacketFieldInfo info)
+            BlockExpression CompileByteArray(CompilerPacketFieldInfo info)
             {
                 var prop = info.Property;
 
-                var offset = Expression.Variable(typeof(int), "offset");
-                var count = Expression.Variable(typeof(ushort), "count");
-                var property = Expression.Variable(prop.PropertyType, "property");
-                var position = Expression.Variable(typeof(int), "position");
+                var offset = typeof(int).Variable("offset");
+                var count = typeof(ushort).Variable("count");
+                var property = prop.PropertyType.Variable("property");
+                var position = typeof(int).Variable("position");
 
                 var read = Expression.Block(new[] { position },
                     position.Assign(reader.Property(ReaderPositionName)),
@@ -306,19 +324,19 @@ namespace Alkahest.Core.Net.Game.Serialization
                         .IfThen(read));
             }
 
-            BlockExpression CompileArray(PacketFieldInfo info)
+            BlockExpression CompileArray(CompilerPacketFieldInfo info)
             {
                 var prop = info.Property;
                 var ftype = prop.PropertyType;
-                var elemType = ftype.GetGenericArguments()[0];
+                var elemInfo = GetPacketInfo(ftype.GetGenericArguments()[0]);
 
-                var offset = Expression.Variable(typeof(int), "offset");
-                var count = Expression.Variable(typeof(ushort), "count");
-                var position = Expression.Variable(typeof(int), "position");
-                var property = Expression.Variable(ftype, "property");
-                var next = Expression.Variable(typeof(int), "next");
-                var i = Expression.Variable(typeof(int), "i");
-                var elem = Expression.Variable(elemType, "elem");
+                var offset = typeof(int).Variable("offset");
+                var count = typeof(ushort).Variable("count");
+                var position = typeof(int).Variable("position");
+                var property = ftype.Variable("property");
+                var next = typeof(int).Variable("next");
+                var i = typeof(int).Variable("i");
+                var elem = elemInfo.Type.Variable("elem");
 
                 var loop = CustomExpression.For(i, 0.Constant(),
                     i.LessThan(count.Convert(typeof(int))),
@@ -327,8 +345,8 @@ namespace Alkahest.Core.Net.Game.Serialization
                         reader.Property(ReaderPositionName).Assign(next),
                         reader.Call(ReadOffsetName, null, null),
                         next.Assign(reader.Call(ReadOffsetName, null, null)),
-                        elem.Assign(elemType.New()),
-                        CompileDeserializer(elemType).Constant().Invoke(reader, elem),
+                        elem.Assign(elemInfo.Type.New()),
+                        CompileDeserializer(elemInfo).Constant().Invoke(reader, elem),
                         property.Call(AddName, null, new[] { elem })));
 
                 var read = Expression.Block(new[] { position, next, elem },
@@ -346,10 +364,10 @@ namespace Alkahest.Core.Net.Game.Serialization
                         .IfThen(read));
             }
 
-            BlockExpression CompileString(PacketFieldInfo info)
+            BlockExpression CompileString(CompilerPacketFieldInfo info)
             {
-                var offset = Expression.Variable(typeof(int), "offset");
-                var position = Expression.Variable(typeof(int), "position");
+                var offset = typeof(int).Variable("offset");
+                var position = typeof(int).Variable("position");
 
                 return Expression.Block(new[] { offset, position },
                     offset.Assign(reader.Call(ReadOffsetName, null, null)),
@@ -359,12 +377,12 @@ namespace Alkahest.Core.Net.Game.Serialization
                     reader.Property(ReaderPositionName).Assign(position));
             }
 
-            BlockExpression CompilePrimitive(PacketFieldInfo info)
+            BlockExpression CompilePrimitive(CompilerPacketFieldInfo info)
             {
                 var prop = info.Property;
                 var ftype = prop.PropertyType;
                 var etype = ftype.IsEnum ? ftype.GetEnumUnderlyingType() : ftype;
-                var prefix = info.Attribute.IsSimpleSkill ? SimpleName : string.Empty;
+                var prefix = (info.Attribute?.IsSimpleSkill ?? false) ? SimpleName : string.Empty;
 
                 Expression read = reader.Call(ReadName + prefix + etype.Name, null, null);
 
@@ -376,15 +394,15 @@ namespace Alkahest.Core.Net.Game.Serialization
 
             var exprs = new List<Expression>()
             {
-                packet.Assign(target.Convert(type)),
+                packet.Assign(target.Convert(info.Type)),
             };
 
-            foreach (var info in GetPacketFields<PacketFieldInfo>(type))
+            foreach (var field in info.Fields.Cast<CompilerPacketFieldInfo>())
                 exprs.Add(
-                    info.IsByteArray ? CompileByteArray(info) :
-                    info.IsArray ? CompileArray(info) :
-                    info.IsString ? CompileString(info) :
-                    CompilePrimitive(info));
+                    field.IsByteArray ? CompileByteArray(field) :
+                    field.IsArray ? CompileArray(field) :
+                    field.IsString ? CompileString(field) :
+                    CompilePrimitive(field));
 
             return Expression.Lambda<Action<GameBinaryReader, object>>(
                 Expression.Block(new[] { packet }, exprs), reader, target).Compile();
