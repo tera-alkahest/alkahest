@@ -305,7 +305,6 @@
       <LogicalName>%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="Net\Game\protocol.350022.map">
-      <Link>Net\Game\%(Filename)%(Extension)</Link>
       <LogicalName>%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="..\tera-toolbox-data\map_base\protocol.350023.map">
