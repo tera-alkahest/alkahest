@@ -24,6 +24,7 @@
       <ReleaseFiles Include="..\AlkahestCA.crt" />
       <ReleaseFiles Include="..\Alkahest.pfx" />
       <ReleaseFiles Include="..\Build\Alkahest.Core.dll" />
+      <ReleaseFiles Include="..\Build\Alkahest.Upgrader.exe" />
       <ReleaseFiles Include="..\Build\Alkahest.exe" />
       <ReleaseFiles Include="..\Build\Alkahest.exe.config" />
       <ReleaseFiles Include="..\Build\EasyHook.dll" />

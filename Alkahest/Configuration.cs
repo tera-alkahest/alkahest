@@ -49,6 +49,12 @@ namespace Alkahest
 
         public static string AssetDirectory { get; }
 
+        public static string UpgradeDirectory { get; }
+
+        public static string UpgradeOwner { get; }
+
+        public static string UpgradeRepository { get; }
+
         public static bool DataCenterInterning { get; }
 
         public static Region Region { get; }
@@ -103,6 +109,9 @@ namespace Alkahest
             PythonPackageDirectory = cfg["pythonPackageDirectory"];
             AssetManifestUri = new Uri(cfg["assetManifestUri"]);
             AssetDirectory = cfg["assetDirectory"];
+            UpgradeDirectory = cfg["upgradeDirectory"];
+            UpgradeOwner = cfg["upgradeOwner"];
+            UpgradeRepository = cfg["upgradeRepository"];
             DataCenterInterning = bool.Parse(cfg["dataCenterInterning"]);
             Region = (Region)Enum.Parse(typeof(Region), cfg["region"], true);
             ServerListEnabled = bool.Parse(cfg["enableSls"]);

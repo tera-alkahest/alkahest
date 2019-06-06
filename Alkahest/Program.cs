@@ -49,6 +49,7 @@ namespace Alkahest
                 new ServeCommand(),
                 new UninstallCommand(),
                 new UpdateCommand(),
+                new UpgradeCommand(),
                 string.Empty,
                 "Available options:",
                 string.Empty,

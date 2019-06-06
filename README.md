@@ -122,6 +122,9 @@ so you must run Alkahest as administrator.
 If Alkahest terminates abnormally, you can run `Alkahest.exe serve -c` on the
 command line to clean up the aforementioned system changes.
 
+When a new version of Alkahest is released, you can run `Alkahest.exe upgrade`
+to upgrade en existing installation.
+
 ## Extensibility
 
 Alkahest can be exteneded with
