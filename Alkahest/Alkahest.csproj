@@ -51,7 +51,6 @@
     <Compile Include="Packager\GitHub.cs" />
     <Compile Include="Packager\LocalPackage.cs" />
     <Compile Include="Packager\Package.cs" />
-    <Compile Include="Packager\PackageKind.cs" />
     <Compile Include="Packager\PackageManager.cs" />
     <Compile Include="Parser\AnalysisMode.cs" />
     <Compile Include="Parser\HexDumpMode.cs" />

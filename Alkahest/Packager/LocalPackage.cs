@@ -9,8 +9,6 @@ namespace Alkahest.Packager
 {
     sealed class LocalPackage
     {
-        public PackageKind Kind { get; }
-
         public string Name { get; }
 
         public string Path { get; }
@@ -23,11 +21,10 @@ namespace Alkahest.Packager
 
         public IReadOnlyList<string> Dependencies { get; }
 
-        public LocalPackage(PackageKind kind, string name)
+        public LocalPackage(string name)
         {
-            Kind = kind;
             Name = name;
-            Path = Package.GetPath(kind, name);
+            Path = Package.GetPath(name);
             ManifestFilePath = GetManifestFilePath();
 
             using var reader = new JsonTextReader(new StreamReader(ManifestFilePath));
@@ -40,7 +37,6 @@ namespace Alkahest.Packager
 
         public LocalPackage(Package package)
         {
-            Kind = package.Kind;
             Name = package.Name;
             Path = package.Path;
             ManifestFilePath = GetManifestFilePath();

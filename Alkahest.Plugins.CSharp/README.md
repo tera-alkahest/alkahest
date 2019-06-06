@@ -20,8 +20,8 @@ You should not need to change anything by default, but you can change the
 
 ## Usage
 
-The unit of encapsulation is a script package. Each directory under `CSharp` is
-considered a package, and can contain as many C# files (with the `.cs`
+The unit of encapsulation is a script package. Each directory under `Packages`
+is considered a script package, and can contain as many C# files (with the `.cs`
 extension) as needed. All script packages are compiled together into the same
 .NET assembly at startup, so they can use code from each other.
 

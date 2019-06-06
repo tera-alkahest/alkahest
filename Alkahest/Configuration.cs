@@ -41,9 +41,7 @@ namespace Alkahest
 
         public static Uri PackageRegistryUri { get; }
 
-        public static string CSharpPackageDirectory { get; }
-
-        public static string PythonPackageDirectory { get; }
+        public static string PackageDirectory { get; }
 
         public static Uri AssetManifestUri { get; }
 
@@ -105,8 +103,7 @@ namespace Alkahest
             PluginPattern = cfg["pluginPattern"];
             DisablePlugins = Split(cfg["disablePlugins"], ',');
             PackageRegistryUri = new Uri(cfg["packageRegistryUri"]);
-            CSharpPackageDirectory = cfg["csharpPackageDirectory"];
-            PythonPackageDirectory = cfg["pythonPackageDirectory"];
+            PackageDirectory = cfg["packageDirectory"];
             AssetManifestUri = new Uri(cfg["assetManifestUri"]);
             AssetDirectory = cfg["assetDirectory"];
             UpgradeDirectory = cfg["upgradeDirectory"];

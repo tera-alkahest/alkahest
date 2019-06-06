@@ -21,11 +21,9 @@ namespace Alkahest.Packager
 
         public PackageManager()
         {
-            var csharp = Configuration.CSharpPackageDirectory;
-            var python = Configuration.PythonPackageDirectory;
+            var pkgs = Configuration.PackageDirectory;
 
-            Directory.CreateDirectory(csharp);
-            Directory.CreateDirectory(python);
+            Directory.CreateDirectory(pkgs);
 
             _log.Info("Fetching package registry...");
 
@@ -46,22 +44,15 @@ namespace Alkahest.Packager
 
             _log.Info("Reading local package manifests...");
 
-            void AddLocalPackages(PackageKind kind)
+            foreach (var dir in Directory.EnumerateDirectories(pkgs))
             {
-                foreach (var dir in Directory.EnumerateDirectories(
-                    kind == PackageKind.CSharp ? csharp : python))
-                {
-                    if (!File.Exists(Path.Combine(dir, ManifestFileName)))
-                        continue;
+                if (!File.Exists(Path.Combine(dir, ManifestFileName)))
+                    continue;
 
-                    var pkg = new LocalPackage(kind, Path.GetFileName(dir));
+                var pkg = new LocalPackage(Path.GetFileName(dir));
 
-                    _locals.Add(pkg.Name, pkg);
-                }
+                _locals.Add(pkg.Name, pkg);
             }
-
-            AddLocalPackages(PackageKind.CSharp);
-            AddLocalPackages(PackageKind.Python);
         }
 
         public void Install(Package package)

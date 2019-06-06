@@ -10,8 +10,6 @@ namespace Alkahest.Packager
     {
         static readonly Log _log = new Log(typeof(Package));
 
-        public PackageKind Kind { get; }
-
         public string Name { get; }
 
         public string Path { get; }
@@ -98,9 +96,8 @@ namespace Alkahest.Packager
 
         public Package(JObject obj)
         {
-            Kind = (PackageKind)Enum.Parse(typeof(PackageKind), (string)obj["kind"], true);
             Name = (string)obj["name"];
-            Path = GetPath(Kind, Name);
+            Path = GetPath(Name);
             Description = (string)obj["description"];
             License = (string)obj["license"];
             Owner = (string)obj["owner"];
@@ -132,10 +129,9 @@ namespace Alkahest.Packager
                 x => (AssetKind)Enum.Parse(typeof(AssetKind), (string)x)).ToList();
         }
 
-        public static string GetPath(PackageKind kind, string name)
+        public static string GetPath(string name)
         {
-            return System.IO.Path.Combine(kind == PackageKind.CSharp ?
-                Configuration.CSharpPackageDirectory : Configuration.PythonPackageDirectory, name);
+            return System.IO.Path.Combine(Configuration.PackageDirectory, name);
         }
     }
 }

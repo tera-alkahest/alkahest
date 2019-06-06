@@ -53,13 +53,7 @@
       <ReleaseFiles Include="..\Build\Plugins\alkahest-csharp.dll.config" />
       <ReleaseFiles Include="..\Build\Plugins\alkahest-packet-logger.dll" />
       <ReleaseFiles Include="..\Build\Plugins\alkahest-packet-logger.dll.config" />
-      <ReleaseFiles Include="..\Build\Plugins\alkahest-python.dll" />
-      <ReleaseFiles Include="..\Build\Plugins\alkahest-python.dll.config" />
       <ReleaseFiles Include="..\Build\Plugins\alkahest-simple-test.dll" />
-      <ReleaseFiles Include="..\Build\Plugins\IronPython.dll" />
-      <ReleaseFiles Include="..\Build\Plugins\IronPython.Modules.dll" />
-      <ReleaseFiles Include="..\Build\Plugins\IronPython.SQLite.dll" />
-      <ReleaseFiles Include="..\Build\Plugins\IronPython.Wpf.dll" />
       <ReleaseFiles Include="..\Build\Plugins\Microsoft.CodeAnalysis.CSharp.dll" />
       <ReleaseFiles Include="..\Build\Plugins\Microsoft.CodeAnalysis.CSharp.pdb" />
       <ReleaseFiles Include="..\Build\Plugins\Microsoft.CodeAnalysis.dll" />
@@ -86,7 +80,6 @@
       <ReleaseFiles Include="..\Build\Plugins\Vanara.PInvoke.User32.dll" />
       <ReleaseFiles Include="..\Build\Plugins\Vanara.PInvoke.User32.Gdi.dll" />
       <ReleaseFiles Include="..\Build\Plugins\Vanara.PInvoke.WinINet.dll" />
-      <ReleaseFiles Include="..\Build\PythonLibs\**" />
     </ItemGroup>
     <Assembly TaskAction="GetInfo" NetAssembly="..\Build\Alkahest.Core.dll">
       <Output TaskParameter="OutputItems" ItemName="AlkahestInfo" />

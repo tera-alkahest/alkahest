@@ -25,9 +25,7 @@ accessing data stored with the game client.
 
 * **.NET plugins:** Plugins can be written in any .NET language, including C#,
   F#, Nemerle, etc.
-* **Python and C# scripting:** Default plugins enable scripting with either
-  Python (using IronPython) or C# (using Roslyn) as an alternative to compiled
-  plugins.
+* **C# scripting:** A default plugin enables scripting with C#, via Roslyn.
 * **Packet manipulation:** Packets can easily be intercepted, modified, or even
   constructed from scratch, in either raw or typed form.
 * **Fast packet serialization**: Specialized serialization functions are
