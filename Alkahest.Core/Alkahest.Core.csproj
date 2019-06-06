@@ -78,6 +78,8 @@
     <Compile Include="Net\Game\Logging\PacketLogWriter.cs" />
     <Compile Include="Net\Game\GameMessageTable.cs" />
     <Compile Include="Net\Game\MessageTable.cs" />
+    <Compile Include="Net\Game\Packets\CAdminPacket.cs" />
+    <Compile Include="Net\Game\Packets\COpCommandPacket.cs" />
     <Compile Include="Net\Game\Serialization\PacketInfo.cs" />
     <Compile Include="Net\Game\SystemMessageTable.cs" />
     <Compile Include="Net\Game\Serialization\PacketFieldOptionsAttribute.cs" />
