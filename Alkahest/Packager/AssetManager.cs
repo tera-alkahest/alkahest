@@ -18,15 +18,8 @@ namespace Alkahest.Packager
 
             _log.Info("Fetching asset manifest...");
 
-            var json = GitHub.GetString(Configuration.AssetManifestUri);
-            var manifest = JObject.Parse(json);
-            var region = Configuration.Region.ToString().ToLowerInvariant();
-            var obj = manifest[region];
-
-            if (obj == null)
-                _log.Warning("{0} data center file not available", region);
-            else
-                _dc = new DataCenterAsset(assets, (JObject)obj);
+            _dc = new DataCenterAsset(assets, (JObject)JObject.Parse(GitHub.GetString(
+                Configuration.AssetManifestUri))[Configuration.Region.ToString().ToLowerInvariant()]);
         }
 
         public void UpdateDataCenter()

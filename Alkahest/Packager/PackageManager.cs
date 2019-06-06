@@ -29,10 +29,8 @@ namespace Alkahest.Packager
 
             _log.Info("Fetching package registry...");
 
-            var json = GitHub.GetString(Configuration.PackageRegistryUri);
-            var manifest = JArray.Parse(json);
-
-            Registry = manifest.Select(x => new Package((JObject)x)).ToDictionary(x => x.Name);
+            Registry = JArray.Parse(GitHub.GetString(Configuration.PackageRegistryUri))
+                .Select(x => new Package((JObject)x)).ToDictionary(x => x.Name);
 
             void CheckReferredPackages(bool dependencies)
             {
