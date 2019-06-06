@@ -2,9 +2,9 @@ using Alkahest.Core.Logging;
 using Alkahest.Core.Net.Game;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition.Hosting;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace Alkahest.Core.Plugins
 {
@@ -18,9 +18,7 @@ namespace Alkahest.Core.Plugins
 
         public PluginContext Context { get; }
 
-        public IReadOnlyCollection<IPlugin> Plugins => _plugins;
-
-        readonly IPlugin[] _plugins;
+        public IReadOnlyCollection<IPlugin> Plugins { get; }
 
         public PluginLoader(PluginContext context, string directory, string pattern, string[] exclude)
         {
@@ -28,20 +26,18 @@ namespace Alkahest.Core.Plugins
 
             Directory.CreateDirectory(directory);
 
-            using var container = new CompositionContainer(
-                new DirectoryCatalog(directory, pattern), true);
-
             if (exclude == null)
                 exclude = Array.Empty<string>();
 
-            _plugins = container.GetExports<IPlugin>().Select(x => x.Value)
-                .Where(x => !exclude.Contains(x.Name)).ToArray();
-
-            foreach (var plugin in _plugins)
-                EnforceConventions(plugin);
+            Plugins = (from file in Directory.EnumerateFiles(directory, pattern)
+                       from type in Assembly.UnsafeLoadFrom(file).DefinedTypes
+                       where type.ImplementedInterfaces.Contains(typeof(IPlugin))
+                       let plugin = (IPlugin)Activator.CreateInstance(type)
+                       where !exclude.Contains(plugin.Name)
+                       select EnforceConventions(plugin)).ToArray();
         }
 
-        static void EnforceConventions(IPlugin plugin)
+        static IPlugin EnforceConventions(IPlugin plugin)
         {
             var name = plugin.Name;
 
@@ -66,6 +62,8 @@ namespace Alkahest.Core.Plugins
 
             if (Path.GetFileName(asm.Location.ToLowerInvariant()) != fileName)
                 throw new PluginException($"{name}: Plugin file name must be '{fileName}'.");
+
+            return plugin;
         }
 
         static void CheckProxies(GameProxy[] proxies)
@@ -83,21 +81,21 @@ namespace Alkahest.Core.Plugins
 
             Context.Data.Freeze();
 
-            foreach (var p in _plugins)
+            foreach (var p in Plugins)
             {
                 p.Start(Context, proxies.ToArray());
 
                 _log.Info("Started plugin {0}", p.Name);
             }
 
-            _log.Basic("Started {0} plugins", _plugins.Length);
+            _log.Basic("Started {0} plugins", Plugins.Count);
         }
 
         public void Stop(GameProxy[] proxies)
         {
             CheckProxies(proxies);
 
-            foreach (var p in _plugins)
+            foreach (var p in Plugins)
             {
                 p.Stop(Context, proxies.ToArray());
 
