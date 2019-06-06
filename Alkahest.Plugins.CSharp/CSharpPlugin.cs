@@ -2,6 +2,7 @@ using Alkahest.Core;
 using Alkahest.Core.Logging;
 using Alkahest.Core.Net.Game;
 using Alkahest.Core.Plugins;
+using EasyHook;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -10,7 +11,13 @@ using Microsoft.CodeAnalysis.Text;
 using Microsoft.CSharp.RuntimeBinder;
 using Microsoft.JScript;
 using Microsoft.VisualBasic;
+using Mono.Linq.Expressions;
+using Mono.Options;
+using Newtonsoft.Json.Linq;
+using Octokit;
+using SharpDisasm;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Registration;
@@ -31,6 +38,7 @@ using System.Management.Instrumentation;
 using System.Messaging;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Numerics;
 using System.Printing;
 using System.Reflection;
@@ -48,7 +56,10 @@ using System.ServiceModel.Routing;
 using System.ServiceProcess;
 using System.Speech.Synthesis;
 using System.Text;
+using System.Threading.Tasks;
 using System.Transactions;
+using System.Web.Http;
+using System.Web.Http.SelfHost;
 using System.Windows;
 using System.Windows.Controls.Ribbon;
 using System.Windows.Forms;
@@ -57,6 +68,9 @@ using System.Windows.Xps.Packaging;
 using System.Xaml;
 using System.Xml;
 using System.Xml.Linq;
+using Theraot;
+using Vanara.InteropServices;
+using Vanara.PInvoke;
 
 namespace Alkahest.Plugins.CSharp
 {
@@ -96,13 +110,19 @@ namespace Alkahest.Plugins.CSharp
             {
                 typeof(Assert),                 // Alkahest.Core.dll
                 typeof(CSharpPlugin),           // alkahest-csharp
+                typeof(RemoteHooking),          // EasyHook.dll
                 typeof(RuntimeBinderException), // Microsoft.CSharp.dll
                 typeof(JSObject),               // Microsoft.JScript.dll
                 typeof(TriState),               // Microsoft.VisualBasic.dll
+                typeof(CustomExpression),       // Mono.Linq.Expressions.dll
+                typeof(OptionSet),              // Mono.Options.dll
+                typeof(JObject),                // Newtonsoft.Json.dll
                 typeof(object),                 // mscorlib.dll
+                typeof(GitHubClient),           // Octokit.dll
                 typeof(UIElement),              // PresentationCore.dll
                 typeof(Window),                 // PresentationFramework.dll
                 typeof(XpsDocument),            // ReachFramework.dll
+                typeof(Disassembler),           // SharpDisasm.dll
                 typeof(Uri),                    // System.dll
                 typeof(Configuration),          // System.Configuration.dll
                 typeof(Installer),              // System.Configuration.Install.dll
@@ -121,11 +141,14 @@ namespace Alkahest.Plugins.CSharp
                 typeof(ZipFile),                // System.IO.Compression.FileSystem.dll
                 typeof(ManagementObject),       // System.Management.dll
                 typeof(InstrumentationManager), // System.Management.Instrumentation.dll
+                typeof(IPinnable),              // System.Memory.dll
                 typeof(MessageQueue),           // System.Messaging.dll
                 typeof(IPEndPointCollection),   // System.Net.dll
                 typeof(HttpClient),             // System.Net.Http.dll
+                typeof(JsonContractResolver),   // System.Net.Http.Formatting.dll
                 typeof(WebRequestHandler),      // System.Net.Http.WebRequest.dll
                 typeof(BigInteger),             // System.Numerics.dll
+                typeof(Vector<>),               // System.Numerics.Vectors.dll
                 typeof(PrintQueue),             // System.Printing.dll
                 typeof(MemoryCache),            // System.Runtime.Caching.dll
                 typeof(Unsafe),                 // System.Runtime.CompilerServices.Unsafe.dll
@@ -142,13 +165,31 @@ namespace Alkahest.Plugins.CSharp
                 typeof(WebHttpBinding),         // System.ServiceModel.Web.dll
                 typeof(ServiceBase),            // System.ServiceProcess.dll
                 typeof(SpeechSynthesizer),      // System.Speech.dll
+                typeof(ValueTask<>),            // System.Threading.Tasks.Extensions.dll
                 typeof(Transaction),            // System.Transactions.dll
+                typeof(HttpServer),             // System.Web.Http.dll
+                typeof(HttpSelfHostServer),     // System.Web.Http.SelfHost.dll
                 typeof(RibbonControl),          // System.Windows.Controls.Ribbon
                 typeof(Form),                   // System.Windows.Forms.dll
                 typeof(DataPoint),              // System.Windows.Forms.DataVisualization.dll
                 typeof(XamlType),               // System.Xaml.dll
                 typeof(XmlNode),                // System.Xml.dll
                 typeof(XNode),                  // System.Xml.Linq.dll
+                typeof(No),                     // Theraot.Core.dll
+                typeof(PinnedObject),           // Vanara.Core.dll
+                typeof(ComCtl32),               // Vanara.PInvoke.ComCtl32.dll
+                typeof(BCrypt),                 // Vanara.PInvoke.Cryptography.dll
+                typeof(Gdi32),                  // Vanara.PInvoke.Gdi32.dll
+                typeof(Kernel32),               // Vanara.PInvoke.Kernel32.dll
+                typeof(Mpr),                    // Vanara.PInvoke.Mpr.dll
+                typeof(NtDll),                  // Vanara.PInvoke.NtDll.dll
+                typeof(AdvApi32),               // Vanara.PInvoke.Security.dll
+                typeof(Lib),                    // Vanara.PInvoke.Shared.dll
+                typeof(Shell32),                // Vanara.PInvoke.Shell32.dll
+                typeof(ShlwApi),                // Vanara.PInvoke.ShlwApi.dll
+                typeof(User32),                 // Vanara.PInvoke.User32.dll
+                typeof(User32_Gdi),             // Vanara.PInvoke.User32.Gdi.dll
+                typeof(WinINet),                // Vanara.PInvoke.WinINet.dll
                 typeof(Rect),                   // WindowsBase.dll
             };
 
