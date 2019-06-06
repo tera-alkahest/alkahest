@@ -10,7 +10,7 @@ namespace Alkahest.Plugins.PacketLogger
 {
     public sealed class PacketLoggerPlugin : IPlugin
     {
-        public string Name { get; } = "packet-logger";
+        public string Name => "packet-logger";
 
         static readonly Log _log = new Log(typeof(PacketLoggerPlugin));
 

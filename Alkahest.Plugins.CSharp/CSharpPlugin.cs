@@ -89,7 +89,7 @@ namespace Alkahest.Plugins.CSharp
             BindingFlags.Static |
             BindingFlags.Public;
 
-        public string Name { get; } = "csharp";
+        public string Name => "csharp";
 
         static readonly Log _log = new Log(typeof(CSharpPlugin));
 
@@ -250,8 +250,8 @@ namespace Alkahest.Plugins.CSharp
             var asm = Assembly.Load(stream.ToArray());
 
             foreach (var (name, typeName) in typeNames)
-                _scripts.Add((name, asm.GetType(typeName), new CSharpScriptContext(context.Data,
-                    new Log(typeof(CSharpPlugin), name))));
+                _scripts.Add((name, asm.GetType(typeName), new CSharpScriptContext(name, Path.GetFullPath(
+                    Path.Combine(pkg, name)), new Log(typeof(CSharpPlugin), name), context.Data)));
 
             var count = 0;
 

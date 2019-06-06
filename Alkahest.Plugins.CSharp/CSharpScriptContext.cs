@@ -5,12 +5,18 @@ namespace Alkahest.Plugins.CSharp
 {
     public sealed class CSharpScriptContext
     {
-        public DataCenter Data { get; }
+        public string Name { get; }
+
+        public string Path { get; }
 
         public Log Log { get; }
 
-        internal CSharpScriptContext(DataCenter data, Log log)
+        public DataCenter Data { get; }
+
+        internal CSharpScriptContext(string name, string path, Log log, DataCenter data)
         {
+            Name = name;
+            Path = path;
             Data = data;
             Log = log;
         }

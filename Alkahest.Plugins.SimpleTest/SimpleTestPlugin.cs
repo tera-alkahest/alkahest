@@ -19,7 +19,7 @@ namespace Alkahest.Plugins.SimpleTest
 
         const uint VisibilityRange = 100;
 
-        public string Name { get; } = "simple-test";
+        public string Name => "simple-test";
 
         static readonly Log _log = new Log(typeof(SimpleTestPlugin));
 
