@@ -13,7 +13,6 @@ was not specified for that code. It has been simplified based on
 The data center parsing code is based on the file format knowledge in the
 [TeraDataTools project](https://github.com/gothos-folly/TeraDataTools).
 
-The client scanning functionality uses search patterns from the
-[TeraScanners project](https://github.com/meishuu/TeraScanners),
-[Mirrawrs's Tera framework](https://github.com/Mirrawrs/Tera), and
-[Gl0's DLL](https://github.com/neowutran/TeraDpsMeterData/blob/master/copypaste-tuto/Gl0-dll.txt).
+The client scanning functionality uses search patterns from
+[Mirrawrs's Tera framework](https://github.com/Mirrawrs/Tera) and some other
+defunct projects.
