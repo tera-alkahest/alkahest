@@ -18,6 +18,7 @@
   </Target>
   <Target Name="Build">
     <ItemGroup>
+      <ReleaseFiles Include="..\ACKNOWLEDGEMENTS.md" />
       <ReleaseFiles Include="..\LICENSE.md" />
       <ReleaseFiles Include="..\README.md" />
       <ReleaseFiles Include="..\Alkahest.ico" />
