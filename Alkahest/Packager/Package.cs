@@ -8,8 +8,6 @@ namespace Alkahest.Packager
 {
     sealed class Package
     {
-        static readonly Log _log = new Log(typeof(Package));
-
         public string Name { get; }
 
         public string Path { get; }
@@ -22,77 +20,17 @@ namespace Alkahest.Packager
 
         public string Repository { get; }
 
-        Version _version;
+        public Version Version { get; }
 
-        public Version Version
-        {
-            get
-            {
-                PopulateDetails();
+        public IReadOnlyList<string> Contributors { get; }
 
-                return _version;
-            }
-        }
+        public IReadOnlyList<string> Files { get; }
 
-        IReadOnlyList<string> _contributors;
+        public IReadOnlyList<string> Dependencies { get; }
 
-        public IReadOnlyList<string> Contributors
-        {
-            get
-            {
-                PopulateDetails();
+        public IReadOnlyList<string> Conflicts { get; }
 
-                return _contributors;
-            }
-        }
-
-        IReadOnlyList<string> _files;
-
-        public IReadOnlyList<string> Files
-        {
-            get
-            {
-                PopulateDetails();
-
-                return _files;
-            }
-        }
-
-        IReadOnlyList<string> _dependencies;
-
-        public IReadOnlyList<string> Dependencies
-        {
-            get
-            {
-                PopulateDetails();
-
-                return _dependencies;
-            }
-        }
-
-        IReadOnlyList<string> _conflicts;
-
-        public IReadOnlyList<string> Conflicts
-        {
-            get
-            {
-                PopulateDetails();
-
-                return _conflicts;
-            }
-        }
-
-        IReadOnlyList<AssetKind> _assets;
-
-        public IReadOnlyList<AssetKind> Assets
-        {
-            get
-            {
-                PopulateDetails();
-
-                return _assets;
-            }
-        }
+        public IReadOnlyList<AssetKind> Assets { get; }
 
         public Package(JObject obj)
         {
@@ -102,30 +40,16 @@ namespace Alkahest.Packager
             License = (string)obj["license"];
             Owner = (string)obj["owner"];
             Repository = (string)obj["repository"];
-        }
 
-        void PopulateDetails()
-        {
-            if (_version != null)
-                return;
+            var details = JObject.Parse(GitHub.GetString(new Uri(
+                $"https://raw.githubusercontent.com/{Owner}/{Repository}/master/{PackageManager.PackageFileName}")));
 
-            var json = GitHub.GetString(
-                new Uri($"https://raw.githubusercontent.com/{Owner}/{Repository}/master/package.json"));
-            var details = JObject.Parse(json);
-            var version = (string)details["version"];
-
-            if (!Version.TryParse(version, out _version))
-            {
-                _version = new Version(1, 0, 0);
-
-                _log.Warning("Package {0} has invalid version {1}; assuming {2}", version, _version);
-            }
-
-            _contributors = details["contributors"].Select(x => (string)x).ToList();
-            _files = details["files"].Select(x => (string)x).ToList();
-            _dependencies = (details["dependencies"] ?? new JArray()).Select(x => (string)x).ToList();
-            _conflicts = (details["conflicts"] ?? new JArray()).Select(x => (string)x).ToList();
-            _assets = (details["assets"] ?? new JArray()).Select(
+            Version = Version.Parse((string)details["version"]);
+            Contributors = details["contributors"].Select(x => (string)x).ToList();
+            Files = details["files"].Select(x => (string)x).ToList();
+            Dependencies = (details["dependencies"] ?? new JArray()).Select(x => (string)x).ToList();
+            Conflicts = (details["conflicts"] ?? new JArray()).Select(x => (string)x).ToList();
+            Assets = (details["assets"] ?? new JArray()).Select(
                 x => (AssetKind)Enum.Parse(typeof(AssetKind), (string)x)).ToList();
         }
 

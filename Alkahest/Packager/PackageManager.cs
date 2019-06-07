@@ -9,6 +9,8 @@ namespace Alkahest.Packager
 {
     sealed class PackageManager
     {
+        public const string PackageFileName = "package.json";
+
         public const string ManifestFileName = "manifest.json";
 
         static readonly Log _log = new Log(typeof(PackageManager));
@@ -27,20 +29,56 @@ namespace Alkahest.Packager
 
             _log.Info("Fetching package registry...");
 
-            Registry = JArray.Parse(GitHub.GetString(Configuration.PackageRegistryUri))
+            var registry = JArray.Parse(GitHub.GetString(Configuration.PackageRegistryUri))
                 .Select(x => new Package((JObject)x)).ToDictionary(x => x.Name);
 
-            void CheckReferredPackages(bool dependencies)
+            foreach (var pkg in Registry.Values.ToArray())
             {
-                foreach (var pkg in Registry.Values)
+                var abs = Path.GetFullPath(pkg.Path);
+                var bad = false;
+
+                void CheckReferredPackages(bool dependencies)
+                {
                     foreach (var name in dependencies ? pkg.Dependencies : pkg.Conflicts)
-                        if (!Registry.ContainsKey(name))
-                            _log.Warning("Package {0} has {1} package {2} which does not exist; ignoring",
+                    {
+                        if (!registry.ContainsKey(name))
+                        {
+                            _log.Warning("Package {0} has {1} package {2} which does not exist; ignoring package",
                                 pkg.Name, dependencies ? "dependency" : "conflicting", name);
+                            bad = true;
+                        }
+                    }
+                }
+
+                CheckReferredPackages(true);
+                CheckReferredPackages(false);
+
+                foreach (var file in pkg.Files)
+                {
+                    var loc = Path.GetFullPath(Path.Combine(abs, file));
+
+                    if (!loc.StartsWith(abs + Path.DirectorySeparatorChar) &&
+                        !loc.StartsWith(abs + Path.AltDirectorySeparatorChar))
+                    {
+                        _log.Warning("Package {0} has file path {1} which is illegal; ignoring package",
+                            pkg.Name, file);
+                        bad = true;
+                    }
+
+                    if (loc == Path.Combine(abs, PackageFileName) ||
+                        loc == Path.Combine(abs, ManifestFileName))
+                    {
+                        _log.Warning("Package {0} has file path {1} which is for internal use; ignoring package",
+                            pkg.Name, file);
+                        bad = true;
+                    }
+                }
+
+                if (bad)
+                    registry.Remove(pkg.Name);
             }
 
-            CheckReferredPackages(true);
-            CheckReferredPackages(false);
+            Registry = registry;
 
             _log.Info("Reading local package manifests...");
 
