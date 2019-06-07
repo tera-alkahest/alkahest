@@ -32,7 +32,7 @@ namespace Alkahest.Packager
             var registry = JArray.Parse(GitHub.GetString(Configuration.PackageRegistryUri))
                 .Select(x => new Package((JObject)x)).ToDictionary(x => x.Name);
 
-            foreach (var pkg in Registry.Values.ToArray())
+            foreach (var pkg in registry.Values.ToArray())
             {
                 var abs = Path.GetFullPath(pkg.Path);
                 var bad = false;
