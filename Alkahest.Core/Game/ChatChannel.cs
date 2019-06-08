@@ -17,6 +17,7 @@ namespace Alkahest.Core.Game
         Private7 = 17,
         Private8 = 18,
         PartyNotice = 21,
+        System = 24,
         RaidNotice = 25,
         Emote = 26,
         Global = 27,

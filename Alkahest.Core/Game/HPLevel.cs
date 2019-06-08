@@ -7,6 +7,6 @@ namespace Alkahest.Core.Game
         FortyToFiftyNine = 2,
         SixtyToSeventyNine = 3,
         EightyToNinetyNine = 4,
-        Hundred = 5,
+        OneHundred = 5,
     }
 }

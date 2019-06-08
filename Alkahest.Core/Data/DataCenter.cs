@@ -62,7 +62,7 @@ namespace Alkahest.Core.Data
 
         internal IReadOnlyList<string> Names { get; private set; }
 
-        internal bool IsFrozen { get; private set; }
+        public bool IsFrozen { get; private set; }
 
         internal bool IsDisposed { get; private set; }
 
@@ -173,12 +173,31 @@ namespace Alkahest.Core.Data
         {
             var unk1 = reader.ReadInt32();
             var unk2 = reader.ReadInt32();
+
+            if (unk2 != 0)
+                throw new InvalidDataException();
+
             var unk3 = reader.ReadInt32();
             var version = reader.ReadUInt32();
             var unk4 = reader.ReadInt32();
+
+            if (unk4 != 0)
+                throw new InvalidDataException();
+
             var unk5 = reader.ReadInt32();
+
+            if (unk5 != 0)
+                throw new InvalidDataException();
+
             var unk6 = reader.ReadInt32();
+
+            if (unk6 != 0)
+                throw new InvalidDataException();
+
             var unk7 = reader.ReadInt32();
+
+            if (unk7 != 0)
+                throw new InvalidDataException();
 
             return new DataCenterHeader(unk1, unk2, unk3, version, unk4, unk5, unk6, unk7);
         }
@@ -186,6 +205,9 @@ namespace Alkahest.Core.Data
         static DataCenterFooter ReadFooter(GameBinaryReader reader)
         {
             var unk1 = reader.ReadInt32();
+
+            if (unk1 != 0)
+                throw new InvalidDataException();
 
             return new DataCenterFooter(unk1);
         }

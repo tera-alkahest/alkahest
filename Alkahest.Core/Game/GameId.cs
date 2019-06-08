@@ -4,7 +4,7 @@ namespace Alkahest.Core.Game
 {
     public struct GameId : IEquatable<GameId>
     {
-        public static readonly GameId Zero = new GameId();
+        public static readonly GameId Zero = default;
 
         public readonly ulong Raw;
 
