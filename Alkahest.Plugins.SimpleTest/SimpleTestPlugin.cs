@@ -23,10 +23,15 @@ namespace Alkahest.Plugins.SimpleTest
 
         static readonly Log _log = new Log(typeof(SimpleTestPlugin));
 
+        readonly PluginContext _context;
+
         readonly List<(string, RawPacketHandler)> _rawHandlers;
 
-        public SimpleTestPlugin()
+#pragma warning disable IDE0051 // Remove unused private members
+        SimpleTestPlugin(PluginContext context)
+#pragma warning restore IDE0051 // Remove unused private members
         {
+            _context = context;
             _rawHandlers = new List<(string, RawPacketHandler)>
             {
                 ("S_SPAWN_ME", HandleSpawnMe),
@@ -34,9 +39,9 @@ namespace Alkahest.Plugins.SimpleTest
             };
         }
 
-        public void Start(PluginContext context, GameProxy[] proxies)
+        public void Start()
         {
-            foreach (var proc in proxies.Select(x => x.Processor))
+            foreach (var proc in _context.Proxies.Select(x => x.Processor))
             {
                 foreach (var (name, handler) in _rawHandlers)
                     proc.AddRawHandler(name, handler);
@@ -48,9 +53,9 @@ namespace Alkahest.Plugins.SimpleTest
             _log.Basic("Simple test plugin started");
         }
 
-        public void Stop(PluginContext context, GameProxy[] proxies)
+        public void Stop()
         {
-            foreach (var proc in proxies.Select(x => x.Processor))
+            foreach (var proc in _context.Proxies.Select(x => x.Processor))
             {
                 foreach (var (name, handler) in _rawHandlers)
                     proc.RemoveRawHandler(name, handler);

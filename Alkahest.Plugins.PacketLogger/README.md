@@ -1,4 +1,4 @@
-# Packet Logger Plugin
+# Alkahest Packet Logger Plugin
 
 This plugin writes a (possibly compressed) packet log for an Alkahest instance.
 This log can later be parsed and analyzed with the `parse` command.

@@ -1,5 +1,4 @@
 using Alkahest.Core.Logging;
-using Alkahest.Core.Net.Game;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,6 +9,12 @@ namespace Alkahest.Core.Plugins
 {
     public sealed class PluginLoader
     {
+        const BindingFlags ConstructorFlags =
+            BindingFlags.DeclaredOnly |
+            BindingFlags.Instance |
+            BindingFlags.Public |
+            BindingFlags.NonPublic;
+
         const string ClassSuffix = "Plugin";
 
         const string NamespacePrefix = "Alkahest.Plugins.";
@@ -32,7 +37,8 @@ namespace Alkahest.Core.Plugins
             Plugins = (from file in Directory.EnumerateFiles(directory, pattern)
                        from type in Assembly.UnsafeLoadFrom(file).DefinedTypes
                        where type.ImplementedInterfaces.Contains(typeof(IPlugin))
-                       let plugin = (IPlugin)Activator.CreateInstance(type)
+                       let ctor = type.GetConstructor(ConstructorFlags, null, new[] { typeof(PluginContext) }, null)
+                       let plugin = (IPlugin)ctor.Invoke(new[] { context })
                        where !exclude.Contains(plugin.Name)
                        select EnforceConventions(plugin)).ToArray();
         }
@@ -66,24 +72,13 @@ namespace Alkahest.Core.Plugins
             return plugin;
         }
 
-        static void CheckProxies(GameProxy[] proxies)
+        public void Start()
         {
-            if (proxies == null)
-                throw new ArgumentNullException(nameof(proxies));
-
-            if (proxies.Any(x => x == null))
-                throw new ArgumentException("A null proxy was given.", nameof(proxies));
-        }
-
-        public void Start(GameProxy[] proxies)
-        {
-            CheckProxies(proxies);
-
             Context.Data.Freeze();
 
             foreach (var p in Plugins)
             {
-                p.Start(Context, proxies.ToArray());
+                p.Start();
 
                 _log.Info("Started plugin {0}", p.Name);
             }
@@ -91,16 +86,16 @@ namespace Alkahest.Core.Plugins
             _log.Basic("Started {0} plugins", Plugins.Count);
         }
 
-        public void Stop(GameProxy[] proxies)
+        public void Stop()
         {
-            CheckProxies(proxies);
-
             foreach (var p in Plugins)
             {
-                p.Stop(Context, proxies.ToArray());
+                p.Stop();
 
                 _log.Info("Stopped plugin {0}", p.Name);
             }
+
+            _log.Basic("Stopped {0} plugins", Plugins.Count);
 
             Context.Data.Thaw();
         }

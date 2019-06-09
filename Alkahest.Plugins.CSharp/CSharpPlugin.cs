@@ -93,10 +93,20 @@ namespace Alkahest.Plugins.CSharp
 
         static readonly Log _log = new Log(typeof(CSharpPlugin));
 
+        readonly PluginContext _context;
+
         readonly List<(string, Type, CSharpScriptContext)> _scripts =
             new List<(string, Type, CSharpScriptContext)>();
 
-        public void Start(PluginContext context, GameProxy[] proxies)
+
+#pragma warning disable IDE0051 // Remove unused private members
+        CSharpPlugin(PluginContext context)
+#pragma warning restore IDE0051 // Remove unused private members
+        {
+            _context = context;
+        }
+
+        public void Start()
         {
             var pkg = Configuration.PackageDirectory;
 
@@ -278,7 +288,7 @@ namespace Alkahest.Plugins.CSharp
             _log.Basic("Started {0} packages", count);
         }
 
-        public void Stop(PluginContext context, GameProxy[] proxies)
+        public void Stop()
         {
             var count = 0;
 

@@ -148,10 +148,10 @@ Script packages can be managed with Alkahest's package management commands:
 * `uninstall`: Uninstall given package(s).
 * `update`: Update given package(s) or all packages.
 
-For example, `Alkahest.exe install csharp_example` installs the `csharp_example`
-package, `Alkahest.exe update` updates all installed packages,
-`Alkahest.exe search foo` finds all packages containing the string `foo` in
-either name or description, etc.
+For example, `Alkahest.exe install example` installs the `example` package,
+`Alkahest.exe update` updates all installed packages, `Alkahest.exe search foo`
+finds all packages containing the string `foo` in either name or description,
+etc.
 
 ## Disclaimer
 

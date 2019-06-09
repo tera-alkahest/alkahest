@@ -1,4 +1,4 @@
-# C# Plugin
+# Alkahest C# Plugin
 
 This plugin lets you write scripts for Alkahest in C#. It is based on Roslyn and
 supports C# 8.0.

@@ -124,10 +124,10 @@ namespace Alkahest.Commands
                     DataCenter.FileNames[region]), ".dec");
                 var loader = new PluginLoader(new PluginContext(File.Exists(path) ?
                     new DataCenter(path, Configuration.DataCenterInterning) :
-                    new DataCenter(version)), Configuration.PluginDirectory,
+                    new DataCenter(version), proxies), Configuration.PluginDirectory,
                     Configuration.PluginPattern, Configuration.DisablePlugins);
 
-                loader.Start(proxies);
+                loader.Start();
 
                 _log.Basic("Proxy server started");
 
@@ -135,7 +135,7 @@ namespace Alkahest.Commands
 
                 _log.Basic("Proxy server stopping...");
 
-                loader.Stop(proxies);
+                loader.Stop();
 
                 foreach (var proxy in proxies)
                     proxy.Dispose();

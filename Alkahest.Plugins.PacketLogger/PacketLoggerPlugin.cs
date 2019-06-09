@@ -14,26 +14,35 @@ namespace Alkahest.Plugins.PacketLogger
 
         static readonly Log _log = new Log(typeof(PacketLoggerPlugin));
 
+        readonly PluginContext _context;
+
         PacketLogWriter _writer;
 
-        public void Start(PluginContext context, GameProxy[] proxies)
+#pragma warning disable IDE0051 // Remove unused private members
+        PacketLoggerPlugin(PluginContext context)
+#pragma warning restore IDE0051 // Remove unused private members
         {
-            var serializer = proxies.First().Processor.Serializer;
+            _context = context;
+        }
+
+        public void Start()
+        {
+            var serializer = _context.Proxies.First().Processor.Serializer;
 
             _writer = new PacketLogWriter(serializer.Region, serializer.GameMessages,
-                serializer.SystemMessages, proxies.Select(x => x.Info).ToArray(),
+                serializer.SystemMessages, _context.Proxies.Select(x => x.Info).ToArray(),
                 Configuration.LogDirectory, Configuration.LogFileNameFormat,
                 Configuration.CompressLogs);
 
-            foreach (var proxy in proxies)
+            foreach (var proxy in _context.Proxies)
                 proxy.Processor.AddRawHandler(PacketLogHandler);
 
             _log.Basic("Packet logger plugin started");
         }
 
-        public void Stop(PluginContext context, GameProxy[] proxies)
+        public void Stop()
         {
-            foreach (var proxy in proxies)
+            foreach (var proxy in _context.Proxies)
                 proxy.Processor.RemoveRawHandler(PacketLogHandler);
 
             _writer.Dispose();
