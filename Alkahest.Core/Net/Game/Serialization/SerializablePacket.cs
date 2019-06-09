@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -54,7 +55,6 @@ namespace Alkahest.Core.Net.Game.Serialization
                 if (opts != null && opts.Skip)
                     continue;
 
-                var propType = prop.PropertyType;
                 var name = prop.Name;
                 var value = prop.GetValue(source);
 
@@ -64,23 +64,20 @@ namespace Alkahest.Core.Net.Game.Serialization
                     builder.AppendLine($"{indent}  {{");
 
                     var elemIndent = indent + "    ";
-                    var elemType = propType.GetGenericArguments()[0];
 
-                    for (var i = 0; i < list.Count; i++)
+                    if (value is List<byte> bytes)
                     {
-                        var elem = list[i];
-                        var idx = $"[{i}] =";
-
-                        if (elemType.IsPrimitive)
-                            builder.AppendLine($"{elemIndent}{idx} {elem}");
-                        else
-                            ToString(builder, elem, idx, elemIndent, level + 1);
+                        RawPacket.ToString(builder, bytes.ToArray(), elemIndent);
+                        builder.AppendLine();
                     }
+                    else
+                        for (var i = 0; i < list.Count; i++)
+                            ToString(builder, list[i], $"[{i}] =", elemIndent, level + 1);
 
                     builder.AppendLine($"{indent}  }}");
                 }
-                else if (propType == typeof(string))
-                    builder.AppendLine($"{indent}  {name} = \"{value}\"");
+                else if (value is string str)
+                    builder.AppendLine($"{indent}  {name} = \"{str}\"");
                 else
                     builder.AppendLine($"{indent}  {name} = {value}");
             }

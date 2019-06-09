@@ -15,15 +15,15 @@ namespace Alkahest.Core.Net.Game
             Name = name ?? throw new ArgumentNullException(nameof(name));
         }
 
-        public override string ToString()
+        internal static void ToString(StringBuilder builder, byte[] data, string indent)
         {
             var hex = new StringBuilder();
 
-            foreach (var (i, x) in Payload.WithIndex())
+            foreach (var (i, x) in data.WithIndex())
             {
                 hex.Append($"{x:X2}");
 
-                if (i != Payload.Length - 1)
+                if (i != data.Length - 1)
                 {
                     if ((i + 1) % 16 != 0)
                         hex.Append(" ");
@@ -34,13 +34,13 @@ namespace Alkahest.Core.Net.Game
 
             var text = new StringBuilder();
 
-            foreach (var (i, x) in Payload.WithIndex())
+            foreach (var (i, x) in data.WithIndex())
             {
                 var ch = (char)x;
 
                 text.Append(!char.IsControl(ch) && !char.IsWhiteSpace(ch) ? ch : '.');
 
-                if (i != Payload.Length - 1 && (i + 1) % 16 == 0)
+                if (i != data.Length - 1 && (i + 1) % 16 == 0)
                     text.AppendLine();
             }
 
@@ -50,19 +50,25 @@ namespace Alkahest.Core.Net.Game
             var textLines = text.ToString().Split(new[] { Environment.NewLine },
                 StringSplitOptions.RemoveEmptyEntries);
 
-            var final = new StringBuilder();
-
             foreach (var (i, line) in hexLines.WithIndex())
             {
-                final.Append($"{i * 16:X4}:  ");
-                final.AppendFormat($"{line,-47}  ");
-                final.Append(textLines[i]);
+                builder.Append(indent);
+                builder.Append($"{i * 16:X4}:  ");
+                builder.AppendFormat($"{line,-47}  ");
+                builder.Append(textLines[i]);
 
                 if (i != hexLines.Length - 1)
-                    final.AppendLine();
+                    builder.AppendLine();
             }
+        }
 
-            return final.ToString();
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+
+            ToString(sb, Payload, string.Empty);
+
+            return sb.ToString();
         }
     }
 }
