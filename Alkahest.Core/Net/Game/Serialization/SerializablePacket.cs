@@ -47,8 +47,7 @@ namespace Alkahest.Core.Net.Game.Serialization
             builder.AppendLine($"{indent}{header}");
             builder.AppendLine($"{indent}{{");
 
-            foreach (var prop in type.GetProperties(PacketSerializer.FieldFlags)
-                .OrderBy(p => p.MetadataToken))
+            foreach (var prop in type.GetProperties().OrderBy(p => p.MetadataToken))
             {
                 var opts = prop.GetCustomAttribute<PacketFieldOptionsAttribute>();
 

@@ -9,11 +9,6 @@ namespace Alkahest.Core.Net.Game.Serialization
 {
     public abstract class PacketSerializer
     {
-        internal const BindingFlags FieldFlags =
-            BindingFlags.DeclaredOnly |
-            BindingFlags.Instance |
-            BindingFlags.Public;
-
         static readonly Log _log = new Log(typeof(PacketSerializer));
 
         public Region Region { get; }
