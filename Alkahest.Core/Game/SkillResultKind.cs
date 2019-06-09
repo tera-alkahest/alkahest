@@ -6,7 +6,8 @@ namespace Alkahest.Core.Game
         Damage = 1,
         RestoreHP = 2,
         RestoreMP = 3,
-        Unknown1 = 5,
-        Unknown2 = 8,
+        Unknown1 = 4,
+        Unknown2 = 5,
+        Unknown3 = 8,
     }
 }

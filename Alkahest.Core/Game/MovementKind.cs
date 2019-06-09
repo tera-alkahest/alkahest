@@ -11,5 +11,6 @@ namespace Alkahest.Core.Game
         StartSwim = 8,
         StopSwim = 9,
         JumpFall = 10,
+        Unknown1 = 14,
     }
 }
