@@ -41,7 +41,6 @@ namespace Alkahest.Plugins.CSharp
                 Color.Yellow,
                 Color.Blue,
                 Color.Teal,
-                Color.Aqua,
                 Color.Orange,
                 Color.Azure,
                 Color.Beige,

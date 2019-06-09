@@ -5,6 +5,7 @@ using Alkahest.Core.Logging;
 using Alkahest.Core.Net.Game;
 using Alkahest.Core.Net.Game.Packets;
 using Alkahest.Core.Plugins;
+using Alkahest.Core.Reflection;
 using EasyHook;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -160,6 +161,16 @@ namespace Alkahest.Plugins.CSharp
             }
 
             return false;
+        }
+
+        bool HandleLoadClientUserSetting(GameClient client, Direction direction,
+            SLoadClientUserSettingPacket packet)
+        {
+            Message(client, null, "Proxy version <FONT COLOR=\"#{0:X}\">{1}</FONT> connected",
+                Color.FromArgb(0, Color.Aqua).ToArgb(),
+                Assembly.GetExecutingAssembly().GetInformationalVersion());
+
+            return true;
         }
 
         void HandleCommand(GameClient client, string command)
@@ -423,6 +434,7 @@ namespace Alkahest.Plugins.CSharp
 
             foreach (var proc in _context.Proxies.Select(x => x.Processor))
             {
+                proc.AddHandler<SLoadClientUserSettingPacket>(HandleLoadClientUserSetting);
                 proc.AddHandler<CAdminPacket>(HandleAdmin);
                 proc.AddHandler<COpCommandPacket>(HandleOpCommand);
             }
@@ -432,6 +444,7 @@ namespace Alkahest.Plugins.CSharp
         {
             foreach (var proc in _context.Proxies.Select(x => x.Processor))
             {
+                proc.RemoveHandler<SLoadClientUserSettingPacket>(HandleLoadClientUserSetting);
                 proc.RemoveHandler<CAdminPacket>(HandleAdmin);
                 proc.RemoveHandler<COpCommandPacket>(HandleOpCommand);
             }

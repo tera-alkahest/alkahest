@@ -1,4 +1,5 @@
 using Alkahest.Core.Logging;
+using Alkahest.Core.Reflection;
 using Alkahest.Packager;
 using Mono.Options;
 using System;
@@ -28,8 +29,7 @@ namespace Alkahest.Commands
         {
             _log.Info("Checking for a newer release...");
 
-            var current = Assembly.GetExecutingAssembly()
-                .GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+            var current = Assembly.GetExecutingAssembly().GetInformationalVersion();
             var latest = GitHub.Client.Repository.Release.GetAll(Configuration.UpgradeOwner,
                 Configuration.UpgradeRepository).Result.OrderByDescending(x => x.PublishedAt).First();
 

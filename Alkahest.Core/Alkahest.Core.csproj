@@ -281,6 +281,7 @@
     <Compile Include="Net\ServerInfo.cs" />
     <Compile Include="Net\ServerListParameters.cs" />
     <Compile Include="Net\ServerListProxy.cs" />
+    <Compile Include="Reflection\ReflectionExtensions.cs" />
     <Compile Include="Region.cs" />
   </ItemGroup>
   <ItemGroup>

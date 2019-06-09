@@ -1,3 +1,4 @@
+using Alkahest.Core.Reflection;
 using Octokit;
 using System;
 using System.Collections.Generic;
@@ -8,8 +9,8 @@ namespace Alkahest.Packager
     static class GitHub
     {
         public static GitHubClient Client { get; } =
-            new GitHubClient(new ProductHeaderValue(nameof(Alkahest), Assembly.GetExecutingAssembly()
-                .GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion));
+            new GitHubClient(new ProductHeaderValue(nameof(Alkahest),
+                Assembly.GetExecutingAssembly().GetInformationalVersion()));
 
         public static object GetObject(Uri uri)
         {

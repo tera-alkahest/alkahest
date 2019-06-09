@@ -1,11 +1,14 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyDescription("An extensible TERA proxy server.")]
-[assembly: AssemblyCompany("Alex Rønne Petersen")]
-[assembly: AssemblyProduct(nameof(Alkahest))]
+[assembly: AssemblyCompany(nameof(Alkahest))]
+[assembly: AssemblyConfiguration("Debug")]
 [assembly: AssemblyCopyright("ISC License (No Attribution)")]
-[assembly: ComVisible(false)]
-[assembly: AssemblyVersion("1.0.0")]
+[assembly: AssemblyCulture("")]
+[assembly: AssemblyDescription("An extensible TERA proxy server.")]
 [assembly: AssemblyFileVersion("1.0.0")]
 [assembly: AssemblyInformationalVersion("1.0.0-alpha4")]
+[assembly: AssemblyProduct(nameof(Alkahest))]
+[assembly: AssemblyTrademark("N/A")]
+[assembly: AssemblyVersion("1.0.0")]
+[assembly: ComVisible(false)]

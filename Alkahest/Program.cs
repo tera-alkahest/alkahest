@@ -1,5 +1,6 @@
 using Alkahest.Commands;
 using Alkahest.Core.Logging;
+using Alkahest.Core.Reflection;
 using Mono.Options;
 using System;
 using System.Diagnostics;
@@ -58,8 +59,8 @@ namespace Alkahest
                     "Print version and exit",
                     v =>
                     {
-                        Console.WriteLine("{0} {1}", Name, Assembly.GetExecutingAssembly()
-                            .GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion);
+                        Console.WriteLine("{0} {1}", Name,
+                            Assembly.GetExecutingAssembly().GetInformationalVersion());
                         Environment.Exit(0);
                     }
                 }

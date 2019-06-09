@@ -1,8 +1,10 @@
 using Alkahest.Core.Logging;
+using Alkahest.Core.Reflection;
 using Mono.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime;
 using Theraot.Collections;
 
@@ -39,7 +41,9 @@ namespace Alkahest
 
             try
             {
-                Console.Title = $"{nameof(Alkahest)} - {Title}";
+                var ver = Assembly.GetExecutingAssembly().GetInformationalVersion();
+
+                Console.Title = $"{nameof(Alkahest)} {ver} - {Title}";
                 GCSettings.LatencyMode = LatencyMode;
 
                 return Invoke((Options?.Parse(arguments) ?? arguments).ToArray());
