@@ -87,10 +87,10 @@ namespace Alkahest.Plugins.CSharp
             using var reader = new JsonTextReader(new StreamReader(path));
             var value = JObject.Load(reader);
 
-            if (value["version"] == null)
-                value["version"] = 0;
+            if (!value.TryGetValue("version", out var tok))
+                tok = value["version"] = 0;
 
-            var ver = (int)value["version"];
+            var ver = (int)tok;
 
             return ver != version && migrator != null ? migrator(value, ver) : value;
         }
