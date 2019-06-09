@@ -1,6 +1,9 @@
 using Alkahest.Core;
+using Alkahest.Core.Collections;
+using Alkahest.Core.Game;
 using Alkahest.Core.Logging;
 using Alkahest.Core.Net.Game;
+using Alkahest.Core.Net.Game.Packets;
 using Alkahest.Core.Plugins;
 using EasyHook;
 using Microsoft.CodeAnalysis;
@@ -91,6 +94,8 @@ namespace Alkahest.Plugins.CSharp
 
         public string Name => "csharp";
 
+        static readonly Color _prefixColor = Color.FromArgb(0, Color.Chartreuse);
+
         static readonly Log _log = new Log(typeof(CSharpPlugin));
 
         readonly PluginContext _context;
@@ -98,12 +103,141 @@ namespace Alkahest.Plugins.CSharp
         readonly List<(string, Type, CSharpScriptContext)> _scripts =
             new List<(string, Type, CSharpScriptContext)>();
 
+        readonly List<(CSharpScriptContext, string, Action<GameClient, string[]>)> _commands =
+            new List<(CSharpScriptContext, string, Action<GameClient, string[]>)>();
 
 #pragma warning disable IDE0051 // Remove unused private members
         CSharpPlugin(PluginContext context)
 #pragma warning restore IDE0051 // Remove unused private members
         {
             _context = context;
+        }
+
+        internal void Message(GameClient client, string from, string format, params object[] args)
+        {
+            if (client == null)
+                throw new ArgumentNullException(nameof(client));
+
+            var msg = string.Format(
+                "[<FONT COLOR=\"#{0:X}\">{1}</FONT>]{2} {3}",
+                _prefixColor.ToArgb(), nameof(Alkahest), from == null ? string.Empty :
+                string.Format("[{0}]", from), string.Format(format, args));
+
+            client.SendToClient(new SChatPacket
+            {
+                Message = msg,
+                Channel = ChatChannel.System,
+            });
+        }
+
+        internal bool AddCommand(CSharpScriptContext context, string name,
+            Action<GameClient, string[]> handler)
+        {
+            lock (_commands)
+            {
+                foreach (var (ctx, n, _) in _commands)
+                    if (n == name)
+                        return false;
+
+                _commands.Add((context, name, handler));
+            }
+
+            return true;
+        }
+
+        internal bool RemoveCommand(CSharpScriptContext context, string name)
+        {
+            lock (_commands)
+            {
+                foreach (var (i, (ctx, n, _)) in _commands.WithIndex().ToArray())
+                {
+                    if (ctx == context && n == name)
+                    {
+                        _commands.RemoveAt(i);
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        void HandleCommand(GameClient client, string command)
+        {
+            var args = new List<string>();
+            var arg = new StringBuilder();
+
+            void Push()
+            {
+                var str = arg.ToString().Trim();
+
+                if (str != string.Empty)
+                    args.Add(str);
+
+                arg.Clear();
+            }
+
+            var quote = false;
+
+            foreach (var c in command)
+            {
+                if (c == '"')
+                {
+                    if (quote)
+                    {
+                        Push();
+
+                        quote = false;
+                    }
+                    else
+                        quote = true;
+                }
+                else if (char.IsWhiteSpace(c) && !quote)
+                    Push();
+                else
+                    arg.Append(c);
+            }
+
+            Push();
+
+            if (args.Count < 1)
+                return;
+
+            var cmd = args[0];
+
+            lock (_commands)
+            {
+                var handler = _commands.FirstOrDefault(x => x.Item2 == cmd).Item3;
+
+                if (handler != null)
+                {
+                    try
+                    {
+                        handler(client, args.Skip(1).ToArray());
+                    }
+                    catch (Exception e) when (!Debugger.IsAttached)
+                    {
+                        _log.Error("Unhandled exception in command {0}:", cmd);
+                        _log.Error("{0}", e);
+                    }
+                }
+                else
+                    Message(client, null, "Unknown command name: {0}", cmd);
+            }
+        }
+
+        bool HandleOpCommand(GameClient client, Direction direction, COpCommandPacket packet)
+        {
+            // The client strips all HTML from this packet.
+            HandleCommand(client, packet.Command);
+            return false;
+        }
+
+        bool HandleAdmin(GameClient client, Direction direction, CAdminPacket packet)
+        {
+            // The client strips all HTML from this packet.
+            HandleCommand(client, packet.Command);
+            return false;
         }
 
         public void Start()
@@ -260,8 +394,9 @@ namespace Alkahest.Plugins.CSharp
             var asm = Assembly.Load(stream.ToArray());
 
             foreach (var (name, typeName) in typeNames)
-                _scripts.Add((name, asm.GetType(typeName), new CSharpScriptContext(name, Path.GetFullPath(
-                    Path.Combine(pkg, name)), new Log(typeof(CSharpPlugin), name), context.Data)));
+                _scripts.Add((name, asm.GetType(typeName), new CSharpScriptContext(this, name,
+                    Path.GetFullPath(Path.Combine(pkg, name)), new Log(typeof(CSharpPlugin), name),
+                    _context.Data, _context.Proxies)));
 
             var count = 0;
 
@@ -269,8 +404,7 @@ namespace Alkahest.Plugins.CSharp
             {
                 try
                 {
-                    type.GetMethod(StartName, MethodFlags).Invoke(null,
-                        new object[] { ctx, proxies.ToArray() });
+                    type.GetMethod(StartName, MethodFlags).Invoke(null, new object[] { ctx });
                 }
                 catch (Exception e) when (!Debugger.IsAttached)
                 {
@@ -286,18 +420,29 @@ namespace Alkahest.Plugins.CSharp
             }
 
             _log.Basic("Started {0} packages", count);
+
+            foreach (var proc in _context.Proxies.Select(x => x.Processor))
+            {
+                proc.AddHandler<CAdminPacket>(HandleAdmin);
+                proc.AddHandler<COpCommandPacket>(HandleOpCommand);
+            }
         }
 
         public void Stop()
         {
+            foreach (var proc in _context.Proxies.Select(x => x.Processor))
+            {
+                proc.RemoveHandler<CAdminPacket>(HandleAdmin);
+                proc.RemoveHandler<COpCommandPacket>(HandleOpCommand);
+            }
+
             var count = 0;
 
             foreach (var (name, type, ctx) in _scripts)
             {
                 try
                 {
-                    type.GetMethod(StopName, MethodFlags).Invoke(null,
-                        new object[] { ctx, proxies.ToArray() });
+                    type.GetMethod(StopName, MethodFlags).Invoke(null, new object[] { ctx });
                 }
                 catch (Exception e) when (!Debugger.IsAttached)
                 {

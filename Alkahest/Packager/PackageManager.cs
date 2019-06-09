@@ -13,6 +13,8 @@ namespace Alkahest.Packager
 
         public const string ManifestFileName = "manifest.json";
 
+        const string ConfigurationFileName = "config.json";
+
         static readonly Log _log = new Log(typeof(PackageManager));
 
         public IReadOnlyDictionary<string, Package> Registry { get; }
@@ -66,7 +68,8 @@ namespace Alkahest.Packager
                     }
 
                     if (loc == Path.Combine(abs, PackageFileName) ||
-                        loc == Path.Combine(abs, ManifestFileName))
+                        loc == Path.Combine(abs, ManifestFileName) ||
+                        loc == Path.Combine(abs, ConfigurationFileName))
                     {
                         _log.Warning("Package {0} has file path {1} which is for internal use; ignoring package",
                             pkg.Name, file);
