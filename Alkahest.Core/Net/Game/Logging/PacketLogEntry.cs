@@ -29,6 +29,9 @@ namespace Alkahest.Core.Net.Game.Logging
             Direction = direction.CheckValidity(nameof(direction));
             MessageCode = messageCode;
             Payload = (payload ?? throw new ArgumentNullException(nameof(payload))).ToArray();
+
+            if (payload.Length > PacketHeader.MaxPayloadSize)
+                throw new ArgumentException("Payload is too large.", nameof(payload));
         }
     }
 }
