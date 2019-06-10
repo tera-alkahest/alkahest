@@ -9,10 +9,15 @@ using Alkahest.Core.Reflection;
 using EasyHook;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Formatting;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Emit;
+using Microsoft.CodeAnalysis.Scripting;
 using Microsoft.CodeAnalysis.Text;
+using Microsoft.CodeAnalysis.VisualBasic;
 using Microsoft.CSharp.RuntimeBinder;
+using Microsoft.DiaSymReader;
 using Microsoft.JScript;
 using Microsoft.VisualBasic;
 using Mono.Linq.Expressions;
@@ -26,6 +31,9 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Registration;
 using System.ComponentModel.DataAnnotations;
+using System.Composition.Convention;
+using System.Composition.Hosting;
+using System.Composition.Hosting.Core;
 using System.Configuration.Install;
 using System.Data;
 using System.Data.EntityClient;
@@ -263,95 +271,110 @@ namespace Alkahest.Plugins.CSharp
             // Reference all the important .NET Framework assemblies.
             var types = new[]
             {
-                typeof(Assert),                 // Alkahest.Core.dll
-                typeof(CSharpPlugin),           // alkahest-csharp
-                typeof(RemoteHooking),          // EasyHook.dll
-                typeof(RuntimeBinderException), // Microsoft.CSharp.dll
-                typeof(JSObject),               // Microsoft.JScript.dll
-                typeof(TriState),               // Microsoft.VisualBasic.dll
-                typeof(CustomExpression),       // Mono.Linq.Expressions.dll
-                typeof(OptionSet),              // Mono.Options.dll
-                typeof(JObject),                // Newtonsoft.Json.dll
-                typeof(object),                 // mscorlib.dll
-                typeof(GitHubClient),           // Octokit.dll
-                typeof(UIElement),              // PresentationCore.dll
-                typeof(Window),                 // PresentationFramework.dll
-                typeof(XpsDocument),            // ReachFramework.dll
-                typeof(Disassembler),           // SharpDisasm.dll
-                typeof(Uri),                    // System.dll
-                typeof(Configuration),          // System.Configuration.dll
-                typeof(Installer),              // System.Configuration.Install.dll
-                typeof(ExportAttribute),        // System.ComponentModel.Composition.dll
-                typeof(ExportBuilder),          // System.ComponentModel.Composition.Registration.dll
-                typeof(Validator),              // System.ComponentModel.DataAnnotations.dll
-                typeof(Enumerable),             // System.Core.dll
-                typeof(DataSet),                // System.Data.dll
-                typeof(DataTableExtensions),    // System.Data.DataSetExtensions.dll
-                typeof(EntityConnection),       // System.Data.Entity.dll
-                typeof(DataContext),            // System.Data.Linq.dll
-                typeof(DataServiceHost),        // System.Data.Services.dll
-                typeof(DataServiceContext),     // System.Data.Services.Client.dll
-                typeof(Bitmap),                 // System.Drawing.dll
-                typeof(ZipArchive),             // System.IO.Compression.dll
-                typeof(ZipFile),                // System.IO.Compression.FileSystem.dll
-                typeof(ManagementObject),       // System.Management.dll
-                typeof(InstrumentationManager), // System.Management.Instrumentation.dll
-                typeof(IPinnable),              // System.Memory.dll
-                typeof(MessageQueue),           // System.Messaging.dll
-                typeof(IPEndPointCollection),   // System.Net.dll
-                typeof(HttpClient),             // System.Net.Http.dll
-                typeof(JsonContractResolver),   // System.Net.Http.Formatting.dll
-                typeof(WebRequestHandler),      // System.Net.Http.WebRequest.dll
-                typeof(BigInteger),             // System.Numerics.dll
-                typeof(Vector<>),               // System.Numerics.Vectors.dll
-                typeof(PrintQueue),             // System.Printing.dll
-                typeof(MemoryCache),            // System.Runtime.Caching.dll
-                typeof(Unsafe),                 // System.Runtime.CompilerServices.Unsafe.dll
-                typeof(InstanceHandle),         // System.Runtime.DurableInstancing.dll
-                typeof(RemotingService),        // System.Runtime.Remoting.dll
-                typeof(DataContractAttribute),  // System.Runtime.Serialization.dll
-                typeof(SoapFormatter),          // System.Runtime.Serialization.Formatters.Soap.dll
-                typeof(ProtectedData),          // System.Security.dll
-                typeof(ChannelFactory),         // System.ServiceModel.dll
-                typeof(ServiceHostFactory),     // System.ServiceModel.Activation.dll
-                typeof(UdpBinding),             // System.ServiceModel.Channels.dll
-                typeof(DiscoveryClient),        // System.ServiceModel.Discovery.dll
-                typeof(RoutingService),         // System.ServiceModel.Routing.dll
-                typeof(WebHttpBinding),         // System.ServiceModel.Web.dll
-                typeof(ServiceBase),            // System.ServiceProcess.dll
-                typeof(SpeechSynthesizer),      // System.Speech.dll
-                typeof(ValueTask<>),            // System.Threading.Tasks.Extensions.dll
-                typeof(Transaction),            // System.Transactions.dll
-                typeof(HttpServer),             // System.Web.Http.dll
-                typeof(HttpSelfHostServer),     // System.Web.Http.SelfHost.dll
-                typeof(RibbonControl),          // System.Windows.Controls.Ribbon
-                typeof(Form),                   // System.Windows.Forms.dll
-                typeof(DataPoint),              // System.Windows.Forms.DataVisualization.dll
-                typeof(XamlType),               // System.Xaml.dll
-                typeof(XmlNode),                // System.Xml.dll
-                typeof(XNode),                  // System.Xml.Linq.dll
-                typeof(No),                     // Theraot.Core.dll
-                typeof(PinnedObject),           // Vanara.Core.dll
-                typeof(ComCtl32),               // Vanara.PInvoke.ComCtl32.dll
-                typeof(BCrypt),                 // Vanara.PInvoke.Cryptography.dll
-                typeof(Gdi32),                  // Vanara.PInvoke.Gdi32.dll
-                typeof(Kernel32),               // Vanara.PInvoke.Kernel32.dll
-                typeof(Mpr),                    // Vanara.PInvoke.Mpr.dll
-                typeof(NtDll),                  // Vanara.PInvoke.NtDll.dll
-                typeof(AdvApi32),               // Vanara.PInvoke.Security.dll
-                typeof(Lib),                    // Vanara.PInvoke.Shared.dll
-                typeof(Shell32),                // Vanara.PInvoke.Shell32.dll
-                typeof(ShlwApi),                // Vanara.PInvoke.ShlwApi.dll
-                typeof(User32),                 // Vanara.PInvoke.User32.dll
-                typeof(User32_Gdi),             // Vanara.PInvoke.User32.Gdi.dll
-                typeof(WinINet),                // Vanara.PInvoke.WinINet.dll
-                typeof(Rect),                   // WindowsBase.dll
+                typeof(Assert),                  // Alkahest.Core.dll
+                typeof(CSharpPlugin),            // alkahest-csharp
+                typeof(RemoteHooking),           // EasyHook.dll
+                typeof(SyntaxTree),              // Microsoft.CodeAnalysis.dll
+                typeof(CSharpSyntaxTree),        // Microsoft.CodeAnalysis.CSharp.dll
+                typeof(CSharpScript),            // Microsoft.CodeAnalysis.CSharp.Scripting.dll
+                typeof(CSharpFormattingOptions), // Microsoft.CodeAnalysis.CSharp.Workspaces.dll
+                typeof(TextTags),                // Microsoft.CodeAnalysis.Features.dll
+                typeof(Script),                  // Microsoft.CodeAnalysis.Scripting.dll
+                typeof(VisualBasicSyntaxTree),   // Microsoft.CodeAnalysis.VisualBasic.dll
+                typeof(Solution),                // Microsoft.CodeAnalysis.Workspaces.dll
+                typeof(RuntimeBinderException),  // Microsoft.CSharp.dll
+                typeof(IMetadataImportProvider), // Microsoft.DiaSymReader.dll
+                typeof(JSObject),                // Microsoft.JScript.dll
+                typeof(TriState),                // Microsoft.VisualBasic.dll
+                typeof(CustomExpression),        // Mono.Linq.Expressions.dll
+                typeof(OptionSet),               // Mono.Options.dll
+                typeof(JObject),                 // Newtonsoft.Json.dll
+                typeof(object),                  // mscorlib.dll
+                typeof(GitHubClient),            // Octokit.dll
+                typeof(UIElement),               // PresentationCore.dll
+                typeof(Window),                  // PresentationFramework.dll
+                typeof(XpsDocument),             // ReachFramework.dll
+                typeof(Disassembler),            // SharpDisasm.dll
+                typeof(Uri),                     // System.dll
+                typeof(Configuration),           // System.Configuration.dll
+                typeof(Installer),               // System.Configuration.Install.dll
+                typeof(ExportAttribute),         // System.ComponentModel.Composition.dll
+                typeof(ExportBuilder),           // System.ComponentModel.Composition.Registration.dll
+                typeof(Validator),               // System.ComponentModel.DataAnnotations.dll
+                typeof(AttributedModelProvider), // System.Composition.AttributedModel.dll
+                typeof(ConventionBuilder),       // System.Composition.Convention.dll
+                typeof(CompositionHost),         // System.Composition.Hosting.dll
+                typeof(CompositionContract),     // System.Composition.Runtime.dll
+                typeof(ContainerConfiguration),  // System.Composition.TypedParts.dll
+                typeof(Enumerable),              // System.Core.dll
+                typeof(DataSet),                 // System.Data.dll
+                typeof(DataTableExtensions),     // System.Data.DataSetExtensions.dll
+                typeof(EntityConnection),        // System.Data.Entity.dll
+                typeof(DataContext),             // System.Data.Linq.dll
+                typeof(DataServiceHost),         // System.Data.Services.dll
+                typeof(DataServiceContext),      // System.Data.Services.Client.dll
+                typeof(Bitmap),                  // System.Drawing.dll
+                typeof(ZipArchive),              // System.IO.Compression.dll
+                typeof(ZipFile),                 // System.IO.Compression.FileSystem.dll
+                typeof(ManagementObject),        // System.Management.dll
+                typeof(InstrumentationManager),  // System.Management.Instrumentation.dll
+                typeof(IPinnable),               // System.Memory.dll
+                typeof(MessageQueue),            // System.Messaging.dll
+                typeof(IPEndPointCollection),    // System.Net.dll
+                typeof(HttpClient),              // System.Net.Http.dll
+                typeof(JsonContractResolver),    // System.Net.Http.Formatting.dll
+                typeof(WebRequestHandler),       // System.Net.Http.WebRequest.dll
+                typeof(BigInteger),              // System.Numerics.dll
+                typeof(Vector<>),                // System.Numerics.Vectors.dll
+                typeof(PrintQueue),              // System.Printing.dll
+                typeof(MemoryCache),             // System.Runtime.Caching.dll
+                typeof(Unsafe),                  // System.Runtime.CompilerServices.Unsafe.dll
+                typeof(InstanceHandle),          // System.Runtime.DurableInstancing.dll
+                typeof(RemotingService),         // System.Runtime.Remoting.dll
+                typeof(DataContractAttribute),   // System.Runtime.Serialization.dll
+                typeof(SoapFormatter),           // System.Runtime.Serialization.Formatters.Soap.dll
+                typeof(ProtectedData),           // System.Security.dll
+                typeof(ChannelFactory),          // System.ServiceModel.dll
+                typeof(ServiceHostFactory),      // System.ServiceModel.Activation.dll
+                typeof(UdpBinding),              // System.ServiceModel.Channels.dll
+                typeof(DiscoveryClient),         // System.ServiceModel.Discovery.dll
+                typeof(RoutingService),          // System.ServiceModel.Routing.dll
+                typeof(WebHttpBinding),          // System.ServiceModel.Web.dll
+                typeof(ServiceBase),             // System.ServiceProcess.dll
+                typeof(SpeechSynthesizer),       // System.Speech.dll
+                typeof(ValueTask<>),             // System.Threading.Tasks.Extensions.dll
+                typeof(Transaction),             // System.Transactions.dll
+                typeof(HttpServer),              // System.Web.Http.dll
+                typeof(HttpSelfHostServer),      // System.Web.Http.SelfHost.dll
+                typeof(RibbonControl),           // System.Windows.Controls.Ribbon
+                typeof(Form),                    // System.Windows.Forms.dll
+                typeof(DataPoint),               // System.Windows.Forms.DataVisualization.dll
+                typeof(XamlType),                // System.Xaml.dll
+                typeof(XmlNode),                 // System.Xml.dll
+                typeof(XNode),                   // System.Xml.Linq.dll
+                typeof(No),                      // Theraot.Core.dll
+                typeof(PinnedObject),            // Vanara.Core.dll
+                typeof(ComCtl32),                // Vanara.PInvoke.ComCtl32.dll
+                typeof(BCrypt),                  // Vanara.PInvoke.Cryptography.dll
+                typeof(Gdi32),                   // Vanara.PInvoke.Gdi32.dll
+                typeof(Kernel32),                // Vanara.PInvoke.Kernel32.dll
+                typeof(Mpr),                     // Vanara.PInvoke.Mpr.dll
+                typeof(NtDll),                   // Vanara.PInvoke.NtDll.dll
+                typeof(AdvApi32),                // Vanara.PInvoke.Security.dll
+                typeof(Lib),                     // Vanara.PInvoke.Shared.dll
+                typeof(Shell32),                 // Vanara.PInvoke.Shell32.dll
+                typeof(ShlwApi),                 // Vanara.PInvoke.ShlwApi.dll
+                typeof(User32),                  // Vanara.PInvoke.User32.dll
+                typeof(User32_Gdi),              // Vanara.PInvoke.User32.Gdi.dll
+                typeof(WinINet),                 // Vanara.PInvoke.WinINet.dll
+                typeof(Rect),                    // WindowsBase.dll
             };
 
             foreach (var type in types)
                 compiler = compiler.AddReferences(MetadataReference.CreateFromFile(type.Assembly.Location));
 
-            var options = CSharpParseOptions.Default.WithLanguageVersion(LanguageVersion.CSharp8);
+            var options = CSharpParseOptions.Default.WithLanguageVersion(
+                Microsoft.CodeAnalysis.CSharp.LanguageVersion.CSharp8);
             var typeNames = new List<(string, string)>();
 
             foreach (var dir in Directory.EnumerateDirectories(pkg))
@@ -364,8 +387,8 @@ namespace Alkahest.Plugins.CSharp
                 foreach (var file in Directory.EnumerateFiles(dir, "*.cs", SearchOption.AllDirectories))
                 {
                     using var src = File.OpenRead(file);
-                    var tree = SyntaxFactory.ParseSyntaxTree(SourceText.From(src, Encoding.UTF8),
-                        options, file);
+                    var tree = Microsoft.CodeAnalysis.CSharp.SyntaxFactory.ParseSyntaxTree(
+                        SourceText.From(src, Encoding.UTF8), options, file);
 
                     compiler = compiler.AddSyntaxTrees(tree);
 

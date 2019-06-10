@@ -8,6 +8,7 @@
     <ApplicationIcon>..\Alkahest.ico</ApplicationIcon>
     <ApplicationManifest>Properties\App.manifest</ApplicationManifest>
     <AssemblyName>Alkahest</AssemblyName>
+    <CodeAnalysisRuleSet>..\Alkahest.ruleset</CodeAnalysisRuleSet>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>embedded</DebugType>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -79,6 +80,9 @@
   <ItemGroup>
     <None Include="..\Alkahest.ico">
       <Link>Properties\Alkahest.ico</Link>
+    </None>
+    <None Include="..\Alkahest.ruleset">
+      <Link>Properties\Alkahest.ruleset</Link>
     </None>
     <None Include="Properties\App.config" />
     <None Include="Properties\App.manifest" />

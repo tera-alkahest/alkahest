@@ -6,6 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AssemblyName>alkahest-simple-test</AssemblyName>
+    <CodeAnalysisRuleSet>..\Alkahest.ruleset</CodeAnalysisRuleSet>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>embedded</DebugType>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -28,6 +29,9 @@
     <Compile Include="SimpleTestPlugin.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Alkahest.ruleset">
+      <Link>Properties\Alkahest.ruleset</Link>
+    </None>
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>

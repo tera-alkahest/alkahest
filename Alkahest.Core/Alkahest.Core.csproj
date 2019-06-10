@@ -6,6 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AssemblyName>Alkahest.Core</AssemblyName>
+    <CodeAnalysisRuleSet>..\Alkahest.ruleset</CodeAnalysisRuleSet>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>embedded</DebugType>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
@@ -283,6 +284,11 @@
     <Compile Include="Net\ServerListProxy.cs" />
     <Compile Include="Reflection\ReflectionExtensions.cs" />
     <Compile Include="Region.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Alkahest.ruleset">
+      <Link>Properties\Alkahest.ruleset</Link>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\AlkahestCA.crt">
