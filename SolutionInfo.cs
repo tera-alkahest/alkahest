@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture("")]
 [assembly: AssemblyDescription("An extensible TERA proxy server.")]
 [assembly: AssemblyFileVersion("1.0.0")]
-[assembly: AssemblyInformationalVersion("1.0.0-alpha4")]
+[assembly: AssemblyInformationalVersion("1.0.0-rc1")]
 [assembly: AssemblyProduct(nameof(Alkahest))]
 [assembly: AssemblyTrademark("N/A")]
 [assembly: AssemblyVersion("1.0.0")]
