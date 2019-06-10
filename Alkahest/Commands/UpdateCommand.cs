@@ -183,6 +183,9 @@ namespace Alkahest.Commands
 
             _log.Basic("Updated {0} packages", count);
 
+            if (updating.Any(x => x.Item2.Assets.Contains(AssetKind.DataCenter)))
+                new AssetManager().UpdateDataCenter();
+
             return 0;
         }
     }
