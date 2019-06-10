@@ -98,7 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="EasyHook">
-      <Version>2.7.6789</Version>
+      <Version>2.7.7097</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp">
       <Version>3.1.0</Version>
@@ -113,22 +113,22 @@
       <Version>1.1.11</Version>
     </PackageReference>
     <PackageReference Include="Vanara.PInvoke.Mpr">
-      <Version>2.3.10</Version>
+      <Version>2.3.11</Version>
     </PackageReference>
     <PackageReference Include="Vanara.PInvoke.NtDll">
-      <Version>2.3.10</Version>
+      <Version>2.3.11</Version>
     </PackageReference>
     <PackageReference Include="Vanara.PInvoke.Shell32">
-      <Version>2.3.10</Version>
+      <Version>2.3.11</Version>
     </PackageReference>
     <PackageReference Include="Vanara.PInvoke.User32">
-      <Version>2.3.10</Version>
+      <Version>2.3.11</Version>
     </PackageReference>
     <PackageReference Include="Vanara.PInvoke.User32.Gdi">
-      <Version>2.3.10</Version>
+      <Version>2.3.11</Version>
     </PackageReference>
     <PackageReference Include="Vanara.PInvoke.WinINet">
-      <Version>2.3.10</Version>
+      <Version>2.3.11</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
