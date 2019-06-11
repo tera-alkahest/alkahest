@@ -25,7 +25,7 @@ namespace Alkahest.Commands
 
         bool _cleanup;
 
-        readonly ManualResetEventSlim _running = new ManualResetEventSlim();
+        readonly ManualResetEventSlim _exiting = new ManualResetEventSlim();
 
         readonly ManualResetEventSlim _exited = new ManualResetEventSlim();
 
@@ -65,6 +65,8 @@ namespace Alkahest.Commands
                 return 0;
             }
 
+            _log.Basic("Proxy server starting...");
+
             if (Configuration.Loggers.Contains(FileLogger.Name))
                 Log.Loggers.Add(new FileLogger(Configuration.LogDirectory, Configuration.LogFileNameFormat));
 
@@ -73,8 +75,6 @@ namespace Alkahest.Commands
                 AppDomain.CurrentDomain.ProcessExit += ProcessExit;
                 Console.CancelKeyPress += CancelKeyPress;
                 ConsoleUtility.AddConsoleEventHandler(ConsoleEvent);
-
-                _log.Basic("Proxy server starting...");
 
                 var region = Configuration.Region;
                 var sls = ServerListParameters.Uris[region];
@@ -117,9 +117,6 @@ namespace Alkahest.Commands
                     MaxClients = Configuration.GameMaxClients,
                 }).ToArray();
 
-                foreach (var proxy in proxies)
-                    proxy.Start();
-
                 var path = Path.ChangeExtension(Path.Combine(Configuration.AssetDirectory,
                     DataCenter.FileNames[region]), ".dec");
                 var loader = new PluginLoader(new PluginContext(File.Exists(path) ?
@@ -129,20 +126,21 @@ namespace Alkahest.Commands
 
                 loader.Start();
 
+                foreach (var proxy in proxies)
+                    proxy.Start();
+
                 _log.Basic("Proxy server started");
 
-                _running.Wait();
+                _exiting.Wait();
 
                 _log.Basic("Proxy server stopping...");
-
-                loader.Stop();
 
                 foreach (var proxy in proxies)
                     proxy.Dispose();
 
-                _exited.Set();
+                loader.Stop();
 
-                _log.Basic("Proxy server stopped");
+                _exited.Set();
             }
             finally
             {
@@ -151,12 +149,14 @@ namespace Alkahest.Commands
                 AppDomain.CurrentDomain.ProcessExit -= ProcessExit;
             }
 
+            _log.Basic("Proxy server stopped");
+
             return 0;
         }
 
         void Stop()
         {
-            _running.Set();
+            _exiting.Set();
             _exited.Wait();
         }
 
