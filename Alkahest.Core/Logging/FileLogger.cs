@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text;
 
 namespace Alkahest.Core.Logging
 {
@@ -7,17 +8,27 @@ namespace Alkahest.Core.Logging
     {
         public const string Name = "file";
 
+        readonly bool _timestamp;
+
+        readonly bool _level;
+
+        readonly bool _source;
+
         readonly StreamWriter _writer;
 
         bool _disposed;
 
-        public FileLogger(string directory, string fileNameFormat)
+        public FileLogger(bool timestamp, bool level, bool source, string directory,
+            string fileNameFormat)
         {
             if (fileNameFormat == null)
                 throw new ArgumentNullException(nameof(fileNameFormat));
 
             Directory.CreateDirectory(directory);
 
+            _timestamp = timestamp;
+            _level = level;
+            _source = source;
             _writer = new StreamWriter(File.Open(
                 Path.Combine(directory, DateTime.Now.ToString(fileNameFormat) + ".log"),
                 FileMode.Create, FileAccess.Write));
@@ -77,10 +88,27 @@ namespace Alkahest.Core.Logging
                     throw Assert.Unreachable();
             }
 
-            timestamp = timestamp != null ? $"[{timestamp}] " : string.Empty;
-            category = category != null ? $" ({category})" : string.Empty;
+            var sb = new StringBuilder();
 
-            _writer.WriteLine($"{timestamp}[{lvl}] {source.Name}{category}: {message}");
+            if (_timestamp && timestamp != null)
+                sb.AppendFormat("[{0}] ", timestamp);
+
+            if (_level)
+                sb.AppendFormat("[{0}] ", lvl);
+
+            if (_source)
+            {
+                sb.AppendFormat("{0}", source.Name);
+
+                if (category != null)
+                    sb.AppendFormat(" ({0})", category);
+
+                sb.Append(": ");
+            }
+
+            sb.Append(message);
+
+            _writer.WriteLine(sb.ToString());
             _writer.Flush();
         }
     }

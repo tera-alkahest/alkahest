@@ -1,3 +1,4 @@
+using Alkahest.Core.Collections;
 using Alkahest.Core.Logging;
 using Alkahest.Packager;
 using Mono.Options;
@@ -42,10 +43,14 @@ namespace Alkahest.Commands
                 _log.Basic("  {0} | {1} | https://github.com/{2}/{3}", latest.Name, latest.License,
                     latest.Owner, latest.Repository);
 
-                foreach (var line in latest.Description.Split('\n').Select(x => x.Trim()))
+                var desc = latest.Description.Split('\n').Select(x => x.Trim()).ToArray();
+
+                foreach (var (i, line) in desc.WithIndex())
                 {
                     _log.Basic("    {0}", line);
-                    _log.Basic(string.Empty);
+
+                    if (i != desc.Length - 1)
+                        _log.Basic(string.Empty);
                 }
             }
 

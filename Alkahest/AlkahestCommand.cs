@@ -23,6 +23,13 @@ namespace Alkahest
             Run = args => throw new NotSupportedException();
         }
 
+        protected virtual ConsoleLogger CreateConsoleLogger()
+        {
+            return new ConsoleLogger(false, false, false, Configuration.ColorsEnabled,
+                Configuration.ErrorColor, Configuration.WarningColor, Configuration.BasicColor,
+                Configuration.InfoColor, Configuration.DebugColor);
+        }
+
         protected abstract int Invoke(string[] args);
 
         public sealed override int Invoke(IEnumerable<string> arguments)
@@ -31,10 +38,8 @@ namespace Alkahest
             Log.TimestampFormat = Configuration.LogTimestampFormat;
             Log.DiscardSources.AddRange(Configuration.DiscardLogSources);
 
-            if (Configuration.Loggers.Contains(ConsoleLogger.Name))
-                Log.Loggers.Add(new ConsoleLogger(Configuration.ColorsEnabled, Configuration.ErrorColor,
-                    Configuration.WarningColor, Configuration.BasicColor, Configuration.InfoColor,
-                    Configuration.DebugColor));
+            if (CreateConsoleLogger() is ConsoleLogger c)
+                Log.Loggers.Add(c);
 
             var title = Console.Title;
             var mode = GCSettings.LatencyMode;

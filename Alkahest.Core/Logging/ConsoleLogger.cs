@@ -1,10 +1,17 @@
 using System;
+using System.Text;
 
 namespace Alkahest.Core.Logging
 {
     public sealed class ConsoleLogger : ILogger
     {
         public const string Name = "console";
+
+        readonly bool _timestamp;
+
+        readonly bool _level;
+
+        readonly bool _source;
 
         readonly bool _colors;
 
@@ -18,8 +25,9 @@ namespace Alkahest.Core.Logging
 
         readonly ConsoleColor _debugColor;
 
-        public ConsoleLogger(bool colors, ConsoleColor errorColor, ConsoleColor warningColor,
-            ConsoleColor basicColor, ConsoleColor infoColor, ConsoleColor debugColor)
+        public ConsoleLogger(bool timestamp, bool level, bool source, bool colors,
+            ConsoleColor errorColor, ConsoleColor warningColor, ConsoleColor basicColor,
+            ConsoleColor infoColor, ConsoleColor debugColor)
         {
             static void CheckColor(ConsoleColor color, string name)
             {
@@ -33,6 +41,9 @@ namespace Alkahest.Core.Logging
             CheckColor(infoColor, nameof(infoColor));
             CheckColor(debugColor, nameof(debugColor));
 
+            _timestamp = timestamp;
+            _level = level;
+            _source = source;
             _colors = colors;
             _errorColor = errorColor;
             _warningColor = warningColor;
@@ -78,17 +89,32 @@ namespace Alkahest.Core.Logging
                     throw Assert.Unreachable();
             }
 
-            timestamp = timestamp != null ? $"[{timestamp}] " : string.Empty;
-            category = category != null ? $" ({category})" : string.Empty;
+            var sb = new StringBuilder();
 
-            var console = level <= LogLevel.Warning ? Console.Error : Console.Out;
+            if (_timestamp && timestamp != null)
+                sb.AppendFormat("[{0}] ", timestamp);
 
-            if (_colors)
-                Console.ForegroundColor = color;
+            if (_level)
+                sb.AppendFormat("[{0}] ", lvl);
+
+            if (_source)
+            {
+                sb.AppendFormat("{0}", source.Name);
+
+                if (category != null)
+                    sb.AppendFormat(" ({0})", category);
+
+                sb.Append(": ");
+            }
+
+            sb.Append(message);
 
             try
             {
-                console.WriteLine($"{timestamp}[{lvl}] {source.Name}{category}: {message}");
+                if (_colors)
+                    Console.ForegroundColor = color;
+
+                (level <= LogLevel.Warning ? Console.Error : Console.Out).WriteLine(sb.ToString());
             }
             finally
             {

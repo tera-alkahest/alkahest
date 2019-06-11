@@ -46,6 +46,14 @@ namespace Alkahest.Commands
             };
         }
 
+        protected override ConsoleLogger CreateConsoleLogger()
+        {
+            return Configuration.Loggers.Contains(ConsoleLogger.Name) ? new ConsoleLogger(
+                true, true, true, Configuration.ColorsEnabled, Configuration.ErrorColor,
+                Configuration.WarningColor, Configuration.BasicColor, Configuration.InfoColor,
+                Configuration.DebugColor) : null;
+        }
+
         protected override int Invoke(string[] args)
         {
             if (_cleanup)
@@ -68,7 +76,8 @@ namespace Alkahest.Commands
             _log.Basic("Proxy server starting...");
 
             if (Configuration.Loggers.Contains(FileLogger.Name))
-                Log.Loggers.Add(new FileLogger(Configuration.LogDirectory, Configuration.LogFileNameFormat));
+                Log.Loggers.Add(new FileLogger(true, true, true, Configuration.LogDirectory,
+                    Configuration.LogFileNameFormat));
 
             try
             {
