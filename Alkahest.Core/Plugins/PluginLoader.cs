@@ -76,6 +76,9 @@ namespace Alkahest.Core.Plugins
 
         public void Start()
         {
+            if (_token != null)
+                throw new InvalidOperationException("Plugins have already been started.");
+
             _token = Context.Data.Freeze();
 
             foreach (var p in Plugins)
@@ -90,6 +93,9 @@ namespace Alkahest.Core.Plugins
 
         public void Stop()
         {
+            if (_token == null)
+                throw new InvalidOperationException("Plugins have not been started.");
+
             foreach (var p in Plugins)
             {
                 p.Stop();
