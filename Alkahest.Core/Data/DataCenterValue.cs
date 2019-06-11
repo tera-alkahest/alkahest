@@ -19,7 +19,7 @@ namespace Alkahest.Core.Data
 
         public readonly DataCenterTypeCode TypeCode;
 
-        public bool IsNull => TypeCode != DataCenterTypeCode.None;
+        public bool IsNull => TypeCode == DataCenterTypeCode.None;
 
         public bool IsInt32 => TypeCode == DataCenterTypeCode.Int32;
 
