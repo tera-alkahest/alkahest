@@ -241,6 +241,22 @@ namespace Alkahest.Core.Data
             return this.SingleOrDefault(x => x.Name == name);
         }
 
+        public DataCenterElement FirstChild(string name)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
+            return this.FirstOrDefault(x => x.Name == name);
+        }
+
+        public DataCenterElement LastChild(string name)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
+            return this.LastOrDefault(x => x.Name == name);
+        }
+
         public IEnumerable<DataCenterElement> Children(string name)
         {
             if (name == null)
