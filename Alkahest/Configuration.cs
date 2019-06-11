@@ -47,6 +47,8 @@ namespace Alkahest
 
         public static string AssetDirectory { get; }
 
+        public static TimeSpan AssetTimeout { get; }
+
         public static string UpgradeDirectory { get; }
 
         public static string UpgradeOwner { get; }
@@ -106,6 +108,7 @@ namespace Alkahest
             PackageDirectory = cfg["packageDirectory"];
             AssetManifestUri = new Uri(cfg["assetManifestUri"]);
             AssetDirectory = cfg["assetDirectory"];
+            AssetTimeout = TimeSpan.FromMinutes(int.Parse(cfg["assetTimeout"]));
             UpgradeDirectory = cfg["upgradeDirectory"];
             UpgradeOwner = cfg["upgradeOwner"];
             UpgradeRepository = cfg["upgradeRepository"];

@@ -1,7 +1,6 @@
 using Alkahest.Core.Reflection;
 using Octokit;
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 
 namespace Alkahest.Packager
@@ -12,9 +11,14 @@ namespace Alkahest.Packager
             new GitHubClient(new ProductHeaderValue(nameof(Alkahest),
                 Assembly.GetExecutingAssembly().GetInformationalVersion()));
 
+        static GitHub()
+        {
+            Client.SetRequestTimeout(Configuration.AssetTimeout);
+        }
+
         public static object GetObject(Uri uri)
         {
-            return Client.Connection.Get<object>(uri, new Dictionary<string, string>(), null).Result.HttpResponse.Body;
+            return Client.Connection.Get<object>(uri, Configuration.AssetTimeout).Result.HttpResponse.Body;
         }
 
         public static string GetString(Uri uri)
