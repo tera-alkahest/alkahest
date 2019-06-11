@@ -9,10 +9,6 @@ namespace Alkahest.Core.Data
     public struct DataCenterValue : IEquatable<DataCenterValue>, IEquatable<int>, IEquatable<float>,
         IEquatable<string>, IEquatable<bool>
     {
-        const NumberStyles Int32Styles = NumberStyles.Integer | NumberStyles.AllowHexSpecifier;
-
-        const NumberStyles SingleStyles = NumberStyles.Float;
-
         readonly string _stringValue;
 
         readonly int _primitiveValue;
@@ -158,8 +154,8 @@ namespace Alkahest.Core.Data
                 case DataCenterTypeCode.Single:
                     return (int)AsSingle;
                 case DataCenterTypeCode.String:
-                    return int.TryParse(AsString, Int32Styles, CultureInfo.InvariantCulture, out var i) ?
-                        i : throw new InvalidCastException();
+                    return int.TryParse(AsString, NumberStyles.Integer, CultureInfo.InvariantCulture,
+                        out var i) ? i : throw new InvalidCastException();
                 default:
                     throw Assert.Unreachable();
             }
@@ -177,8 +173,8 @@ namespace Alkahest.Core.Data
                 case DataCenterTypeCode.Single:
                     return AsSingle;
                 case DataCenterTypeCode.String:
-                    return float.TryParse(AsString, SingleStyles, CultureInfo.InvariantCulture, out var f) ?
-                        f : throw new InvalidCastException();
+                    return float.TryParse(AsString, NumberStyles.Float, CultureInfo.InvariantCulture,
+                        out var f) ? f : throw new InvalidCastException();
                 default:
                     throw Assert.Unreachable();
             }
