@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 
 namespace Alkahest.Core.Net
 {
+    [Serializable]
     public class SocketDisconnectedException : Exception
     {
         public SocketDisconnectedException()
