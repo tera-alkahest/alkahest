@@ -25,6 +25,8 @@ namespace Alkahest.Core.Plugins
 
         public IReadOnlyCollection<IPlugin> Plugins { get; }
 
+        object _token;
+
         public PluginLoader(PluginContext context, string directory, string pattern, string[] exclude)
         {
             Context = context ?? throw new ArgumentNullException(nameof(context));
@@ -74,7 +76,7 @@ namespace Alkahest.Core.Plugins
 
         public void Start()
         {
-            Context.Data.Freeze();
+            _token = Context.Data.Freeze();
 
             foreach (var p in Plugins)
             {
@@ -97,7 +99,7 @@ namespace Alkahest.Core.Plugins
 
             _log.Basic("Stopped {0} plugins", Plugins.Count);
 
-            Context.Data.Thaw();
+            Context.Data.Thaw(_token);
         }
     }
 }

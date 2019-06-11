@@ -62,7 +62,7 @@ namespace Alkahest.Core.Data
 
         internal IReadOnlyList<string> Names { get; private set; }
 
-        public bool IsFrozen { get; private set; }
+        public bool IsFrozen => _frozen != null;
 
         internal bool IsDisposed { get; private set; }
 
@@ -70,6 +70,8 @@ namespace Alkahest.Core.Data
 
         ConcurrentDictionary<DataCenterAddress, string> _strings =
             new ConcurrentDictionary<DataCenterAddress, string>();
+
+        object _frozen;
 
         readonly bool _intern;
 
@@ -138,14 +140,23 @@ namespace Alkahest.Core.Data
             }
         }
 
-        internal void Freeze()
+        public object Freeze()
         {
-            IsFrozen = true;
+            if (IsFrozen)
+                throw new InvalidOperationException("Data center is already frozen.");
+
+            return _frozen = new object();
         }
 
-        internal void Thaw()
+        public void Thaw(object token)
         {
-            IsFrozen = false;
+            if (!IsFrozen)
+                throw new InvalidOperationException("Data center is not frozen.");
+
+            if (_frozen != token)
+                throw new ArgumentException("Invalid freeze token.", nameof(token));
+
+            _frozen = null;
         }
 
         public void Reset()
