@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace Alkahest.Core.Data
@@ -34,6 +35,8 @@ namespace Alkahest.Core.Data
         }
 
         public DataCenterValue this[string name] => Attribute(name);
+
+        public DataCenterValue this[string name, object fallback] => AttributeOrDefault(name, fallback);
 
         internal DataCenterElement(DataCenter center, DataCenterAddress address)
         {
@@ -200,6 +203,34 @@ namespace Alkahest.Core.Data
                 throw new ArgumentNullException(nameof(name));
 
             return Attributes.GetValueOrDefault(name);
+        }
+
+        public DataCenterValue AttributeOrDefault(string name, object fallback)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
+            if (!(fallback is int || fallback is float || fallback is string || fallback is bool))
+                throw new ArgumentException("Invalid fallback value.", nameof(fallback));
+
+            var attr = Attributes.GetValueOrDefault(name);
+
+            if (!attr.IsNull)
+                return attr;
+
+            switch (fallback)
+            {
+                case int i:
+                    return new DataCenterValue(DataCenterTypeCode.Int32, i, null);
+                case float f:
+                    return new DataCenterValue(DataCenterTypeCode.Single, Unsafe.As<float, int>(ref f), null);
+                case string s:
+                    return new DataCenterValue(DataCenterTypeCode.String, 0, s);
+                case bool b:
+                    return new DataCenterValue(DataCenterTypeCode.Boolean, b ? 1 : 0, null);
+                default:
+                    throw Assert.Unreachable();
+            }
         }
 
         public DataCenterElement Child(string name)
