@@ -299,14 +299,6 @@
       <Link>Net\%(Filename)%(Extension)</Link>
       <LogicalName>%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\tera-toolbox-data\map_base\protocol.347372.map">
-      <Link>Net\Game\%(Filename)%(Extension)</Link>
-      <LogicalName>%(Filename)%(Extension)</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\tera-toolbox-data\map_base\protocol.350024.map">
-      <Link>Net\Game\%(Filename)%(Extension)</Link>
-      <LogicalName>%(Filename)%(Extension)</LogicalName>
-    </EmbeddedResource>
     <EmbeddedResource Include="..\tera-toolbox-data\map_base\protocol.349932.map">
       <Link>Net\Game\%(Filename)%(Extension)</Link>
       <LogicalName>%(Filename)%(Extension)</LogicalName>
@@ -318,11 +310,15 @@
       <Link>Net\Game\%(Filename)%(Extension)</Link>
       <LogicalName>%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\tera-toolbox-data\map_base\protocol.350024.map">
+      <Link>Net\Game\%(Filename)%(Extension)</Link>
+      <LogicalName>%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
     <EmbeddedResource Include="..\tera-toolbox-data\map_base\protocol.350025.map">
       <Link>Net\Game\%(Filename)%(Extension)</Link>
       <LogicalName>%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\tera-proxy-data\map\sysmsg.81.map">
+    <EmbeddedResource Include="..\tera-toolbox-data\map_base\protocol.350027.map">
       <Link>Net\Game\%(Filename)%(Extension)</Link>
       <LogicalName>%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
