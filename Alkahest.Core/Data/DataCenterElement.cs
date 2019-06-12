@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,7 +8,7 @@ using System.Runtime.InteropServices;
 namespace Alkahest.Core.Data
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public sealed class DataCenterElement : IEnumerable<DataCenterElement>, IDisposable
+    public sealed class DataCenterElement : IDisposable
     {
         object _parent;
 
@@ -19,20 +18,16 @@ namespace Alkahest.Core.Data
 
         Lazy<IReadOnlyList<DataCenterElement>> _children;
 
-        public DataCenter Center => _parent is DataCenterElement e ? e.Center : (DataCenter)_parent;
+        public DataCenter Center =>
+            (_parent ?? throw new ObjectDisposedException(GetType().FullName)) is DataCenterElement e ?
+            e.Center : (DataCenter)_parent;
 
-        public DataCenterElement Parent => _parent is DataCenter ? null : (DataCenterElement)_parent;
+        public DataCenterElement Parent =>
+            (_parent ?? throw new ObjectDisposedException(GetType().FullName)) is DataCenter ?
+            null : (DataCenterElement)_parent;
 
-        public IReadOnlyDictionary<string, DataCenterValue> Attributes
-        {
-            get
-            {
-                if (_attributes == null)
-                    throw new ObjectDisposedException(GetType().FullName);
-
-                return _attributes.Value;
-            }
-        }
+        public IReadOnlyDictionary<string, DataCenterValue> Attributes =>
+            (_attributes ?? throw new ObjectDisposedException(GetType().FullName)).Value;
 
         public DataCenterValue this[string name] => Attribute(name);
 
@@ -177,24 +172,12 @@ namespace Alkahest.Core.Data
 
         public void Dispose()
         {
-            if (Center.IsFrozen)
+            if (Center?.IsFrozen ?? false)
                 throw new InvalidOperationException("Data center is frozen.");
 
+            _parent = null;
             _attributes = null;
             _children = null;
-        }
-
-        public IEnumerator<DataCenterElement> GetEnumerator()
-        {
-            if (_children == null)
-                throw new ObjectDisposedException(GetType().FullName);
-
-            return _children.Value.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
 
         public DataCenterValue Attribute(string name)
@@ -233,28 +216,89 @@ namespace Alkahest.Core.Data
             }
         }
 
-        public DataCenterElement Child(string name)
+        public IEnumerable<DataCenterElement> Ancestors()
         {
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
+            if (_parent == null)
+                throw new ObjectDisposedException(GetType().FullName);
 
-            return this.SingleOrDefault(x => x.Name == name);
+            IEnumerable<DataCenterElement> Iterator()
+            {
+                var current = this;
+
+                while ((current = current.Parent) != null)
+                    yield return current;
+            }
+
+            return Iterator();
         }
 
-        public DataCenterElement FirstChild(string name)
+        public IEnumerable<DataCenterElement> Ancestors(string name)
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
 
-            return this.FirstOrDefault(x => x.Name == name);
+            return Ancestors().Where(x => x.Name == name);
         }
 
-        public DataCenterElement LastChild(string name)
+        public IEnumerable<DataCenterElement> Ancestors(params string[] names)
+        {
+            if (names == null)
+                throw new ArgumentNullException(nameof(names));
+
+            if (names.Any(x => x == null))
+                throw new ArgumentException("A null name was given.", nameof(names));
+
+            var set = names.ToHashSet();
+
+            return Ancestors().Where(x => set.Contains(x.Name));
+        }
+
+        public IEnumerable<DataCenterElement> Siblings()
+        {
+            if (_parent == null)
+                throw new ObjectDisposedException(GetType().FullName);
+
+            IEnumerable<DataCenterElement> Iterator()
+            {
+                var parent = Parent;
+
+                if (parent == null)
+                    yield break;
+
+                foreach (var elem in parent.Children().Where(x => x != this))
+                    yield return elem;
+            }
+
+            return Iterator();
+        }
+
+        public IEnumerable<DataCenterElement> Siblings(string name)
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
 
-            return this.LastOrDefault(x => x.Name == name);
+            return Siblings().Where(x => x.Name == name);
+        }
+
+        public IEnumerable<DataCenterElement> Siblings(params string[] names)
+        {
+            if (names == null)
+                throw new ArgumentNullException(nameof(names));
+
+            if (names.Any(x => x == null))
+                throw new ArgumentException("A null name was given.", nameof(names));
+
+            var set = names.ToHashSet();
+
+            return Siblings().Where(x => set.Contains(x.Name));
+        }
+
+        public IEnumerable<DataCenterElement> Children()
+        {
+            if (_children == null)
+                throw new ObjectDisposedException(GetType().FullName);
+
+            return _children.Value;
         }
 
         public IEnumerable<DataCenterElement> Children(string name)
@@ -262,7 +306,68 @@ namespace Alkahest.Core.Data
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
 
-            return this.Where(x => x.Name == name);
+            return Children().Where(x => x.Name == name);
+        }
+
+        public IEnumerable<DataCenterElement> Children(params string[] names)
+        {
+            if (names == null)
+                throw new ArgumentNullException(nameof(names));
+
+            if (names.Any(x => x == null))
+                throw new ArgumentException("A null name was given.", nameof(names));
+
+            var set = names.ToHashSet();
+
+            return Children().Where(x => set.Contains(x.Name));
+        }
+
+        public IEnumerable<DataCenterElement> Descendants()
+        {
+            if (_children == null)
+                throw new ObjectDisposedException(GetType().FullName);
+
+            IEnumerable<DataCenterElement> Iterator()
+            {
+                var work = new Queue<DataCenterElement>();
+
+                work.Enqueue(this);
+
+                while (work.Count != 0)
+                {
+                    var current = work.Dequeue();
+
+                    foreach (var elem in current.Children())
+                    {
+                        yield return elem;
+
+                        work.Enqueue(elem);
+                    }
+                }
+            }
+
+            return Iterator();
+        }
+
+        public IEnumerable<DataCenterElement> Descendants(string name)
+        {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
+            return Descendants().Where(x => x.Name == name);
+        }
+
+        public IEnumerable<DataCenterElement> Descendants(params string[] names)
+        {
+            if (names == null)
+                throw new ArgumentNullException(nameof(names));
+
+            if (names.Any(x => x == null))
+                throw new ArgumentException("A null name was given.", nameof(names));
+
+            var set = names.ToHashSet();
+
+            return Descendants().Where(x => set.Contains(x.Name));
         }
 
         public override string ToString()

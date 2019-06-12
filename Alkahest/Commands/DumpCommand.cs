@@ -82,7 +82,7 @@ namespace Alkahest.Commands
                 Indent = true,
             };
 
-            Parallel.ForEach(dc.Root.GroupBy(x => x.Name), options, grp =>
+            Parallel.ForEach(dc.Root.Children().GroupBy(x => x.Name), options, grp =>
             {
                 var dir = Path.Combine(_output, grp.Key);
 
@@ -133,7 +133,7 @@ namespace Alkahest.Commands
             foreach (var (name, attr) in element.Attributes.Tuples())
                 writer.WriteAttributeString(name, attr.Value.ToString());
 
-            foreach (var elem in element)
+            foreach (var elem in element.Children())
                 WriteElement(writer, elem);
 
             writer.WriteEndElement();
@@ -164,7 +164,7 @@ namespace Alkahest.Commands
                 }
             }
 
-            foreach (var grp in element.GroupBy(x => x.Name))
+            foreach (var grp in element.Children().GroupBy(x => x.Name))
             {
                 writer.WritePropertyName(grp.Key);
                 writer.WriteStartArray();
