@@ -1,4 +1,4 @@
-# ![Alkahest](Alkahest.ico) Alkahest
+# <img src="https://raw.githubusercontent.com/tera-alkahest/alkahest/master/Alkahest.ico" width="32"> Alkahest
 
 [![Latest Release](https://img.shields.io/github/release/tera-alkahest/alkahest/all.svg)](https://github.com/tera-alkahest/alkahest/releases)
 [![NuGet Package](https://img.shields.io/nuget/v/Alkahest.Core.svg)](https://www.nuget.org/packages/Alkahest.Core)
