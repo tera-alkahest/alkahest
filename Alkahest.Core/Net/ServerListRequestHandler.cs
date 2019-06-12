@@ -46,7 +46,7 @@ namespace Alkahest.Core.Net
             while (true)
             {
                 var uri = _parameters.Uri;
-                var req = new HttpRequestMessage(HttpMethod.Get, GetUri(uri.Scheme, uri.AbsolutePath, true));
+                using var req = new HttpRequestMessage(HttpMethod.Get, GetUri(uri.Scheme, uri.AbsolutePath, true));
 
                 req.Headers.Host = _parameters.Uri.Authority;
 
