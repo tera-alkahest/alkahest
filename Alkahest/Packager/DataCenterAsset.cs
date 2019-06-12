@@ -1,6 +1,8 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
+using System.IO.Compression;
+using System.Linq;
 using System.Security.Cryptography;
 
 namespace Alkahest.Packager
@@ -31,9 +33,16 @@ namespace Alkahest.Packager
         public void Update()
         {
             var region = Configuration.Region.ToString().ToLowerInvariant();
+            var zipName = File.FullName + ".zip";
 
-            System.IO.File.WriteAllBytes(File.FullName, GitHub.GetBytes(
-                new Uri($"https://github.com/tera-alkahest/alkahest-assets/releases/download/{region}/{File.Name}")));
+            System.IO.File.WriteAllBytes(zipName, GitHub.GetBytes(new Uri(
+                $"https://github.com/tera-alkahest/alkahest-assets/releases/download/{region}/{File.Name}.zip")));
+
+            using (var zip = ZipFile.OpenRead(zipName))
+                zip.Entries.Single().ExtractToFile(File.FullName, true);
+
+            System.IO.File.Delete(zipName);
+
             File.Refresh();
         }
     }
