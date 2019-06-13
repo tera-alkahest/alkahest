@@ -69,7 +69,6 @@
       <ReleaseFiles Include="..\Build\Plugins\Microsoft.DiaSymReader.dll" />
       <ReleaseFiles Include="..\Build\Plugins\System.Buffers.dll" />
       <ReleaseFiles Include="..\Build\Plugins\System.Collections.Immutable.dll" />
-      <ReleaseFiles Include="..\Build\Plugins\System.ComponentModel.AttributedModel.dll" />
       <ReleaseFiles Include="..\Build\Plugins\System.Composition.AttributedModel.dll" />
       <ReleaseFiles Include="..\Build\Plugins\System.Composition.Convention.dll" />
       <ReleaseFiles Include="..\Build\Plugins\System.Composition.Hosting.dll" />
