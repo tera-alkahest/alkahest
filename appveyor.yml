@@ -1,11 +1,11 @@
 after_build:
     - cmd: |
           forfiles /m *.proj /S /C "cmd /C msbuild @path"
+          msbuild /t:Pack Alkahest.Core
 artifacts:
     - path: 'Build\*.zip'
 build:
     publish_nuget: true
-    publish_nuget_symbols: true
     verbosity: detailed
 before_build:
     - cmd: |
