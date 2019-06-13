@@ -36,7 +36,6 @@
     <Compile Include="Data\DataCenterElement.cs" />
     <Compile Include="Data\DataCenterFooter.cs" />
     <Compile Include="Data\DataCenterHeader.cs" />
-    <Compile Include="Data\DataCenterPlaceholderException.cs" />
     <Compile Include="Data\DataCenterSegment.cs" />
     <Compile Include="Data\DataCenterSegmentedRegion.cs" />
     <Compile Include="Data\DataCenterSimpleRegion.cs" />

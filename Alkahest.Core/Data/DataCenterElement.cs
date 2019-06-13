@@ -67,8 +67,9 @@ namespace Alkahest.Core.Data
                 var reader = center.Elements.GetReader(address);
                 var nameIndex = reader.ReadUInt16() - 1;
 
+                // Is this a placeholder element?
                 if (nameIndex == -1)
-                    throw new DataCenterPlaceholderException();
+                    return;
 
                 if (nameIndex >= center.Names.Count)
                     throw new InvalidDataException();
@@ -151,19 +152,15 @@ namespace Alkahest.Core.Data
 
                 for (var i = 0; i < childCount; i++)
                 {
-                    var addr = new DataCenterAddress(childAddr.SegmentIndex,
-                        (ushort)(childAddr.ElementIndex + i));
+                    var elem = new DataCenterElement(center, new DataCenterAddress(
+                        childAddr.SegmentIndex, (ushort)(childAddr.ElementIndex + i)))
+                    {
+                        _parent = this,
+                    };
 
-                    try
-                    {
-                        children.Add(new DataCenterElement(center, addr)
-                        {
-                            _parent = this,
-                        });
-                    }
-                    catch (DataCenterPlaceholderException)
-                    {
-                    }
+                    // Don't expose placeholder elements.
+                    if (elem.Name != null)
+                        children.Add(elem);
                 }
 
                 return children;
