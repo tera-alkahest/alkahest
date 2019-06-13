@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Sdk Name="DasMulli.AssemblyInfoGeneration.Sdk" Version="1.0.0" />
   <PropertyGroup>
     <OutputPath>..\Build\Plugins\</OutputPath>
     <TargetFramework>net472</TargetFramework>
