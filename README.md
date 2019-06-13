@@ -70,10 +70,11 @@ configuration. All build artifacts will end up in the `Build` directory.
 If you want to build the NuGet package, run this command after building:
 
 ```bash
-nuget pack -Symbols Alkahest.Core
+msbuild /t:Pack Alkahest.Core
 ```
 
-This will create a file named something like `Alkahest.Core.1.0.0.nupkg`.
+This will create a file named something like `Alkahest.Core.1.0.0.nupkg` in the
+`Build` directory.
 
 ## Configuration
 
