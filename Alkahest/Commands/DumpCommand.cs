@@ -130,8 +130,8 @@ namespace Alkahest.Commands
         {
             writer.WriteStartElement(element.Name);
 
-            foreach (var (name, attr) in element.Attributes.Tuples())
-                writer.WriteAttributeString(name, attr.Value.ToString());
+            foreach (var (name, value) in element.Attributes.Tuples())
+                writer.WriteAttributeString(name, value.ToString());
 
             foreach (var elem in element.Children())
                 WriteElement(writer, elem);
@@ -143,23 +143,23 @@ namespace Alkahest.Commands
         {
             writer.WriteStartObject();
 
-            foreach (var (name, attr) in element.Attributes.Tuples())
+            foreach (var (name, value) in element.Attributes.Tuples())
             {
                 writer.WritePropertyName(name);
 
-                switch (attr.TypeCode)
+                switch (value.TypeCode)
                 {
                     case DataCenterTypeCode.Int32:
-                        writer.WriteValue(attr.AsInt32);
+                        writer.WriteValue(value.AsInt32);
                         break;
                     case DataCenterTypeCode.Single:
-                        writer.WriteValue(attr.AsSingle);
+                        writer.WriteValue(value.AsSingle);
                         break;
                     case DataCenterTypeCode.String:
-                        writer.WriteValue(attr.AsString);
+                        writer.WriteValue(value.AsString);
                         break;
                     case DataCenterTypeCode.Boolean:
-                        writer.WriteValue(attr.AsBoolean);
+                        writer.WriteValue(value.AsBoolean);
                         break;
                 }
             }

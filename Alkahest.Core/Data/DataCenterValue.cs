@@ -255,13 +255,13 @@ namespace Alkahest.Core.Data
             switch (TypeCode)
             {
                 case DataCenterTypeCode.None:
-                    return "N/A";
+                    return "null";
                 case DataCenterTypeCode.Int32:
                     return AsInt32.ToString();
                 case DataCenterTypeCode.Single:
                     return AsSingle.ToString();
                 case DataCenterTypeCode.String:
-                    return $"\"{AsString}\"";
+                    return AsString;
                 case DataCenterTypeCode.Boolean:
                     return AsBoolean.ToString();
                 default:
