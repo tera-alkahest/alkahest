@@ -1,23 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <Sdk Name="DasMulli.AssemblyInfoGeneration.Sdk" Version="1.0.0" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <AssemblyName>alkahest-packet-logger</AssemblyName>
     <OutputPath>..\Build\Plugins\</OutputPath>
-    <OutputType>Library</OutputType>
-    <ProjectGuid>{CCB59799-5CB1-4595-B34E-068B12791E46}</ProjectGuid>
-    <RootNamespace>Alkahest.Plugins.PacketLogger</RootNamespace>
+    <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="Configuration.cs" />
-    <Compile Include="PacketLoggerPlugin.cs" />
-  </ItemGroup>
   <ItemGroup>
     <Content Include="alkahest-packet-logger.dll.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -31,8 +17,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Alkahest.Core\Alkahest.Core.csproj">
-      <Name>Alkahest.Core</Name>
-      <Project>{4CB2D190-FC09-4D4D-9598-D0CFC0C725DB}</Project>
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
@@ -40,5 +24,4 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

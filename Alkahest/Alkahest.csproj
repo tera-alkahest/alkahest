@@ -1,65 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <Sdk Name="DasMulli.AssemblyInfoGeneration.Sdk" Version="1.0.0" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ApplicationIcon>..\Alkahest.ico</ApplicationIcon>
     <ApplicationManifest>Properties\App.manifest</ApplicationManifest>
-    <AssemblyName>Alkahest</AssemblyName>
-    <OutputPath>..\Build\</OutputPath>
     <OutputType>Exe</OutputType>
-    <ProjectGuid>{FB4516B0-8850-49F1-B65D-AD5ECE07670C}</ProjectGuid>
-    <RootNamespace>Alkahest</RootNamespace>
-    <StartupObject>Alkahest.Program</StartupObject>
+    <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="AlkahestCommand.cs" />
-    <Compile Include="Commands\DecryptCommand.cs" />
-    <Compile Include="Commands\DumpCommand.cs" />
-    <Compile Include="Commands\InfoCommand.cs" />
-    <Compile Include="Commands\InstallCommand.cs" />
-    <Compile Include="Commands\ParseCommand.cs" />
-    <Compile Include="Commands\PurgeCommand.cs" />
-    <Compile Include="Commands\ScanCommand.cs" />
-    <Compile Include="Commands\SearchCommand.cs" />
-    <Compile Include="Commands\ServeCommand.cs" />
-    <Compile Include="Commands\UninstallCommand.cs" />
-    <Compile Include="Commands\UpdateCommand.cs" />
-    <Compile Include="Commands\UpgradeCommand.cs" />
-    <Compile Include="DefaultCommandException.cs" />
-    <Compile Include="Configuration.cs" />
-    <Compile Include="ConsoleUtility.cs" />
-    <Compile Include="Extractor\DumpFormat.cs" />
-    <Compile Include="Packager\AssetKind.cs" />
-    <Compile Include="Packager\DataCenterAsset.cs" />
-    <Compile Include="Packager\AssetManager.cs" />
-    <Compile Include="Packager\GitHub.cs" />
-    <Compile Include="Packager\LocalPackage.cs" />
-    <Compile Include="Packager\Package.cs" />
-    <Compile Include="Packager\PackageManager.cs" />
-    <Compile Include="Parser\AnalysisMode.cs" />
-    <Compile Include="Parser\HexDumpMode.cs" />
-    <Compile Include="Parser\PacketAnalysis.cs" />
-    <Compile Include="Parser\PacketSerializerBackend.cs" />
-    <Compile Include="Parser\PacketStatistics.cs" />
-    <Compile Include="Parser\PotentialArray.cs" />
-    <Compile Include="Parser\PotentialArrayElement.cs" />
-    <Compile Include="Parser\PotentialString.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Scanner\ClientVersionScanner.cs" />
-    <Compile Include="Scanner\DataCenterScanner.cs" />
-    <Compile Include="Scanner\EntryPoint.cs" />
-    <Compile Include="Scanner\GameMessageScanner.cs" />
-    <Compile Include="Scanner\IpcChannel.cs" />
-    <Compile Include="Scanner\IScanner.cs" />
-    <Compile Include="Scanner\MemoryReader.cs" />
-    <Compile Include="Scanner\SystemMessageScanner.cs" />
-  </ItemGroup>
   <ItemGroup>
     <Content Include="$(NuGetPackageRoot)\easyhook\2.7.6789\content\net40\*32*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -77,10 +23,7 @@
     <None Include="Properties\App.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Alkahest.Core\Alkahest.Core.csproj">
-      <Name>Alkahest.Core</Name>
-      <Project>{4CB2D190-FC09-4D4D-9598-D0CFC0C725DB}</Project>
-    </ProjectReference>
+    <ProjectReference Include="..\Alkahest.Core\Alkahest.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -109,5 +52,4 @@
       <Version>2.3.11</Version>
     </PackageReference>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

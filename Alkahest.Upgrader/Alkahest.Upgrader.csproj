@@ -1,25 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <Sdk Name="DasMulli.AssemblyInfoGeneration.Sdk" Version="1.0.0" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ApplicationIcon>..\Alkahest.ico</ApplicationIcon>
     <ApplicationManifest>Properties\App.manifest</ApplicationManifest>
-    <AssemblyName>Alkahest.Upgrader</AssemblyName>
-    <OutputPath>..\Build\</OutputPath>
     <OutputType>Exe</OutputType>
-    <ProjectGuid>{CE80A707-C017-4A09-9798-EC1176B943C3}</ProjectGuid>
-    <RootNamespace>Alkahest.Upgrader</RootNamespace>
-    <StartupObject>Alkahest.Upgrader.Program</StartupObject>
+    <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="Program.cs" />
-  </ItemGroup>
   <ItemGroup>
     <None Include="..\Alkahest.ico">
       <Link>Properties\Alkahest.ico</Link>
@@ -34,5 +20,4 @@
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
