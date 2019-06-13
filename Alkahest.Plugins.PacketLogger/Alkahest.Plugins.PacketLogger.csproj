@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <AssemblyName>alkahest-packet-logger</AssemblyName>
     <OutputPath>..\Build\Plugins\</OutputPath>
     <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
