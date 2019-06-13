@@ -1,0 +1,36 @@
+<Project>
+
+  <PropertyGroup>
+    <Company>Alex Rønne Petersen</Company>
+    <Copyright>ISC License (No Attribution)</Copyright>
+    <Description>An extensible TERA proxy server.</Description>
+    <Product>Alkahest</Product>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <FileVersion>1.0.0</FileVersion>
+    <Version>1.0.0-rc2</Version>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CodeAnalysisRuleSet>..\Alkahest.ruleset</CodeAnalysisRuleSet>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>embedded</DebugType>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <Deterministic>true</Deterministic>
+    <LangVersion>8.0</LangVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Authors>$(Company)</Authors>
+    <IsPackable>false</IsPackable>
+    <PackageIconUrl>https://raw.githubusercontent.com/alexrp/alkahest/master/Alkahest.ico</PackageIconUrl>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <RepositoryUrl>https://github.com/alexrp/alkahest</RepositoryUrl>
+  </PropertyGroup>
+
+</Project>

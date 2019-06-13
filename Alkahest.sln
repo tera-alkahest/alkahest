@@ -17,7 +17,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		appveyor.yml = appveyor.yml
 		LICENSE.md = LICENSE.md
 		README.md = README.md
-		SolutionInfo.cs = SolutionInfo.cs
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{A844471C-783C-45A5-8CC0-4F7D2EC13FB1}"

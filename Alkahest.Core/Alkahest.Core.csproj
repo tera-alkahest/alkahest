@@ -1,31 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Sdk Name="DasMulli.AssemblyInfoGeneration.Sdk" Version="1.0.0" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AssemblyName>Alkahest.Core</AssemblyName>
-    <CodeAnalysisRuleSet>..\Alkahest.ruleset</CodeAnalysisRuleSet>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>embedded</DebugType>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <Deterministic>true</Deterministic>
-    <LangVersion>8.0</LangVersion>
+    <IsPackable>true</IsPackable>
     <OutputPath>..\Build\</OutputPath>
     <OutputType>Library</OutputType>
+    <PackageOutputPath>..\Build\</PackageOutputPath>
     <ProjectGuid>{4CB2D190-FC09-4D4D-9598-D0CFC0C725DB}</ProjectGuid>
     <RootNamespace>Alkahest.Core</RootNamespace>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\SolutionInfo.cs">
-      <Link>Properties\SolutionInfo.cs</Link>
-    </Compile>
     <Compile Include="Assert.cs" />
     <Compile Include="Bits.cs" />
     <Compile Include="Collections\CollectionExtensions.cs" />
@@ -327,7 +318,18 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Alkahest.Core.nuspec" />
+    <None Include="..\ACKNOWLEDGEMENTS.md">
+      <Pack>true</Pack>
+      <PackagePath>%(Filename)%(Extension)</PackagePath>
+    </None>
+    <None Include="..\LICENSE.md">
+      <Pack>true</Pack>
+      <PackagePath>%(Filename)%(Extension)</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>true</Pack>
+      <PackagePath>%(Filename)%(Extension)</PackagePath>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -342,6 +344,10 @@
     </PackageReference>
     <PackageReference Include="Mono.Linq.Expressions">
       <Version>1.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="NuGet.Build.Tasks.Pack">
+      <PrivateAssets>all</PrivateAssets>
+      <Version>5.1.0</Version>
     </PackageReference>
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe">
       <Version>4.5.2</Version>

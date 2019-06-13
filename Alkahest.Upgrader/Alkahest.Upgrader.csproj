@@ -1,34 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <Sdk Name="DasMulli.AssemblyInfoGeneration.Sdk" Version="1.0.0" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ApplicationIcon>..\Alkahest.ico</ApplicationIcon>
     <ApplicationManifest>Properties\App.manifest</ApplicationManifest>
     <AssemblyName>Alkahest.Upgrader</AssemblyName>
-    <CodeAnalysisRuleSet>..\Alkahest.ruleset</CodeAnalysisRuleSet>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>embedded</DebugType>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <Deterministic>true</Deterministic>
-    <LangVersion>8.0</LangVersion>
     <OutputPath>..\Build\</OutputPath>
     <OutputType>Exe</OutputType>
     <ProjectGuid>{CE80A707-C017-4A09-9798-EC1176B943C3}</ProjectGuid>
     <RootNamespace>Alkahest.Upgrader</RootNamespace>
     <StartupObject>Alkahest.Upgrader.Program</StartupObject>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\SolutionInfo.cs">
-      <Link>Properties\SolutionInfo.cs</Link>
-    </Compile>
     <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
