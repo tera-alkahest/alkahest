@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Alkahest.ruleset = Alkahest.ruleset
 		AlkahestCA.crt = AlkahestCA.crt
 		appveyor.yml = appveyor.yml
+		Directory.Build.props = Directory.Build.props
 		LICENSE.md = LICENSE.md
 		README.md = README.md
 	EndProjectSection
@@ -27,7 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{A844
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alkahest.Archive", "Alkahest.Archive\Alkahest.Archive.proj", "{8B4B4367-7056-42FB-9ADF-31CCE0FA9309}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alkahest.Core", "Alkahest.Core\Alkahest.Core.csproj", "{4CB2D190-FC09-4D4D-9598-D0CFC0C725DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alkahest.Core", "Alkahest.Core\Alkahest.Core.csproj", "{4CB2D190-FC09-4D4D-9598-D0CFC0C725DB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{C60FBBE6-4B76-4D6F-BADC-377D3878FF93}"
 EndProject
@@ -37,9 +38,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alkahest.Plugins.PacketLogg
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alkahest.Plugins.SimpleTest", "Alkahest.Plugins.SimpleTest\Alkahest.Plugins.SimpleTest.csproj", "{F85463D3-9795-4C7D-A041-3BAA652D0BB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alkahest.Upgrader", "Alkahest.Upgrader\Alkahest.Upgrader.csproj", "{CE80A707-C017-4A09-9798-EC1176B943C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alkahest.Upgrader", "Alkahest.Upgrader\Alkahest.Upgrader.csproj", "{CE80A707-C017-4A09-9798-EC1176B943C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alkahest", "Alkahest\Alkahest.csproj", "{FB4516B0-8850-49F1-B65D-AD5ECE07670C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alkahest", "Alkahest\Alkahest.csproj", "{FB4516B0-8850-49F1-B65D-AD5ECE07670C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
