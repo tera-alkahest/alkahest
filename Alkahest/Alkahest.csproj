@@ -6,12 +6,6 @@
     <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="$(NuGetPackageRoot)\easyhook\2.7.6789\content\net40\*32*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Visible>false</Visible>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\Alkahest.ico">
       <Link>Properties\Alkahest.ico</Link>
     </None>
