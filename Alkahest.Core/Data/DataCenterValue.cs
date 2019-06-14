@@ -58,6 +58,8 @@ namespace Alkahest.Core.Data
             }
         }
 
+        public long AsInt64 => AsInt32;
+
         public float AsSingle
         {
             get
@@ -70,6 +72,8 @@ namespace Alkahest.Core.Data
                 return Unsafe.As<int, float>(ref value);
             }
         }
+
+        public double AsDouble => AsSingle;
 
         public bool AsBoolean
         {
@@ -161,6 +165,25 @@ namespace Alkahest.Core.Data
             }
         }
 
+        public long ToInt64()
+        {
+            switch (TypeCode)
+            {
+                case DataCenterTypeCode.None:
+                case DataCenterTypeCode.Boolean:
+                    throw new InvalidCastException();
+                case DataCenterTypeCode.Int32:
+                    return AsInt32;
+                case DataCenterTypeCode.Single:
+                    return (long)AsSingle;
+                case DataCenterTypeCode.String:
+                    return long.TryParse(AsString, NumberStyles.Integer, CultureInfo.InvariantCulture,
+                        out var l) ? l : throw new InvalidCastException();
+                default:
+                    throw Assert.Unreachable();
+            }
+        }
+
         public float ToSingle()
         {
             switch (TypeCode)
@@ -175,6 +198,25 @@ namespace Alkahest.Core.Data
                 case DataCenterTypeCode.String:
                     return float.TryParse(AsString, NumberStyles.Float, CultureInfo.InvariantCulture,
                         out var f) ? f : throw new InvalidCastException();
+                default:
+                    throw Assert.Unreachable();
+            }
+        }
+
+        public double ToDouble()
+        {
+            switch (TypeCode)
+            {
+                case DataCenterTypeCode.None:
+                case DataCenterTypeCode.Boolean:
+                    throw new InvalidCastException();
+                case DataCenterTypeCode.Int32:
+                    return AsInt32;
+                case DataCenterTypeCode.Single:
+                    return AsSingle;
+                case DataCenterTypeCode.String:
+                    return double.TryParse(AsString, NumberStyles.Float, CultureInfo.InvariantCulture,
+                        out var d) ? d : throw new InvalidCastException();
                 default:
                     throw Assert.Unreachable();
             }
@@ -269,24 +311,34 @@ namespace Alkahest.Core.Data
             }
         }
 
-        public static explicit operator int(DataCenterValue attribute)
+        public static explicit operator int(DataCenterValue value)
         {
-            return attribute.AsInt32;
+            return value.AsInt32;
         }
 
-        public static explicit operator float(DataCenterValue attribute)
+        public static explicit operator long(DataCenterValue value)
         {
-            return attribute.AsSingle;
+            return value.AsInt64;
         }
 
-        public static explicit operator string(DataCenterValue attribute)
+        public static explicit operator float(DataCenterValue value)
         {
-            return attribute.AsString;
+            return value.AsSingle;
         }
 
-        public static explicit operator bool(DataCenterValue attribute)
+        public static explicit operator double(DataCenterValue value)
         {
-            return attribute.AsBoolean;
+            return value.AsDouble;
+        }
+
+        public static explicit operator string(DataCenterValue value)
+        {
+            return value.AsString;
+        }
+
+        public static explicit operator bool(DataCenterValue value)
+        {
+            return value.AsBoolean;
         }
 
         public static bool operator ==(DataCenterValue left, DataCenterValue right)
