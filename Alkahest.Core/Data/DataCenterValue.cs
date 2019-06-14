@@ -146,7 +146,7 @@ namespace Alkahest.Core.Data
             return TypeCode == DataCenterTypeCode.Boolean && AsBoolean == other;
         }
 
-        public int ToInt32()
+        public int ToInt32(int? fallback = null)
         {
             switch (TypeCode)
             {
@@ -159,13 +159,13 @@ namespace Alkahest.Core.Data
                     return (int)AsSingle;
                 case DataCenterTypeCode.String:
                     return int.TryParse(AsString, NumberStyles.Integer, CultureInfo.InvariantCulture,
-                        out var i) ? i : throw new InvalidCastException();
+                        out var i) ? i : fallback ?? throw new InvalidCastException();
                 default:
                     throw Assert.Unreachable();
             }
         }
 
-        public long ToInt64()
+        public long ToInt64(long? fallback = null)
         {
             switch (TypeCode)
             {
@@ -178,13 +178,13 @@ namespace Alkahest.Core.Data
                     return (long)AsSingle;
                 case DataCenterTypeCode.String:
                     return long.TryParse(AsString, NumberStyles.Integer, CultureInfo.InvariantCulture,
-                        out var l) ? l : throw new InvalidCastException();
+                        out var l) ? l : fallback ?? throw new InvalidCastException();
                 default:
                     throw Assert.Unreachable();
             }
         }
 
-        public float ToSingle()
+        public float ToSingle(float? fallback = null)
         {
             switch (TypeCode)
             {
@@ -197,13 +197,13 @@ namespace Alkahest.Core.Data
                     return AsSingle;
                 case DataCenterTypeCode.String:
                     return float.TryParse(AsString, NumberStyles.Float, CultureInfo.InvariantCulture,
-                        out var f) ? f : throw new InvalidCastException();
+                        out var f) ? f : fallback ?? throw new InvalidCastException();
                 default:
                     throw Assert.Unreachable();
             }
         }
 
-        public double ToDouble()
+        public double ToDouble(double? fallback = null)
         {
             switch (TypeCode)
             {
@@ -216,13 +216,13 @@ namespace Alkahest.Core.Data
                     return AsSingle;
                 case DataCenterTypeCode.String:
                     return double.TryParse(AsString, NumberStyles.Float, CultureInfo.InvariantCulture,
-                        out var d) ? d : throw new InvalidCastException();
+                        out var d) ? d : fallback ?? throw new InvalidCastException();
                 default:
                     throw Assert.Unreachable();
             }
         }
 
-        public bool ToBoolean()
+        public bool ToBoolean(bool? fallback = null)
         {
             switch (TypeCode)
             {
@@ -231,7 +231,8 @@ namespace Alkahest.Core.Data
                 case DataCenterTypeCode.Single:
                     throw new InvalidCastException();
                 case DataCenterTypeCode.String:
-                    return bool.TryParse(AsString, out var b) ? b : throw new InvalidCastException();
+                    return bool.TryParse(AsString, out var b) ? b :
+                        fallback ?? throw new InvalidCastException();
                 case DataCenterTypeCode.Boolean:
                     return AsBoolean;
                 default:
