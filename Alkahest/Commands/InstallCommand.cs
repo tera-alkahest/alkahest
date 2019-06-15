@@ -137,8 +137,15 @@ namespace Alkahest.Commands
 
             _log.Basic("Installed {0} packages", count);
 
-            if (installing.Any(x => x.Assets.Contains(AssetKind.DataCenter)))
-                new AssetManager().UpdateDataCenter();
+            var kinds = installing.SelectMany(x => x.Assets).Distinct();
+
+            if (kinds.Any())
+            {
+                var assets = new AssetManager();
+
+                foreach (var kind in kinds)
+                    assets.Update(kind);
+            }
 
             return 0;
         }

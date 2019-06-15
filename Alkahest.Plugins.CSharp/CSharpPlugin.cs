@@ -429,8 +429,7 @@ namespace Alkahest.Plugins.CSharp
 
             foreach (var (name, typeName) in typeNames)
                 _scripts.Add((name, asm.GetType(typeName), new CSharpScriptContext(this, name,
-                    Path.GetFullPath(Path.Combine(pkg, name)), new Log(typeof(CSharpPlugin), name),
-                    _context.Data, _context.Proxies)));
+                    Path.GetFullPath(Path.Combine(pkg, name)), new Log(typeof(CSharpPlugin), name), _context)));
 
             var count = 0;
 

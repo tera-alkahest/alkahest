@@ -8,12 +8,15 @@ namespace Alkahest.Core.Plugins
 {
     public sealed class PluginContext
     {
+        public Region Region { get; }
+
         public DataCenter Data { get; }
 
         public IReadOnlyList<GameProxy> Proxies { get; }
 
-        public PluginContext(DataCenter data, IEnumerable<GameProxy> proxies)
+        public PluginContext(Region region, DataCenter data, IEnumerable<GameProxy> proxies)
         {
+            Region = region.CheckValidity(nameof(region));
             Data = data ?? throw new ArgumentNullException(nameof(data));
             Proxies = (proxies ?? throw new ArgumentNullException(nameof(proxies))).ToArray();
 

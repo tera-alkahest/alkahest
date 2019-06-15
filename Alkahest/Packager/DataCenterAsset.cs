@@ -1,3 +1,4 @@
+using Alkahest.Core;
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
@@ -9,12 +10,15 @@ namespace Alkahest.Packager
 {
     sealed class DataCenterAsset
     {
+        public Region Region { get; }
+
         public FileInfo File { get; }
 
         public string Hash { get; }
 
-        public DataCenterAsset(string directory, JObject obj)
+        public DataCenterAsset(string directory, Region region, JObject obj)
         {
+            Region = region;
             File = new FileInfo(Path.Combine(directory, (string)obj["name"]));
             Hash = (string)obj["sha1"];
         }
@@ -32,7 +36,7 @@ namespace Alkahest.Packager
 
         public void Update()
         {
-            var region = Configuration.Region.ToString().ToLowerInvariant();
+            var region = Region.ToString().ToLowerInvariant();
             var zipName = File.FullName + ".zip";
 
             System.IO.File.WriteAllBytes(zipName, GitHub.GetBytes(new Uri(

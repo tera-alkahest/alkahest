@@ -57,7 +57,7 @@ namespace Alkahest
 
         public static bool DataCenterInterning { get; }
 
-        public static Region Region { get; }
+        public static Region[] Regions { get; }
 
         public static bool ServerListEnabled { get; }
 
@@ -113,7 +113,7 @@ namespace Alkahest
             UpgradeOwner = cfg["upgradeOwner"];
             UpgradeRepository = cfg["upgradeRepository"];
             DataCenterInterning = bool.Parse(cfg["dataCenterInterning"]);
-            Region = (Region)Enum.Parse(typeof(Region), cfg["region"], true);
+            Regions = Split(cfg["regions"], ',').Select(x => (Region)Enum.Parse(typeof(Region), x, true)).ToArray();
             ServerListEnabled = bool.Parse(cfg["enableSls"]);
             ServerListBaseAddress = IPAddress.Parse(cfg["slsBaseAddress"]);
             GameBaseAddress = IPAddress.Parse(cfg["gameBaseAddress"]);

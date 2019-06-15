@@ -1,6 +1,7 @@
 using Alkahest.Core.Data;
 using Alkahest.Core.Logging;
 using Alkahest.Core.Net.Game;
+using Alkahest.Core.Plugins;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -22,6 +23,8 @@ namespace Alkahest.Plugins.CSharp
         public string Path { get; }
 
         public Log Log { get; }
+
+        public Core.Region Region { get; }
 
         public DataCenter Data { get; }
 
@@ -65,23 +68,24 @@ namespace Alkahest.Plugins.CSharp
         }
 
         internal CSharpScriptContext(CSharpPlugin plugin, string name, string path, Log log,
-            DataCenter data, IEnumerable<GameProxy> proxies)
+            PluginContext context)
         {
             Name = name;
             Path = path;
-            Data = data;
+            Data = context.Data;
+            Region = context.Region;
             Log = log;
-            Proxies = proxies.ToArray();
+            Proxies = context.Proxies.ToArray();
             _plugin = plugin;
             _scriptColor = _colors[_last++ % _colors.Count];
         }
 
         public JObject LoadConfiguration(int version, Func<JObject, int, JObject> migrator = null)
         {
-            var path = GetConfigurationPath();
+            var path = GetConfigurationPath(true);
 
             if (!File.Exists(path))
-                File.Copy(path + ".default", path);
+                File.Copy(GetConfigurationPath(false), path);
 
             using var reader = new JsonTextReader(new StreamReader(path));
             var value = JObject.Load(reader);
@@ -99,7 +103,7 @@ namespace Alkahest.Plugins.CSharp
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
 
-            using var writer = new JsonTextWriter(new StreamWriter(GetConfigurationPath()))
+            using var writer = new JsonTextWriter(new StreamWriter(GetConfigurationPath(true)))
             {
                 Formatting = Formatting.Indented,
             };
@@ -110,9 +114,11 @@ namespace Alkahest.Plugins.CSharp
             value.WriteTo(writer);
         }
 
-        string GetConfigurationPath()
+        string GetConfigurationPath(bool region)
         {
-            return System.IO.Path.Combine(Path, "config.json");
+            var path = System.IO.Path.Combine(Path, "config");
+
+            return path + (region ? $".{Region.ToString().ToLowerInvariant()}.json" : ".json.default");
         }
 
         public void Message(GameClient client, string format, params object[] args)

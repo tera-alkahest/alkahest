@@ -92,7 +92,8 @@ The most important configuration values you will need to change are:
   `file` logger from this list to save disk space.
 * `disablePlugins`: Most users can add `packet-logger` to this list to save disk
   space, as they likely will not need packet logs.
-* `region`: Set this to `de`, `fr`, `jp`, `na`, `ru`, `se`, `th`, `tw`, or `uk`.
+* `regions`: Set this to any of `de`, `fr`, `jp`, `na`, `ru`, `se`, `th`, `tw`,
+  and `uk`, depending on which region(s) you intend to play in.
 
 There are many other configuration values that you can play with, but you do not
 need to change them if all you want is to use Alkahest for a single TERA client

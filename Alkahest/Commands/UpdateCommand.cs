@@ -12,6 +12,8 @@ namespace Alkahest.Commands
     {
         static readonly Log _log = new Log(typeof(UpdateCommand));
 
+        bool _assets;
+
         bool _force;
 
         public UpdateCommand()
@@ -24,6 +26,11 @@ namespace Alkahest.Commands
                 "Available options:",
                 string.Empty,
                 {
+                    "a|assets",
+                    $"Enable/disable updating all assets unconditionally (defaults to `{_assets}`)",
+                    a => _assets = a != null
+                },
+                {
                     "f|force",
                     $"Enable/disable forcing package updates even if conflicts are detected (defaults to `{_force}`)",
                     f => _force = f != null
@@ -33,7 +40,8 @@ namespace Alkahest.Commands
 
         protected override int Invoke(string[] args)
         {
-            new AssetManager().UpdateAll();
+            if (_assets)
+                new AssetManager().UpdateAll();
 
             var mgr = new PackageManager();
             var pkgs = new HashSet<LocalPackage>();
@@ -183,8 +191,13 @@ namespace Alkahest.Commands
 
             _log.Basic("Updated {0} packages", count);
 
-            if (updating.Any(x => x.Item2.Assets.Contains(AssetKind.DataCenter)))
-                new AssetManager().UpdateDataCenter();
+            if (!_assets)
+            {
+                var assets = new AssetManager();
+
+                foreach (var kind in updating.SelectMany(x => x.Item2.Assets).Distinct())
+                    assets.Update(kind);
+            }
 
             return 0;
         }
