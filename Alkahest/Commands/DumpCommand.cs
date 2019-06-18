@@ -72,7 +72,7 @@ namespace Alkahest.Commands
             var directories = 0;
             var files = 0;
 
-            using var dc = new DataCenter(input, Configuration.DataCenterInterning);
+            using var dc = new DataCenter(File.OpenRead(input), Configuration.DataCenterInterning);
             var options = new ParallelOptions
             {
                 MaxDegreeOfParallelism = _parallel ? Environment.ProcessorCount : 1,

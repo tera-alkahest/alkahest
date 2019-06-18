@@ -83,6 +83,9 @@ namespace Alkahest.Core.Net.Game
 
         public void Start()
         {
+            if (_disposed)
+                throw new ObjectDisposedException(GetType().FullName);
+
             _serverSocket.Bind(Info.ProxyEndPoint);
             _serverSocket.Listen(_backlog);
 

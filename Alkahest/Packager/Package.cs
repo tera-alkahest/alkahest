@@ -49,7 +49,7 @@ namespace Alkahest.Packager
             Dependencies = (details["dependencies"] ?? new JArray()).Select(x => (string)x).ToList();
             Conflicts = (details["conflicts"] ?? new JArray()).Select(x => (string)x).ToList();
             Assets = (details["assets"] ?? new JArray()).Select(
-                x => (AssetKind)Enum.Parse(typeof(AssetKind), (string)x)).ToList();
+                x => (AssetKind)Enum.Parse(typeof(AssetKind), (string)x, true)).ToList();
         }
 
         public static string GetPath(string name)

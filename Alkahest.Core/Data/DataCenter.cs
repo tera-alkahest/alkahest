@@ -84,11 +84,11 @@ namespace Alkahest.Core.Data
             Root = new DataCenterElement(this, DataCenterAddress.Zero);
         }
 
-        public unsafe DataCenter(string fileName, bool intern)
+        public unsafe DataCenter(Stream stream, bool intern)
         {
             _intern = intern;
 
-            using var reader = new GameBinaryReader(File.OpenRead(fileName));
+            using var reader = new GameBinaryReader(stream);
 
             Header = ReadHeader(reader);
 

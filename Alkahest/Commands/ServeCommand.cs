@@ -89,7 +89,7 @@ namespace Alkahest.Commands
 
             var real = Dns.GetHostEntry(slsHost).AddressList[0];
 
-            _log.Basic("Resolved {0} official server list address: {1} -> {2}", region, slsHost, real);
+            _log.Info("Resolved {0} server list address: {1} -> {2}", region, slsHost, real);
 
             hosts?.AddEntry(slsHost, slsAddress);
 
@@ -97,9 +97,6 @@ namespace Alkahest.Commands
                 Configuration.ServerListBaseAddress, slsPort, Configuration.GameBaseAddress,
                 Configuration.GameBasePort, region, Configuration.ServerListTimeout,
                 Configuration.ServerListRetries));
-
-            if (Configuration.ServerListEnabled)
-                slsProxy.Start();
 
             var pool = new ObjectPool<SocketAsyncEventArgs>(() => new SocketAsyncEventArgs(),
                 x => x.Reset(), Configuration.PoolLimit != 0 ? (int?)Configuration.PoolLimit : null);
@@ -115,11 +112,14 @@ namespace Alkahest.Commands
             var path = Path.ChangeExtension(Path.Combine(Configuration.AssetDirectory,
                 DataCenter.FileNames[region]), ".dec");
             var loader = new PluginLoader(new PluginContext(region, File.Exists(path) ?
-                new DataCenter(path, Configuration.DataCenterInterning) :
+                new DataCenter(File.OpenRead(path), Configuration.DataCenterInterning) :
                 new DataCenter(version), proxies), Configuration.PluginDirectory,
                 Configuration.PluginPattern, Configuration.DisablePlugins);
 
             loader.Start();
+
+            if (Configuration.ServerListEnabled)
+                slsProxy.Start();
 
             foreach (var proxy in proxies)
                 proxy.Start();
@@ -138,6 +138,8 @@ namespace Alkahest.Commands
             foreach (var proxy in server.Proxies)
                 proxy.Dispose();
 
+            server.ServerListProxy.Dispose();
+
             server.Loader.Stop();
 
             _log.Basic("{0} proxy server stopped", region);
@@ -146,12 +148,11 @@ namespace Alkahest.Commands
         protected override int Invoke(string[] args)
         {
             using var hosts = Configuration.AdjustHostsFile ? new HostsFileManager() : null;
+            using var certs = Configuration.AdjustCertificateStore ? new CertificateManager(443) : null;
 
             if (_cleanup)
             {
                 _log.Basic("Cleaning up proxy server system changes...");
-
-                using var certs = Configuration.AdjustCertificateStore ? new CertificateManager(443) : null;
 
                 foreach (var region in Configuration.Regions)
                     hosts?.RemoveEntry(ServerListParameters.Uris[region].Host,
@@ -169,6 +170,8 @@ namespace Alkahest.Commands
                 AppDomain.CurrentDomain.ProcessExit += ProcessExit;
                 Console.CancelKeyPress += CancelKeyPress;
                 ConsoleUtility.AddConsoleEventHandler(ConsoleEvent);
+
+                certs?.Activate();
 
                 var servers = Configuration.Regions.Select(x => StartServer(x, hosts)).ToArray();
 

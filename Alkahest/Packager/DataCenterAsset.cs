@@ -8,19 +8,19 @@ using System.Security.Cryptography;
 
 namespace Alkahest.Packager
 {
-    sealed class DataCenterAsset
+    sealed class DataCenterAsset : IAsset
     {
-        public Region Region { get; }
-
         public FileInfo File { get; }
 
-        public string Hash { get; }
+        readonly Region _region;
+
+        readonly string _hash;
 
         public DataCenterAsset(string directory, Region region, JObject obj)
         {
-            Region = region;
             File = new FileInfo(Path.Combine(directory, (string)obj["name"]));
-            Hash = (string)obj["sha1"];
+            _region = region;
+            _hash = (string)obj["sha1"];
         }
 
         public bool CheckIfLatest()
@@ -30,13 +30,13 @@ namespace Alkahest.Packager
 
             using var sha = new SHA1Managed();
 
-            return Hash == BitConverter.ToString(sha.ComputeHash(System.IO.File.ReadAllBytes(File.FullName)))
+            return _hash == BitConverter.ToString(sha.ComputeHash(System.IO.File.ReadAllBytes(File.FullName)))
                 .Replace("-", string.Empty).ToLowerInvariant();
         }
 
         public void Update()
         {
-            var region = Region.ToString().ToLowerInvariant();
+            var region = _region.ToString().ToLowerInvariant();
             var zipName = File.FullName + ".zip";
 
             System.IO.File.WriteAllBytes(zipName, GitHub.GetBytes(new Uri(

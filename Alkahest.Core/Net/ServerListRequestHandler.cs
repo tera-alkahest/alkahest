@@ -56,15 +56,13 @@ namespace Alkahest.Core.Net
                 }
                 catch (Exception e) when (IsHttpException(e) && retriesSoFar < _parameters.Retries)
                 {
-                    _log.Error("Could not fetch official server list, retrying...");
+                    _log.Error("Could not fetch official server list; retrying...");
                     retriesSoFar++;
                     continue;
                 }
 
                 break;
             }
-
-            _log.Basic("Fetched official server list");
 
             var doc = XDocument.Parse(resp.Content.ReadAsStringAsync().Result);
             var servs = new List<ServerInfo>();
@@ -95,12 +93,12 @@ namespace Alkahest.Core.Net
 
                 servs.Add(new ServerInfo(id, name, new IPEndPoint(ip, port), new IPEndPoint(newIP, newPort)));
 
-                _log.Info("Redirected {0}: {1}:{2} -> {3}:{4}", name, ip, port, newIP, newPort);
+                _log.Info("Redirecting {0}: {1}:{2} -> {3}:{4}", name, ip, port, newIP, newPort);
             }
 
             servers = servs.OrderBy(x => x.Id).ToArray();
 
-            _log.Basic("Redirected {0} servers", servs.Count);
+            _log.Basic("Redirecting {0} game servers", servs.Count);
 
             return doc.ToString();
         }
@@ -176,7 +174,7 @@ namespace Alkahest.Core.Net
                     {
                         if (retriesSoFar < _parameters.Retries)
                         {
-                            _log.Error("Could not forward HTTP request at {0} from {1}, retrying...",
+                            _log.Error("Could not forward HTTP request at {0} from {1}; retrying...",
                                 path, from);
                             retriesSoFar++;
                             continue;

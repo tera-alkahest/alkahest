@@ -62,6 +62,9 @@ namespace Alkahest.Core.Net
 
         public void Start()
         {
+            if (_disposed)
+                throw new ObjectDisposedException(GetType().FullName);
+
             _server.OpenAsync().Wait();
 
             _log.Basic("{0} server list proxy listening at {1}", Parameters.Region,
