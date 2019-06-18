@@ -58,16 +58,16 @@ namespace Alkahest.Core.Net
 
         ~HostsFileManager()
         {
-            RealDispose();
+            RealDispose(false);
         }
 
         public void Dispose()
         {
-            RealDispose();
+            RealDispose(true);
             GC.SuppressFinalize(this);
         }
 
-        void RealDispose()
+        void RealDispose(bool disposing)
         {
             if (_disposed)
                 return;
@@ -77,7 +77,8 @@ namespace Alkahest.Core.Net
             RunLocked(() => File.WriteAllLines(_hostsPath,
                 File.ReadAllLines(_hostsPath).Where(x => !_entries.Contains(x))));
 
-            _log.Basic("Removed all hosts entries");
+            if (disposing)
+                _log.Basic("Removed all hosts entries");
         }
 
         string MakeEntry(string host, IPAddress destination)

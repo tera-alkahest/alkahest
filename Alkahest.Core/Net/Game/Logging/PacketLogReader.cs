@@ -108,20 +108,21 @@ namespace Alkahest.Core.Net.Game.Logging
 
         ~PacketLogReader()
         {
-            RealDispose();
+            RealDispose(false);
         }
 
         public void Dispose()
         {
-            RealDispose();
+            RealDispose(true);
             GC.SuppressFinalize(this);
         }
 
-        void RealDispose()
+        void RealDispose(bool disposing)
         {
             _disposed = true;
 
-            _reader?.Dispose();
+            if (disposing)
+                _reader.Dispose();
         }
 
         public PacketLogEntry Read()

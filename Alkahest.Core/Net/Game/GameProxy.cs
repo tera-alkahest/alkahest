@@ -52,16 +52,16 @@ namespace Alkahest.Core.Net.Game
 
         ~GameProxy()
         {
-            RealDispose();
+            RealDispose(false);
         }
 
         public void Dispose()
         {
-            RealDispose();
+            RealDispose(true);
             GC.SuppressFinalize(this);
         }
 
-        void RealDispose()
+        void RealDispose(bool disposing)
         {
             if (_disposed)
                 return;
@@ -78,7 +78,8 @@ namespace Alkahest.Core.Net.Game
             foreach (var client in _clients.ToArray())
                 client.Disconnect();
 
-            _log.Basic("Game proxy for {0} stopped", Info.Name);
+            if (disposing)
+                _log.Basic("Game proxy for {0} stopped", Info.Name);
         }
 
         public void Start()

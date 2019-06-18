@@ -56,21 +56,24 @@ namespace Alkahest.Core.Net
 
         ~CertificateManager()
         {
-            RealDispose();
+            RealDispose(false);
         }
 
         public void Dispose()
         {
-            RealDispose();
+            RealDispose(true);
             GC.SuppressFinalize(this);
         }
 
-        void RealDispose()
+        void RealDispose(bool disposing)
         {
             if (_disposed)
                 return;
 
             _disposed = true;
+
+            if (_store == null)
+                return;
 
             NetShellRemove();
 
@@ -78,7 +81,8 @@ namespace Alkahest.Core.Net
             RemoveKeys();
             _store.Dispose();
 
-            _log.Basic("Uninstalled root certificates");
+            if (disposing)
+                _log.Basic("Uninstalled root certificates");
         }
 
         public void Activate()

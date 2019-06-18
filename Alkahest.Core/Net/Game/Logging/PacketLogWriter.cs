@@ -79,20 +79,21 @@ namespace Alkahest.Core.Net.Game.Logging
 
         ~PacketLogWriter()
         {
-            RealDispose();
+            RealDispose(false);
         }
 
         public void Dispose()
         {
-            RealDispose();
+            RealDispose(true);
             GC.SuppressFinalize(this);
         }
 
-        void RealDispose()
+        void RealDispose(bool disposing)
         {
             _disposed = true;
 
-            _writer?.Dispose();
+            if (disposing)
+                _writer.Dispose();
         }
 
         public void Write(PacketLogEntry entry)
