@@ -52,7 +52,7 @@ namespace Alkahest.Core.Data
 
         public DataCenterHeader Header { get; }
 
-        internal DataCenterSimpleRegion Unknown { get; private set; }
+        internal DataCenterSimpleRegion ElementExtensions { get; private set; }
 
         internal DataCenterSegmentedRegion Attributes { get; private set; }
 
@@ -86,7 +86,7 @@ namespace Alkahest.Core.Data
             using var reader = new GameBinaryReader(stream);
 
             Header = ReadHeader(reader);
-            Unknown = ReadSimpleRegion(reader, false, UnknownSize);
+            ElementExtensions = ReadSimpleRegion(reader, false, UnknownSize);
             Attributes = ReadSegmentedRegion(reader, AttributeSize);
             Elements = ReadSegmentedRegion(reader, ElementSize);
             Values = ReadStringTable(reader, 1024, intern);
@@ -107,7 +107,7 @@ namespace Alkahest.Core.Data
 
                 IsDisposed = true;
 
-                Unknown = null;
+                ElementExtensions = null;
                 Attributes = null;
                 Elements = null;
                 Values = null;

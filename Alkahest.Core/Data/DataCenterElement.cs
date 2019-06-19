@@ -76,8 +76,13 @@ namespace Alkahest.Core.Data
 
                 Name = center.Names.ByIndex[nameIndex].Value;
 
-                // Unknown; mostly (but not always) zero.
-                reader.ReadUInt16();
+                var ext = reader.ReadUInt16();
+
+                if (Bits.Extract(ext, 0, 4) != 0)
+                    throw new InvalidDataException();
+
+                if (Bits.Extract(ext, 4, 12) >= center.ElementExtensions.Count)
+                    throw new InvalidDataException();
 
                 attrCount = reader.ReadUInt16();
                 childCount = reader.ReadUInt16();
