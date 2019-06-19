@@ -40,7 +40,7 @@ namespace Alkahest.Core.Data
                         throw new InvalidDataException();
 
                     list.Add(new DataCenterString(index, address1, intern ?
-                        value : string.Intern(value), hash));
+                        string.Intern(value) : value, hash));
                 }
             }
 

@@ -10,6 +10,8 @@ namespace Alkahest.Core.Data
     {
         public const int KeySize = 16;
 
+        public const int Version = 6;
+
         public static IReadOnlyDictionary<Region, string> FileNames { get; } =
             new Dictionary<Region, string>
             {
@@ -25,7 +27,7 @@ namespace Alkahest.Core.Data
                 { Region.UK, "DataCenter_Final_EUR.dat" },
             };
 
-        public static IReadOnlyDictionary<Region, uint> Versions { get; } =
+        public static IReadOnlyDictionary<Region, uint> ClientVersions { get; } =
             new Dictionary<Region, uint>
             {
                 { Region.DE, 350022 },
@@ -74,7 +76,7 @@ namespace Alkahest.Core.Data
 
         public DataCenter(uint version)
         {
-            Header = new DataCenterHeader(0, 0, 0, version, 0, 0, 0, 0);
+            Header = new DataCenterHeader(Version, 0, 0, -16400, version, 0, 0, 0, 0);
             Footer = new DataCenterFooter(0);
             Root = new DataCenterElement(this, DataCenterAddress.Zero);
         }
@@ -150,14 +152,27 @@ namespace Alkahest.Core.Data
 
         static DataCenterHeader ReadHeader(GameBinaryReader reader)
         {
+            var version = reader.ReadUInt32();
+
+            if (version != Version)
+                throw new InvalidDataException();
+
             var unk1 = reader.ReadInt32();
-            var unk2 = reader.ReadInt32();
+
+            if (unk1 != 0)
+                throw new InvalidDataException();
+
+            var unk2 = reader.ReadInt16();
 
             if (unk2 != 0)
                 throw new InvalidDataException();
 
-            var unk3 = reader.ReadInt32();
-            var version = reader.ReadUInt32();
+            var unk3 = reader.ReadInt16();
+
+            if (unk3 != -16400)
+                throw new InvalidDataException();
+
+            var clientVersion = reader.ReadUInt32();
             var unk4 = reader.ReadInt32();
 
             if (unk4 != 0)
@@ -178,7 +193,7 @@ namespace Alkahest.Core.Data
             if (unk7 != 0)
                 throw new InvalidDataException();
 
-            return new DataCenterHeader(unk1, unk2, unk3, version, unk4, unk5, unk6, unk7);
+            return new DataCenterHeader(version, unk1, unk2, unk3, clientVersion, unk4, unk5, unk6, unk7);
         }
 
         static DataCenterFooter ReadFooter(GameBinaryReader reader)

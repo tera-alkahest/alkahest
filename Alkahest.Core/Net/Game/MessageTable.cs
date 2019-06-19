@@ -17,7 +17,7 @@ namespace Alkahest.Core.Net.Game
 
         internal MessageTable(bool game, uint version)
         {
-            if (!DataCenter.Versions.Values.Contains(version))
+            if (!DataCenter.ClientVersions.Values.Contains(version))
                 throw new ArgumentOutOfRangeException(nameof(version));
 
             Version = version;

@@ -4,13 +4,15 @@ namespace Alkahest.Core.Data
     {
         // Some of these are actually more complex structures, but are zeroed.
 
+        public uint Version { get; }
+
         public int Unknown1 { get; }
 
-        public int Unknown2 { get; }
+        public short Unknown2 { get; }
 
-        public int Unknown3 { get; }
+        public short Unknown3 { get; }
 
-        public uint Version { get; }
+        public uint ClientVersion { get; }
 
         public int Unknown4 { get; }
 
@@ -20,13 +22,14 @@ namespace Alkahest.Core.Data
 
         public int Unknown7 { get; }
 
-        internal DataCenterHeader(int unknown1, int unknown2, int unknown3, uint version,
-            int unknown4, int unknown5, int unknown6, int unknown7)
+        internal DataCenterHeader(uint version, int unknown1, short unknown2, short unknown3,
+            uint clientVersion, int unknown4, int unknown5, int unknown6, int unknown7)
         {
+            Version = version;
             Unknown1 = unknown1;
             Unknown2 = unknown2;
             Unknown3 = unknown3;
-            Version = version;
+            ClientVersion = clientVersion;
             Unknown4 = unknown4;
             Unknown5 = unknown5;
             Unknown6 = unknown6;

@@ -60,7 +60,7 @@ namespace Alkahest.Core.Net.Game.Logging
 
             var clientVersion = _reader.ReadUInt32();
 
-            if (!DataCenter.Versions.Values.Contains(clientVersion))
+            if (!DataCenter.ClientVersions.Values.Contains(clientVersion))
                 throw new InvalidDataException();
 
             GameMessages = new GameMessageTable(clientVersion);
