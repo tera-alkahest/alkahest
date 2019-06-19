@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace Alkahest.Core.Data
 {
-    sealed class DataCenterSegment
+    sealed class DataCenterRegion
     {
         public uint ElementSize { get; }
 
@@ -15,7 +15,7 @@ namespace Alkahest.Core.Data
 
         readonly ThreadLocal<GameBinaryReader> _reader = new ThreadLocal<GameBinaryReader>();
 
-        public DataCenterSegment(uint elementSize, uint fullCount, uint usedCount, byte[] data)
+        public DataCenterRegion(uint elementSize, uint fullCount, uint usedCount, byte[] data)
         {
             ElementSize = elementSize;
             FullCount = fullCount;

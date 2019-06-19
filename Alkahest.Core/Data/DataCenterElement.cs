@@ -71,11 +71,12 @@ namespace Alkahest.Core.Data
                 if (nameIndex == -1)
                     return;
 
-                if (nameIndex >= center.Names.Count)
+                if (nameIndex >= center.Names.ByIndex.Count)
                     throw new InvalidDataException();
 
-                Name = center.Names[nameIndex];
+                Name = center.Names.ByIndex[nameIndex].Value;
 
+                // Unknown; mostly (but not always) zero.
                 reader.ReadUInt16();
 
                 attrCount = reader.ReadUInt16();
@@ -106,7 +107,7 @@ namespace Alkahest.Core.Data
                         var attrReader = center.Attributes.GetReader(addr);
                         var attrNameIndex = attrReader.ReadUInt16() - 1;
 
-                        if (attrNameIndex >= center.Names.Count)
+                        if (attrNameIndex >= center.Names.ByIndex.Count)
                             throw new InvalidDataException();
 
                         var typeCode = (DataCenterTypeCode)attrReader.ReadUInt16();
@@ -118,6 +119,7 @@ namespace Alkahest.Core.Data
                             case DataCenterTypeCode.Boolean:
                                 break;
                             default:
+                                // Currently unclear how these string type codes are determined.
                                 typeCode = DataCenterTypeCode.String;
                                 break;
                         }
@@ -131,11 +133,14 @@ namespace Alkahest.Core.Data
 
                             var strAddr = DataCenter.ReadAddress(attrReader);
 
-                            stringValue = center.GetString(strAddr);
+                            if (center.Values.ByAddress.TryGetValue(strAddr, out var str))
+                                stringValue = str.Value;
+                            else
+                                throw new InvalidDataException();
                         }
 
-                        attributes.Add(center.Names[attrNameIndex], new DataCenterValue(typeCode,
-                            primitiveValue, stringValue));
+                        attributes.Add(center.Names.ByIndex[attrNameIndex].Value, new DataCenterValue(
+                            typeCode, primitiveValue, stringValue));
                     }
                 }
                 finally

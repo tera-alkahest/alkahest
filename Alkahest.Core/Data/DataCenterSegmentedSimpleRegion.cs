@@ -4,13 +4,14 @@ using System.IO;
 
 namespace Alkahest.Core.Data
 {
-    sealed class DataCenterSegmentedRegion
+    sealed class DataCenterSegmentedSimpleRegion
     {
         public uint ElementSize { get; }
 
-        public IReadOnlyList<DataCenterRegion> Segments { get; }
+        public IReadOnlyList<DataCenterSimpleRegion> Segments { get; }
 
-        public DataCenterSegmentedRegion(uint elementSize, IReadOnlyList<DataCenterRegion> segments)
+        public DataCenterSegmentedSimpleRegion(uint elementSize,
+            IReadOnlyList<DataCenterSimpleRegion> segments)
         {
             ElementSize = elementSize;
             Segments = segments;

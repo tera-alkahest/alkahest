@@ -44,5 +44,10 @@ namespace Alkahest.Core.Data
         {
             return !a.Equals(b);
         }
+
+        public override string ToString()
+        {
+            return $"[SegmentIndex: {SegmentIndex}, ElementIndex: {ElementIndex}]";
+        }
     }
 }

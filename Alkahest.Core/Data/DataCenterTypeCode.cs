@@ -2,7 +2,7 @@ namespace Alkahest.Core.Data
 {
     public enum DataCenterTypeCode : ushort
     {
-        None = 0,
+        None = 0, // Not a real type code in the format.
         Int32 = 1,
         Single = 2,
         String = 3, // Not a real type code in the format.

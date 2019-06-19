@@ -1,9 +1,7 @@
 using Alkahest.Core.IO;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
 
 namespace Alkahest.Core.Data
@@ -42,25 +40,29 @@ namespace Alkahest.Core.Data
                 { Region.UK, 350022 },
             };
 
-        const int Unknown1Size = 8;
+        const int UnknownSize = 8;
 
         const int AttributeSize = 8;
 
         const int ElementSize = 16;
 
-        const int Unknown2Size = 16;
+        const int MetadataSize = 16;
 
         public DataCenterHeader Header { get; }
 
-        public DataCenterFooter Footer { get; }
-
-        public DataCenterElement Root { get; private set; }
+        internal DataCenterSimpleRegion Unknown { get; private set; }
 
         internal DataCenterSegmentedRegion Attributes { get; private set; }
 
         internal DataCenterSegmentedRegion Elements { get; private set; }
 
-        internal IReadOnlyList<string> Names { get; private set; }
+        internal DataCenterStringTable Values { get; private set; }
+
+        internal DataCenterStringTable Names { get; private set; }
+
+        public DataCenterFooter Footer { get; }
+
+        public DataCenterElement Root { get; private set; }
 
         public bool IsFrozen => _frozen != null;
 
@@ -68,14 +70,7 @@ namespace Alkahest.Core.Data
 
         internal ReaderWriterLockSlim Lock { get; } = new ReaderWriterLockSlim();
 
-        ConcurrentDictionary<DataCenterAddress, string> _strings =
-            new ConcurrentDictionary<DataCenterAddress, string>();
-
         object _frozen;
-
-        readonly bool _intern;
-
-        DataCenterSegmentedRegion _stringRegion;
 
         public DataCenter(uint version)
         {
@@ -84,34 +79,17 @@ namespace Alkahest.Core.Data
             Root = new DataCenterElement(this, DataCenterAddress.Zero);
         }
 
-        public unsafe DataCenter(Stream stream, bool intern)
+        public DataCenter(Stream stream, bool intern)
         {
-            _intern = intern;
-
             using var reader = new GameBinaryReader(stream);
 
             Header = ReadHeader(reader);
-
-            ReadSimpleRegion(reader, false, Unknown1Size);
-
-            var attributeRegion = ReadSegmentedRegion(reader, AttributeSize);
-            var elementRegion = ReadSegmentedRegion(reader, ElementSize);
-
-            _stringRegion = ReadSegmentedRegion(reader, sizeof(char));
-
-            ReadSimpleSegmentedRegion(reader, 1024, Unknown2Size);
-            ReadSimpleRegion(reader, true, (uint)sizeof(DataCenterAddress));
-
-            var nameRegion = ReadSegmentedRegion(reader, sizeof(char));
-
-            ReadSimpleSegmentedRegion(reader, 512, Unknown2Size);
-
-            var nameAddressRegion = ReadSimpleRegion(reader, true, (uint)sizeof(DataCenterAddress));
-
+            Unknown = ReadSimpleRegion(reader, false, UnknownSize);
+            Attributes = ReadSegmentedRegion(reader, AttributeSize);
+            Elements = ReadSegmentedRegion(reader, ElementSize);
+            Values = ReadStringTable(reader, 1024, intern);
+            Names = ReadStringTable(reader, 512, intern);
             Footer = ReadFooter(reader);
-            Attributes = attributeRegion;
-            Elements = elementRegion;
-            Names = ReadAddresses(nameAddressRegion).Select(x => ReadString(nameRegion, x)).ToArray();
 
             Reset();
         }
@@ -127,12 +105,12 @@ namespace Alkahest.Core.Data
 
                 IsDisposed = true;
 
-                Root = null;
+                Unknown = null;
                 Attributes = null;
                 Elements = null;
+                Values = null;
                 Names = null;
-                _strings = null;
-                _stringRegion = null;
+                Root = null;
             }
             finally
             {
@@ -168,16 +146,6 @@ namespace Alkahest.Core.Data
                 throw new InvalidOperationException("Data center is frozen.");
 
             Root = new DataCenterElement(this, DataCenterAddress.Zero);
-        }
-
-        internal string GetString(DataCenterAddress address)
-        {
-            return _strings.GetOrAdd(address, a =>
-            {
-                var str = _stringRegion.GetReader(address).ReadString();
-
-                return _intern ? string.Intern(str) : str;
-            });
         }
 
         static DataCenterHeader ReadHeader(GameBinaryReader reader)
@@ -236,7 +204,7 @@ namespace Alkahest.Core.Data
             return new DataCenterSimpleRegion(elementSize, count, data);
         }
 
-        static DataCenterSimpleSegmentedRegion ReadSimpleSegmentedRegion(GameBinaryReader reader,
+        static DataCenterSegmentedSimpleRegion ReadSegmentedSimpleRegion(GameBinaryReader reader,
             uint count, uint elementSize)
         {
             var segments = new List<DataCenterSimpleRegion>();
@@ -244,27 +212,41 @@ namespace Alkahest.Core.Data
             for (var i = 0; i < count; i++)
                 segments.Add(ReadSimpleRegion(reader, false, elementSize));
 
-            return new DataCenterSimpleSegmentedRegion(elementSize, segments);
+            return new DataCenterSegmentedSimpleRegion(elementSize, segments);
         }
 
-        static DataCenterSegment ReadSegment(GameBinaryReader reader, uint elementSize)
+        static DataCenterRegion ReadRegion(GameBinaryReader reader, uint elementSize)
         {
             var full = reader.ReadUInt32();
             var used = reader.ReadUInt32();
+
+            if (used > full)
+                throw new InvalidDataException();
+
             var data = reader.ReadBytes((int)(full * elementSize));
 
-            return new DataCenterSegment(elementSize, full, used, data);
+            return new DataCenterRegion(elementSize, full, used, data);
         }
 
         static DataCenterSegmentedRegion ReadSegmentedRegion(GameBinaryReader reader, uint elementSize)
         {
             var count = reader.ReadUInt32();
-            var segments = new List<DataCenterSegment>((int)count);
+            var segments = new List<DataCenterRegion>((int)count);
 
             for (var i = 0; i < count; i++)
-                segments.Add(ReadSegment(reader, elementSize));
+                segments.Add(ReadRegion(reader, elementSize));
 
             return new DataCenterSegmentedRegion(elementSize, segments);
+        }
+
+        static unsafe DataCenterStringTable ReadStringTable(GameBinaryReader reader, uint count,
+            bool intern)
+        {
+            var strings = ReadSegmentedRegion(reader, sizeof(char));
+            var metadata = ReadSegmentedSimpleRegion(reader, count, MetadataSize);
+            var addresses = ReadSimpleRegion(reader, true, (uint)sizeof(DataCenterAddress));
+
+            return new DataCenterStringTable(strings, metadata, addresses, intern);
         }
 
         internal static DataCenterAddress ReadAddress(GameBinaryReader reader)
@@ -273,19 +255,6 @@ namespace Alkahest.Core.Data
             var element = reader.ReadUInt16();
 
             return new DataCenterAddress(segment, element);
-        }
-
-        static IEnumerable<DataCenterAddress> ReadAddresses(DataCenterSimpleRegion region)
-        {
-            var reader = region.GetReader(0);
-
-            for (var i = 0; i < region.Count; i++)
-                yield return ReadAddress(reader);
-        }
-
-        static string ReadString(DataCenterSegmentedRegion region, DataCenterAddress address)
-        {
-            return region.GetReader(address).ReadString();
         }
     }
 }
