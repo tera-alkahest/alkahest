@@ -72,17 +72,22 @@ namespace Alkahest.Core.Data
                     return;
 
                 if (nameIndex >= center.Names.ByIndex.Count)
-                    throw new InvalidDataException();
+                    throw new InvalidDataException(
+                        $"Element name index {nameIndex} is greater than {center.Names.ByIndex.Count}.");
 
                 Name = center.Names.ByIndex[nameIndex].Value;
 
                 var ext = reader.ReadUInt16();
+                var flags = Bits.Extract(ext, 0, 4);
 
-                if (Bits.Extract(ext, 0, 4) != 0)
-                    throw new InvalidDataException();
+                if (flags != 0)
+                    throw new InvalidDataException($"Unexpected extension flags {flags}.");
 
-                if (Bits.Extract(ext, 4, 12) >= center.ElementExtensions.Count)
-                    throw new InvalidDataException();
+                var extIndex = Bits.Extract(ext, 4, 12);
+
+                if (extIndex >= center.ElementExtensions.Count)
+                    throw new InvalidDataException(
+                        $"Extension index {extIndex} is greater than {center.ElementExtensions.Count}.");
 
                 attrCount = reader.ReadUInt16();
                 childCount = reader.ReadUInt16();
@@ -113,7 +118,8 @@ namespace Alkahest.Core.Data
                         var attrNameIndex = attrReader.ReadUInt16() - 1;
 
                         if (attrNameIndex >= center.Names.ByIndex.Count)
-                            throw new InvalidDataException();
+                            throw new InvalidDataException(
+                                $"Attribute name index {attrNameIndex} is greater than {center.Names.ByIndex.Count}.");
 
                         var typeCode = (DataCenterTypeCode)attrReader.ReadUInt16();
 
@@ -141,7 +147,8 @@ namespace Alkahest.Core.Data
                             if (center.Values.ByAddress.TryGetValue(strAddr, out var str))
                                 stringValue = str.Value;
                             else
-                                throw new InvalidDataException();
+                                throw new InvalidDataException(
+                                    $"String value address {strAddr} is invalid.");
                         }
 
                         attributes.Add(center.Names.ByIndex[attrNameIndex].Value, new DataCenterValue(

@@ -1,3 +1,4 @@
+using Alkahest.Core.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,29 +16,36 @@ namespace Alkahest.Core.Data
         {
             var list = new List<DataCenterString>((int)addresses.Count);
 
-            foreach (var segment in metadata.Segments)
+            foreach (var (i, segment) in metadata.Segments.WithIndex())
             {
-                for (uint i = 0; i < segment.Count; i++)
+                for (uint j = 0; j < segment.Count; j++)
                 {
-                    var reader = segment.GetReader(i);
+                    var reader = segment.GetReader(j);
 
                     // This hash only has a tiny amount of collisions in a typical data center.
                     var hash = reader.ReadUInt32();
+                    var bucket = (hash ^ hash >> 16) % metadata.Segments.Count;
+
+                    if (bucket != i)
+                        throw new InvalidDataException(
+                            $"String bucket index {i} does not match expected index {bucket}.");
 
                     // This includes the NUL character.
-                    var length = reader.ReadUInt32();
+                    var length = reader.ReadUInt32() - 1;
 
                     var index = reader.ReadUInt32() - 1;
                     var address1 = DataCenter.ReadAddress(reader);
                     var address2 = DataCenter.ReadAddress(addresses.GetReader(index));
 
                     if (address1 != address2)
-                        throw new InvalidDataException();
+                        throw new InvalidDataException(
+                            $"String address {address1} does not match expected address {address2}.");
 
                     var value = strings.GetReader(address1).ReadString();
 
-                    if (value.Length != length - 1)
-                        throw new InvalidDataException();
+                    if (value.Length != length)
+                        throw new InvalidDataException(
+                            $"String length {value.Length} does not match recorded length {length}.");
 
                     list.Add(new DataCenterString(index, address1, intern ?
                         string.Intern(value) : value, hash));

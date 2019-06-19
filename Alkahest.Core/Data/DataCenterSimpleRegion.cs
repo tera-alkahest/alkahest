@@ -1,4 +1,5 @@
 using Alkahest.Core.IO;
+using System.IO;
 using System.Threading;
 
 namespace Alkahest.Core.Data
@@ -22,6 +23,9 @@ namespace Alkahest.Core.Data
 
         public GameBinaryReader GetReader(uint elementIndex)
         {
+            if (elementIndex >= Count)
+                throw new InvalidDataException($"Element index {elementIndex} is greater than {Count}.");
+
             var reader = _reader.Value ??= new GameBinaryReader(Data);
 
             reader.Position = (int)(elementIndex * ElementSize);

@@ -47,7 +47,7 @@ namespace Alkahest.Core.Data
 
         public override string ToString()
         {
-            return $"[SegmentIndex: {SegmentIndex}, ElementIndex: {ElementIndex}]";
+            return $"{SegmentIndex}:{ElementIndex}";
         }
     }
 }

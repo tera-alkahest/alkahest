@@ -19,7 +19,8 @@ namespace Alkahest.Core.Data
         public GameBinaryReader GetReader(DataCenterAddress address)
         {
             if (address.SegmentIndex >= Segments.Count)
-                throw new InvalidDataException();
+                throw new InvalidDataException(
+                    $"Segment index {address.SegmentIndex} is greater than {Segments.Count}.");
 
             return Segments[address.SegmentIndex].GetReader(address.ElementIndex);
         }

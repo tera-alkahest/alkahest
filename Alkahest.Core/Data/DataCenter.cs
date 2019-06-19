@@ -153,45 +153,14 @@ namespace Alkahest.Core.Data
         static DataCenterHeader ReadHeader(GameBinaryReader reader)
         {
             var version = reader.ReadUInt32();
-
-            if (version != Version)
-                throw new InvalidDataException();
-
             var unk1 = reader.ReadInt32();
-
-            if (unk1 != 0)
-                throw new InvalidDataException();
-
             var unk2 = reader.ReadInt16();
-
-            if (unk2 != 0)
-                throw new InvalidDataException();
-
             var unk3 = reader.ReadInt16();
-
-            if (unk3 != -16400)
-                throw new InvalidDataException();
-
             var clientVersion = reader.ReadUInt32();
             var unk4 = reader.ReadInt32();
-
-            if (unk4 != 0)
-                throw new InvalidDataException();
-
             var unk5 = reader.ReadInt32();
-
-            if (unk5 != 0)
-                throw new InvalidDataException();
-
             var unk6 = reader.ReadInt32();
-
-            if (unk6 != 0)
-                throw new InvalidDataException();
-
             var unk7 = reader.ReadInt32();
-
-            if (unk7 != 0)
-                throw new InvalidDataException();
 
             return new DataCenterHeader(version, unk1, unk2, unk3, clientVersion, unk4, unk5, unk6, unk7);
         }
@@ -199,9 +168,6 @@ namespace Alkahest.Core.Data
         static DataCenterFooter ReadFooter(GameBinaryReader reader)
         {
             var unk1 = reader.ReadInt32();
-
-            if (unk1 != 0)
-                throw new InvalidDataException();
 
             return new DataCenterFooter(unk1);
         }
@@ -222,7 +188,7 @@ namespace Alkahest.Core.Data
         static DataCenterSegmentedSimpleRegion ReadSegmentedSimpleRegion(GameBinaryReader reader,
             uint count, uint elementSize)
         {
-            var segments = new List<DataCenterSimpleRegion>();
+            var segments = new List<DataCenterSimpleRegion>((int)count);
 
             for (var i = 0; i < count; i++)
                 segments.Add(ReadSimpleRegion(reader, false, elementSize));
@@ -234,10 +200,6 @@ namespace Alkahest.Core.Data
         {
             var full = reader.ReadUInt32();
             var used = reader.ReadUInt32();
-
-            if (used > full)
-                throw new InvalidDataException();
-
             var data = reader.ReadBytes((int)(full * elementSize));
 
             return new DataCenterRegion(elementSize, full, used, data);
