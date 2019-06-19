@@ -121,24 +121,47 @@ namespace Alkahest.Core.Data
                             throw new InvalidDataException(
                                 $"Attribute name index {attrNameIndex} is greater than {center.Names.ByIndex.Count}.");
 
-                        var typeCode = (DataCenterTypeCode)attrReader.ReadUInt16();
+                        var typeInfo = attrReader.ReadUInt16();
+                        var typeCode = Bits.Extract(typeInfo, 0, 2);
+                        var extCode = Bits.Extract(typeInfo, 2, 14);
+
+                        DataCenterTypeCode type;
 
                         switch (typeCode)
                         {
-                            case DataCenterTypeCode.Int32:
-                            case DataCenterTypeCode.Single:
-                            case DataCenterTypeCode.Boolean:
+                            case 1:
+                                switch (extCode)
+                                {
+                                    case 0:
+                                        type = DataCenterTypeCode.Int32;
+                                        break;
+                                    case 1:
+                                        type = DataCenterTypeCode.Boolean;
+                                        break;
+                                    default:
+                                        throw new InvalidDataException(
+                                            $"Unexpected extended type code value {extCode}.");
+                                }
+
+                                break;
+                            case 2:
+                                if (extCode != 0)
+                                    throw new InvalidDataException(
+                                        $"Unexpected extended type code value {extCode}.");
+
+                                type = DataCenterTypeCode.Single;
+                                break;
+                            case 3:
+                                type = DataCenterTypeCode.String;
                                 break;
                             default:
-                                // Currently unclear how these string type codes are determined.
-                                typeCode = DataCenterTypeCode.String;
-                                break;
+                                throw new InvalidDataException($"Unexpected type code value {typeCode}.");
                         }
 
                         var primitiveValue = attrReader.ReadInt32();
                         string stringValue = null;
 
-                        if (typeCode == DataCenterTypeCode.String)
+                        if (type == DataCenterTypeCode.String)
                         {
                             attrReader.Position -= sizeof(int);
 
@@ -152,7 +175,7 @@ namespace Alkahest.Core.Data
                         }
 
                         attributes.Add(center.Names.ByIndex[attrNameIndex].Value, new DataCenterValue(
-                            typeCode, primitiveValue, stringValue));
+                            type, primitiveValue, stringValue));
                     }
                 }
                 finally
