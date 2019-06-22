@@ -51,6 +51,7 @@ namespace Alkahest
                 new UninstallCommand(),
                 new UpdateCommand(),
                 new UpgradeCommand(),
+                new VerifyCommand(),
                 string.Empty,
                 "Available options:",
                 string.Empty,
