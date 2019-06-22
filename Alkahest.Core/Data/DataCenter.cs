@@ -93,6 +93,11 @@ namespace Alkahest.Core.Data
             Names = ReadStringTable(reader, 512, intern);
             Footer = ReadFooter(reader);
 
+            var diff = stream.Length - stream.Position;
+
+            if (diff != 0)
+                throw new InvalidDataException($"{diff} bytes remain unread.");
+
             Reset();
         }
 

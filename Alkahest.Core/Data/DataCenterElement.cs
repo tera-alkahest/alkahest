@@ -174,8 +174,10 @@ namespace Alkahest.Core.Data
                                     $"String value address {strAddr} is invalid.");
                         }
 
-                        attributes.Add(center.Names.ByIndex[attrNameIndex].Value, new DataCenterValue(
-                            type, primitiveValue, stringValue));
+                        var name = center.Names.ByIndex[attrNameIndex].Value;
+
+                        if (!attributes.TryAdd(name, new DataCenterValue(type, primitiveValue, stringValue)))
+                            throw new InvalidDataException($"Duplicate attribute name {name}.");
                     }
                 }
                 finally
