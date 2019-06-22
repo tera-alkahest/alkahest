@@ -59,16 +59,18 @@ namespace Alkahest.Commands
             };
 
             using var transform = new PaddingCryptoTransform(aes.CreateDecryptor());
-            var stream = new CryptoStream(File.OpenRead(input), transform, CryptoStreamMode.Read);
-            using var reader = new BinaryReader(stream, GameBinaryReader.Encoding, true);
+            var decrypt = new CryptoStream(File.OpenRead(input), transform, CryptoStreamMode.Read);
+            using var reader = new BinaryReader(decrypt, GameBinaryReader.Encoding, true);
 
-            reader.ReadUInt32();
-            reader.ReadUInt16();
+            reader.ReadUInt32(); // Decompressed size.
 
-            using var stream2 = new DeflateStream(stream, CompressionMode.Decompress);
-            using var stream3 = File.Open(_output, FileMode.Create, FileAccess.Write);
+            if (reader.ReadUInt16() is var hdr && hdr != 0x9c78)
+                throw new InvalidDataException($"Invalid zlib header value {hdr}.");
 
-            stream2.CopyTo(stream3);
+            using var decompress = new DeflateStream(decrypt, CompressionMode.Decompress);
+            using var result = File.Open(_output, FileMode.Create, FileAccess.Write);
+
+            decompress.CopyTo(result);
 
             _log.Basic("Decrypted data center to {0}", _output);
 
