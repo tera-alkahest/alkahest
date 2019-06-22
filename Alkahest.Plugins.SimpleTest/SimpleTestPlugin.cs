@@ -96,7 +96,7 @@ namespace Alkahest.Plugins.SimpleTest
 
             using var writer = new GameBinaryWriter();
 
-            writer.WriteUInt16(PacketHeader.HeaderSize + sizeof(ushort) * 2);
+            writer.WriteOffset(sizeof(ushort) * 2);
             writer.WriteUInt16(ChatChannelPassword);
             writer.WriteString(ChatChannelName);
 
