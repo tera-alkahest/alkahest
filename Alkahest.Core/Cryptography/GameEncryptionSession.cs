@@ -6,7 +6,7 @@ namespace Alkahest.Core.Cryptography
 {
     public sealed class GameEncryptionSession
     {
-        public const int KeySize = 128;
+        public static readonly int KeySize = 128;
 
         public Direction Direction { get; }
 

@@ -8,9 +8,9 @@ namespace Alkahest.Core.Data
 {
     public sealed class DataCenter : IDisposable
     {
-        public const int KeySize = 16;
+        public static readonly int KeySize = 16;
 
-        public const int Version = 6;
+        public static readonly uint Version = 6;
 
         public static IReadOnlyDictionary<Region, string> FileNames { get; } =
             new Dictionary<Region, string>

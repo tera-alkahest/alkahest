@@ -2,11 +2,11 @@ namespace Alkahest.Core.Net.Game
 {
     public struct PacketHeader
     {
-        public const int HeaderSize = sizeof(ushort) * 2;
+        public static readonly int HeaderSize = sizeof(ushort) * 2;
 
-        public const int MaxPayloadSize = ushort.MaxValue - HeaderSize;
+        public static readonly int MaxPayloadSize = ushort.MaxValue - HeaderSize;
 
-        public const int MaxPacketSize = HeaderSize + MaxPayloadSize;
+        public static readonly int MaxPacketSize = HeaderSize + MaxPayloadSize;
 
         public readonly ushort Length;
 

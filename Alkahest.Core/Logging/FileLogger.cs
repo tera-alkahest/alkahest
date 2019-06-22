@@ -6,7 +6,7 @@ namespace Alkahest.Core.Logging
 {
     public sealed class FileLogger : IDisposable, ILogger
     {
-        public const string Name = "file";
+        public static readonly string Name = "file";
 
         readonly bool _timestamp;
 
