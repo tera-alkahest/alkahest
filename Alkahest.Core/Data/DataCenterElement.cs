@@ -58,7 +58,7 @@ namespace Alkahest.Core.Data
                 throw new InvalidDataException(
                     $"Element name index {nameIndex} is greater than {center.Names.ByIndex.Count}.");
 
-            Name = center.Names.ByIndex[nameIndex].Value;
+            Name = center.Names.ByIndex[nameIndex];
 
             var ext = reader.ReadUInt16();
             var flags = Bits.Extract(ext, 0, 4);
@@ -138,13 +138,11 @@ namespace Alkahest.Core.Data
 
                         var strAddr = DataCenter.ReadAddress(attrReader);
 
-                        if (center.Values.ByAddress.TryGetValue(strAddr, out var str))
-                            stringValue = str.Value;
-                        else
+                        if (!center.Values.ByAddress.TryGetValue(strAddr, out stringValue))
                             throw new InvalidDataException($"String value address {strAddr} is invalid.");
                     }
 
-                    var name = center.Names.ByIndex[attrNameIndex].Value;
+                    var name = center.Names.ByIndex[attrNameIndex];
 
                     if (!attributes.TryAdd(name, new DataCenterValue(type, primitiveValue, stringValue)))
                         throw new InvalidDataException($"Duplicate attribute name {name}.");

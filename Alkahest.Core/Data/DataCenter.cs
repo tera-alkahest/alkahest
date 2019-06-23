@@ -197,10 +197,10 @@ namespace Alkahest.Core.Data
             bool intern)
         {
             var strings = ReadSegmentedRegion(reader, sizeof(char));
-            var metadata = ReadSegmentedSimpleRegion(reader, count, MetadataSize);
+            var table = ReadSegmentedSimpleRegion(reader, count, MetadataSize);
             var addresses = ReadSimpleRegion(reader, true, (uint)sizeof(DataCenterAddress));
 
-            return new DataCenterStringTable(strings, metadata, addresses, intern);
+            return new DataCenterStringTable(strings, table, addresses, intern);
         }
 
         internal static DataCenterAddress ReadAddress(GameBinaryReader reader)

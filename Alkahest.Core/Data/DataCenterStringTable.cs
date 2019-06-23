@@ -7,16 +7,16 @@ namespace Alkahest.Core.Data
 {
     sealed class DataCenterStringTable
     {
-        public IReadOnlyList<DataCenterString> ByIndex { get; }
+        public IReadOnlyList<string> ByIndex { get; }
 
-        public IReadOnlyDictionary<DataCenterAddress, DataCenterString> ByAddress { get; }
+        public IReadOnlyDictionary<DataCenterAddress, string> ByAddress { get; }
 
         public DataCenterStringTable(DataCenterSegmentedRegion strings,
-            DataCenterSegmentedSimpleRegion metadata, DataCenterSimpleRegion addresses, bool intern)
+            DataCenterSegmentedSimpleRegion table, DataCenterSimpleRegion addresses, bool intern)
         {
-            var list = new List<DataCenterString>((int)addresses.Count);
+            var list = new List<(uint, DataCenterAddress, string)>((int)addresses.Count);
 
-            foreach (var (i, segment) in metadata.Segments.WithIndex())
+            foreach (var (i, segment) in table.Segments.WithIndex())
             {
                 for (uint j = 0; j < segment.Count; j++)
                 {
@@ -24,7 +24,7 @@ namespace Alkahest.Core.Data
 
                     // This hash only has a tiny amount of collisions in a typical data center.
                     var hash = reader.ReadUInt32();
-                    var bucket = (hash ^ hash >> 16) % metadata.Segments.Count;
+                    var bucket = (hash ^ hash >> 16) % table.Segments.Count;
 
                     if (bucket != i)
                         throw new InvalidDataException(
@@ -47,13 +47,12 @@ namespace Alkahest.Core.Data
                         throw new InvalidDataException(
                             $"String length {value.Length} does not match recorded length {length}.");
 
-                    list.Add(new DataCenterString(index, address1, intern ?
-                        string.Intern(value) : value, hash));
+                    list.Add((index, address1, intern ? string.Intern(value) : value));
                 }
             }
 
-            ByIndex = list.OrderBy(x => x.Index).ToArray();
-            ByAddress = list.ToDictionary(x => x.Address);
+            ByIndex = list.OrderBy(x => x.Item1).Select(x => x.Item3).ToArray();
+            ByAddress = list.ToDictionary(x => x.Item2, x => x.Item3);
         }
     }
 }
