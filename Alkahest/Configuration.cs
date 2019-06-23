@@ -1,4 +1,5 @@
 using Alkahest.Core;
+using Alkahest.Core.Data;
 using Alkahest.Core.Logging;
 using System;
 using System.Configuration;
@@ -54,6 +55,8 @@ namespace Alkahest
         public static string UpgradeOwner { get; }
 
         public static string UpgradeRepository { get; }
+
+        public static DataCenterMode DataCenterMode { get; }
 
         public static bool DataCenterInterning { get; }
 
@@ -112,6 +115,7 @@ namespace Alkahest
             UpgradeDirectory = cfg["upgradeDirectory"];
             UpgradeOwner = cfg["upgradeOwner"];
             UpgradeRepository = cfg["upgradeRepository"];
+            DataCenterMode = (DataCenterMode)Enum.Parse(typeof(DataCenterMode), cfg["dataCenterMode"], true);
             DataCenterInterning = bool.Parse(cfg["dataCenterInterning"]);
             Regions = Split(cfg["regions"], ',').Select(x => (Region)Enum.Parse(typeof(Region), x, true)).ToArray();
             ServerListEnabled = bool.Parse(cfg["enableSls"]);

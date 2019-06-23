@@ -8,26 +8,21 @@ using System.Runtime.InteropServices;
 namespace Alkahest.Core.Data
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public sealed class DataCenterElement : IDisposable
+    public sealed class DataCenterElement
     {
         object _parent;
 
         public string Name { get; }
 
-        Lazy<IReadOnlyDictionary<string, DataCenterValue>> _attributes;
+        readonly Lazy<IReadOnlyDictionary<string, DataCenterValue>> _attributes;
 
-        Lazy<IReadOnlyList<DataCenterElement>> _children;
+        readonly Lazy<IReadOnlyList<DataCenterElement>> _children;
 
-        public DataCenter Center =>
-            (_parent ?? throw new ObjectDisposedException(GetType().FullName)) is DataCenterElement e ?
-            e.Center : (DataCenter)_parent;
+        public DataCenter Center => _parent is DataCenterElement e ? e.Center : (DataCenter)_parent;
 
-        public DataCenterElement Parent =>
-            (_parent ?? throw new ObjectDisposedException(GetType().FullName)) is DataCenter ?
-            null : (DataCenterElement)_parent;
+        public DataCenterElement Parent => _parent is DataCenter ? null : (DataCenterElement)_parent;
 
-        public IReadOnlyDictionary<string, DataCenterValue> Attributes =>
-            (_attributes ?? throw new ObjectDisposedException(GetType().FullName)).Value;
+        public IReadOnlyDictionary<string, DataCenterValue> Attributes => _attributes.Value;
 
         public DataCenterValue this[string name] => Attribute(name);
 
@@ -52,137 +47,107 @@ namespace Alkahest.Core.Data
                 _parent = center;
             }
 
-            ushort attrCount;
-            ushort childCount;
-            DataCenterAddress attrAddr;
-            DataCenterAddress childAddr;
+            var reader = center.Elements.GetReader(address);
+            var nameIndex = reader.ReadUInt16() - 1;
 
-            try
-            {
-                center.Lock.EnterReadLock();
+            // Is this a placeholder element?
+            if (nameIndex == -1)
+                return;
 
-                if (center.IsDisposed)
-                    throw new ObjectDisposedException(center.GetType().FullName);
+            if (nameIndex >= center.Names.ByIndex.Count)
+                throw new InvalidDataException(
+                    $"Element name index {nameIndex} is greater than {center.Names.ByIndex.Count}.");
 
-                var reader = center.Elements.GetReader(address);
-                var nameIndex = reader.ReadUInt16() - 1;
+            Name = center.Names.ByIndex[nameIndex].Value;
 
-                // Is this a placeholder element?
-                if (nameIndex == -1)
-                    return;
+            var ext = reader.ReadUInt16();
+            var flags = Bits.Extract(ext, 0, 4);
 
-                if (nameIndex >= center.Names.ByIndex.Count)
-                    throw new InvalidDataException(
-                        $"Element name index {nameIndex} is greater than {center.Names.ByIndex.Count}.");
+            if (flags != 0)
+                throw new InvalidDataException($"Unexpected extension flags {flags}.");
 
-                Name = center.Names.ByIndex[nameIndex].Value;
+            var extIndex = Bits.Extract(ext, 4, 12);
 
-                var ext = reader.ReadUInt16();
-                var flags = Bits.Extract(ext, 0, 4);
+            if (extIndex >= center.ElementExtensions.Count)
+                throw new InvalidDataException(
+                    $"Extension index {extIndex} is greater than {center.ElementExtensions.Count}.");
 
-                if (flags != 0)
-                    throw new InvalidDataException($"Unexpected extension flags {flags}.");
-
-                var extIndex = Bits.Extract(ext, 4, 12);
-
-                if (extIndex >= center.ElementExtensions.Count)
-                    throw new InvalidDataException(
-                        $"Extension index {extIndex} is greater than {center.ElementExtensions.Count}.");
-
-                attrCount = reader.ReadUInt16();
-                childCount = reader.ReadUInt16();
-                attrAddr = DataCenter.ReadAddress(reader);
-                childAddr = DataCenter.ReadAddress(reader);
-            }
-            finally
-            {
-                center.Lock.ExitReadLock();
-            }
+            var attrCount = reader.ReadUInt16();
+            var childCount = reader.ReadUInt16();
+            var attrAddr = DataCenter.ReadAddress(reader);
+            var childAddr = DataCenter.ReadAddress(reader);
 
             _attributes = new Lazy<IReadOnlyDictionary<string, DataCenterValue>>(() =>
             {
                 var attributes = new Dictionary<string, DataCenterValue>();
 
-                try
+                for (var i = 0; i < attrCount; i++)
                 {
-                    center.Lock.EnterReadLock();
+                    var addr = new DataCenterAddress(attrAddr.SegmentIndex,
+                        (ushort)(attrAddr.ElementIndex + i));
+                    var attrReader = center.Attributes.GetReader(addr);
+                    var attrNameIndex = attrReader.ReadUInt16() - 1;
 
-                    if (center.IsDisposed)
-                        throw new ObjectDisposedException(center.GetType().FullName);
+                    if (attrNameIndex >= center.Names.ByIndex.Count)
+                        throw new InvalidDataException(
+                            $"Attribute name index {attrNameIndex} is greater than {center.Names.ByIndex.Count}.");
 
-                    for (var i = 0; i < attrCount; i++)
+                    var typeInfo = attrReader.ReadUInt16();
+                    var typeCode = Bits.Extract(typeInfo, 0, 2);
+                    var extCode = Bits.Extract(typeInfo, 2, 14);
+
+                    DataCenterTypeCode type;
+
+                    switch (typeCode)
                     {
-                        var addr = new DataCenterAddress(attrAddr.SegmentIndex,
-                            (ushort)(attrAddr.ElementIndex + i));
-                        var attrReader = center.Attributes.GetReader(addr);
-                        var attrNameIndex = attrReader.ReadUInt16() - 1;
-
-                        if (attrNameIndex >= center.Names.ByIndex.Count)
-                            throw new InvalidDataException(
-                                $"Attribute name index {attrNameIndex} is greater than {center.Names.ByIndex.Count}.");
-
-                        var typeInfo = attrReader.ReadUInt16();
-                        var typeCode = Bits.Extract(typeInfo, 0, 2);
-                        var extCode = Bits.Extract(typeInfo, 2, 14);
-
-                        DataCenterTypeCode type;
-
-                        switch (typeCode)
-                        {
-                            case 1:
-                                switch (extCode)
-                                {
-                                    case 0:
-                                        type = DataCenterTypeCode.Int32;
-                                        break;
-                                    case 1:
-                                        type = DataCenterTypeCode.Boolean;
-                                        break;
-                                    default:
-                                        throw new InvalidDataException(
-                                            $"Unexpected extended type code value {extCode}.");
-                                }
-
-                                break;
-                            case 2:
-                                if (extCode != 0)
+                        case 1:
+                            switch (extCode)
+                            {
+                                case 0:
+                                    type = DataCenterTypeCode.Int32;
+                                    break;
+                                case 1:
+                                    type = DataCenterTypeCode.Boolean;
+                                    break;
+                                default:
                                     throw new InvalidDataException(
                                         $"Unexpected extended type code value {extCode}.");
+                            }
 
-                                type = DataCenterTypeCode.Single;
-                                break;
-                            case 3:
-                                type = DataCenterTypeCode.String;
-                                break;
-                            default:
-                                throw new InvalidDataException($"Unexpected type code value {typeCode}.");
-                        }
-
-                        var primitiveValue = attrReader.ReadInt32();
-                        string stringValue = null;
-
-                        if (type == DataCenterTypeCode.String)
-                        {
-                            attrReader.Position -= sizeof(int);
-
-                            var strAddr = DataCenter.ReadAddress(attrReader);
-
-                            if (center.Values.ByAddress.TryGetValue(strAddr, out var str))
-                                stringValue = str.Value;
-                            else
+                            break;
+                        case 2:
+                            if (extCode != 0)
                                 throw new InvalidDataException(
-                                    $"String value address {strAddr} is invalid.");
-                        }
+                                    $"Unexpected extended type code value {extCode}.");
 
-                        var name = center.Names.ByIndex[attrNameIndex].Value;
-
-                        if (!attributes.TryAdd(name, new DataCenterValue(type, primitiveValue, stringValue)))
-                            throw new InvalidDataException($"Duplicate attribute name {name}.");
+                            type = DataCenterTypeCode.Single;
+                            break;
+                        case 3:
+                            type = DataCenterTypeCode.String;
+                            break;
+                        default:
+                            throw new InvalidDataException($"Unexpected type code value {typeCode}.");
                     }
-                }
-                finally
-                {
-                    center.Lock.ExitReadLock();
+
+                    var primitiveValue = attrReader.ReadInt32();
+                    string stringValue = null;
+
+                    if (type == DataCenterTypeCode.String)
+                    {
+                        attrReader.Position -= sizeof(int);
+
+                        var strAddr = DataCenter.ReadAddress(attrReader);
+
+                        if (center.Values.ByAddress.TryGetValue(strAddr, out var str))
+                            stringValue = str.Value;
+                        else
+                            throw new InvalidDataException($"String value address {strAddr} is invalid.");
+                    }
+
+                    var name = center.Names.ByIndex[attrNameIndex].Value;
+
+                    if (!attributes.TryAdd(name, new DataCenterValue(type, primitiveValue, stringValue)))
+                        throw new InvalidDataException($"Duplicate attribute name {name}.");
                 }
 
                 return attributes;
@@ -194,11 +159,10 @@ namespace Alkahest.Core.Data
 
                 for (var i = 0; i < childCount; i++)
                 {
-                    var elem = new DataCenterElement(center, new DataCenterAddress(
-                        childAddr.SegmentIndex, (ushort)(childAddr.ElementIndex + i)))
-                    {
-                        _parent = this,
-                    };
+                    var elem = center.Materialize(new DataCenterAddress(
+                        childAddr.SegmentIndex, (ushort)(childAddr.ElementIndex + i)));
+
+                    elem._parent = this;
 
                     // Don't expose placeholder elements.
                     if (elem.Name != null)
@@ -207,16 +171,6 @@ namespace Alkahest.Core.Data
 
                 return children;
             });
-        }
-
-        public void Dispose()
-        {
-            if (Center?.IsFrozen ?? false)
-                throw new InvalidOperationException("Data center is frozen.");
-
-            _parent = null;
-            _attributes = null;
-            _children = null;
         }
 
         public DataCenterValue Attribute(string name)
@@ -257,18 +211,10 @@ namespace Alkahest.Core.Data
 
         public IEnumerable<DataCenterElement> Ancestors()
         {
-            if (_parent == null)
-                throw new ObjectDisposedException(GetType().FullName);
+            var current = this;
 
-            IEnumerable<DataCenterElement> Iterator()
-            {
-                var current = this;
-
-                while ((current = current.Parent) != null)
-                    yield return current;
-            }
-
-            return Iterator();
+            while ((current = current.Parent) != null)
+                yield return current;
         }
 
         public IEnumerable<DataCenterElement> Ancestors(string name)
@@ -294,21 +240,13 @@ namespace Alkahest.Core.Data
 
         public IEnumerable<DataCenterElement> Siblings()
         {
-            if (_parent == null)
-                throw new ObjectDisposedException(GetType().FullName);
+            var parent = Parent;
 
-            IEnumerable<DataCenterElement> Iterator()
-            {
-                var parent = Parent;
+            if (parent == null)
+                yield break;
 
-                if (parent == null)
-                    yield break;
-
-                foreach (var elem in parent.Children().Where(x => x != this))
-                    yield return elem;
-            }
-
-            return Iterator();
+            foreach (var elem in parent.Children().Where(x => x != this))
+                yield return elem;
         }
 
         public IEnumerable<DataCenterElement> Siblings(string name)
@@ -334,9 +272,6 @@ namespace Alkahest.Core.Data
 
         public IEnumerable<DataCenterElement> Children()
         {
-            if (_children == null)
-                throw new ObjectDisposedException(GetType().FullName);
-
             return _children.Value;
         }
 
@@ -363,29 +298,21 @@ namespace Alkahest.Core.Data
 
         public IEnumerable<DataCenterElement> Descendants()
         {
-            if (_children == null)
-                throw new ObjectDisposedException(GetType().FullName);
+            var work = new Queue<DataCenterElement>();
 
-            IEnumerable<DataCenterElement> Iterator()
+            work.Enqueue(this);
+
+            while (work.Count != 0)
             {
-                var work = new Queue<DataCenterElement>();
+                var current = work.Dequeue();
 
-                work.Enqueue(this);
-
-                while (work.Count != 0)
+                foreach (var elem in current.Children())
                 {
-                    var current = work.Dequeue();
+                    yield return elem;
 
-                    foreach (var elem in current.Children())
-                    {
-                        yield return elem;
-
-                        work.Enqueue(elem);
-                    }
+                    work.Enqueue(elem);
                 }
             }
-
-            return Iterator();
         }
 
         public IEnumerable<DataCenterElement> Descendants(string name)

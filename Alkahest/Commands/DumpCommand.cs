@@ -72,7 +72,8 @@ namespace Alkahest.Commands
             var directories = 0;
             var files = 0;
 
-            using var dc = new DataCenter(File.OpenRead(input), Configuration.DataCenterInterning);
+            var dc = new DataCenter(File.OpenRead(input), Configuration.DataCenterMode,
+                Configuration.DataCenterInterning);
             var options = new ParallelOptions
             {
                 MaxDegreeOfParallelism = _parallel ? Environment.ProcessorCount : 1,
@@ -91,29 +92,26 @@ namespace Alkahest.Commands
 
                 foreach (var (i, elem) in grp.WithIndex())
                 {
-                    using (elem)
+                    switch (_format)
                     {
-                        switch (_format)
+                        case DumpFormat.Xml:
                         {
-                            case DumpFormat.Xml:
-                            {
-                                using var writer = XmlWriter.Create(Path.Combine(
-                                    dir, $"{grp.Key}-{i}.xml"), settings);
+                            using var writer = XmlWriter.Create(Path.Combine(
+                                dir, $"{grp.Key}-{i}.xml"), settings);
 
-                                WriteElement(writer, elem);
-                                break;
-                            }
-                            case DumpFormat.Json:
+                            WriteElement(writer, elem);
+                            break;
+                        }
+                        case DumpFormat.Json:
+                        {
+                            using var writer = new JsonTextWriter(new StreamWriter(
+                                Path.Combine(dir, $"{grp.Key}-{i}.json")))
                             {
-                                using var writer = new JsonTextWriter(new StreamWriter(
-                                    Path.Combine(dir, $"{grp.Key}-{i}.json")))
-                                {
-                                    Formatting = Newtonsoft.Json.Formatting.Indented,
-                                };
+                                Formatting = Newtonsoft.Json.Formatting.Indented,
+                            };
 
-                                WriteElement(writer, elem);
-                                break;
-                            }
+                            WriteElement(writer, elem);
+                            break;
                         }
                     }
 

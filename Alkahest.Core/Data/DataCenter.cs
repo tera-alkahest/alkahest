@@ -1,12 +1,13 @@
 using Alkahest.Core.IO;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 
 namespace Alkahest.Core.Data
 {
-    public sealed class DataCenter : IDisposable
+    public sealed class DataCenter
     {
         public static readonly int KeySize = 16;
 
@@ -50,6 +51,8 @@ namespace Alkahest.Core.Data
 
         const int MetadataSize = 16;
 
+        public DataCenterMode Mode { get; }
+
         public DataCenterHeader Header { get; }
 
         internal DataCenterSimpleRegion ElementExtensions { get; private set; }
@@ -64,25 +67,29 @@ namespace Alkahest.Core.Data
 
         public DataCenterFooter Footer { get; }
 
-        public DataCenterElement Root { get; private set; }
+        public DataCenterElement Root => Materialize(DataCenterAddress.Zero);
+
+        readonly ConcurrentDictionary<DataCenterAddress, DataCenterElement> _elements =
+            new ConcurrentDictionary<DataCenterAddress, DataCenterElement>();
+
+        readonly ConcurrentDictionary<DataCenterAddress, WeakReference<DataCenterElement>> _weakElements =
+            new ConcurrentDictionary<DataCenterAddress, WeakReference<DataCenterElement>>();
 
         public bool IsFrozen => _frozen != null;
-
-        internal bool IsDisposed { get; private set; }
-
-        internal ReaderWriterLockSlim Lock { get; } = new ReaderWriterLockSlim();
 
         object _frozen;
 
         public DataCenter(uint version)
         {
+            Mode = DataCenterMode.Persistent;
             Header = new DataCenterHeader(Version, 0, 0, -16400, version, 0, 0, 0, 0);
             Footer = new DataCenterFooter(0);
-            Root = new DataCenterElement(this, DataCenterAddress.Zero);
         }
 
-        public DataCenter(Stream stream, bool intern)
+        public DataCenter(Stream stream, DataCenterMode mode, bool intern)
         {
+            Mode = mode.CheckValidity(nameof(mode));
+
             using var reader = new GameBinaryReader(stream);
 
             Header = ReadHeader(reader);
@@ -97,32 +104,6 @@ namespace Alkahest.Core.Data
 
             if (diff != 0)
                 throw new InvalidDataException($"{diff} bytes remain unread.");
-
-            Reset();
-        }
-
-        public void Dispose()
-        {
-            if (IsFrozen)
-                throw new InvalidOperationException("Data center is frozen.");
-
-            try
-            {
-                Lock.EnterWriteLock();
-
-                IsDisposed = true;
-
-                ElementExtensions = null;
-                Attributes = null;
-                Elements = null;
-                Values = null;
-                Names = null;
-                Root = null;
-            }
-            finally
-            {
-                Lock.ExitWriteLock();
-            }
         }
 
         public object Freeze()
@@ -138,21 +119,36 @@ namespace Alkahest.Core.Data
             if (!IsFrozen)
                 throw new InvalidOperationException("Data center is not frozen.");
 
-            if (_frozen != token)
+            if (token != _frozen)
                 throw new ArgumentException("Invalid freeze token.", nameof(token));
 
             _frozen = null;
         }
 
-        public void Reset()
+        internal DataCenterElement Materialize(DataCenterAddress address)
         {
-            if (IsDisposed)
-                throw new ObjectDisposedException(GetType().FullName);
+            DataCenterElement Create(DataCenterAddress address)
+            {
+                return new DataCenterElement(this, address);
+            }
 
-            if (IsFrozen)
-                throw new InvalidOperationException("Data center is frozen.");
+            switch (Mode)
+            {
+                case DataCenterMode.Persistent:
+                    return _elements.GetOrAdd(address, Create);
+                case DataCenterMode.Transient:
+                    return Create(address);
+                case DataCenterMode.Weak:
+                    var weak = _weakElements.GetOrAdd(address,
+                        address => new WeakReference<DataCenterElement>(Create(address)));
 
-            Root = new DataCenterElement(this, DataCenterAddress.Zero);
+                    if (!weak.TryGetTarget(out var elem))
+                        weak.SetTarget(elem = Create(address));
+
+                    return elem;
+                default:
+                    throw Assert.Unreachable();
+            }
         }
 
         static DataCenterHeader ReadHeader(GameBinaryReader reader)

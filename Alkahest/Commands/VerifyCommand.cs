@@ -31,7 +31,8 @@ namespace Alkahest.Commands
 
             _log.Basic("Verifying {0}...", input);
 
-            using var dc = new DataCenter(File.OpenRead(input), true);
+            var dc = new DataCenter(File.OpenRead(input), Configuration.DataCenterMode,
+                Configuration.DataCenterInterning);
 
             _log.Info(string.Empty);
             _log.Info("Version: {0}", dc.Header.Version);
