@@ -25,7 +25,7 @@ namespace Alkahest.Core.Plugins
 
         public IReadOnlyCollection<IPlugin> Plugins { get; }
 
-        object _token;
+        bool _started;
 
         public PluginLoader(PluginContext context, string directory, string pattern, string[] exclude)
         {
@@ -76,10 +76,10 @@ namespace Alkahest.Core.Plugins
 
         public void Start()
         {
-            if (_token != null)
+            if (_started)
                 throw new InvalidOperationException("Plugins have already been started.");
 
-            _token = Context.Data.Freeze();
+            _started = true;
 
             foreach (var p in Plugins)
             {
@@ -93,8 +93,10 @@ namespace Alkahest.Core.Plugins
 
         public void Stop()
         {
-            if (_token == null)
+            if (!_started)
                 throw new InvalidOperationException("Plugins have not been started.");
+
+            _started = false;
 
             foreach (var p in Plugins)
             {
@@ -104,8 +106,6 @@ namespace Alkahest.Core.Plugins
             }
 
             _log.Basic("Stopped {0} plugins", Plugins.Count);
-
-            Context.Data.Thaw(_token);
         }
     }
 }

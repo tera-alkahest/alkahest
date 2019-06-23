@@ -3,7 +3,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
 
 namespace Alkahest.Core.Data
 {
@@ -75,10 +74,6 @@ namespace Alkahest.Core.Data
         readonly ConcurrentDictionary<DataCenterAddress, WeakReference<DataCenterElement>> _weakElements =
             new ConcurrentDictionary<DataCenterAddress, WeakReference<DataCenterElement>>();
 
-        public bool IsFrozen => _frozen != null;
-
-        object _frozen;
-
         public DataCenter(uint version)
         {
             Mode = DataCenterMode.Persistent;
@@ -104,25 +99,6 @@ namespace Alkahest.Core.Data
 
             if (diff != 0)
                 throw new InvalidDataException($"{diff} bytes remain unread.");
-        }
-
-        public object Freeze()
-        {
-            if (IsFrozen)
-                throw new InvalidOperationException("Data center is already frozen.");
-
-            return _frozen = new object();
-        }
-
-        public void Thaw(object token)
-        {
-            if (!IsFrozen)
-                throw new InvalidOperationException("Data center is not frozen.");
-
-            if (token != _frozen)
-                throw new ArgumentException("Invalid freeze token.", nameof(token));
-
-            _frozen = null;
         }
 
         internal DataCenterElement Materialize(DataCenterAddress address)
