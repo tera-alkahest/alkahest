@@ -140,7 +140,7 @@ namespace Alkahest.Core.Data
                     return Create(address);
                 case DataCenterMode.Weak:
                     var weak = _weakElements.GetOrAdd(address,
-                        address => new WeakReference<DataCenterElement>(Create(address)));
+                        a => new WeakReference<DataCenterElement>(Create(a)));
 
                     if (!weak.TryGetTarget(out var elem))
                         weak.SetTarget(elem = Create(address));
