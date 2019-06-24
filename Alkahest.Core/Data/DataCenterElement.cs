@@ -123,11 +123,18 @@ namespace Alkahest.Core.Data
                     var primitiveValue = attrReader.ReadInt32();
                     string stringValue = null;
 
-                    if (type == DataCenterTypeCode.String)
+                    switch (type)
                     {
-                        attrReader.Position -= sizeof(int);
+                        case DataCenterTypeCode.String:
+                            attrReader.Position -= sizeof(int);
 
-                        stringValue = center.Values.Get(DataCenter.ReadAddress(attrReader));
+                            stringValue = center.Values.Get(DataCenter.ReadAddress(attrReader));
+                            break;
+                        case DataCenterTypeCode.Boolean:
+                            if (primitiveValue != 0 && primitiveValue != 1)
+                                throw new InvalidDataException(
+                                    $"Unexpected non-Boolean value {primitiveValue}.");
+                            break;
                     }
 
                     if (!attributes.TryAdd(name, new DataCenterValue(type, primitiveValue, stringValue)))
