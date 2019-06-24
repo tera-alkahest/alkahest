@@ -32,16 +32,20 @@ namespace Alkahest.Commands
             _log.Basic("Verifying {0}...", input);
 
             var dc = new DataCenter(File.OpenRead(input), Configuration.DataCenterMode,
-                Configuration.DataCenterInterning);
+                Configuration.DataCenterStringOptions);
 
             _log.Info(string.Empty);
             _log.Info("Version: {0}", dc.Header.Version);
             _log.Info("Client Version: {0}", dc.Header.ClientVersion);
             _log.Info(string.Empty);
 
-            static void ForceLoad(DataCenterElement element)
+            var elements = 0;
+            var attributes = 0;
+
+            void ForceLoad(DataCenterElement element)
             {
-                var dummy = element.Attributes;
+                elements++;
+                attributes += element.Attributes.Count;
 
                 foreach (var child in element.Children())
                     ForceLoad(child);
@@ -49,7 +53,7 @@ namespace Alkahest.Commands
 
             ForceLoad(dc.Root);
 
-            _log.Basic("Data center is OK", input);
+            _log.Basic("Verified {0} elements and {1} attributes", elements, attributes);
 
             return 0;
         }

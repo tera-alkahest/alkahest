@@ -54,11 +54,7 @@ namespace Alkahest.Core.Data
             if (nameIndex == -1)
                 return;
 
-            if (nameIndex >= center.Names.ByIndex.Count)
-                throw new InvalidDataException(
-                    $"Element name index {nameIndex} is greater than {center.Names.ByIndex.Count}.");
-
-            Name = center.Names.ByIndex[nameIndex];
+            Name = center.Names.Get(nameIndex);
 
             var ext = reader.ReadUInt16();
             var flags = Bits.Extract(ext, 0, 4);
@@ -68,9 +64,9 @@ namespace Alkahest.Core.Data
 
             var extIndex = Bits.Extract(ext, 4, 12);
 
-            if (extIndex >= center.ElementExtensions.Count)
+            if (extIndex >= center.Extensions.Count)
                 throw new InvalidDataException(
-                    $"Extension index {extIndex} is greater than {center.ElementExtensions.Count}.");
+                    $"Extension index {extIndex} is greater than {center.Extensions.Count}.");
 
             var attrCount = reader.ReadUInt16();
             var childCount = reader.ReadUInt16();
@@ -86,12 +82,7 @@ namespace Alkahest.Core.Data
                     var addr = new DataCenterAddress(attrAddr.SegmentIndex,
                         (ushort)(attrAddr.ElementIndex + i));
                     var attrReader = center.Attributes.GetReader(addr);
-                    var attrNameIndex = attrReader.ReadUInt16() - 1;
-
-                    if (attrNameIndex >= center.Names.ByIndex.Count)
-                        throw new InvalidDataException(
-                            $"Attribute name index {attrNameIndex} is greater than {center.Names.ByIndex.Count}.");
-
+                    var name = center.Names.Get(attrReader.ReadUInt16() - 1);
                     var typeInfo = attrReader.ReadUInt16();
                     var typeCode = Bits.Extract(typeInfo, 0, 2);
                     var extCode = Bits.Extract(typeInfo, 2, 14);
@@ -136,13 +127,8 @@ namespace Alkahest.Core.Data
                     {
                         attrReader.Position -= sizeof(int);
 
-                        var strAddr = DataCenter.ReadAddress(attrReader);
-
-                        if (!center.Values.ByAddress.TryGetValue(strAddr, out stringValue))
-                            throw new InvalidDataException($"String value address {strAddr} is invalid.");
+                        stringValue = center.Values.Get(DataCenter.ReadAddress(attrReader));
                     }
-
-                    var name = center.Names.ByIndex[attrNameIndex];
 
                     if (!attributes.TryAdd(name, new DataCenterValue(type, primitiveValue, stringValue)))
                         throw new InvalidDataException($"Duplicate attribute name {name}.");

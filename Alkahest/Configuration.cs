@@ -58,7 +58,7 @@ namespace Alkahest
 
         public static DataCenterMode DataCenterMode { get; }
 
-        public static bool DataCenterInterning { get; }
+        public static DataCenterStringOptions DataCenterStringOptions { get; }
 
         public static Region[] Regions { get; }
 
@@ -115,8 +115,10 @@ namespace Alkahest
             UpgradeDirectory = cfg["upgradeDirectory"];
             UpgradeOwner = cfg["upgradeOwner"];
             UpgradeRepository = cfg["upgradeRepository"];
-            DataCenterMode = (DataCenterMode)Enum.Parse(typeof(DataCenterMode), cfg["dataCenterMode"], true);
-            DataCenterInterning = bool.Parse(cfg["dataCenterInterning"]);
+            DataCenterMode = (DataCenterMode)Enum.Parse(typeof(DataCenterMode),
+                cfg["dataCenterMode"], true);
+            DataCenterStringOptions = (DataCenterStringOptions)Enum.Parse(typeof(DataCenterStringOptions),
+                cfg["dataCenterStringOptions"], true);
             Regions = Split(cfg["regions"], ',').Select(x => (Region)Enum.Parse(typeof(Region), x, true)).ToArray();
             ServerListEnabled = bool.Parse(cfg["enableSls"]);
             ServerListBaseAddress = IPAddress.Parse(cfg["slsBaseAddress"]);

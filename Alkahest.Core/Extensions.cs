@@ -15,6 +15,18 @@ namespace Alkahest.Core
             return value;
         }
 
+        internal static T CheckFlagsValidity<T>(this T value, string name)
+            where T : Enum
+        {
+            var t = typeof(T);
+            var ch = value.ToString()[0];
+
+            if (ch == '-' || char.IsDigit(ch))
+                throw new ArgumentException($"Invalid {t.Name} flag combination.", name);
+
+            return value;
+        }
+
         public static T[] Slice<T>(this T[] array, int start, int length)
         {
             if (length < 0)

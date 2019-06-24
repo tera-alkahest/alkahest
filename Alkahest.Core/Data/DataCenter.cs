@@ -54,7 +54,7 @@ namespace Alkahest.Core.Data
 
         public DataCenterHeader Header { get; }
 
-        internal DataCenterSimpleRegion ElementExtensions { get; private set; }
+        internal DataCenterSimpleRegion Extensions { get; private set; }
 
         internal DataCenterSegmentedRegion Attributes { get; private set; }
 
@@ -81,18 +81,20 @@ namespace Alkahest.Core.Data
             Footer = new DataCenterFooter(0);
         }
 
-        public DataCenter(Stream stream, DataCenterMode mode, bool intern)
+        public DataCenter(Stream stream, DataCenterMode mode, DataCenterStringOptions options)
         {
+            options.CheckFlagsValidity(nameof(options));
+
             Mode = mode.CheckValidity(nameof(mode));
 
             using var reader = new GameBinaryReader(stream);
 
             Header = ReadHeader(reader);
-            ElementExtensions = ReadSimpleRegion(reader, false, UnknownSize);
+            Extensions = ReadSimpleRegion(reader, false, UnknownSize);
             Attributes = ReadSegmentedRegion(reader, AttributeSize);
             Elements = ReadSegmentedRegion(reader, ElementSize);
-            Values = ReadStringTable(reader, 1024, intern);
-            Names = ReadStringTable(reader, 512, intern);
+            Values = ReadStringTable(reader, 1024, options);
+            Names = ReadStringTable(reader, 512, options);
             Footer = ReadFooter(reader);
 
             var diff = stream.Length - stream.Position;
@@ -194,13 +196,13 @@ namespace Alkahest.Core.Data
         }
 
         static unsafe DataCenterStringTable ReadStringTable(GameBinaryReader reader, uint count,
-            bool intern)
+            DataCenterStringOptions options)
         {
-            var strings = ReadSegmentedRegion(reader, sizeof(char));
+            var data = ReadSegmentedRegion(reader, sizeof(char));
             var table = ReadSegmentedSimpleRegion(reader, count, MetadataSize);
             var addresses = ReadSimpleRegion(reader, true, (uint)sizeof(DataCenterAddress));
 
-            return new DataCenterStringTable(strings, table, addresses, intern);
+            return new DataCenterStringTable(data, table, addresses, options);
         }
 
         internal static DataCenterAddress ReadAddress(GameBinaryReader reader)
