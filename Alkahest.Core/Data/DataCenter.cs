@@ -93,8 +93,8 @@ namespace Alkahest.Core.Data
             Extensions = ReadSimpleRegion(reader, false, UnknownSize);
             Attributes = ReadSegmentedRegion(reader, AttributeSize);
             Elements = ReadSegmentedRegion(reader, ElementSize);
-            Values = ReadStringTable(reader, 1024, options);
-            Names = ReadStringTable(reader, 512, options);
+            Values = ReadStringTable(reader, 1024, false, options);
+            Names = ReadStringTable(reader, 512, true, options);
             Footer = ReadFooter(reader);
 
             var diff = stream.Length - stream.Position;
@@ -196,13 +196,13 @@ namespace Alkahest.Core.Data
         }
 
         static unsafe DataCenterStringTable ReadStringTable(GameBinaryReader reader, uint count,
-            DataCenterStringOptions options)
+            bool names, DataCenterStringOptions options)
         {
             var data = ReadSegmentedRegion(reader, sizeof(char));
             var table = ReadSegmentedSimpleRegion(reader, count, MetadataSize);
             var addresses = ReadSimpleRegion(reader, true, (uint)sizeof(DataCenterAddress));
 
-            return new DataCenterStringTable(data, table, addresses, options);
+            return new DataCenterStringTable(data, table, addresses, names, options);
         }
 
         internal static DataCenterAddress ReadAddress(GameBinaryReader reader)

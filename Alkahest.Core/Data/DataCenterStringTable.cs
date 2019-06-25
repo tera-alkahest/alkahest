@@ -8,31 +8,41 @@ namespace Alkahest.Core.Data
 {
     sealed class DataCenterStringTable
     {
-        readonly DataCenterSegmentedRegion _data;
-
         readonly bool _intern;
-
-        readonly IReadOnlyList<DataCenterAddress> _addresses;
 
         readonly ConcurrentDictionary<DataCenterAddress, string> _strings;
 
+        readonly DataCenterSegmentedRegion _data;
+
+        readonly IReadOnlyList<DataCenterAddress> _addresses;
+
         public DataCenterStringTable(DataCenterSegmentedRegion data,
             DataCenterSegmentedSimpleRegion table, DataCenterSimpleRegion addresses,
-            DataCenterStringOptions options)
+            bool names, DataCenterStringOptions options)
         {
-            _intern = options.HasFlag(DataCenterStringOptions.Intern);
-
             var count = (int)addresses.Count;
-            var addrs = new List<DataCenterAddress>(count);
 
-            for (uint i = 0; i < addresses.Count; i++)
-                addrs.Add(DataCenter.ReadAddress(addresses.GetReader(i)));
-
-            _addresses = addrs;
+            _intern = options.HasFlag(DataCenterStringOptions.Intern);
             _strings = new ConcurrentDictionary<DataCenterAddress, string>(
                 Environment.ProcessorCount, count);
 
-            if (!options.HasFlag(DataCenterStringOptions.Lazy))
+            var lazy = options.HasFlag(DataCenterStringOptions.Lazy);
+
+            // We only need the address list if we are eagerly loading strings
+            // and thus verifying the integrity of the regions, or if we are
+            // loading the names table which is always accessed by index. The
+            // values table is never accessed by index.
+            if (names || !lazy)
+            {
+                var addrs = new List<DataCenterAddress>(count);
+
+                for (uint i = 0; i < addresses.Count; i++)
+                    addrs.Add(DataCenter.ReadAddress(addresses.GetReader(i)));
+
+                _addresses = addrs;
+            }
+
+            if (!lazy)
             {
                 foreach (var (i, segment) in table.Segments.WithIndex())
                 {
@@ -54,9 +64,9 @@ namespace Alkahest.Core.Data
 
                         var index = reader.ReadUInt32() - 1;
 
-                        if (index >= addrs.Count)
+                        if (index >= _addresses.Count)
                             throw new InvalidDataException(
-                                $"String index {index} is greater than {addrs.Count}.");
+                                $"String index {index} is greater than {_addresses.Count}.");
 
                         var address1 = DataCenter.ReadAddress(reader);
                         var address2 = _addresses[(int)index];
