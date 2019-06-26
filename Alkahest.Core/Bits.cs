@@ -134,22 +134,46 @@ namespace Alkahest.Core
 
         public static int Compose(params (int value, int start, int count)[] values)
         {
-            return values.Aggregate(0, (acc, x) => Insert(acc, x.value, x.start, x.count));
+            var result = 0;
+
+            // Avoid LINQ for performance reasons.
+            foreach (var (value, start, count) in values)
+                result = Insert(result, value, start, count);
+
+            return result;
         }
 
         public static uint Compose(params (uint value, int start, int count)[] values)
         {
-            return values.Aggregate(0U, (acc, x) => Insert(acc, x.value, x.start, x.count));
+            var result = 0U;
+
+            // Avoid LINQ for performance reasons.
+            foreach (var (value, start, count) in values)
+                result = Insert(result, value, start, count);
+
+            return result;
         }
 
         public static long Compose(params (long value, int start, int count)[] values)
         {
-            return values.Aggregate(0L, (acc, x) => Insert(acc, x.value, x.start, x.count));
+            var result = 0L;
+
+            // Avoid LINQ for performance reasons.
+            foreach (var (value, start, count) in values)
+                result = Insert(result, value, start, count);
+
+            return result;
         }
 
         public static ulong Compose(params (ulong value, int start, int count)[] values)
         {
-            return values.Aggregate(0UL, (acc, x) => Insert(acc, x.value, x.start, x.count));
+            var result = 0UL;
+
+            // Avoid LINQ for performance reasons.
+            foreach (var (value, start, count) in values)
+                result = Insert(result, value, start, count);
+
+            return result;
         }
     }
 }
