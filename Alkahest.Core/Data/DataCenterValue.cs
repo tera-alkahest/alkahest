@@ -276,15 +276,21 @@ namespace Alkahest.Core.Data
 
         public override bool Equals(object obj)
         {
-            return obj switch
+            switch (obj)
             {
-                DataCenterValue v => Equals(v),
-                int i => Equals(i),
-                float f => Equals(f),
-                string s => Equals(s),
-                bool b => Equals(b),
-                _ => false,
-            };
+                case DataCenterValue v:
+                    return Equals(v);
+                case int i:
+                    return Equals(i);
+                case float f:
+                    return Equals(f);
+                case string s:
+                    return Equals(s);
+                case bool b:
+                    return Equals(b);
+                default:
+                    return false;
+            }
         }
 
         public override string ToString()
