@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 namespace Alkahest.Core
 {
@@ -6,6 +7,7 @@ namespace Alkahest.Core
     {
         static readonly Exception _unreachable = new Exception("Unreachable code executed.");
 
+        [Conditional("DEBUG")]
         public static void Check(bool condition, string message)
         {
             if (message == null)
