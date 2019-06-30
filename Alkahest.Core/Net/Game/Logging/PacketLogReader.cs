@@ -31,34 +31,22 @@ namespace Alkahest.Core.Net.Game.Logging
         {
             Stream stream = File.OpenRead(fileName);
 
-            var magic = new byte[PacketLogEntry.Magic.Count];
+            using var reader = new GameBinaryReader(stream, true);
 
-            if (stream.Read(magic, 0, magic.Length) != magic.Length)
-                throw new EndOfStreamException();
-
-            if (!magic.SequenceEqual(PacketLogEntry.Magic))
+            if (!reader.ReadBytes(PacketLogEntry.Magic.Count).SequenceEqual(PacketLogEntry.Magic))
                 throw new InvalidDataException("Invalid magic number.");
 
-            var level = stream.ReadByte();
-
-            if (level == -1)
-                throw new EndOfStreamException();
-
-            if ((CompressionLevel = (byte)level) != 0)
-                stream = new DeflateStream(stream, CompressionMode.Decompress);
-
-            _reader = new GameBinaryReader(stream);
-            Version = _reader.ReadUInt32();
+            Version = reader.ReadUInt32();
 
             if (Version != PacketLogEntry.Version)
                 throw new InvalidDataException($"Unknown format version {Version}.");
 
-            Region = (Region)_reader.ReadByte();
+            Region = (Region)reader.ReadByte();
 
             if (!Enum.IsDefined(typeof(Region), Region))
                 throw new InvalidDataException($"Unknown region value {Region}.");
 
-            var clientVersion = _reader.ReadUInt32();
+            var clientVersion = reader.ReadUInt32();
 
             if (!DataCenter.ClientVersions.Values.Contains(clientVersion))
                 throw new InvalidDataException($"Unknown client version {clientVersion}.");
@@ -66,23 +54,22 @@ namespace Alkahest.Core.Net.Game.Logging
             GameMessages = new GameMessageTable(clientVersion);
             SystemMessages = new SystemMessageTable(clientVersion);
 
-            var serverCount = (int)_reader.ReadUInt32();
-
+            var serverCount = (int)reader.ReadUInt32();
             var servers = new Dictionary<int, ServerInfo>(serverCount);
 
             for (var i = 0; i < serverCount; i++)
             {
-                var id = _reader.ReadInt32();
+                var id = reader.ReadInt32();
 
                 if (servers.ContainsKey(id))
                     throw new InvalidDataException($"Duplicate server ID {id}.");
 
-                var name = _reader.ReadString();
-                var size = _reader.ReadBoolean() ? 16 : 4;
-                var realIPBytes = _reader.ReadBytes(size);
-                var realPort = _reader.ReadUInt16();
-                var proxyIPBytes = _reader.ReadBytes(size);
-                var proxyPort = _reader.ReadUInt16();
+                var name = reader.ReadString();
+                var size = reader.ReadBoolean() ? 16 : 4;
+                var realIPBytes = reader.ReadBytes(size);
+                var realPort = reader.ReadUInt16();
+                var proxyIPBytes = reader.ReadBytes(size);
+                var proxyPort = reader.ReadUInt16();
 
                 IPEndPoint realEP;
 
@@ -118,6 +105,10 @@ namespace Alkahest.Core.Net.Game.Logging
             }
 
             Servers = servers;
+            CompressionLevel = reader.ReadByte();
+
+            _reader = new GameBinaryReader(CompressionLevel != 0 ?
+                new DeflateStream(stream, CompressionMode.Decompress) : stream);
         }
 
         ~PacketLogReader()

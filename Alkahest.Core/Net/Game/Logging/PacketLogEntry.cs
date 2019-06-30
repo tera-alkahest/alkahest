@@ -9,7 +9,7 @@ namespace Alkahest.Core.Net.Game.Logging
     {
         public static IReadOnlyList<byte> Magic { get; } = Encoding.ASCII.GetBytes("TPPL");
 
-        public static uint Version { get; } = 0;
+        public static uint Version { get; } = 1;
 
         public DateTime Timestamp { get; }
 

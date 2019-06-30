@@ -1,4 +1,5 @@
 using Alkahest.Core;
+using Alkahest.Core.Collections;
 using Alkahest.Core.Logging;
 using Alkahest.Core.Net.Game;
 using Alkahest.Core.Net.Game.Logging;
@@ -315,7 +316,7 @@ namespace Alkahest.Commands
             {
                 static void PrintValue(string name, int value, string trail = "")
                 {
-                    _log.Info("{0,17}: {1}{2}", name, value, trail);
+                    _log.Info("  {0,17}: {1}{2}", name, value, trail);
                 }
 
                 static void PrintPercentageValue(string name, int value, int total)
@@ -343,7 +344,6 @@ namespace Alkahest.Commands
                 PrintRelevantPacketValue("Parsed packets", stats.ParsedPackets);
                 PrintValue("Potential arrays", stats.PotentialArrays);
                 PrintValue("Potential strings", stats.PotentialStrings);
-                _log.Info(string.Empty);
             }
 
             if (_summary)
@@ -359,22 +359,27 @@ namespace Alkahest.Commands
                         $" ({(double)entry.Count / total:P2})" : string.Empty);
                     _log.Info("    Sizes: Min = {0}, Max = {1}, Avg = {2}", sizes.Min(), sizes.Max(),
                         (int)sizes.Average());
-                    _log.Info(string.Empty);
                 }
 
                 void PrintSummaryList(string header, bool known)
                 {
-                    var packets = stats.Packets.Where(x => x.Value.IsKnown == known).OrderBy(x => x.Key);
+                    var packets = stats.Packets.Where(x => x.Value.IsKnown == known)
+                        .OrderBy(x => x.Key).ToArray();
 
-                    if (!packets.Any())
+                    if (packets.Length == 0)
                         return;
 
                     _log.Info(string.Empty);
                     _log.Info($"{header}:");
                     _log.Info(string.Empty);
 
-                    foreach (var kvp in packets)
+                    foreach (var (i, kvp) in packets.WithIndex())
+                    {
                         PrintSummary(kvp);
+
+                        if (i != packets.Length - 1)
+                            _log.Info(string.Empty);
+                    }
                 }
 
                 PrintSummaryList("Known packets", true);

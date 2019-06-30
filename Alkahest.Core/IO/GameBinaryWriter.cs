@@ -35,12 +35,7 @@ namespace Alkahest.Core.IO
         {
         }
 
-        public GameBinaryWriter(Stream stream)
-            : this(stream, false)
-        {
-        }
-
-        public GameBinaryWriter(Stream stream, bool leaveOpen)
+        public GameBinaryWriter(Stream stream, bool leaveOpen = false)
         {
             _writer = new BinaryWriter(stream, Encoding, leaveOpen);
         }

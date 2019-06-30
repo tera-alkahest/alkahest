@@ -31,12 +31,7 @@ namespace Alkahest.Core.IO
         {
         }
 
-        public GameBinaryReader(Stream stream)
-            : this(stream, false)
-        {
-        }
-
-        public GameBinaryReader(Stream stream, bool leaveOpen)
+        public GameBinaryReader(Stream stream, bool leaveOpen = false)
         {
             _reader = new BinaryReader(stream, Encoding, leaveOpen);
         }
