@@ -110,7 +110,7 @@ namespace Alkahest.Commands
             }).ToArray();
 
             var path = Path.ChangeExtension(Path.Combine(Configuration.AssetDirectory,
-                DataCenter.FileNames[region]), ".dec");
+                DataCenter.FileNames[region]), DataCenter.UnpackedExtension);
             var dc = !File.Exists(path) ? new DataCenter(version) : new DataCenter(File.OpenRead(path),
                 Configuration.DataCenterMode, Configuration.DataCenterStringOptions);
             var loader = new PluginLoader(new PluginContext(region, dc, proxies),

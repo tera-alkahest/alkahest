@@ -1,4 +1,5 @@
 using Alkahest.Core.Cryptography;
+using Alkahest.Core.Data;
 using Alkahest.Core.IO;
 using Alkahest.Core.Logging;
 using Mono.Options;
@@ -14,8 +15,6 @@ namespace Alkahest.Commands
     {
         static readonly Log _log = new Log(typeof(DecryptCommand));
 
-        const string DecryptedExtension = "dec";
-
         string _output;
 
         public DecryptCommand()
@@ -29,7 +28,7 @@ namespace Alkahest.Commands
                 string.Empty,
                 {
                     "o|output=",
-                    $"Specify output file (defaults to input file name with extension changed to `{DecryptedExtension}`)",
+                    $"Specify output file (defaults to input file name with extension changed to `{DataCenter.UnpackedExtension}`)",
                     o => _output = o
                 },
             };
@@ -46,7 +45,7 @@ namespace Alkahest.Commands
             var input = args[0];
 
             if (_output == null)
-                _output = Path.ChangeExtension(input, DecryptedExtension);
+                _output = Path.ChangeExtension(input, DataCenter.UnpackedExtension);
 
             _log.Basic("Decrypting {0}...", input);
 

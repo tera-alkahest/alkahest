@@ -12,6 +12,10 @@ namespace Alkahest.Core.Data
 
         public static readonly uint Version = 6;
 
+        public static string PackedExtension => "dat";
+
+        public static string UnpackedExtension => "dec";
+
         public static IReadOnlyDictionary<Region, string> FileNames { get; } =
             new Dictionary<Region, string>
             {
