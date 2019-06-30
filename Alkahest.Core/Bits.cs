@@ -1,5 +1,3 @@
-using System.Linq;
-
 namespace Alkahest.Core
 {
     public static class Bits
