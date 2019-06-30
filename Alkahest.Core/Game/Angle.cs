@@ -2,11 +2,11 @@ using System;
 
 namespace Alkahest.Core.Game
 {
-    public struct Angle : IEquatable<Angle>, IComparable<Angle>
+    public readonly struct Angle : IEquatable<Angle>, IComparable<Angle>
     {
         public static readonly Angle Zero = default;
 
-        public readonly short Raw;
+        public short Raw { get; }
 
         public bool IsZero => this == Zero;
 
