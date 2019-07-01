@@ -1,6 +1,6 @@
+using Alkahest.Core.Collections;
 using Alkahest.Core.Game;
 using Alkahest.Core.Net.Game.Serialization;
-using System.Collections.Generic;
 using System.Numerics;
 
 namespace Alkahest.Core.Net.Game.Packets
@@ -15,7 +15,7 @@ namespace Alkahest.Core.Net.Game.Packets
             public int Unknown1 { get; set; }
         }
 
-        public List<TargetInfo> Targets { get; } = new List<TargetInfo>();
+        public NoNullList<TargetInfo> Targets { get; } = new NoNullList<TargetInfo>();
 
         public SkillId Skill { get; set; }
 

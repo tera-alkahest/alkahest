@@ -1,3 +1,4 @@
+using Alkahest.Core.Collections;
 using Alkahest.Core.Game;
 using System;
 using System.Collections.Generic;
@@ -26,28 +27,29 @@ namespace Alkahest.Core.Net.Game.Serialization
             Attribute = attribute;
 
             var type = property.PropertyType;
-            var isArray = type.IsConstructedGenericType && type.GetGenericTypeDefinition() == typeof(List<>);
-            var elemType = isArray ? type.GetGenericArguments()[0] : null;
-            var isByteArray = elemType == typeof(byte);
 
-            IsArray = isArray && !isByteArray;
-            IsByteArray = isArray && isByteArray;
-            IsString = type == typeof(string);
-            IsPrimitive = IsPrimitiveType(type);
-        }
+            if (type.IsConstructedGenericType && type.GetGenericTypeDefinition() == typeof(NoNullList<>))
+                IsArray = true;
+            else if (type == typeof(List<byte>))
+                IsByteArray = true;
+            else if (type == typeof(string))
+                IsString = true;
+            else
+            {
+                if (type.IsEnum)
+                    type = type.GetEnumUnderlyingType();
 
-        internal static bool IsPrimitiveType(Type type)
-        {
-            if (type.IsEnum)
-                type = type.GetEnumUnderlyingType();
-
-            return type.IsPrimitive ||
-                type == typeof(Vector3) ||
-                type == typeof(GameId) ||
-                type == typeof(SkillId) ||
-                type == typeof(Angle) ||
-                type == typeof(TemplateId) ||
-                type == typeof(Appearance);
+                if (type.IsPrimitive ||
+                    type == typeof(Vector3) ||
+                    type == typeof(GameId) ||
+                    type == typeof(SkillId) ||
+                    type == typeof(Angle) ||
+                    type == typeof(TemplateId) ||
+                    type == typeof(Appearance))
+                    IsPrimitive = true;
+                else
+                    throw Assert.Unreachable();
+            }
         }
     }
 }

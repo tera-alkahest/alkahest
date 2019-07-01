@@ -1,5 +1,5 @@
+using Alkahest.Core.Collections;
 using Alkahest.Core.Net.Game.Serialization;
-using System.Collections.Generic;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
@@ -11,7 +11,7 @@ namespace Alkahest.Core.Net.Game.Packets
             public uint CrestId { get; set; }
         }
 
-        public List<CrestInfo> Crests { get; } = new List<CrestInfo>();
+        public NoNullList<CrestInfo> Crests { get; } = new NoNullList<CrestInfo>();
 
         public byte Unknown1 { get; set; }
     }

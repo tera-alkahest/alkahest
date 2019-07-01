@@ -1,6 +1,6 @@
+using Alkahest.Core.Collections;
 using Alkahest.Core.Game;
 using Alkahest.Core.Net.Game.Serialization;
-using System.Collections.Generic;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
@@ -20,14 +20,14 @@ namespace Alkahest.Core.Net.Game.Packets
             public uint FriendGroupId { get; set; }
         }
 
-        public List<FriendInfo> Friends { get; } = new List<FriendInfo>();
+        public NoNullList<FriendInfo> Friends { get; } = new NoNullList<FriendInfo>();
 
         public sealed class MemberInfo
         {
             public string MemberName { get; set; }
         }
 
-        public List<MemberInfo> Members { get; } = new List<MemberInfo>();
+        public NoNullList<MemberInfo> Members { get; } = new NoNullList<MemberInfo>();
 
         public bool IsOwner { get; set; }
 

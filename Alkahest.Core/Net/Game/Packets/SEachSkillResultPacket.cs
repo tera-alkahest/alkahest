@@ -1,6 +1,6 @@
+using Alkahest.Core.Collections;
 using Alkahest.Core.Game;
 using Alkahest.Core.Net.Game.Serialization;
-using System.Collections.Generic;
 using System.Numerics;
 
 namespace Alkahest.Core.Net.Game.Packets
@@ -19,7 +19,8 @@ namespace Alkahest.Core.Net.Game.Packets
             public float Distance { get; set; }
         }
 
-        public List<AnimationSequenceInfo> AnimationSequences { get; } = new List<AnimationSequenceInfo>();
+        public NoNullList<AnimationSequenceInfo> AnimationSequences { get; } =
+            new NoNullList<AnimationSequenceInfo>();
 
         public GameId Source { get; set; }
 

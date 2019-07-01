@@ -1,5 +1,5 @@
+using Alkahest.Core.Collections;
 using Alkahest.Core.Net.Game.Serialization;
-using System.Collections.Generic;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
@@ -13,6 +13,6 @@ namespace Alkahest.Core.Net.Game.Packets
             public uint Value { get; set; }
         }
 
-        public List<VersionInfo> Versions { get; } = new List<VersionInfo>();
+        public NoNullList<VersionInfo> Versions { get; } = new NoNullList<VersionInfo>();
     }
 }

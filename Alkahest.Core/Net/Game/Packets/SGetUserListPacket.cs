@@ -1,3 +1,4 @@
+using Alkahest.Core.Collections;
 using Alkahest.Core.Game;
 using Alkahest.Core.Net.Game.Serialization;
 using System.Collections.Generic;
@@ -17,7 +18,8 @@ namespace Alkahest.Core.Net.Game.Packets
                 public string CustomString { get; set; }
             }
 
-            public List<CustomStringInfo> CustomStrings { get; } = new List<CustomStringInfo>();
+            public NoNullList<CustomStringInfo> CustomStrings { get; } =
+                new NoNullList<CustomStringInfo>();
 
             public string UserName { get; set; }
 
@@ -206,7 +208,7 @@ namespace Alkahest.Core.Net.Game.Packets
             public uint ApexLevel { get; set; }
         }
 
-        public List<CharacterInfo> Characters { get; } = new List<CharacterInfo>();
+        public NoNullList<CharacterInfo> Characters { get; } = new NoNullList<CharacterInfo>();
 
         public bool IsVeteran { get; set; }
 

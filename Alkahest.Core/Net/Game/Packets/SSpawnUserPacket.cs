@@ -1,3 +1,4 @@
+using Alkahest.Core.Collections;
 using Alkahest.Core.Game;
 using Alkahest.Core.Net.Game.Serialization;
 using System.Collections.Generic;
@@ -13,14 +14,14 @@ namespace Alkahest.Core.Net.Game.Packets
             public uint IconId { get; set; }
         }
 
-        public List<IconInfo> Icons { get; } = new List<IconInfo>();
+        public NoNullList<IconInfo> Icons { get; } = new NoNullList<IconInfo>();
 
         public sealed class PackageInfo
         {
             public uint PackageId { get; set; }
         }
 
-        public List<PackageInfo> Packages { get; } = new List<PackageInfo>();
+        public NoNullList<PackageInfo> Packages { get; } = new NoNullList<PackageInfo>();
 
         public string UserName { get; set; }
 

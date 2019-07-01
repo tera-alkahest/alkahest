@@ -1,3 +1,4 @@
+using Alkahest.Core.Collections;
 using Alkahest.Core.Game;
 using Alkahest.Core.Net.Game.Serialization;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace Alkahest.Core.Net.Game.Packets
             public int Unknown5 { get; set; }
         }
 
-        public List<ServantInfo> Servants { get; } = new List<ServantInfo>();
+        public NoNullList<ServantInfo> Servants { get; } = new NoNullList<ServantInfo>();
 
         public string UserName { get; set; }
 

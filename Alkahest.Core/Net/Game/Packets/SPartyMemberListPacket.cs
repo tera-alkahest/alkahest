@@ -1,6 +1,6 @@
+using Alkahest.Core.Collections;
 using Alkahest.Core.Game;
 using Alkahest.Core.Net.Game.Serialization;
-using System.Collections.Generic;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
@@ -32,7 +32,8 @@ namespace Alkahest.Core.Net.Game.Packets
             public uint ApexLevel { get; set; }
         }
 
-        public List<PartyMemberInfo> PartyMembers { get; } = new List<PartyMemberInfo>();
+        public NoNullList<PartyMemberInfo> PartyMembers { get; } =
+            new NoNullList<PartyMemberInfo>();
 
         public bool IsInstanceMatched { get; set; }
 

@@ -1,6 +1,6 @@
+using Alkahest.Core.Collections;
 using Alkahest.Core.Game;
 using Alkahest.Core.Net.Game.Serialization;
-using System.Collections.Generic;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
@@ -16,7 +16,8 @@ namespace Alkahest.Core.Net.Game.Packets
                     public uint PassivityId { get; set; }
                 }
 
-                public List<PassivityInfo> Passivities { get; } = new List<PassivityInfo>();
+                public NoNullList<PassivityInfo> Passivities { get; } =
+                    new NoNullList<PassivityInfo>();
 
                 public uint Index { get; set; }
 
@@ -29,14 +30,16 @@ namespace Alkahest.Core.Net.Game.Packets
                 public uint MaxItemLevel { get; set; }
             }
 
-            public List<PassivitySetInfo> PassivitySets { get; } = new List<PassivitySetInfo>();
+            public NoNullList<PassivitySetInfo> PassivitySets { get; } =
+                new NoNullList<PassivitySetInfo>();
 
             public sealed class MergedPassivityInfo
             {
                 public uint PassivityId { get; set; }
             }
 
-            public List<MergedPassivityInfo> MergedPassivities { get; } = new List<MergedPassivityInfo>();
+            public NoNullList<MergedPassivityInfo> MergedPassivities { get; } =
+                new NoNullList<MergedPassivityInfo>();
 
             public string CustomString { get; set; }
 
@@ -113,7 +116,7 @@ namespace Alkahest.Core.Net.Game.Packets
             public bool IsDamaged { get; set; }
         }
 
-        public List<ItemInfo> Items { get; } = new List<ItemInfo>();
+        public NoNullList<ItemInfo> Items { get; } = new NoNullList<ItemInfo>();
 
         public GameId Player { get; set; }
 

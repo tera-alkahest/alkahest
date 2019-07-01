@@ -1,6 +1,6 @@
+using Alkahest.Core.Collections;
 using Alkahest.Core.Game;
 using Alkahest.Core.Net.Game.Serialization;
-using System.Collections.Generic;
 using System.Numerics;
 
 namespace Alkahest.Core.Net.Game.Packets
@@ -27,7 +27,7 @@ namespace Alkahest.Core.Net.Game.Packets
             public uint CurrentMP { get; set; }
         }
 
-        public List<SeatInfo> Seats { get; set; } = new List<SeatInfo>();
+        public NoNullList<SeatInfo> Seats { get; set; } = new NoNullList<SeatInfo>();
 
         public sealed class PartInfo
         {
@@ -40,7 +40,7 @@ namespace Alkahest.Core.Net.Game.Packets
             public uint LastBreakStageId { get; set; }
         }
 
-        public List<PartInfo> Parts { get; set; } = new List<PartInfo>();
+        public NoNullList<PartInfo> Parts { get; set; } = new NoNullList<PartInfo>();
 
         public string NpcName { get; set; }
 

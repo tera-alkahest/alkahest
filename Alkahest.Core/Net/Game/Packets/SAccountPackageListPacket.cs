@@ -1,5 +1,5 @@
+using Alkahest.Core.Collections;
 using Alkahest.Core.Net.Game.Serialization;
-using System.Collections.Generic;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
@@ -13,6 +13,6 @@ namespace Alkahest.Core.Net.Game.Packets
             public ulong ExpirationTime { get; set; }
         }
 
-        public List<PackageInfo> Packages { get; } = new List<PackageInfo>();
+        public NoNullList<PackageInfo> Packages { get; } = new NoNullList<PackageInfo>();
     }
 }

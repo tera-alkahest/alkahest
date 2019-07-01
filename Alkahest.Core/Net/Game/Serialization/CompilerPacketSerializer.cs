@@ -1,7 +1,9 @@
+using Alkahest.Core.Collections;
 using Alkahest.Core.IO;
 using Alkahest.Core.Logging;
 using Mono.Linq.Expressions;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -20,7 +22,7 @@ namespace Alkahest.Core.Net.Game.Serialization
             }
         }
 
-        const string ReaderPositionName = nameof(GameBinaryReader.Position);
+        const string PositionName = nameof(GameBinaryReader.Position);
 
         const string ReadName = "Read";
 
@@ -32,8 +34,6 @@ namespace Alkahest.Core.Net.Game.Serialization
 
         const string ReadBytesName = nameof(GameBinaryReader.ReadBytes);
 
-        const string WriterPositionName = nameof(GameBinaryWriter.Position);
-
         const string WriteName = "Write";
 
         const string WriteUInt16Name = nameof(GameBinaryWriter.WriteUInt16);
@@ -44,15 +44,15 @@ namespace Alkahest.Core.Net.Game.Serialization
 
         const string WriteBytesName = nameof(GameBinaryWriter.WriteBytes);
 
-        const string CountName = nameof(List<object>.Count);
+        const string CountName = nameof(IList.Count);
 
-        const string AddName = nameof(List<object>.Add);
+        const string AddName = nameof(IList.Add);
 
-        const string AddRangeName = nameof(List<object>.AddRange);
+        const string ClearName = nameof(IList.Clear);
 
-        const string ClearName = nameof(List<object>.Clear);
+        const string AddRangeName = nameof(List<byte>.AddRange);
 
-        const string ToArrayName = nameof(List<object>.ToArray);
+        const string ToArrayName = nameof(List<byte>.ToArray);
 
         const string ItemName = "Item";
 
@@ -133,7 +133,7 @@ namespace Alkahest.Core.Net.Game.Serialization
                 var property = packet.Property(prop);
 
                 return Expression.Block(
-                    offset.Assign(writer.Property(WriterPositionName)),
+                    offset.Assign(writer.Property(PositionName)),
                     writer.Call(WriteUInt16Name, null, new[] { ((ushort)0).Constant() }),
                     writer.Call(WriteUInt16Name, null, new[] { property.Property(CountName).Convert(typeof(ushort)) }));
             }
@@ -150,7 +150,7 @@ namespace Alkahest.Core.Net.Game.Serialization
 
                 return Expression.Block(
                     writer.Call(WriteUInt16Name, null, new[] { property.Property(CountName).Convert(typeof(ushort)) }),
-                    offset.Assign(writer.Property(WriterPositionName)),
+                    offset.Assign(writer.Property(PositionName)),
                     writer.Call(WriteUInt16Name, null, new[] { ((ushort)0).Constant() }));
             }
 
@@ -161,7 +161,7 @@ namespace Alkahest.Core.Net.Game.Serialization
                 offsets.Add((info, offset));
 
                 return Expression.Block(
-                    offset.Assign(writer.Property(WriterPositionName)),
+                    offset.Assign(writer.Property(PositionName)),
                     writer.Call(WriteUInt16Name, null, new[] { ((ushort)0).Constant() }));
             }
 
@@ -206,10 +206,10 @@ namespace Alkahest.Core.Net.Game.Serialization
                 var position = typeof(int).Variable("position");
 
                 var write = Expression.Block(new[] { position },
-                    position.Assign(writer.Property(WriterPositionName)),
-                    writer.Property(WriterPositionName).Assign(offset),
+                    position.Assign(writer.Property(PositionName)),
+                    writer.Property(PositionName).Assign(offset),
                     writer.Call(WriteOffsetName, null, new[] { position }),
-                    writer.Property(WriterPositionName).Assign(position),
+                    writer.Property(PositionName).Assign(position),
                     writer.Call(WriteBytesName, null, new[] { property.Call(ToArrayName, null, null).Convert(typeof(ReadOnlySpan<byte>)) }));
 
                 return Expression.Block(new[] { property },
@@ -232,15 +232,17 @@ namespace Alkahest.Core.Net.Game.Serialization
                 var position3 = typeof(int).Variable("position3");
 
                 var writeNext = Expression.Block(new[] { position3 },
-                    position3.Assign(writer.Property(WriterPositionName)),
-                    writer.Property(WriterPositionName).Assign(position2.Add(sizeof(ushort).Constant())),
+                    position3.Assign(writer.Property(PositionName)),
+                    writer.Property(PositionName).Assign(position2.Add(sizeof(ushort).Constant())),
                     writer.Call(WriteOffsetName, null, new[] { position3 }),
-                    writer.Property(WriterPositionName).Assign(position3));
+                    writer.Property(PositionName).Assign(position3));
 
-                var loop = CustomExpression.For(i, 0.Constant(),
-                    i.LessThan(count), i.PostIncrementAssign(),
+                var loop = CustomExpression.For(
+                    i, 0.Constant(),
+                    i.LessThan(count),
+                    i.PreIncrementAssign(),
                     Expression.Block(new[] { position2 },
-                        position2.Assign(writer.Property(WriterPositionName)),
+                        position2.Assign(writer.Property(PositionName)),
                         writer.Call(WriteOffsetName, null, new[] { position2 }),
                         writer.Call(WriteUInt16Name, null, new[] { ((ushort)0).Constant() }),
                         CompileSerializer(elemInfo).Constant().Invoke(writer, property.Property(ItemName, i)),
@@ -248,10 +250,10 @@ namespace Alkahest.Core.Net.Game.Serialization
                             .IfThen(writeNext)));
 
                 var write = Expression.Block(new[] { position, i },
-                    position.Assign(writer.Property(WriterPositionName)),
-                    writer.Property(WriterPositionName).Assign(offset),
+                    position.Assign(writer.Property(PositionName)),
+                    writer.Property(PositionName).Assign(offset),
                     writer.Call(WriteOffsetName, null, new[] { position }),
-                    writer.Property(WriterPositionName).Assign(position),
+                    writer.Property(PositionName).Assign(position),
                     loop);
 
                 return Expression.Block(new[] { property, count },
@@ -266,10 +268,10 @@ namespace Alkahest.Core.Net.Game.Serialization
                 var position = typeof(int).Variable("position");
 
                 return Expression.Block(new[] { position },
-                    position.Assign(writer.Property(WriterPositionName)),
-                    writer.Property(WriterPositionName).Assign(offset),
+                    position.Assign(writer.Property(PositionName)),
+                    writer.Property(PositionName).Assign(offset),
                     writer.Call(WriteOffsetName, null, new[] { position }),
-                    writer.Property(WriterPositionName).Assign(position),
+                    writer.Property(PositionName).Assign(position),
                     writer.Call(WriteStringName, null, new[] { packet.Property(info.Property) }));
             }
 
@@ -310,10 +312,10 @@ namespace Alkahest.Core.Net.Game.Serialization
                 var position = typeof(int).Variable("position");
 
                 var read = Expression.Block(new[] { position },
-                    position.Assign(reader.Property(ReaderPositionName)),
-                    reader.Property(ReaderPositionName).Assign(offset),
+                    position.Assign(reader.Property(PositionName)),
+                    reader.Property(PositionName).Assign(offset),
                     property.Call(AddRangeName, null, new[] { reader.Call(ReadBytesName, null, new[] { count.Convert(typeof(int)) }) }),
-                    reader.Property(ReaderPositionName).Assign(position));
+                    reader.Property(PositionName).Assign(position));
 
                 return Expression.Block(new[] { offset, count, property },
                     offset.Assign(reader.Call(ReadOffsetName, null, null)),
@@ -338,11 +340,12 @@ namespace Alkahest.Core.Net.Game.Serialization
                 var i = typeof(int).Variable("i");
                 var elem = elemInfo.Type.Variable("elem");
 
-                var loop = CustomExpression.For(i, 0.Constant(),
+                var loop = CustomExpression.For(
+                    i, 0.Constant(),
                     i.LessThan(count.Convert(typeof(int))),
-                    i.PostIncrementAssign(),
+                    i.PreIncrementAssign(),
                     Expression.Block(
-                        reader.Property(ReaderPositionName).Assign(next),
+                        reader.Property(PositionName).Assign(next),
                         reader.Call(ReadOffsetName, null, null),
                         next.Assign(reader.Call(ReadOffsetName, null, null)),
                         elem.Assign(elemInfo.Type.New()),
@@ -350,10 +353,10 @@ namespace Alkahest.Core.Net.Game.Serialization
                         property.Call(AddName, null, new[] { elem })));
 
                 var read = Expression.Block(new[] { position, next, elem },
-                    position.Assign(reader.Property(ReaderPositionName)),
+                    position.Assign(reader.Property(PositionName)),
                     next.Assign(offset),
                     loop,
-                    reader.Property(ReaderPositionName).Assign(position));
+                    reader.Property(PositionName).Assign(position));
 
                 return Expression.Block(new[] { offset, count, property },
                     count.Assign(reader.Call(ReadUInt16Name, null, null)),
@@ -371,10 +374,10 @@ namespace Alkahest.Core.Net.Game.Serialization
 
                 return Expression.Block(new[] { offset, position },
                     offset.Assign(reader.Call(ReadOffsetName, null, null)),
-                    position.Assign(reader.Property(ReaderPositionName)),
-                    reader.Property(ReaderPositionName).Assign(offset),
+                    position.Assign(reader.Property(PositionName)),
+                    reader.Property(PositionName).Assign(offset),
                     packet.Property(info.Property).Assign(reader.Call(ReadStringName, null, null)),
-                    reader.Property(ReaderPositionName).Assign(position));
+                    reader.Property(PositionName).Assign(position));
             }
 
             BlockExpression CompilePrimitive(CompilerPacketFieldInfo info)

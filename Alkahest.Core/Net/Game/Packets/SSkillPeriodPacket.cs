@@ -1,6 +1,6 @@
+using Alkahest.Core.Collections;
 using Alkahest.Core.Game;
 using Alkahest.Core.Net.Game.Serialization;
-using System.Collections.Generic;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
@@ -18,7 +18,8 @@ namespace Alkahest.Core.Net.Game.Packets
             public int Unknown2 { get; set; }
         }
 
-        public List<SkillPeriodInfo> SkillPeriods { get; } = new List<SkillPeriodInfo>();
+        public NoNullList<SkillPeriodInfo> SkillPeriods { get; } =
+            new NoNullList<SkillPeriodInfo>();
 
         public GameId Target { get; set; }
     }

@@ -1,5 +1,5 @@
+using Alkahest.Core.Collections;
 using Alkahest.Core.Net.Game.Serialization;
-using System.Collections.Generic;
 
 namespace Alkahest.Core.Net.Game.Packets
 {
@@ -11,7 +11,7 @@ namespace Alkahest.Core.Net.Game.Packets
             public uint PlayerId { get; set; }
         }
 
-        public List<MemberInfo> Members { get; } = new List<MemberInfo>();
+        public NoNullList<MemberInfo> Members { get; } = new NoNullList<MemberInfo>();
 
         public string ChannelName { get; set; }
 
