@@ -296,6 +296,7 @@ namespace Alkahest.Plugins.CSharp
                 typeof(XpsDocument),             // ReachFramework.dll
                 typeof(Disassembler),            // SharpDisasm.dll
                 typeof(Uri),                     // System.dll
+                typeof(ArrayPool<>),             // System.Buffers.dll
                 typeof(Configuration),           // System.Configuration.dll
                 typeof(Installer),               // System.Configuration.Install.dll
                 typeof(ExportAttribute),         // System.ComponentModel.Composition.dll
