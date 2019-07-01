@@ -66,7 +66,7 @@ namespace Alkahest.Commands
             if (reader.ReadUInt16() is var hdr && hdr != 0x9c78)
                 throw new InvalidDataException($"Invalid zlib header value {hdr}.");
 
-            using var decompress = new DeflateStream(decrypt, CompressionMode.Decompress);
+            using var decompress = new FastDeflateStream(decrypt, CompressionMode.Decompress);
             using var result = File.Open(_output, FileMode.Create, FileAccess.Write);
 
             decompress.CopyTo(result);
