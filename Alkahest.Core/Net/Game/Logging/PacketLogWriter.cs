@@ -71,7 +71,7 @@ namespace Alkahest.Core.Net.Game.Logging
             writer.WriteByte((byte)(compress ? 6 : 0));
 
             _writer = new GameBinaryWriter(compress ?
-                new DeflateStream(stream, CompressionLevel.Optimal) : stream);
+                new FastDeflateStream(stream, System.IO.Compression.CompressionLevel.Optimal) : stream);
         }
 
         ~PacketLogWriter()

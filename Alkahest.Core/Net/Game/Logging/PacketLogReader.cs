@@ -108,7 +108,7 @@ namespace Alkahest.Core.Net.Game.Logging
             CompressionLevel = reader.ReadByte();
 
             _reader = new GameBinaryReader(CompressionLevel != 0 ?
-                new DeflateStream(stream, CompressionMode.Decompress) : stream);
+                new FastDeflateStream(stream, CompressionMode.Decompress) : stream);
         }
 
         ~PacketLogReader()
