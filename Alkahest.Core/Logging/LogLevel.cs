@@ -1,6 +1,6 @@
 namespace Alkahest.Core.Logging
 {
-    public enum LogLevel : uint
+    public enum LogLevel
     {
         Error = 0,
         Warning = 1,

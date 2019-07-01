@@ -11,16 +11,20 @@ namespace Alkahest.Core.Net
             return new Win32Exception((int)error.CheckValidity(nameof(error))).Message;
         }
 
-        public static void SendFull(this Socket socket, byte[] data, int offset, int length)
+        public static void SendFull(this Socket socket, ArraySegment<byte> segment)
         {
             if (socket == null)
                 throw new ArgumentNullException(nameof(socket));
 
+            if (segment.Array == null)
+                throw new ArgumentException("Invalid array segment.", nameof(segment));
+
             var progress = 0;
 
-            while (progress < length)
+            while (progress < segment.Count)
             {
-                var len = socket.Send(data, offset + progress, length - progress, SocketFlags.None);
+                var len = socket.Send(segment.Array, segment.Offset + progress,
+                    segment.Count - progress, SocketFlags.None);
 
                 if (len == 0)
                     throw new SocketDisconnectedException();
@@ -29,16 +33,20 @@ namespace Alkahest.Core.Net
             }
         }
 
-        public static void ReceiveFull(this Socket socket, byte[] data, int offset, int length)
+        public static void ReceiveFull(this Socket socket, ArraySegment<byte> segment)
         {
             if (socket == null)
                 throw new ArgumentNullException(nameof(socket));
 
+            if (segment.Array == null)
+                throw new ArgumentException("Invalid array segment.", nameof(segment));
+
             var progress = 0;
 
-            while (progress < length)
+            while (progress < segment.Count)
             {
-                var len = socket.Receive(data, offset + progress, length - progress, SocketFlags.None);
+                var len = socket.Receive(segment.Array, segment.Offset + progress,
+                    segment.Count - progress, SocketFlags.None);
 
                 if (len == 0)
                     throw new SocketDisconnectedException();

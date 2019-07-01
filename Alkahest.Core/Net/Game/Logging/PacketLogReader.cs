@@ -186,7 +186,7 @@ namespace Alkahest.Core.Net.Game.Logging
             if (_disposed)
                 throw new ObjectDisposedException(GetType().FullName);
 
-            IEnumerable<PacketLogEntry> Enumerate()
+            IEnumerable<PacketLogEntry> Iterator()
             {
                 PacketLogEntry entry;
 
@@ -194,7 +194,7 @@ namespace Alkahest.Core.Net.Game.Logging
                     yield return entry;
             }
 
-            return Enumerate();
+            return Iterator();
         }
     }
 }

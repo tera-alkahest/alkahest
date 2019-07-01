@@ -5,7 +5,7 @@ namespace Alkahest.Core.Logging
 {
     public sealed class ConsoleLogger : ILogger
     {
-        public static readonly string Name = "console";
+        public static string Name => "console";
 
         readonly bool _timestamp;
 

@@ -8,9 +8,9 @@ namespace Alkahest.Core.Data
 {
     public sealed class DataCenter
     {
-        public static readonly int KeySize = 16;
+        public static int KeySize => 16;
 
-        public static readonly uint Version = 6;
+        public static uint Version => 6;
 
         public static string PackedExtension => "dat";
 

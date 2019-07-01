@@ -137,15 +137,12 @@ namespace Alkahest.Core.Net.Game.Serialization
         protected abstract void OnDeserialize(GameBinaryReader reader, PacketInfo info,
             SerializablePacket packet);
 
-        public void Deserialize(byte[] payload, SerializablePacket packet)
+        public void Deserialize(byte[] buffer, int index, int count, SerializablePacket packet)
         {
-            if (payload == null)
-                throw new ArgumentNullException(nameof(payload));
-
             if (packet == null)
                 throw new ArgumentNullException(nameof(packet));
 
-            using var reader = new GameBinaryReader(payload);
+            using var reader = new GameBinaryReader(buffer, index, count);
 
             OnDeserialize(reader, _byType[packet.GetType()], packet);
 

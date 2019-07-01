@@ -1,16 +1,16 @@
 namespace Alkahest.Core.Net.Game
 {
-    public struct PacketHeader
+    public readonly struct PacketHeader
     {
-        public static readonly int HeaderSize = sizeof(ushort) * 2;
+        public static int HeaderSize => sizeof(ushort) * 2;
 
-        public static readonly int MaxPayloadSize = ushort.MaxValue - HeaderSize;
+        public static int MaxPayloadSize => ushort.MaxValue - HeaderSize;
 
-        public static readonly int MaxPacketSize = HeaderSize + MaxPayloadSize;
+        public static int MaxPacketSize => HeaderSize + MaxPayloadSize;
 
-        public readonly ushort Length;
+        public readonly ushort Length { get; }
 
-        public readonly ushort Code;
+        public readonly ushort Code { get; }
 
         public ushort FullLength => (ushort)(Length + HeaderSize);
 
@@ -18,6 +18,11 @@ namespace Alkahest.Core.Net.Game
         {
             Length = length;
             Code = code;
+        }
+
+        public override string ToString()
+        {
+            return $"[Length: {Length}, Code: {Code}]";
         }
     }
 }

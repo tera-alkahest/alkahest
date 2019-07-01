@@ -18,7 +18,7 @@ namespace Alkahest.Core.Net.Game
 
         public PacketProcessor Processor { get; }
 
-        public int MaxClients { get; set; }
+        public int MaxClients { get; }
 
         public TimeSpan Timeout { get; }
 
@@ -33,14 +33,18 @@ namespace Alkahest.Core.Net.Game
         bool _disposed;
 
         public GameProxy(ServerInfo info, ObjectPool<SocketAsyncEventArgs> pool,
-            PacketProcessor processor, int backlog, TimeSpan timeout)
+            PacketProcessor processor, int backlog, int maxClients, TimeSpan timeout)
         {
             if (backlog < 0)
                 throw new ArgumentOutOfRangeException(nameof(backlog));
 
+            if (maxClients < 1)
+                throw new ArgumentOutOfRangeException(nameof(maxClients));
+
             Info = info ?? throw new ArgumentNullException(nameof(info));
             ArgsPool = pool ?? throw new ArgumentNullException(nameof(pool));
             Processor = processor ?? throw new ArgumentNullException(nameof(processor));
+            MaxClients = maxClients;
             Timeout = timeout;
             _serverSocket = new Socket(info.ProxyEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp)
             {

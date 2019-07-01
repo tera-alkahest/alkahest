@@ -4,7 +4,7 @@ namespace Alkahest.Core.Game
 {
     public readonly struct Angle : IEquatable<Angle>, IComparable<Angle>
     {
-        public static readonly Angle Zero = default;
+        public static Angle Zero => default;
 
         public short Raw { get; }
 

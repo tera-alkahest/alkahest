@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Alkahest.Core.Collections
 {
@@ -11,8 +12,7 @@ namespace Alkahest.Core.Collections
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            foreach (var kvp in source)
-                yield return (kvp.Key, kvp.Value);
+            return source.Select(kvp => (kvp.Key, kvp.Value));
         }
 
         public static IEnumerable<(int, T)> WithIndex<T>(this IEnumerable<T> source)
@@ -20,29 +20,7 @@ namespace Alkahest.Core.Collections
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            var i = 0;
-
-            foreach (var item in source)
-            {
-                yield return (i, item);
-
-                i++;
-            }
-        }
-
-        public static IEnumerable<(long, T)> WithLongIndex<T>(this IEnumerable<T> source)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            long i = 0;
-
-            foreach (var item in source)
-            {
-                yield return (i, item);
-
-                i++;
-            }
+            return source.Select((i, x) => (x, i));
         }
     }
 }

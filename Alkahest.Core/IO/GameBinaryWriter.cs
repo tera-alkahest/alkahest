@@ -21,7 +21,7 @@ namespace Alkahest.Core.IO
 
         public int Length => (int)Stream.Length;
 
-        public bool EndOfStream => Position == Length;
+        public bool EndOfStream => Position >= Length;
 
         readonly BinaryWriter _writer;
 
@@ -32,6 +32,16 @@ namespace Alkahest.Core.IO
 
         public GameBinaryWriter(byte[] buffer)
             : this(new MemoryStream(buffer))
+        {
+        }
+
+        public GameBinaryWriter(byte[] buffer, int index, int count)
+            : this(new MemoryStream(buffer, index, count))
+        {
+        }
+
+        public GameBinaryWriter(ArraySegment<byte> segment)
+            : this(segment.Array, segment.Offset, segment.Count)
         {
         }
 
@@ -102,10 +112,10 @@ namespace Alkahest.Core.IO
 
         public void WriteString(string value)
         {
-            value ??= string.Empty;
+            if (!string.IsNullOrEmpty(value))
+                _writer.Write(Encoding.GetBytes(value));
 
-            _writer.Write(value.ToCharArray());
-            _writer.Write(char.MinValue);
+            _writer.Write((ushort)char.MinValue);
         }
 
         public void WriteVector3(Vector3 value)
@@ -150,9 +160,10 @@ namespace Alkahest.Core.IO
             _writer.Write((ushort)(value + PacketHeader.HeaderSize));
         }
 
-        public void WriteBytes(byte[] value)
+        public void WriteBytes(ReadOnlySpan<byte> value)
         {
-            _writer.Write(value);
+            foreach (var b in value)
+                _writer.Write(b);
         }
 
         public T Seek<T>(int position, Func<GameBinaryWriter, int, T> func)
@@ -197,12 +208,20 @@ namespace Alkahest.Core.IO
         {
             using var stream = new MemoryStream(PacketHeader.MaxPayloadSize);
 
-            return Seek(0, (w, op) =>
+            var pos = Position;
+
+            try
             {
-                w.Stream.CopyTo(stream);
+                Position = 0;
+
+                Stream.CopyTo(stream);
 
                 return stream.ToArray();
-            });
+            }
+            finally
+            {
+                Position = pos;
+            }
         }
     }
 }

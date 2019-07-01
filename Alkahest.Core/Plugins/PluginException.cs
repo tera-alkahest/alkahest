@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 
 namespace Alkahest.Core.Plugins
 {
+    [Serializable]
     public class PluginException : Exception
     {
         public PluginException()

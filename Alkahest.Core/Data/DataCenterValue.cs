@@ -6,14 +6,14 @@ using System.Runtime.InteropServices;
 namespace Alkahest.Core.Data
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    public struct DataCenterValue : IEquatable<DataCenterValue>, IEquatable<int>, IEquatable<float>,
-        IEquatable<string>, IEquatable<bool>
+    public readonly struct DataCenterValue : IEquatable<DataCenterValue>, IEquatable<int>,
+        IEquatable<float>, IEquatable<string>, IEquatable<bool>
     {
         readonly string _stringValue;
 
         readonly int _primitiveValue;
 
-        public readonly DataCenterTypeCode TypeCode;
+        public DataCenterTypeCode TypeCode { get; }
 
         public bool IsNull => TypeCode == DataCenterTypeCode.None;
 

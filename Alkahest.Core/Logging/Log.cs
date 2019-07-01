@@ -5,7 +5,13 @@ namespace Alkahest.Core.Logging
 {
     public sealed class Log
     {
-        public static LogLevel Level { get; set; }
+        static LogLevel _level;
+
+        public static LogLevel Level
+        {
+            get => _level;
+            set => _level = value.CheckValidity(nameof(value));
+        }
 
         public static string TimestampFormat { get; set; }
 
@@ -13,20 +19,15 @@ namespace Alkahest.Core.Logging
 
         public static ICollection<ILogger> Loggers { get; } = new HashSet<ILogger>();
 
-        public static event EventHandler<LogEventArgs> MessageLogged;
-
         static readonly object _lock = new object();
+
+        public static event EventHandler<LogEventArgs> MessageLogged;
 
         public Type Source { get; }
 
         public string Category { get; }
 
-        public Log(Type source)
-            : this(source, null)
-        {
-        }
-
-        public Log(Type source, string category)
+        public Log(Type source, string category = null)
         {
             Source = source ?? throw new ArgumentNullException(nameof(source));
             Category = category;
@@ -59,7 +60,7 @@ namespace Alkahest.Core.Logging
 
         bool ShouldLog(LogLevel level)
         {
-            return level <= LogLevel.Warning || (level <= Level && !DiscardSources.Contains(Source.Name));
+            return level <= LogLevel.Warning || (level <= _level && !DiscardSources.Contains(Source.Name));
         }
 
         void LogMessage(LogLevel level, string format, params object[] args)
@@ -75,14 +76,16 @@ namespace Alkahest.Core.Logging
 
             var msg = string.Format(format, args);
             var now = DateTime.Now;
-            var stamp = TimestampFormat != string.Empty ? now.ToString(TimestampFormat) : null;
+            var stamp = TimestampFormat;
+
+            stamp = !string.IsNullOrWhiteSpace(stamp) ? now.ToString(stamp) : null;
 
             lock (_lock)
             {
                 MessageLogged?.Invoke(this, new LogEventArgs(level, now, msg));
 
                 foreach (var logger in Loggers)
-                    logger.Log(level, stamp, Source, Category, msg);
+                    logger?.Log(level, stamp, Source, Category, msg);
             }
         }
     }

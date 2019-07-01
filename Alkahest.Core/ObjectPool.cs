@@ -15,9 +15,6 @@ namespace Alkahest.Core
 
         public ObjectPool(Func<T> creator, Action<T> cleaner, int? limit)
         {
-            if (creator == null)
-                throw new ArgumentNullException(nameof(creator));
-
             _creator = creator ?? throw new ArgumentNullException(nameof(creator));
             _cleaner = cleaner;
             _limit = limit;

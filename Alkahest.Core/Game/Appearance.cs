@@ -2,11 +2,11 @@ using System;
 
 namespace Alkahest.Core.Game
 {
-    public struct Appearance : IEquatable<Appearance>
+    public readonly struct Appearance : IEquatable<Appearance>
     {
-        public static readonly Appearance Default = default;
+        public static Appearance Default => default;
 
-        public readonly ulong Raw;
+        public ulong Raw { get; }
 
         public bool IsDefault => this == Default;
 

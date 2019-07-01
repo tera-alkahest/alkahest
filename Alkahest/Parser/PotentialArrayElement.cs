@@ -19,9 +19,9 @@ namespace Alkahest.Parser
 
         public override string ToString()
         {
-            var delta = Next == 0 ? string.Empty : $" (delta = {Next - NextPosition - sizeof(ushort)} bytes)";
+            var next = Next == 0 ? string.Empty : $" (next = {Next - NextPosition - sizeof(ushort)} bytes)";
 
-            return $"{Here:X4} ... {Next:X4}{delta}";
+            return $"{Here:X4} ... {Next:X4}{next}";
         }
     }
 }

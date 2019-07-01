@@ -96,7 +96,7 @@ namespace Alkahest.Core.Cryptography
 
         void PadMessage()
         {
-            _messageBlock[_blockIndex++] = 0x80;
+            _messageBlock[_blockIndex++] = 128;
 
             if (_blockIndex > 56)
             {
@@ -124,7 +124,7 @@ namespace Alkahest.Core.Cryptography
 
         protected override void HashCore(byte[] array, int ibStart, int cbSize)
         {
-            foreach (var b in array.Slice(ibStart, cbSize))
+            foreach (var b in array.AsMemory(ibStart, cbSize).Span)
             {
                 _messageBlock[_blockIndex++] = b;
 

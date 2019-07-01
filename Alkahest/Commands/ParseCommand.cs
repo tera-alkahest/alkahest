@@ -224,10 +224,10 @@ namespace Alkahest.Commands
 
             result.WriteLine("[{0:yyyy-MM-dd HH:mm:ss:fff}] {1} {2}: {3} ({4} bytes)",
                 entry.Timestamp.ToLocalTime(), reader.Servers[entry.ServerId].Name,
-                entry.Direction.ToDirectionString(), name, entry.Payload.Count);
+                entry.Direction.ToDirectionString(), name, entry.Payload.Length);
 
             var parsed = serializer.Create(entry.MessageCode);
-            var payload = entry.Payload.ToArray();
+            var payload = entry.Payload;
 
             if (payload.Length != 0)
             {
@@ -236,7 +236,7 @@ namespace Alkahest.Commands
                     result.WriteLine();
                     result.WriteLine(new RawPacket(name)
                     {
-                        Payload = payload,
+                        Payload = payload.AsMemory(),
                     });
                 }
 
@@ -282,23 +282,29 @@ namespace Alkahest.Commands
             {
                 stats.ParsedPackets++;
 
-                serializer.Deserialize(payload, parsed);
+                var seg = payload.GetArray();
+
+                serializer.Deserialize(seg.Array, seg.Offset, seg.Count, parsed);
 
                 for (var i = 0; i < _roundtrips; i++)
                 {
-                    var payload2 = serializer.Serialize(parsed);
+                    var payload2 = serializer.Serialize(parsed).AsMemory();
                     var len = payload.Length;
                     var len2 = payload2.Length;
 
                     Assert.Check(len2 == len,
-                        $"Payload lengths for {name} don't match ({len2} versus {len}).");
+                        $"Payload lengths for {name} do not match ({len2} versus {len}).");
 
                     if (i > 0)
-                        Assert.Check(payload2.SequenceEqual(payload),
-                            $"Payloads for {name} don't match after roundtrip.");
+                        Assert.Check(payload2.Span.SequenceEqual(payload.Span),
+                            $"Payloads for {name} do not match after roundtrip.");
 
                     if (i != _roundtrips - 1)
-                        serializer.Deserialize(payload2, parsed);
+                    {
+                        var seg2 = payload2.GetArray();
+
+                        serializer.Deserialize(seg2.Array, seg2.Offset, seg2.Count, parsed);
+                    }
 
                     payload = payload2;
                 }

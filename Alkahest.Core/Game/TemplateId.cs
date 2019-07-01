@@ -2,11 +2,11 @@ using System;
 
 namespace Alkahest.Core.Game
 {
-    public struct TemplateId : IEquatable<TemplateId>
+    public readonly struct TemplateId : IEquatable<TemplateId>
     {
-        public static readonly TemplateId Zero = default;
+        public static TemplateId Zero => default;
 
-        public readonly uint Raw;
+        public readonly uint Raw { get; }
 
         public bool IsZero => this == Zero;
 

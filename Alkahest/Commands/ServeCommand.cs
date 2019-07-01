@@ -104,10 +104,8 @@ namespace Alkahest.Commands
             var proc = new PacketProcessor(new CompilerPacketSerializer(region,
                 new GameMessageTable(version), new SystemMessageTable(version)));
             var proxies = slsProxy.Servers.Select(x => new GameProxy(x, pool, proc,
-                Configuration.GameBacklog, Configuration.GameTimeout)
-            {
-                MaxClients = Configuration.GameMaxClients,
-            }).ToArray();
+                Configuration.GameBacklog, Configuration.GameMaxClients, Configuration.GameTimeout))
+                .ToArray();
 
             var path = Path.ChangeExtension(Path.Combine(Configuration.AssetDirectory,
                 DataCenter.FileNames[region]), DataCenter.UnpackedExtension);

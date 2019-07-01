@@ -4,13 +4,13 @@ using System.Runtime.InteropServices;
 namespace Alkahest.Core.Data
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    struct DataCenterAddress : IEquatable<DataCenterAddress>
+    readonly struct DataCenterAddress : IEquatable<DataCenterAddress>
     {
-        public static readonly DataCenterAddress Zero = new DataCenterAddress();
+        public static DataCenterAddress Zero => default;
 
-        public readonly ushort SegmentIndex;
+        public ushort SegmentIndex { get; }
 
-        public readonly ushort ElementIndex;
+        public ushort ElementIndex { get; }
 
         public DataCenterAddress(ushort segmentIndex, ushort elementIndex)
         {

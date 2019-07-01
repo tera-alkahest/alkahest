@@ -123,9 +123,9 @@ namespace Alkahest.Core.Net.Game
                 _handlers[code].Remove(handler);
         }
 
-        internal static PacketHeader ReadHeader(byte[] buffer)
+        internal static PacketHeader ReadHeader(GameBinaryReader reader)
         {
-            using var reader = new GameBinaryReader(buffer);
+            reader.Position = 0;
 
             var length = (ushort)(reader.ReadUInt16() - PacketHeader.HeaderSize);
             var code = reader.ReadUInt16();
@@ -133,16 +133,16 @@ namespace Alkahest.Core.Net.Game
             return new PacketHeader(length, code);
         }
 
-        internal static void WriteHeader(PacketHeader header, byte[] buffer)
+        internal static void WriteHeader(GameBinaryWriter writer, PacketHeader header)
         {
-            using var writer = new GameBinaryWriter(buffer);
+            writer.Position = 0;
 
             writer.WriteUInt16((ushort)(header.Length + PacketHeader.HeaderSize));
             writer.WriteUInt16(header.Code);
         }
 
         bool RunHandlers(GameClient client, Direction direction, ref PacketHeader header,
-            ref byte[] payload, string name)
+            ref Memory<byte> payload, string name)
         {
             IReadOnlyCollection<RawPacketHandler> rawHandlers;
 
@@ -187,7 +187,7 @@ namespace Alkahest.Core.Net.Game
                     }
                 }
 
-                payload = packet.Payload;
+                payload = packet.Payload.ToArray();
                 header = new PacketHeader((ushort)packet.Payload.Length, header.Code);
             }
 
@@ -203,7 +203,9 @@ namespace Alkahest.Core.Net.Game
 
                 try
                 {
-                    Serializer.Deserialize(payload.Slice(0, header.Length), packet);
+                    var seg = payload.GetArray();
+
+                    Serializer.Deserialize(seg.Array, seg.Offset, seg.Count, packet);
                 }
                 catch (EndOfStreamException)
                 {
@@ -237,7 +239,7 @@ namespace Alkahest.Core.Net.Game
         }
 
         internal bool Process(GameClient client, Direction direction, ref PacketHeader header,
-            ref byte[] payload)
+            ref Memory<byte> payload)
         {
             Serializer.GameMessages.CodeToName.TryGetValue(header.Code, out var name);
 
@@ -254,7 +256,7 @@ namespace Alkahest.Core.Net.Game
 
             if (send && payload.Length > PacketHeader.MaxPayloadSize)
             {
-                _log.Error("{0}: {1} is too big ({2} bytes) to be sent correctly; sending original",
+                _log.Error("{0}: {1} is too large ({2} bytes) to be sent correctly; sending original",
                     direction.ToDirectionString(), name, payload.Length);
 
                 payload = original;

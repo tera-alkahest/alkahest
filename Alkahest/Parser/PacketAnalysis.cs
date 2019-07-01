@@ -1,3 +1,4 @@
+using Alkahest.Core;
 using Alkahest.Core.IO;
 using Alkahest.Core.Net.Game;
 using System;
@@ -11,10 +12,10 @@ namespace Alkahest.Parser
 {
     static class PacketAnalysis
     {
-        public static IEnumerable<PotentialString> FindStrings(byte[] payload, bool whiteSpace,
-            bool control, int minLength)
+        public static IEnumerable<PotentialString> FindStrings(ReadOnlyMemory<byte> payload,
+            bool whiteSpace, bool control, int minLength)
         {
-            using var reader = new GameBinaryReader(payload);
+            using var reader = new GameBinaryReader(payload.GetArray());
 
             for (var i = 0; i < reader.Length; i++)
             {
@@ -75,9 +76,9 @@ namespace Alkahest.Parser
                 e is EncoderFallbackException;
         }
 
-        public static IEnumerable<PotentialArray> FindArrays(byte[] payload)
+        public static IEnumerable<PotentialArray> FindArrays(ReadOnlyMemory<byte> payload)
         {
-            using var reader = new GameBinaryReader(payload);
+            using var reader = new GameBinaryReader(payload.GetArray());
 
             for (var i = 0; i < reader.Length; i++)
             {

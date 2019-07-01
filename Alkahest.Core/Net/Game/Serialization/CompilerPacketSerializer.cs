@@ -210,7 +210,7 @@ namespace Alkahest.Core.Net.Game.Serialization
                     writer.Property(WriterPositionName).Assign(offset),
                     writer.Call(WriteOffsetName, null, new[] { position }),
                     writer.Property(WriterPositionName).Assign(position),
-                    writer.Call(WriteBytesName, null, new[] { property.Call(ToArrayName, null, null) }));
+                    writer.Call(WriteBytesName, null, new[] { property.Call(ToArrayName, null, null).Convert(typeof(ReadOnlySpan<byte>)) }));
 
                 return Expression.Block(new[] { property },
                     property.Assign(packet.Property(info.Property)),
