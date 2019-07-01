@@ -6,7 +6,7 @@ namespace Alkahest.Core.Game
     {
         public static TemplateId Zero => default;
 
-        public readonly uint Raw { get; }
+        public uint Raw { get; }
 
         public bool IsZero => this == Zero;
 

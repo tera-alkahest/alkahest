@@ -6,7 +6,7 @@ namespace Alkahest.Core.Game
     {
         public static SkillId Zero => default;
 
-        public readonly ulong Raw { get; }
+        public ulong Raw { get; }
 
         public bool IsZero => this == Zero;
 

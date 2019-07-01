@@ -8,9 +8,9 @@ namespace Alkahest.Core.Net.Game
 
         public static int MaxPacketSize => HeaderSize + MaxPayloadSize;
 
-        public readonly ushort Length { get; }
+        public ushort Length { get; }
 
-        public readonly ushort Code { get; }
+        public ushort Code { get; }
 
         public ushort FullLength => (ushort)(Length + HeaderSize);
 
