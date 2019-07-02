@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <IsPackable>true</IsPackable>
     <TargetFramework>net472</TargetFramework>
@@ -60,6 +60,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.SelfHost">
       <Version>5.2.7</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.SourceLink.GitHub">
+      <Version>1.0.0-beta2-19351-01</Version>
+      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Mono.Linq.Expressions">
       <Version>1.2.0</Version>

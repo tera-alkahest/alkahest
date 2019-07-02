@@ -14,10 +14,12 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <CodeAnalysisRuleSet>..\Alkahest.ruleset</CodeAnalysisRuleSet>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'True'">true</ContinuousIntegrationBuild>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>embedded</DebugType>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <Deterministic>true</Deterministic>
+    <EmbedAllSources>true</EmbedAllSources>
     <LangVersion>8.0</LangVersion>
     <OutputPath>..\Build\</OutputPath>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -25,9 +27,9 @@
   <PropertyGroup>
     <Authors>$(Company)</Authors>
     <IsPackable>false</IsPackable>
-    <PackageIconUrl>https://raw.githubusercontent.com/alexrp/alkahest/master/Alkahest.ico</PackageIconUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/tera-alkahest/alkahest/master/Alkahest.ico</PackageIconUrl>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageOutputPath>..\Build\</PackageOutputPath>
-    <RepositoryUrl>https://github.com/alexrp/alkahest</RepositoryUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
 </Project>
