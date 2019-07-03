@@ -4,11 +4,7 @@ namespace Alkahest.Core.Game
 {
     public readonly struct Appearance : IEquatable<Appearance>
     {
-        public static Appearance Default => default;
-
         public ulong Raw { get; }
-
-        public bool IsDefault => this == Default;
 
         public byte Unknown => (byte)Bits.Extract(Raw, 0, 8);
 
