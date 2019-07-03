@@ -37,7 +37,14 @@ namespace Alkahest.Core.Data
                 var addrs = new List<DataCenterAddress>(count);
 
                 for (uint i = 0; i < addresses.Count; i++)
-                    addrs.Add(DataCenter.ReadAddress(addresses.GetReader(i)));
+                {
+                    var addr = DataCenter.ReadAddress(addresses.GetReader(i));
+
+                    if (addr == DataCenterAddress.Invalid)
+                        throw new InvalidDataException($"String address {addr} is invalid.");
+
+                    addrs.Add(addr);
+                }
 
                 _addresses = addrs;
             }
@@ -110,6 +117,9 @@ namespace Alkahest.Core.Data
 
         public string Get(DataCenterAddress address)
         {
+            if (address == DataCenterAddress.Invalid)
+                throw new InvalidDataException($"String address {address} is invalid.");
+
             return _strings.GetOrAdd(address, a =>
             {
                 var str = _data.GetReader(a).ReadString();
