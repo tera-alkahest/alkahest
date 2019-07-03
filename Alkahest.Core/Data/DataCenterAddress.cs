@@ -6,9 +6,9 @@ namespace Alkahest.Core.Data
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     readonly struct DataCenterAddress : IEquatable<DataCenterAddress>
     {
-        public static DataCenterAddress Zero => default;
+        public static readonly DataCenterAddress Zero = default;
 
-        public static DataCenterAddress Invalid =>
+        public static readonly DataCenterAddress Invalid =
             new DataCenterAddress(ushort.MaxValue, ushort.MaxValue);
 
         public ushort SegmentIndex { get; }
