@@ -46,6 +46,8 @@ namespace Alkahest.Core.Data
             {
                 foreach (var (i, segment) in table.Segments.WithIndex())
                 {
+                    long last = -1;
+
                     for (uint j = 0; j < segment.Count; j++)
                     {
                         var reader = segment.GetReader(j);
@@ -53,6 +55,13 @@ namespace Alkahest.Core.Data
                         // This hash only has a tiny amount of collisions in a
                         // typical data center.
                         var hash = reader.ReadUInt32();
+
+                        if (hash < last)
+                            throw new InvalidDataException(
+                                $"String hash {hash} is less than previous hash {last}.");
+
+                        last = hash;
+
                         var bucket = (hash ^ hash >> 16) % table.Segments.Count;
 
                         if (bucket != i)
