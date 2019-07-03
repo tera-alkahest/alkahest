@@ -1,6 +1,6 @@
 after_build:
     - cmd: |
-          forfiles /m *.proj /S /C "cmd /C msbuild @path"
+          msbuild Alkahest.Archive
           msbuild /t:Pack Alkahest.Core
 artifacts:
     - path: 'Build\*.zip'
