@@ -49,12 +49,11 @@ namespace Alkahest.Core.Data
 
             var reader = center.Elements.GetReader(address);
             var nameIndex = reader.ReadUInt16() - 1;
+            var placeholder = nameIndex == -1;
 
             // Is this a placeholder element?
-            if (nameIndex == -1)
-                return;
-
-            Name = center.Names.Get(nameIndex);
+            if (!placeholder)
+                Name = center.Names.Get(nameIndex);
 
             var ext = reader.ReadUInt16();
             var flags = Bits.Extract(ext, 0, 4);
@@ -64,14 +63,51 @@ namespace Alkahest.Core.Data
 
             var extIndex = Bits.Extract(ext, 4, 12);
 
-            if (extIndex >= center.Extensions.Count)
+            if (placeholder && extIndex != 0)
+                throw new InvalidDataException(
+                    $"Placeholder element has non-zero extension index {extIndex}.");
+            else if (extIndex >= center.Extensions.Count)
                 throw new InvalidDataException(
                     $"Extension index {extIndex} is greater than {center.Extensions.Count}.");
 
             var attrCount = reader.ReadUInt16();
+
+            if (placeholder && attrCount != 0)
+                throw new InvalidDataException(
+                    $"Placeholder element has non-zero attribute count {attrCount}.");
+
             var childCount = reader.ReadUInt16();
+
+            if (placeholder && childCount != 0)
+                throw new InvalidDataException(
+                    $"Placeholder element has non-zero child count {childCount}.");
+
             var attrAddr = DataCenter.ReadAddress(reader);
+
+            if (placeholder && attrAddr != DataCenterAddress.Invalid)
+                throw new InvalidDataException(
+                    $"Placeholder element has unexpected attribute address {attrAddr}.");
+            else if (attrCount == 0 && attrAddr != DataCenterAddress.Invalid)
+                throw new InvalidDataException(
+                    $"Element with zero attributes has unexpected attribute address {attrAddr}.");
+            else if (attrCount != 0 && attrAddr == DataCenterAddress.Invalid)
+                throw new InvalidDataException(
+                    $"Element with {attrCount} attributes has invalid attribute address {attrAddr}.");
+
             var childAddr = DataCenter.ReadAddress(reader);
+
+            if (placeholder && childAddr != DataCenterAddress.Invalid)
+                throw new InvalidDataException(
+                    $"Placeholder element has unexpected child address {childAddr}.");
+            else if (childCount == 0 && childAddr != DataCenterAddress.Invalid)
+                throw new InvalidDataException(
+                    $"Element with zero children has unexpected child address {childAddr}.");
+            else if (childCount != 0 && childAddr == DataCenterAddress.Invalid)
+                throw new InvalidDataException(
+                    $"Element with {childCount} children has invalid child address {childAddr}.");
+
+            if (placeholder)
+                return;
 
             _attributes = new Lazy<IReadOnlyDictionary<string, DataCenterValue>>(() =>
             {
@@ -102,14 +138,14 @@ namespace Alkahest.Core.Data
                                     break;
                                 default:
                                     throw new InvalidDataException(
-                                        $"Unexpected extended type code value {extCode}.");
+                                        $"Unexpected extended code {extCode} for integer value.");
                             }
 
                             break;
                         case 2:
                             if (extCode != 0)
                                 throw new InvalidDataException(
-                                    $"Unexpected extended type code value {extCode}.");
+                                    $"Unexpected extended code {extCode} for floating point value.");
 
                             type = DataCenterTypeCode.Single;
                             break;

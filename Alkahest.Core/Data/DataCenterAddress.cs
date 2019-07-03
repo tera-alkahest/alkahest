@@ -8,6 +8,9 @@ namespace Alkahest.Core.Data
     {
         public static DataCenterAddress Zero => default;
 
+        public static DataCenterAddress Invalid =>
+            new DataCenterAddress(ushort.MaxValue, ushort.MaxValue);
+
         public ushort SegmentIndex { get; }
 
         public ushort ElementIndex { get; }
