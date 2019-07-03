@@ -2,7 +2,7 @@
   <PropertyGroup>
     <AssemblyName>alkahest-packet-logger</AssemblyName>
     <OutputPath>..\Build\Plugins\</OutputPath>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net48</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="alkahest-packet-logger.dll.config">
