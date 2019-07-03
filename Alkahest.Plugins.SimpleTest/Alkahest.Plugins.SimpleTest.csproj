@@ -2,7 +2,7 @@
   <PropertyGroup>
     <AssemblyName>alkahest-simple-test</AssemblyName>
     <OutputPath>..\Build\Plugins\</OutputPath>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\Alkahest.ruleset">
