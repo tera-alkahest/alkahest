@@ -100,7 +100,7 @@ namespace Alkahest.Core.Net.Game.Logging
             if (!Servers.ContainsKey(entry.ServerId))
                 throw new ArgumentException("Invalid server ID.", nameof(entry));
 
-            if (!GameMessages.CodeToName.ContainsKey(entry.MessageCode))
+            if (!GameMessages.CodeToName.ContainsKey(entry.Code))
                 throw new ArgumentException("Invalid game message code.", nameof(entry));
 
             if (_disposed)
@@ -109,7 +109,7 @@ namespace Alkahest.Core.Net.Game.Logging
             _writer.WriteInt64(new DateTimeOffset(entry.Timestamp).ToUnixTimeMilliseconds());
             _writer.WriteInt32(entry.ServerId);
             _writer.WriteByte((byte)entry.Direction);
-            _writer.WriteUInt16(entry.MessageCode);
+            _writer.WriteUInt16(entry.Code);
             _writer.WriteUInt16((ushort)entry.Payload.Length);
             _writer.WriteBytes(entry.Payload.Span);
         }

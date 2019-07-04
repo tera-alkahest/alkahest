@@ -28,17 +28,12 @@ extension) as needed. All script packages are compiled together into the same
 A package must have at least a file called `Main.cs`. This file must contain a
 class exposing the special `__Start__` and `__Stop__` methods. These are invoked
 on startup and shutdown, respectively, and receive an
-`Alkahest.Plugins.CSharp.CSharpScriptContext` object as well as an array of
-`Alkahest.Core.Net.Game.GameProxy` objects. The context object exposes a `Data`
-property, which is an `Alkahest.Core.Data.DataCenter` object, as well as a `Log`
-property, which is an `Alkahest.Core.Logging.Log` object created specifically
-for this script package. All logging should go through this log object rather
-than normal console I/O.
+`Alkahest.Plugins.CSharp.CSharpScriptContext` object. This object provides
+functionality such as packet handling, data center access, logging, etc.
 
 A reference to the `Alkahest.Core` assembly is added automatically, so you can
 readily access anything from it, e.g. via `using` directives. References to all
 common .NET Framework assemblies are added as well.
 
-See the
-[csharp_example](https://github.com/tera-alkahest/alkahest-csharp-example)
-package to get an idea of how a C# script package should look.
+See the [wiki page](https://github.com/tera-alkahest/alkahest/wiki/Script-Development)
+for more information on script development.

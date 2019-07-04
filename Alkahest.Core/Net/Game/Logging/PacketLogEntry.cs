@@ -16,17 +16,17 @@ namespace Alkahest.Core.Net.Game.Logging
 
         public Direction Direction { get; }
 
-        public ushort MessageCode { get; }
+        public ushort Code { get; }
 
         public ReadOnlyMemory<byte> Payload { get; }
 
         public PacketLogEntry(DateTime timestamp, int serverId, Direction direction,
-            ushort messageCode, ReadOnlyMemory<byte> payload)
+            ushort code, ReadOnlyMemory<byte> payload)
         {
             Timestamp = timestamp;
             ServerId = serverId;
             Direction = direction.CheckValidity(nameof(direction));
-            MessageCode = messageCode;
+            Code = code;
             Payload = payload.ToArray();
 
             if (payload.Length > PacketHeader.MaxPayloadSize)

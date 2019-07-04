@@ -1,6 +1,4 @@
-using Alkahest.Core;
 using Alkahest.Core.Logging;
-using Alkahest.Core.Net.Game;
 using Alkahest.Core.Net.Game.Logging;
 using Alkahest.Core.Plugins;
 using System;
@@ -27,35 +25,29 @@ namespace Alkahest.Plugins.PacketLogger
 
         public void Start()
         {
-            var serializer = _context.Proxies.First().Processor.Serializer;
+            var serializer = _context.Serializer;
 
             _writer = new PacketLogWriter(serializer.Region, serializer.GameMessages,
                 serializer.SystemMessages, _context.Proxies.Select(x => x.Info).ToArray(),
                 Configuration.LogDirectory, Configuration.LogFileNameFormat,
                 Configuration.CompressLogs);
 
-            foreach (var proxy in _context.Proxies)
-                proxy.Processor.AddRawHandler(PacketLogHandler);
+            _context.Dispatch.AddHandler((client, direction, code, packet, flags) =>
+            {
+                _writer.Write(new PacketLogEntry(DateTime.Now, client.Proxy.Info.Id, direction,
+                    code, packet.Payload));
+
+                return true;
+            }, new PacketFilter(long.MinValue).WithSilenced(null));
 
             _log.Basic("Packet logger plugin started");
         }
 
         public void Stop()
         {
-            foreach (var proxy in _context.Proxies)
-                proxy.Processor.RemoveRawHandler(PacketLogHandler);
-
             _writer.Dispose();
 
             _log.Basic("Packet logger plugin stopped");
-        }
-
-        bool PacketLogHandler(GameClient client, Direction direction, RawPacket packet)
-        {
-            _writer.Write(new PacketLogEntry(DateTime.Now, client.Proxy.Info.Id, direction,
-                client.Proxy.Processor.Serializer.GameMessages.NameToCode[packet.Name], packet.Payload));
-
-            return true;
         }
     }
 }

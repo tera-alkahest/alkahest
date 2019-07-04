@@ -1,4 +1,3 @@
-using Alkahest.Core.Collections;
 using Alkahest.Core.IO;
 using Alkahest.Core.Logging;
 using Mono.Linq.Expressions;

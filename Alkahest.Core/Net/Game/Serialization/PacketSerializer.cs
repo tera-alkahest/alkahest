@@ -125,11 +125,14 @@ namespace Alkahest.Core.Net.Game.Serialization
             if (packet == null)
                 throw new ArgumentNullException(nameof(packet));
 
+            if (!_byType.TryGetValue(packet.GetType(), out var info))
+                throw new UnmappedMessageException();
+
             packet.OnSerialize(this);
 
             using var writer = new GameBinaryWriter();
 
-            OnSerialize(writer, _byType[packet.GetType()], packet);
+            OnSerialize(writer, info, packet);
 
             return writer.ToArray();
         }
@@ -142,9 +145,12 @@ namespace Alkahest.Core.Net.Game.Serialization
             if (packet == null)
                 throw new ArgumentNullException(nameof(packet));
 
+            if (!_byType.TryGetValue(packet.GetType(), out var info))
+                throw new UnmappedMessageException();
+
             using var reader = new GameBinaryReader(buffer, index, count);
 
-            OnDeserialize(reader, _byType[packet.GetType()], packet);
+            OnDeserialize(reader, info, packet);
 
             packet.OnDeserialize(this);
         }

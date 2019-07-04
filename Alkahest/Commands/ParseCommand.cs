@@ -214,7 +214,7 @@ namespace Alkahest.Commands
         {
             stats.TotalPackets++;
 
-            var name = serializer.GameMessages.CodeToName[entry.MessageCode];
+            var name = serializer.GameMessages.CodeToName[entry.Code];
 
             if (_regexes.All(r => !r.IsMatch(name)))
             {
@@ -226,7 +226,7 @@ namespace Alkahest.Commands
                 entry.Timestamp.ToLocalTime(), reader.Servers[entry.ServerId].Name,
                 entry.Direction.ToDirectionString(), name, entry.Payload.Length);
 
-            var parsed = serializer.Create(entry.MessageCode);
+            var parsed = serializer.Create(entry.Code);
             var payload = entry.Payload;
 
             if (payload.Length != 0)

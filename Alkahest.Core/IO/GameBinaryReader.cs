@@ -1,7 +1,6 @@
 using Alkahest.Core.Game;
 using Alkahest.Core.Net.Game;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Numerics;
 using System.Text;

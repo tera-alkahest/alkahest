@@ -101,9 +101,9 @@ namespace Alkahest.Commands
             var pool = new ObjectPool<SocketAsyncEventArgs>(() => new SocketAsyncEventArgs(),
                 x => x.Reset(), Configuration.PoolLimit != 0 ? (int?)Configuration.PoolLimit : null);
             var version = DataCenter.ClientVersions[region];
-            var proc = new PacketProcessor(new CompilerPacketSerializer(region,
-                new GameMessageTable(version), new SystemMessageTable(version)));
-            var proxies = slsProxy.Servers.Select(x => new GameProxy(x, pool, proc,
+            var serializer = new CompilerPacketSerializer(region, new GameMessageTable(version),
+                new SystemMessageTable(version));
+            var proxies = slsProxy.Servers.Select(x => new GameProxy(x, pool, serializer,
                 Configuration.GameBacklog, Configuration.GameMaxClients, Configuration.GameTimeout))
                 .ToArray();
 

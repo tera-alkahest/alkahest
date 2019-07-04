@@ -12,7 +12,7 @@ namespace Alkahest.Core.Net.Game
 
         public RawPacket(string name)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Name = name;
         }
 
         internal static void ToString(StringBuilder builder, ReadOnlyMemory<byte> data, string indent)

@@ -30,6 +30,8 @@ namespace Alkahest.Plugins.CSharp
 
         public IReadOnlyList<GameProxy> Proxies { get; }
 
+        public PacketDispatch Dispatch { get; }
+
         readonly CSharpPlugin _plugin;
 
         readonly Color _scriptColor;
@@ -76,6 +78,7 @@ namespace Alkahest.Plugins.CSharp
             Region = context.Region;
             Log = log;
             Proxies = context.Proxies.ToArray();
+            Dispatch = context.Dispatch;
             _plugin = plugin;
             _scriptColor = _colors[_last++ % _colors.Count];
         }

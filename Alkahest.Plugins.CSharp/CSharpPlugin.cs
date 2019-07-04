@@ -171,16 +171,6 @@ namespace Alkahest.Plugins.CSharp
             return false;
         }
 
-        bool HandleLoadClientUserSetting(GameClient client, Direction direction,
-            SLoadClientUserSettingPacket packet)
-        {
-            Message(client, null, "Proxy version <FONT COLOR=\"#{0:X}\">{1}</FONT> connected",
-                Color.FromArgb(0, Color.Aqua).ToArgb(),
-                Assembly.GetExecutingAssembly().GetInformationalVersion());
-
-            return true;
-        }
-
         void HandleCommand(GameClient client, string command)
         {
             var args = new List<string>();
@@ -243,20 +233,6 @@ namespace Alkahest.Plugins.CSharp
                 else
                     Message(client, null, "Unknown command name: {0}", cmd);
             }
-        }
-
-        bool HandleOpCommand(GameClient client, Direction direction, COpCommandPacket packet)
-        {
-            // The client strips all HTML from this packet.
-            HandleCommand(client, packet.Command);
-            return false;
-        }
-
-        bool HandleAdmin(GameClient client, Direction direction, CAdminPacket packet)
-        {
-            // The client strips all HTML from this packet.
-            HandleCommand(client, packet.Command);
-            return false;
         }
 
         public void Start()
@@ -455,23 +431,34 @@ namespace Alkahest.Plugins.CSharp
 
             _log.Basic("Started {0} packages", count);
 
-            foreach (var proc in _context.Proxies.Select(x => x.Processor))
+            var dispatch = _context.Dispatch;
+
+            dispatch.AddHandler<SLoadClientUserSettingPacket>((client, direction, packet, flags) =>
             {
-                proc.AddHandler<SLoadClientUserSettingPacket>(HandleLoadClientUserSetting);
-                proc.AddHandler<CAdminPacket>(HandleAdmin);
-                proc.AddHandler<COpCommandPacket>(HandleOpCommand);
-            }
+                Message(client, null, "Proxy version <FONT COLOR=\"#{0:X}\">{1}</FONT> connected",
+                    Color.FromArgb(0, Color.Aqua).ToArgb(),
+                    Assembly.GetExecutingAssembly().GetInformationalVersion());
+
+                return true;
+            }, new PacketFilter(long.MinValue).WithSilenced(null));
+
+            dispatch.AddHandler<CAdminPacket>((client, direction, packet, flags) =>
+            {
+                // The client strips all HTML from this packet.
+                HandleCommand(client, packet.Command);
+                return false;
+            }, new PacketFilter(long.MinValue).WithSilenced(null));
+
+            dispatch.AddHandler<COpCommandPacket>((client, direction, packet, flags) =>
+            {
+                // The client strips all HTML from this packet.
+                HandleCommand(client, packet.Command);
+                return false;
+            }, new PacketFilter(long.MinValue).WithSilenced(null));
         }
 
         public void Stop()
         {
-            foreach (var proc in _context.Proxies.Select(x => x.Processor))
-            {
-                proc.RemoveHandler<SLoadClientUserSettingPacket>(HandleLoadClientUserSetting);
-                proc.RemoveHandler<CAdminPacket>(HandleAdmin);
-                proc.RemoveHandler<COpCommandPacket>(HandleOpCommand);
-            }
-
             var count = 0;
 
             foreach (var (name, type, ctx) in _scripts)

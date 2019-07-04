@@ -81,6 +81,8 @@ namespace Alkahest.Core.Plugins
 
             _started = true;
 
+            Context.Dispatch.Start();
+
             foreach (var p in Plugins)
             {
                 p.Start();
@@ -97,6 +99,8 @@ namespace Alkahest.Core.Plugins
                 throw new InvalidOperationException("Plugins have not been started.");
 
             _started = false;
+
+            Context.Dispatch.Stop();
 
             foreach (var p in Plugins)
             {

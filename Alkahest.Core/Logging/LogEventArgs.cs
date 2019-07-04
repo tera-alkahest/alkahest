@@ -2,7 +2,7 @@ using System;
 
 namespace Alkahest.Core.Logging
 {
-    public sealed class LogEventArgs : EventArgs
+    public readonly struct LogEventArgs
     {
         public LogLevel Level { get; }
 
