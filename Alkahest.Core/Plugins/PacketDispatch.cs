@@ -185,7 +185,7 @@ namespace Alkahest.Core.Plugins
                     {
                         var packet = new RawPacket(name)
                         {
-                            Payload = payload,
+                            Payload = payload.ToArray(),
                         };
 
                         // Avoid DynamicInvoke so we don't box unnecessarily.
