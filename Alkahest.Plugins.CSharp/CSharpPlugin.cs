@@ -437,7 +437,7 @@ namespace Alkahest.Plugins.CSharp
             {
                 Message(client, null, "Proxy version <FONT COLOR=\"#{0:X}\">{1}</FONT> connected",
                     Color.FromArgb(0, Color.Aqua).ToArgb(),
-                    Assembly.GetExecutingAssembly().GetInformationalVersion());
+                    Assembly.GetExecutingAssembly().GetInformationalVersion(true));
 
                 return true;
             }, new PacketFilter(long.MinValue).WithSilenced(null));

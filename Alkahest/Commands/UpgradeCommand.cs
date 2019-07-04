@@ -29,7 +29,7 @@ namespace Alkahest.Commands
         {
             _log.Info("Checking for a newer release...");
 
-            var current = Assembly.GetExecutingAssembly().GetInformationalVersion();
+            var current = Assembly.GetExecutingAssembly().GetInformationalVersion(true);
             var latest = GitHub.Client.Repository.Release.GetAll(Configuration.UpgradeOwner,
                 Configuration.UpgradeRepository).Result.OrderByDescending(x => x.PublishedAt).First();
 

@@ -9,7 +9,7 @@ namespace Alkahest.Packager
     {
         public static GitHubClient Client { get; } =
             new GitHubClient(new ProductHeaderValue(nameof(Alkahest),
-                Assembly.GetExecutingAssembly().GetInformationalVersion()));
+                Assembly.GetExecutingAssembly().GetInformationalVersion(true)));
 
         static GitHub()
         {

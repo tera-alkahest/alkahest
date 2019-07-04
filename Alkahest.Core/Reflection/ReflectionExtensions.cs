@@ -55,11 +55,21 @@ namespace Alkahest.Core.Reflection
             return assembly.GetCustomAttribute<AssemblyFileVersionAttribute>()?.Version;
         }
 
-        public static string GetInformationalVersion(this Assembly assembly)
+        public static string GetInformationalVersion(this Assembly assembly, bool stripExtra = false)
         {
             CheckAssembly(assembly);
 
-            return assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+            var version = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+
+            if (stripExtra && version != null)
+            {
+                var idx = version.IndexOf('+');
+
+                if (idx != -1)
+                    version = version.Substring(0, idx);
+            }
+
+            return version;
         }
 
         public static Dictionary<string, string> GetMetadata(this Assembly assembly)

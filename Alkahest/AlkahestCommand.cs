@@ -43,7 +43,7 @@ namespace Alkahest
 
             var title = Console.Title;
             var mode = GCSettings.LatencyMode;
-            var ver = Assembly.GetExecutingAssembly().GetInformationalVersion();
+            var ver = Assembly.GetExecutingAssembly().GetInformationalVersion(true);
 
             try
             {
