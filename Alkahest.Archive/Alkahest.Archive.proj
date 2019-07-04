@@ -95,10 +95,16 @@
     <Assembly TaskAction="GetInfo" NetAssembly="..\Build\Alkahest.Core.dll">
       <Output TaskParameter="OutputItems" ItemName="AlkahestInfo" />
     </Assembly>
-    <Zip ZipFileName="..\Build\Alkahest-%(AlkahestInfo.AssemblyInformationalVersion).zip" WorkingDirectory="..\Build" Files="@(ReleaseFiles)" />
+    <PropertyGroup>
+      <ReleaseVersion>%(AlkahestInfo.AssemblyInformationalVersion)</ReleaseVersion>
+    </PropertyGroup>
+    <Zip ZipFileName="..\Build\Alkahest-$(ReleaseVersion.Substring(0, $(ReleaseVersion.IndexOf('+')))).zip" WorkingDirectory="..\Build" Files="@(ReleaseFiles)" />
   </Target>
   <Target Name="Clean">
-    <Delete Files="..\Build\Alkahest-*.zip" />
+    <ItemGroup>
+      <CleanFiles Include="..\Build\Alkahest-*.zip" />
+    </ItemGroup>
+    <Delete Files="@(CleanFiles)" />
   </Target>
   <Target Name="Rebuild" DependsOnTargets="Clean; Build" />
 </Project>
