@@ -136,7 +136,7 @@ namespace Alkahest.Plugins.CSharp
             {
                 Message = msg,
                 Channel = ChatChannel.System,
-            });
+            }, true);
         }
 
         internal bool AddCommand(CSharpScriptContext context, string name,

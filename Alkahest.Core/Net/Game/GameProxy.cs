@@ -191,14 +191,18 @@ namespace Alkahest.Core.Net.Game
         }
 
         bool InvokePacketEvent(RefEventHandler<PacketEventArgs> handler, GameClient client,
-            Direction direction, ushort code, ref Memory<byte> payload)
+            Direction direction, ushort code, ref Memory<byte> payload, bool direct)
         {
             if (handler == null)
                 return true;
 
-            var args = new PacketEventArgs(client, direction, code, payload);
+            var args = new PacketEventArgs(client, direction, code,
+                direct ? payload.ToArray() : payload);
 
             handler(this, ref args);
+
+            if (direct)
+                return true;
 
             payload = args.Payload;
 
@@ -208,13 +212,13 @@ namespace Alkahest.Core.Net.Game
         internal bool InvokeReceived(GameClient client, Direction direction, ushort code,
             ref Memory<byte> payload)
         {
-            return InvokePacketEvent(PacketReceived, client, direction, code, ref payload);
+            return InvokePacketEvent(PacketReceived, client, direction, code, ref payload, false);
         }
 
         internal bool InvokeSent(GameClient client, Direction direction, ushort code,
-            ref Memory<byte> payload)
+            ref Memory<byte> payload, bool direct)
         {
-            return InvokePacketEvent(PacketSent, client, direction, code, ref payload);
+            return InvokePacketEvent(PacketSent, client, direction, code, ref payload, direct);
         }
     }
 }

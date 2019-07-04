@@ -119,18 +119,29 @@ namespace Alkahest.Core.Net.Game
 
         public bool SendToClient(RawPacket packet)
         {
+            return SendToClient(packet, false);
+        }
+
+        internal bool SendToClient(RawPacket packet, bool direct)
+        {
             return SendRawPacketInternal(Direction.ServerToClient, packet, _clientSendBuffer,
-                _clientSendWriter, _clientSocket, _clientEncryption, false);
+                _clientSendWriter, _clientSocket, _clientEncryption, false, direct);
         }
 
         public bool SendToServer(RawPacket packet)
         {
+            return SendToServer(packet, false);
+        }
+
+        internal bool SendToServer(RawPacket packet, bool direct)
+        {
             return SendRawPacketInternal(Direction.ClientToServer, packet, _serverSendBuffer,
-                _serverSendWriter, _serverSocket, _serverEncryption, true);
+                _serverSendWriter, _serverSocket, _serverEncryption, true, direct);
         }
 
         bool SendRawPacketInternal(Direction direction, RawPacket packet, Memory<byte> buffer,
-            GameBinaryWriter writer, Socket socket, GameEncryptionSession encryption, bool server)
+            GameBinaryWriter writer, Socket socket, GameEncryptionSession encryption, bool server,
+            bool direct)
         {
             if (packet == null)
                 throw new ArgumentNullException(nameof(packet));
@@ -146,7 +157,7 @@ namespace Alkahest.Core.Net.Game
 
             var payload = packet.Payload;
             var original = payload;
-            var send = Proxy.InvokeSent(this, direction, code, ref payload);
+            var send = Proxy.InvokeSent(this, direction, code, ref payload, direct);
 
             if (!send)
                 return false;
@@ -182,18 +193,29 @@ namespace Alkahest.Core.Net.Game
 
         public bool SendToClient(SerializablePacket packet)
         {
+            return SendToClient(packet, false);
+        }
+
+        internal bool SendToClient(SerializablePacket packet, bool direct)
+        {
             return SendPacketInternal(Direction.ServerToClient, packet, _clientSendBuffer,
-                _clientSendWriter, _clientSocket, _clientEncryption, false);
+                _clientSendWriter, _clientSocket, _clientEncryption, false, direct);
         }
 
         public bool SendToServer(SerializablePacket packet)
         {
+            return SendToServer(packet, false);
+        }
+
+        internal bool SendToServer(SerializablePacket packet, bool direct)
+        {
             return SendPacketInternal(Direction.ClientToServer, packet, _serverSendBuffer,
-                _serverSendWriter, _serverSocket, _serverEncryption, true);
+                _serverSendWriter, _serverSocket, _serverEncryption, true, direct);
         }
 
         bool SendPacketInternal(Direction direction, SerializablePacket packet, Memory<byte> buffer,
-            GameBinaryWriter writer, Socket socket, GameEncryptionSession encryption, bool server)
+            GameBinaryWriter writer, Socket socket, GameEncryptionSession encryption, bool server,
+            bool direct)
         {
             if (packet == null)
                 throw new ArgumentNullException(nameof(packet));
@@ -205,7 +227,7 @@ namespace Alkahest.Core.Net.Game
 
             var code = Proxy.Serializer.GameMessages.NameToCode[packet.Name];
             var original = payload;
-            var send = Proxy.InvokeSent(this, direction, code, ref payload);
+            var send = Proxy.InvokeSent(this, direction, code, ref payload, direct);
 
             if (!send)
                 return false;
