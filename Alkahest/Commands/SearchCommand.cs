@@ -29,10 +29,11 @@ namespace Alkahest.Commands
             var regexes = args.Select(x => new Regex(x, SearchRegexOptions))
                 .DefaultIfEmpty(new Regex(".*", SearchRegexOptions));
             var mgr = new PackageManager();
+            var pkgs = mgr.Registry.Values.Where(pkg => regexes.All(
+                x => x.IsMatch(pkg.Name) || x.IsMatch(pkg.Description))).WithIndex().ToArray();
             var match = false;
 
-            foreach (var latest in mgr.Registry.Values.Where(pkg => regexes.All(
-                x => x.IsMatch(pkg.Name) || x.IsMatch(pkg.Description))))
+            foreach (var (i, latest) in pkgs)
             {
                 if (!match)
                 {
@@ -45,13 +46,16 @@ namespace Alkahest.Commands
 
                 var desc = latest.Description.Split('\n').Select(x => x.Trim()).ToArray();
 
-                foreach (var (i, line) in desc.WithIndex())
+                foreach (var (j, line) in desc.WithIndex())
                 {
                     _log.Basic("    {0}", line);
 
-                    if (i != desc.Length - 1)
+                    if (j != desc.Length - 1)
                         _log.Basic(string.Empty);
                 }
+
+                if (i != pkgs.Length - 1)
+                    _log.Basic(string.Empty);
             }
 
             if (!match)
