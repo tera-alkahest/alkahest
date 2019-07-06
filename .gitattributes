@@ -3,4 +3,7 @@
 *.ico binary
 *.pfx binary
 *.proj eol=crlf
+*.props eol=crlf
+*.rsp eol=crlf
 *.sln eol=crlf
+*.targets eol=crlf
