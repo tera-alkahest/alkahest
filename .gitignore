@@ -1,9 +1,9 @@
+*.nupkg
+*.user
+.vs
+.vscode
 /*/bin
 /*/obj
 /*/Properties/launchSettings.json
 /Build
 /packages
-.vs
-.vscode
-*.nupkg
-*.user
