@@ -2,7 +2,7 @@
 
 [![Latest Release](https://img.shields.io/github/release/tera-alkahest/alkahest/all.svg)](https://github.com/tera-alkahest/alkahest/releases)
 [![NuGet Package](https://img.shields.io/nuget/v/Alkahest.Core.svg)](https://www.nuget.org/packages/Alkahest.Core)
-[![Build Status](https://ci.appveyor.com/api/projects/status/github/tera-alkahest/alkahest?svg=true)](https://ci.appveyor.com/project/tera-alkahest/alkahest)
+[![Build Status](https://ci.appveyor.com/api/projects/status/github/tera-alkahest/alkahest?svg=true)](https://ci.appveyor.com/project/alexrp/alkahest-ue82n)
 [![Discord Server](https://discordapp.com/api/guilds/576893607701905439/widget.png)](https://discord.io/alkahest)
 
 **Alkahest** is a proxy server for
