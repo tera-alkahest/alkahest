@@ -91,7 +91,7 @@ namespace Alkahest.Core.Data
 
             Mode = mode.CheckValidity(nameof(mode));
 
-            using var reader = new GameBinaryReader(stream);
+            using var reader = new GameBinaryReader(stream, true);
 
             Header = ReadHeader(reader);
             Extensions = ReadSimpleRegion(reader, false, UnknownSize);
