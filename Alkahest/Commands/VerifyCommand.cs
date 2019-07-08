@@ -31,7 +31,8 @@ namespace Alkahest.Commands
 
             _log.Basic("Verifying {0}...", input);
 
-            var dc = new DataCenter(File.OpenRead(input), Configuration.DataCenterMode,
+            using var stream = File.OpenRead(input);
+            var dc = new DataCenter(stream, Configuration.DataCenterMode,
                 Configuration.DataCenterStringOptions);
 
             _log.Info(string.Empty);

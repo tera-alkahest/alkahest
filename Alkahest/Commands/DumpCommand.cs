@@ -72,7 +72,8 @@ namespace Alkahest.Commands
             var directories = 0;
             var files = 0;
 
-            var dc = new DataCenter(File.OpenRead(input), Configuration.DataCenterMode,
+            using var stream = File.OpenRead(input);
+            var dc = new DataCenter(stream, Configuration.DataCenterMode,
                 Configuration.DataCenterStringOptions);
             var options = new ParallelOptions
             {

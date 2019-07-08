@@ -109,7 +109,8 @@ namespace Alkahest.Commands
 
             var path = Path.ChangeExtension(Path.Combine(Configuration.AssetDirectory,
                 DataCenter.FileNames[region]), DataCenter.UnpackedExtension);
-            var dc = !File.Exists(path) ? new DataCenter(version) : new DataCenter(File.OpenRead(path),
+            using var file = File.Exists(path) ? File.OpenRead(path) : null;
+            var dc = file == null ? new DataCenter(version) : new DataCenter(file,
                 Configuration.DataCenterMode, Configuration.DataCenterStringOptions);
             var loader = new PluginLoader(new PluginContext(region, dc, proxies),
                 Configuration.PluginDirectory, Configuration.PluginPattern, Configuration.DisablePlugins);
