@@ -1,5 +1,10 @@
 after_build:
-    - cmd: |
+    - pwsh: |
+          $ErrorActionPreference = "Stop"
+          Set-StrictMode `
+              -Version 2.0
+          Set-PSDebug `
+              -Trace 1
           msbuild Alkahest.Archive
 artifacts:
     - path: 'Build\*.zip'
@@ -7,10 +12,27 @@ build:
     publish_nuget: true
     verbosity: detailed
 before_build:
-    - cmd: |
-          git submodule update --init --recursive
+    - pwsh: |
+          $ErrorActionPreference = "Stop"
+          Set-StrictMode `
+              -Version 2.0
+          Set-PSDebug `
+              -Trace 1
+          markdownlint *.md **/*.md
+          git submodule update `
+              --init `
+              --recursive
           nuget restore
 image: Visual Studio 2019 Preview
+install:
+    - pwsh: |
+          $ErrorActionPreference = "Stop"
+          Set-StrictMode `
+              -Version 2.0
+          Set-PSDebug `
+              -Trace 1
+          npm install markdownlint-cli `
+              -g
 nuget:
     disable_publish_on_pr: true
 pull_requests:
