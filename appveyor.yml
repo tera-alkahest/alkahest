@@ -3,8 +3,6 @@ after_build:
           $ErrorActionPreference = "Stop"
           Set-StrictMode `
               -Version 2.0
-          Set-PSDebug `
-              -Trace 1
           msbuild Alkahest.Archive
 artifacts:
     - path: 'Build\*.zip'
@@ -16,8 +14,6 @@ before_build:
           $ErrorActionPreference = "Stop"
           Set-StrictMode `
               -Version 2.0
-          Set-PSDebug `
-              -Trace 1
           markdownlint *.md **/*.md
           git submodule update `
               --init `
@@ -29,8 +25,6 @@ install:
           $ErrorActionPreference = "Stop"
           Set-StrictMode `
               -Version 2.0
-          Set-PSDebug `
-              -Trace 1
           npm install markdownlint-cli `
               -g
 nuget:
