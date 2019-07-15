@@ -393,14 +393,13 @@ namespace Alkahest.Plugins.CSharp
                 DebugInformationFormat.Embedded));
 
             if (!result.Success)
-            {
                 _log.Error("Could not compile the final script assembly:");
 
-                foreach (var diag in result.Diagnostics)
-                    _log.Error("{0}", diag);
+            foreach (var diag in result.Diagnostics)
+                _log.Error("{0}", diag);
 
+            if (!result.Success)
                 return;
-            }
 
             var asm = Assembly.Load(stream.ToArray());
 
