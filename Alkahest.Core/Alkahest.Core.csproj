@@ -45,7 +45,7 @@
       <Link>Net\Game\%(Filename)%(Extension)</Link>
       <LogicalName>%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\tera-proxy-data\map\sysmsg.82.map">
+    <EmbeddedResource Include="..\tera-proxy-data\map\sysmsg.83.map">
       <Link>Net\Game\%(Filename)%(Extension)</Link>
       <LogicalName>%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>

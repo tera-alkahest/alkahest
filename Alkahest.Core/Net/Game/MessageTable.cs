@@ -27,7 +27,7 @@ namespace Alkahest.Core.Net.Game
             var nameToCode = new Dictionary<string, ushort>();
 
             using var reader = new StreamReader(asm.GetManifestResourceStream(
-                game ? $"protocol.{version}.map" : $"sysmsg.82.map"));
+                game ? $"protocol.{version}.map" : $"sysmsg.83.map"));
 
             string line;
 
