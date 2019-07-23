@@ -38,7 +38,7 @@ namespace Alkahest.Core.Data
                 { Region.FR, 353338 },
                 { Region.JP, 350023 },
                 { Region.KR, 0 },
-                { Region.NA, 350027 },
+                { Region.NA, 353337 },
                 { Region.RU, 350024 },
                 { Region.SE, 349932 },
                 { Region.TH, 349932 },
