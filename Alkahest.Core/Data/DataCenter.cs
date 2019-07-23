@@ -46,7 +46,7 @@ namespace Alkahest.Core.Data
                 { Region.UK, 353338 },
             };
 
-        const int UnknownSize = 8;
+        const int ExtensionSize = 8;
 
         const int AttributeSize = 8;
 
@@ -94,7 +94,7 @@ namespace Alkahest.Core.Data
             using var reader = new GameBinaryReader(stream, true);
 
             Header = ReadHeader(reader);
-            Extensions = ReadSimpleRegion(reader, false, UnknownSize);
+            Extensions = ReadSimpleRegion(reader, false, ExtensionSize);
             Attributes = ReadSegmentedRegion(reader, AttributeSize);
             Elements = ReadSegmentedRegion(reader, ElementSize);
             Values = ReadStringTable(reader, 1024, false, options);
