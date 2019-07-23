@@ -34,8 +34,8 @@ namespace Alkahest.Core.Data
         public static IReadOnlyDictionary<Region, uint> ClientVersions { get; } =
             new Dictionary<Region, uint>
             {
-                { Region.DE, 350022 },
-                { Region.FR, 350022 },
+                { Region.DE, 353338 },
+                { Region.FR, 353338 },
                 { Region.JP, 350023 },
                 { Region.KR, 0 },
                 { Region.NA, 350027 },
@@ -43,7 +43,7 @@ namespace Alkahest.Core.Data
                 { Region.SE, 349932 },
                 { Region.TH, 349932 },
                 { Region.TW, 350025 },
-                { Region.UK, 350022 },
+                { Region.UK, 353338 },
             };
 
         const int UnknownSize = 8;
