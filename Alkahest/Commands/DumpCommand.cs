@@ -79,45 +79,50 @@ namespace Alkahest.Commands
             {
                 MaxDegreeOfParallelism = _parallel ? Environment.ProcessorCount : 1,
             };
+            var work = dc.Root.Children().GroupBy(x => x.Name, (name, elems) =>
+                elems.WithIndex().Select(x => (name, elem: x.Item2, idx: x.Item1))).SelectMany(x => x);
             var settings = new XmlWriterSettings
             {
                 Indent = true,
             };
 
-            Parallel.ForEach(dc.Root.Children().GroupBy(x => x.Name), options, grp =>
+            Parallel.ForEach(work, options, item =>
             {
-                var dir = Path.Combine(_output, grp.Key);
+                var dir = Path.Combine(_output, item.name);
 
-                Directory.CreateDirectory(dir);
-                Interlocked.Increment(ref directories);
-
-                foreach (var (i, elem) in grp.WithIndex())
+                lock (dc)
                 {
-                    switch (_format)
+                    if (!Directory.Exists(dir))
                     {
-                        case DumpFormat.Xml:
-                        {
-                            using var writer = XmlWriter.Create(Path.Combine(
-                                dir, $"{grp.Key}-{i}.xml"), settings);
-
-                            WriteElement(writer, elem);
-                            break;
-                        }
-                        case DumpFormat.Json:
-                        {
-                            using var writer = new JsonTextWriter(new StreamWriter(
-                                Path.Combine(dir, $"{grp.Key}-{i}.json")))
-                            {
-                                Formatting = Newtonsoft.Json.Formatting.Indented,
-                            };
-
-                            WriteElement(writer, elem);
-                            break;
-                        }
+                        Directory.CreateDirectory(dir);
+                        Interlocked.Increment(ref directories);
                     }
+                }
 
-                    Interlocked.Increment(ref files);
-                };
+                switch (_format)
+                {
+                    case DumpFormat.Xml:
+                    {
+                        using var writer = XmlWriter.Create(Path.Combine(
+                            dir, $"{item.name}-{item.idx}.xml"), settings);
+
+                        WriteElement(writer, item.elem);
+                        break;
+                    }
+                    case DumpFormat.Json:
+                    {
+                        using var writer = new JsonTextWriter(new StreamWriter(
+                            Path.Combine(dir, $"{item.name}-{item.idx}.json")))
+                        {
+                            Formatting = Newtonsoft.Json.Formatting.Indented,
+                        };
+
+                        WriteElement(writer, item.elem);
+                        break;
+                    }
+                }
+
+                Interlocked.Increment(ref files);
             });
 
             _log.Basic("Dumped {0} directories and {1} files", directories, files);
