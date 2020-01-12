@@ -6,8 +6,9 @@ namespace Alkahest.Scanner
     {
         static readonly byte?[] _pattern1 = new byte?[]
         {
-            0x8B, 0x55, 0xEC,                   // mov edx, [ebp-0x14]
-            0x8B, 0x35, null, null, null, null, // mov esi, <addr>
+            0x8b, 0x55, null,                   // mov edx, [ebp-0x14]
+            0x8b, 0x35, null, null, null, null, // mov esi, <addr>
+            0x0f, 0xb7, 0x02,                   // movzx eax, word ptr [edx]
         };
 
         static readonly byte?[] _pattern2 = new byte?[]
@@ -27,8 +28,8 @@ namespace Alkahest.Scanner
                 return;
             }
 
-            var ver1 = ReadVersion(reader, _pattern1, (int)o1);
-            var ver2 = ReadVersion(reader, _pattern2, (int)o2);
+            var ver1 = ReadVersion(reader, (int)o1 + 5);
+            var ver2 = ReadVersion(reader, (int)o2 + 6);
 
             if (ver1 == null || ver2 == null)
             {
@@ -41,9 +42,9 @@ namespace Alkahest.Scanner
             channel.WriteVersions((uint)ver1, (uint)ver2);
         }
 
-        static uint? ReadVersion(MemoryReader reader, byte?[] pattern, int offset)
+        static uint? ReadVersion(MemoryReader reader, int offset)
         {
-            var off = reader.ReadOffset(offset + pattern.TakeWhile(x => x != null).Count());
+            var off = reader.ReadOffset(offset);
 
             return reader.IsInRange(off) ? (uint?)reader.Read<uint>(off) : null;
         }
