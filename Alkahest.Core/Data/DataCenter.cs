@@ -48,9 +48,9 @@ namespace Alkahest.Core.Data
 
         const int ExtensionSize = 8;
 
-        const int AttributeSize = 8;
+        const int AttributeSize = 12;
 
-        const int ElementSize = 16;
+        const int ElementSize = 24;
 
         const int MetadataSize = 16;
 
