@@ -94,6 +94,8 @@ namespace Alkahest.Core.Data
                 throw new InvalidDataException(
                     $"Element with {attrCount} attributes has invalid attribute address {attrAddr}.");
 
+            reader.ReadInt32(); // Padding.
+
             var childAddr = DataCenter.ReadAddress(reader);
 
             if (placeholder && childAddr != DataCenterAddress.Invalid)
@@ -105,6 +107,8 @@ namespace Alkahest.Core.Data
             else if (childCount != 0 && childAddr == DataCenterAddress.Invalid)
                 throw new InvalidDataException(
                     $"Element with {childCount} children has invalid child address {childAddr}.");
+
+            reader.ReadInt32(); // Padding.
 
             if (placeholder)
                 return;
@@ -172,6 +176,8 @@ namespace Alkahest.Core.Data
                                     $"Unexpected non-Boolean value {primitiveValue}.");
                             break;
                     }
+
+                    attrReader.ReadInt32(); // Padding.
 
                     if (!attributes.TryAdd(name, new DataCenterValue(type, primitiveValue, stringValue)))
                         throw new InvalidDataException($"Duplicate attribute name {name}.");
