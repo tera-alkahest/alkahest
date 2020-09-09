@@ -184,13 +184,12 @@ Please see [CONTRIBUTING.md](.github/CONTRIBUTING.md).
 
 Please see [LICENSE.md](LICENSE.md).
 
-## Donations
+## Funding
 
-[![Liberapay Receiving](http://img.shields.io/liberapay/receives/alkahest.svg?logo=liberapay)](https://liberapay.com/alkahest/donate)
-[![Liberapay Patrons](http://img.shields.io/liberapay/patrons/alkahest.svg?logo=liberapay)](https://liberapay.com/alkahest)
-
-If you like this project and would like to support the core developers, you
-might consider donating. Please only donate if you want to and have the means to
-do so; we want to be very clear that the project will always be available for
-free under a permissive license, and you should not feel obligated to donate or
-pay for it in any way.
+I work on open source software projects such as this one in my spare time, and
+make them available free of charge under permissive licenses. If you like my
+work and would like to support me, you might consider [sponsoring
+me](https://github.com/sponsors/alexrp). Please only donate if you want to and
+have the means to do so; I want to be very clear that all open source software I
+write will always be available for free and you should not feel obligated to
+donate or pay for it in any way.
